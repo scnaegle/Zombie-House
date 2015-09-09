@@ -18,10 +18,10 @@ public class Player
   Player(int playerSight, int playerHearing, double playerSpeed,
          double playerStamina)
   {
-    this.sight = playerSight;
-    this.hearing = playerHearing;
-    this.speed = playerSpeed;
-    this.stamina = playerStamina;
+    this.sight = playerSight;       // perhaps we can make upgrades that can be picked up for
+    this.hearing = playerHearing;   // these things later, like flash light, and hearing aids
+    this.speed = playerSpeed;       // I imaginge it would be similar to the traps we have to
+    this.stamina = playerStamina;   // make
   }
 
   /*When not running, playerRegen  deltaTime is added
