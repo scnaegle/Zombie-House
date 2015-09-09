@@ -8,8 +8,5 @@ public class startGame
     GUI g = new GUI();
     g.setUpGUI();
     test test
-    I like patatoes
-      paptat
-
   }
 }
