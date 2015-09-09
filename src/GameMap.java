@@ -2,7 +2,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameMap {
@@ -23,7 +22,7 @@ public class GameMap {
    * @param end
    * @param tile_size
    */
-  public void paintSection(Graphics g, TilePosition start, TilePosition end, int tile_size) {
+  public void paintSection(Graphics g, Location start, Location end, int tile_size) {
     for(int row = start.row; row < end.row; row++) {
       for(int col = start.col; col < end.col; col++) {
         g.setColor(grid[row][col].tile_type.color);
@@ -38,7 +37,7 @@ public class GameMap {
    * @param tile_size
    */
   public void paint(Graphics g, int tile_size) {
-    paintSection(g, new TilePosition(0, 0), new TilePosition(num_rows, num_cols), tile_size);
+    paintSection(g, new Location(0, 0), new Location(num_rows, num_cols), tile_size);
   }
 
   /**
