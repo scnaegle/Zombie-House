@@ -6,8 +6,7 @@ public abstract class Zombie extends GameObject implements Humanoid
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
   protected Heading heading = Heading.STILL;
-  double defaultSpeed = .5;  // These need to be able to be changed easily
-  protected double speed = defaultSpeed;
+  protected double speed = .5;
 
   public Zombie(Location location) {
     this.location = location;
@@ -37,5 +36,10 @@ public abstract class Zombie extends GameObject implements Humanoid
   public Location getLocation()
   {
     return location;
+  }
+
+  @Override
+  public void setLocation(Location new_location) {
+    this.location = new_location;
   }
 }
