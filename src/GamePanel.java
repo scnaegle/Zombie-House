@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.net.URISyntaxException;
 
 
 /**
@@ -8,19 +10,35 @@ import java.awt.*;
  */
 public class GamePanel extends JPanel
 {
-
+  private GameMap map;
 
   public GamePanel()
   {
     setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
     setBackground(Color.white);
 
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(getClass().getResource("resources/level1.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+
+    map = new GameMap(map_file);
+
+    repaint();
 
   }
 
-  //Merrr.... stuck here. Trying to get image to paint on panel. Lack of time.
+
   public void paintComponent(Graphics2D g)
   {
+    super.paintComponent(g);
+    map.paint(g, 10);
     g.drawImage(GUI.player, 200, 200, null);
   }
 }
