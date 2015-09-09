@@ -9,6 +9,7 @@ public class startGame
     g.setUpGUI();
     test test
     I like patatoes
+      paptat
 
   }
 }
