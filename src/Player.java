@@ -1,7 +1,9 @@
+import java.awt.*;
+
 /**
  *
  */
-public class Player implements Humanoid
+public class Player extends GameObject implements Humanoid
 {
   int sight;
   int hearing;
@@ -37,7 +39,6 @@ public class Player implements Humanoid
     return regen;
   }
 
-
   @Override
   public double getSpeed()
   {
@@ -51,17 +52,8 @@ public class Player implements Humanoid
   }
 
   @Override
-  public Location getLocation()
-  {
-    return location;
+  public void setLocation(Location new_location) {
+    this.location = new_location;
   }
 
-  @Override
-  public boolean intersects(Humanoid other)
-  {
-    if (location.equals(other.getLocation())) {
-      return true;
-    }
-    return false;
-  }
 }

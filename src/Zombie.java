@@ -1,7 +1,7 @@
 /**
  * Created by sean on 9/8/15.
  */
-public abstract class Zombie implements Humanoid
+public abstract class Zombie extends GameObject implements Humanoid
 {
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
@@ -38,14 +38,5 @@ public abstract class Zombie implements Humanoid
   public Location getLocation()
   {
     return location;
-  }
-
-  @Override
-  public boolean intersects(Humanoid other)
-  {
-    if (location.equals(other.getLocation())) {
-      return true;
-    }
-    return false;
   }
 }

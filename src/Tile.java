@@ -14,7 +14,7 @@ import java.awt.Rectangle;
  * Tile contains all the information needed for it's box in the grid. This 
  * implements Comparable so that it can be used to 
  */
-public class Tile implements Comparable<Tile> {
+public class Tile extends GameObject implements Comparable<Tile> {
 	static final int WIDTH = 16;
 	static final int HEIGHT = 16;
 	
@@ -109,6 +109,31 @@ public class Tile implements Comparable<Tile> {
     g.setColor(Color.WHITE);
     g.drawRect(row, col, WIDTH, HEIGHT);
   }
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	@Override
+	public Location getLocation() {
+		return null;
+	}
+
+	@Override
+	public Rectangle getBoundingRectangle() {
+		return null;
+	}
+
+	@Override
+	public boolean intersects(Object2D other) {
+		return false;
+	}
 
 	/* (non-Javadoc)
    * @see java.lang.Comparable#compareTo(java.lang.Object)
