@@ -7,8 +7,8 @@ import java.io.IOException;
 public class GUI
 {
   JFrame window;
-  int SCENE_WIDTH;
-  int SCENE_HEIGHT;
+  static int SCENE_WIDTH;
+  static int SCENE_HEIGHT;
   JPanel scorePanel;
   JPanel gamePanel;
   JLabel level;
