@@ -1,6 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,10 +11,15 @@ public class GameMap {
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
+  private ArrayList<Tile> walls = new ArrayList<Tile>();
 
 
   public GameMap(File file) {
     createFromFile(file);
+  }
+
+  public ArrayList<Tile> getWalls() {
+    return walls;
   }
 
   /**
@@ -60,7 +67,11 @@ public class GameMap {
           col = 0;
 
           for(char type : row_types) {
-            row_array.add(new Tile(row, col, type));
+            Tile new_tile = new Tile(row, col, type);
+            row_array.add(new_tile);
+            if (new_tile.tile_type == TileType.WALL) {
+              walls.add(new_tile);
+            }
             col++;
           }
           grid.add(row_array);
@@ -97,9 +108,18 @@ public class GameMap {
   }
 
   public static void main(String[] args) {
-    File map_file = new File("resources/level1.map");
+    File map_file = null;
+    try {
+      map_file = new File(GameMap.class.getResource("resources/level1.map").toURI());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
     System.out.println("file: " + map_file);
     GameMap map = new GameMap(map_file);
     System.out.println("map: " + map.toString());
+    System.out.println("map walls: ");
+    for(Tile tile : map.getWalls()) {
+      System.out.println(tile);
+    }
   }
 }
