@@ -17,6 +17,12 @@ public interface Humanoid
   Heading getHeading();
 
   /**
+   * Set the location
+   * @param new_location New location object
+   */
+  void setLocation(Location new_location);
+
+  /**
    * Get the location of a zombie
    * @return location
    */
@@ -27,5 +33,5 @@ public interface Humanoid
    * @param other
    * @return
    */
-  boolean intersects(Humanoid other);
+//  boolean intersects(Humanoid other);
 }
