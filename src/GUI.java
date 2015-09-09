@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 
 public class GUI
@@ -10,6 +9,8 @@ public class GUI
   static int SCENE_HEIGHT;
   static JPanel scorePanel; //Will probably need to make another class,
   static BufferedImage player = null;
+  //  static BufferedImage[] walking = new BufferedImage[10];
+//  static BufferedImage[] running = new BufferedImage[10];
   static int PIXELS = 80;
   JFrame window;
   // or could make interface to update settings. Either one.
@@ -54,17 +55,27 @@ public class GUI
 
   }
 
-  public void initPlayerSprite()
-  {
-    BufferedImageLoader loader = new BufferedImageLoader();
-    try
-    {
-      player = loader.loadPlayerSprite("resources/player.png");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    player = loader.grabPlayerImage(1, 1, PIXELS, PIXELS);
-  }
+//  public void initPlayerSprite()
+//  {
+//    BufferedImageLoader loader = new BufferedImageLoader();
+//    try
+//    {
+//      player = loader.loadPlayerSprite("resources/player.png");
+//    }
+//    catch (IOException e)
+//    {
+//      e.printStackTrace();
+//    }
+//
+//    player = loader.grabPlayerImage(1, 1, PIXELS, PIXELS);
+//    walking[1] = player;
+////    player=loader.grabPlayerImage(3,9,PIXELS,PIXELS);
+////    walking[2] = player;
+//    walking[3] = loader.grabPlayerImage(3,10,PIXELS,PIXELS);
+////    walking[4]= loader.grabPlayerImage(3,11,PIXELS,PIXELS);
+////    walking[5]= loader.grabPlayerImage(4,1,PIXELS,PIXELS);
+////    walking[6]= loader.grabPlayerImage(4,2,PIXELS,PIXELS);
+////    walking[7]= loader.grabPlayerImage(4,3,PIXELS,PIXELS);
+// }
+
 }

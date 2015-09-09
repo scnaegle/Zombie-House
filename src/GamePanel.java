@@ -35,10 +35,10 @@ public class GamePanel extends JPanel
   }
 
 
-  public void paintComponent(Graphics2D g)
+  public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
     map.paint(g, 10);
-    g.drawImage(GUI.player, 200, 200, null);
+    g.drawImage(BufferedImageLoader.walking[1], 200, 200, null);
   }
 }
