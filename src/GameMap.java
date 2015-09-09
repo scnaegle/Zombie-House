@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +16,36 @@ public class GameMap {
     createFromFile(file);
   }
 
-  public void createFromFile(File file) {
+  /**
+   * This paints the grid between the the given start (row, col) and end (row, col)
+   * @param g
+   * @param start
+   * @param end
+   * @param tile_size
+   */
+  public void paintSection(Graphics g, TilePosition start, TilePosition end, int tile_size) {
+    for(int row = start.row; row < end.row; row++) {
+      for(int col = start.col; col < end.col; col++) {
+        g.setColor(grid[row][col].tile_type.color);
+        g.fillRect(row * tile_size, col * tile_size, tile_size, tile_size);
+      }
+    }
+  }
+
+  /**
+   * This paints the entire grid from start to finish
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size) {
+    paintSection(g, new TilePosition(0, 0), new TilePosition(num_rows, num_cols), tile_size);
+  }
+
+  /**
+   * Creates map from a file
+   * @param file
+   */
+  private void createFromFile(File file) {
     Scanner sc;
     ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
     int row = 0;
@@ -60,7 +90,6 @@ public class GameMap {
         ", num_cols=" + num_cols + "}\n";
     for(int row = 0; row < num_rows; row++) {
       for(int col = 0; col < num_cols; col++) {
-        System.out.format("row=%d, col=%d\n", row, col);
         ret += grid[row][col].tile_type.grid_char;
       }
       ret += "\n";
