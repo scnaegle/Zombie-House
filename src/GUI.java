@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 
 public class GUI
@@ -14,6 +16,8 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
+  BufferedImage player = null;
+  int PIXELS = 80;
 
   public void setUpGUI()
   {
@@ -42,11 +46,26 @@ public class GUI
     gamePanel.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT - 25));
     gamePanel.setBackground(Color.white);
 
+    
     window.add(gamePanel,BorderLayout.CENTER);
     window.add(scorePanel, BorderLayout.NORTH);
     window.setVisible(true);
     window.setResizable(true);
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+  }
+
+  public void initPlayerSprite()
+  {
+    BufferedImageLoader loader = new BufferedImageLoader();
+    try
+    {
+      player = loader.loadPlayerSprite("resources/player.png");
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    player = loader.grabPlayerImage(1, 1, PIXELS, PIXELS);
   }
 }
