@@ -6,25 +6,27 @@ import java.io.IOException;
 
 public class GUI
 {
+  static int SCENE_WIDTH;
+  static int SCENE_HEIGHT;
+  static JPanel scorePanel; //Will probably need to make another class,
+  static BufferedImage player = null;
+  static int PIXELS = 80;
   JFrame window;
-  int SCENE_WIDTH;
-  int SCENE_HEIGHT;
-  JPanel scorePanel;
-  JPanel gamePanel;
+  // or could make interface to update settings. Either one.
+  GamePanel gamePanel;
   JLabel level;
   JLabel playerSight;
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
-  BufferedImage player = null;
-  int PIXELS = 80;
 
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
     window.setLayout(new BorderLayout());
     window.setExtendedState(window.MAXIMIZED_BOTH);
-    gamePanel = new JPanel();
+
+    gamePanel = new GamePanel();
 
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
@@ -43,10 +45,7 @@ public class GUI
     SCENE_WIDTH = window.getWidth();
     SCENE_HEIGHT = window.getHeight();
 
-    gamePanel.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT - 25));
-    gamePanel.setBackground(Color.white);
 
-    
     window.add(gamePanel,BorderLayout.CENTER);
     window.add(scorePanel, BorderLayout.NORTH);
     window.setVisible(true);
