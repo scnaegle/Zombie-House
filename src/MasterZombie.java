@@ -1,9 +1,9 @@
 /**
- * Created by Tyler on 9/8/2015.
+ * Created by sean on 9/8/15.
  */
-
-//Perhaps we can make the master zombie move faster and see farther
 public class MasterZombie extends Zombie
 {
-
+  public MasterZombie(Location location) {
+    super(location);
+  }
 }

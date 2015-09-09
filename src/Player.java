@@ -1,10 +1,15 @@
-public class Player
+/**
+ *
+ */
+public class Player implements Humanoid
 {
   int sight;
   int hearing;
   double speed;
   double stamina;
   double regen;
+  Heading heading;
+  Location location;
 
 
   /**
@@ -33,4 +38,30 @@ public class Player
   }
 
 
+  @Override
+  public double getSpeed()
+  {
+    return speed;
+  }
+
+  @Override
+  public Heading getHeading()
+  {
+    return heading;
+  }
+
+  @Override
+  public Location getLocation()
+  {
+    return location;
+  }
+
+  @Override
+  public boolean intersects(Humanoid other)
+  {
+    if (location.equals(other.getLocation())) {
+      return true;
+    }
+    return false;
+  }
 }
