@@ -3,12 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-/**
- * This is the GUI. This is going to house the game screen and all that good
- * Jazz
- *
- * It will have button such as pause and start, a score keeper, levels,
- */
+
 public class GUI
 {
   JFrame window;
@@ -17,11 +12,10 @@ public class GUI
   JPanel scorePanel;
   JPanel gamePanel;
   JLabel level;
-
-  JLabel playerSight;           // perhaps we can make upgrades that can be picked up for
-  JLabel playerHearing;         // these things later, like flash light, and hearing aids
-  JLabel playerSpeed;           // I imaginge it would be similar to the traps we have to
-  JLabel playerStamina;         // make
+  JLabel playerSight;
+  JLabel playerHearing;
+  JLabel playerSpeed;
+  JLabel playerStamina;
   BufferedImage player = null;
   int PIXELS = 80;
 
