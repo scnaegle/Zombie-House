@@ -39,7 +39,7 @@ public class Player implements Humanoid
 
 
   @Override
-  public int getSpeed()
+  public double getSpeed()
   {
     return speed;
   }

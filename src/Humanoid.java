@@ -8,7 +8,7 @@ public interface Humanoid
    * Get the current speed of the zombie
    * @return current speed
    */
-  int getSpeed();
+  double getSpeed();
 
   /**
    * Get the current heading of the zombie
