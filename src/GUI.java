@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 
 public class GUI
@@ -16,8 +14,6 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
-  BufferedImage playerSprite = null;
-  int PIXELS = 80;
 
   public void setUpGUI()
   {
@@ -52,22 +48,5 @@ public class GUI
     window.setResizable(true);
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-  }
-
-  public void initPlayerSprite()
-  {
-    BufferedImageLoader loader = new BufferedImageLoader();
-    try
-    {
-      //Image is currently null since intelliJ only uses sources in the out
-      //folder. Need to see if creating a symbolic link will work with
-      //everyone's computer.
-      playerSprite = loader.loadPlayerSprite("resources/player.jpg");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    playerSprite = loader.grabPlayerImage(1, 1, PIXELS, PIXELS);
   }
 }

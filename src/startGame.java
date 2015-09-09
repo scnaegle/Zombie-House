@@ -5,6 +5,6 @@ public class startGame
   {
     GUI g = new GUI();
     g.setUpGUI();
-    g.initPlayerSprite();
+    test test
   }
 }
