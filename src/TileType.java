@@ -11,7 +11,7 @@ import java.awt.Color;
  */
 public enum TileType {
 		GRASS(1, '.',1, new Color(145, 179, 140)),
-		BRICK(2, '*',1, new Color(191, 225, 184)),
+		BRICK(2, '*',1, new Color(93, 93, 93)),
 		TRAP(3, '3',1, new Color(230, 9, 13)),
 		BURNT(4, '4',1, new Color(22, 22, 22)),
 		START(5, 'S',1, new Color(216, 216, 25)),
