@@ -17,14 +17,14 @@ public class GUI
   JLabel playerSpeed;
   JLabel playerStamina;
   BufferedImage player = null;
-  int PIXELS = 80;
+  final int PIXELS = 80;
 
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
     window.setLayout(new BorderLayout());
     window.setExtendedState(window.MAXIMIZED_BOTH);
-    gamePanel = new JPanel();
+    gamePanel = new GamePanel();
 
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
