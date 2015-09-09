@@ -121,7 +121,7 @@ public class Tile implements Comparable<Tile> {
    * @see java.lang.Object#toString()
    */
   public String toString() {
-  	return String.format("%s: (%d, %d)", tile_type, row, col);
+  	return String.format("%s: [row=%d, col=%d]", tile_type, row, col);
   } 
   
   /* (non-Javadoc)
