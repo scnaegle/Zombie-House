@@ -26,6 +26,16 @@ public interface Object2D {
 //  int getCol();
 
   /**
+   * @return Width of object
+   */
+  int getWidth();
+
+  /**
+   * @return Height of object
+   */
+  int getHeight();
+
+  /**
    * Get the location of an object which contains the row, col, and
    * x and y coordinates.
    * @return Location of object
