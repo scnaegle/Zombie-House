@@ -72,7 +72,6 @@ public class GameMap {
     File map_file = new File("resources/level1.map");
     System.out.println("file: " + map_file);
     GameMap map = new GameMap(map_file);
-
     System.out.println("map: " + map.toString());
   }
 }

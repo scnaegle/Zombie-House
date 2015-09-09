@@ -49,4 +49,5 @@ public class GUI
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
   }
+
 }
