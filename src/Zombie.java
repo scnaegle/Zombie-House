@@ -7,7 +7,8 @@ public abstract class Zombie extends GameObject implements Humanoid
   protected double smell = 7.0;
   protected Heading heading = Heading.STILL;
   protected Location location;
-  protected double speed = .5;
+  double defaultSpeed = .5;  // These need to be able to be changed easily
+  protected double speed = defaultSpeed;
 
   public Zombie(Location location) {
     this.location = location;
