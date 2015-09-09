@@ -1,8 +1,3 @@
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-
 public class Player
 {
   int sight;
@@ -10,7 +5,7 @@ public class Player
   double speed;
   double stamina;
   double regen;
-  BufferedImage player;
+
 
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
@@ -37,9 +32,5 @@ public class Player
     return regen;
   }
 
-  private BufferedImage loadPlayerSprite(String path) throws IOException
-  {
-    player = ImageIO.read(getClass().getResource(path));
-    return player;
-  }
+
 }
