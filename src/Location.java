@@ -1,22 +1,23 @@
 /**
  * Created by scnaegl on 9/8/15.
  */
-public class TilePosition {
+public class Location
+{
   int row;
   int col;
   int x;
   int y;
 
-  public TilePosition() {
+  public Location() {
 
   }
 
-  public TilePosition(int row, int col) {
+  public Location(int row, int col) {
     this.row = row;
     this.col = col;
   }
 
-  public TilePosition(int row, int col, int x, int y) {
+  public Location(int row, int col, int x, int y) {
     this(row, col);
     this.x = x;
     this.y = y;
