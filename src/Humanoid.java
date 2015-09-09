@@ -20,7 +20,7 @@ public interface Humanoid
    * Get the location of a zombie
    * @return location
    */
-  double getLocation();
+  Location getLocation();
 
   /**
    * Does this zombie intersect another? Check if this zombie is in the same location as another zombie.

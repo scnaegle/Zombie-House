@@ -26,7 +26,7 @@ public abstract class Zombie implements Humanoid
   }
 
   @Override
-  public double getLocation()
+  public Location getLocation()
   {
     return location;
   }

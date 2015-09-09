@@ -51,7 +51,7 @@ public class Player implements Humanoid
   }
 
   @Override
-  public double getLocation()
+  public Location getLocation()
   {
     return location;
   }
