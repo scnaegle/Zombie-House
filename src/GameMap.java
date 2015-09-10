@@ -33,7 +33,7 @@ public class GameMap {
     for(int row = start.row; row < end.row; row++) {
       for(int col = start.col; col < end.col; col++) {
         g.setColor(grid[row][col].tile_type.color);
-        g.fillRect(row * tile_size, col * tile_size, tile_size, tile_size);
+        g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
       }
     }
   }
