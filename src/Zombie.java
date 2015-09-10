@@ -39,7 +39,8 @@ public abstract class Zombie extends GameObject implements Humanoid
   }
 
   @Override
-  public void setLocation(Location new_location) {
+  public void setLocation(Location new_location)
+  {
     this.location = new_location;
   }
 }

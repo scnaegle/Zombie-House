@@ -1,19 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 
 public class GUI
 {
-  JFrame window;
+
+  final static int PIXELS = 80;
   static int SCENE_WIDTH;
   static int SCENE_HEIGHT;
   static JPanel scorePanel; //Will probably need to make another class,
-  static BufferedImage player = null;
-  static int PIXELS = 80;
   JFrame window;
-  // or could make interface to update settings. Either one.
   GamePanel gamePanel;
   JLabel level;
   JLabel playerSight;
@@ -21,7 +18,6 @@ public class GUI
   JLabel playerSpeed;
   JLabel playerStamina;
   BufferedImage player = null;
-  final int PIXELS = 80;
 
   public void setUpGUI()
   {
@@ -57,17 +53,5 @@ public class GUI
 
   }
 
-  public void initPlayerSprite()
-  {
-    BufferedImageLoader loader = new BufferedImageLoader();
-    try
-    {
-      player = loader.loadPlayerSprite("resources/player.png");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    player = loader.grabPlayerImage(1, 1, PIXELS, PIXELS);
-  }
+
 }
