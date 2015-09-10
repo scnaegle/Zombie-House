@@ -17,6 +17,7 @@ public class GameMap
   private static final int Y_SIZE = 100;
   private static final int MAX_ROOM_SIZE = 10;
   private static final int MIN_ROOM_SIZE = 5;
+  private static final int END_ROOM_SIZE = 4;
   private static int roomSize;
   private static int numberOfRooms = 15;
   private static int numberOfObsicles = 3;
@@ -124,9 +125,108 @@ public class GameMap
     roomSize = roomSize();
   }
 
-  /**
-   * builds a room to go into the maze
-   */
+
+  private static void buildEndRoom()
+  {
+    resetRoomDimentions();
+
+    for (int x = buildRoomX; x < buildRoomX + END_ROOM_SIZE; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + END_ROOM_SIZE; y++)
+      {
+        if (touchingAnotherRoom(x, y))
+        {
+          resetRoomDimentions();
+          x = buildRoomX;
+          y = buildRoomY;
+        }
+      }
+    }
+
+    for (int x = buildRoomX; x < buildRoomX + END_ROOM_SIZE; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + END_ROOM_SIZE; y++)
+      {
+        // Need to create another method or this if statment... it will do
+        // for now though.
+        if (inBoundsWithBorder(x, y) &&
+            (x == buildRoomX && y == buildRoomY) ||
+            (x == (buildRoomX + END_ROOM_SIZE - 1) && y == buildRoomY) ||
+            (x == buildRoomX && y == (buildRoomY + END_ROOM_SIZE - 1)) ||
+            (x == (buildRoomX + END_ROOM_SIZE - 1) &&
+                y == (buildRoomY + END_ROOM_SIZE - 1)))
+        {
+          intGrid[x][y] = 8;
+        }
+        //seriously sorry about the if statments :( It is working though. :)
+        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
+            x == (buildRoomX + END_ROOM_SIZE - 1) || y == buildRoomY ||
+            y == (buildRoomY + END_ROOM_SIZE - 1)))
+        {
+          intGrid[x][y] = 9;
+        }
+        else if (inBoundsWithBorder(x, y))
+        {
+          intGrid[x][y] = 3;
+        }
+      }
+    }
+    System.out.println("finish end room");
+  }
+
+  private static void buildStartRoom()
+  {
+    resetRoomDimentions();
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        if (touchingAnotherRoom(x, y))
+        {
+          resetRoomDimentions();
+          x = buildRoomX;
+          y = buildRoomY;
+        }
+      }
+    }
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        // Need to create another method or this if statment... it will do
+        // for now though.
+        if (inBoundsWithBorder(x, y) &&
+            (x == buildRoomX && y == buildRoomY) ||
+            (x == (buildRoomX + roomSize - 1) && y == buildRoomY) ||
+            (x == buildRoomX && y == (buildRoomY + roomSize - 1)) ||
+            (x == (buildRoomX + roomSize - 1) &&
+                y == (buildRoomY + roomSize - 1)))
+        {
+          intGrid[x][y] = 8;
+        }
+        //seriously sorry about the if statments :( It is working though. :)
+        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
+            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
+            y == (buildRoomY + roomSize - 1)))
+        {
+          intGrid[x][y] = 9;
+        }
+        else if (inBoundsWithBorder(x, y))
+        {
+          intGrid[x][y] = 2;
+        }
+      }
+    }
+    System.out.println("finish start room");
+  }
+
+
+
+    /**
+     * builds a room to go into the maze
+     */
   private static void buildRoom()
   {
     resetRoomDimentions();
@@ -177,7 +277,8 @@ public class GameMap
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
-    if (intGrid[x][y] == 9 || intGrid[x][y] == 1 || intGrid[x][y] == 8)
+    boolean valid = true;
+    if (intGrid[x][y]!=0)
     {
       return true;
     }
@@ -250,11 +351,14 @@ public class GameMap
       }
     }
 
+    buildStartRoom();
+    buildEndRoom();
+
     //builds specified number of rooms
-    for (int i = 0; i < numberOfRooms; i++)
-    {
-      buildRoom();
-    }
+//    for (int i = 0; i < numberOfRooms; i++)
+//    {
+//      buildRoom();
+//    }
 
     breakTouchingWalls();
 
@@ -265,12 +369,14 @@ public class GameMap
      * make exit and start room
      * JUST KEEP SWIMMING
      */
-    for (int i = 0; i <= numberOfObsicles; i++)
-    {
-      buildObsticales();
-    }
+//    for (int i = 0; i <= numberOfObsicles; i++)
+//    {
+//      buildObsticales();
+//    }
 
 
+
+    //makeHalls();
     // buildRoomExact();
 
     for (int x = 0; x < X_SIZE; x++)
