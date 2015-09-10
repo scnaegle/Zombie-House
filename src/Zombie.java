@@ -5,7 +5,7 @@ public abstract class Zombie extends GameObject implements Humanoid
 {
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
-  protected Heading heading = Heading.STILL;
+  protected Heading heading = Heading.NONE;
   protected double speed = .5;
 
   public Zombie(Location location) {
@@ -19,6 +19,10 @@ public abstract class Zombie extends GameObject implements Humanoid
       //  the zombies one tile at a time but in a continuios movement, i'm thinking we have them travel in a
       // straight lines will be eaier than diagonol, but I could ver possibly be wrong
       // maybe having them traverse for a certain amount of time in a gerneral
+
+  public void move() {
+
+  }
 
   @Override
   public double getSpeed()

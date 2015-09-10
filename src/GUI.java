@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 
 
@@ -9,6 +11,7 @@ public class GUI
   final static int PIXELS = 80;
   static int SCENE_WIDTH;
   static int SCENE_HEIGHT;
+  static int tile_size = 80;
   static JPanel scorePanel; //Will probably need to make another class,
   JFrame window;
   GamePanel gamePanel;
@@ -24,6 +27,28 @@ public class GUI
     window = new JFrame("Zombie House");
     window.setLayout(new BorderLayout());
     window.setExtendedState(window.MAXIMIZED_BOTH);
+    window.addComponentListener(new ComponentListener() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        SCENE_WIDTH = window.getWidth();
+        SCENE_HEIGHT = window.getHeight();
+      }
+
+      @Override
+      public void componentMoved(ComponentEvent e) {
+
+      }
+
+      @Override
+      public void componentShown(ComponentEvent e) {
+
+      }
+
+      @Override
+      public void componentHidden(ComponentEvent e) {
+
+      }
+    });
 
     gamePanel = new GamePanel();
 
@@ -41,8 +66,6 @@ public class GUI
     scorePanel.add(playerSpeed);
     scorePanel.add(playerStamina);
 
-    SCENE_WIDTH = window.getWidth();
-    SCENE_HEIGHT = window.getHeight();
 
 
     window.add(gamePanel,BorderLayout.CENTER);

@@ -7,7 +7,7 @@ public class Heading
   static final Heading SOUTH = new Heading(0, -1);
   static final Heading WEST = new Heading(-1, 0);
   static final Heading EAST = new Heading(1, 0);
-  static final Heading STILL = new Heading(0, 0);
+  static final Heading NONE = new Heading(0, 0);
 
   private int x_movement;
   private int y_movement;

@@ -1,16 +1,33 @@
+import java.awt.image.BufferedImage;
+
 /**
  *
  */
 public class Player extends GameObject implements Humanoid
 {
-  int sight;
-  int hearing;
-  double speed;
-  double stamina;
-  double regen;
+  private final int FPS = 60;
+  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
+  private final double STAMINA_PER_SEC = 1.0;
+  private final double STAMINA_STEP = STAMINA_PER_SEC / FPS;
+  int sight = 5;
+  int hearing = 10;
+  double speed = 1.0;
+  double max_stamina = 5;
+  double stamina = 5;
+  double regen = .2;
   Heading heading;
-  Location location;
+  BufferedImageLoader loader = new BufferedImageLoader();
+  private BufferedImage[] walking = loader.initPlayerSpriteWalk();
+//  private BufferedImage[] running = loader.initPlayerSpriteRun();
+  private Animation walk = new Animation(walking, 5);
+//  private Animation run = new Animation(running, 5);
+  Animation animation = walk;
 
+
+  public Player(Location location) {
+    this.location = location;
+    animation.start();
+  }
 
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
@@ -28,6 +45,7 @@ public class Player extends GameObject implements Humanoid
     // aids
     this.speed = player_speed;       // I imaginge it would be similar to the traps we
     // have to
+    this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
   }
 
@@ -45,15 +63,47 @@ public class Player extends GameObject implements Humanoid
     return speed;
   }
 
+  public void setSpeed(double speed) {
+    this.speed = speed;
+  }
+
   @Override
   public Heading getHeading()
   {
     return heading;
   }
 
+//  public void setHeading(String heading_str) {
+//    switch(heading_str) {
+//      case "up":
+//        this.heading = Heading.NORTH;
+//      case "down":
+//        this.heading = Heading.
+//    }
+//  }
+
+  public void setHeading(Heading heading) {
+    this.heading = heading;
+  }
+
   @Override
   public void setLocation(Location new_location) {
     this.location = new_location;
+  }
+
+  public void move() {
+    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    if (speed > 1 && stamina > 0) {
+//      animation = run;
+      stamina -= STAMINA_STEP;
+    } else {
+      stamina += STAMINA_STEP; // call regen()
+      Math.min(stamina, max_stamina);
+      animation = walk;
+      speed = 1;
+    }
+    animation.update();
   }
 
 }
