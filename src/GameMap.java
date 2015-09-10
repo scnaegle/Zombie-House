@@ -10,12 +10,15 @@ import java.util.Scanner;
 
 public class GameMap
 {
-  private static final int X_SIZE = 30;
-  private static final int Y_SIZE = 30;
+
+  // as the levels progress we may want to make them bigger and add more rooms
+  // so these final varibles may not always be final
+  private static final int X_SIZE = 50;
+  private static final int Y_SIZE = 100;
   private static final int MAX_ROOM_SIZE = 10;
   private static final int MIN_ROOM_SIZE = 5;
   private static int roomSize;
-  private static int numberOfRooms = 7;
+  private static int numberOfRooms = 15;
   // we are going to need to find a way to change this number when
   // starting a new level and such
   private static int buildRoomX;
@@ -134,8 +137,8 @@ public class GameMap
         if (touchingAnotherRoom(x, y))
         {
           resetRoomDimentions();
-          x=buildRoomX;
-          y=buildRoomY;
+          x = buildRoomX;
+          y = buildRoomY;
         }
       }
     }
@@ -146,7 +149,17 @@ public class GameMap
       {
         // Need to create another method or this if statment... it will do
         // for now though.
-        if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
+        if (inBoundsWithBorder(x, y) &&
+            (x == buildRoomX && y == buildRoomY) ||
+            (x == (buildRoomX + roomSize - 1) && y == buildRoomY) ||
+            (x == buildRoomX && y == (buildRoomY + roomSize - 1)) ||
+            (x == (buildRoomX + roomSize - 1) &&
+                y == (buildRoomY + roomSize - 1)))
+        {
+          intGrid[x][y] = 8;
+        }
+        //seriously sorry about the if statments :( It is working though. :)
+        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
             x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
             y == (buildRoomY + roomSize - 1)))
         {
@@ -163,7 +176,7 @@ public class GameMap
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
-    if (intGrid[x][y] == 9 || intGrid[x][y]==1)
+    if (intGrid[x][y] == 9 || intGrid[x][y] == 1 || intGrid[x][y] == 8)
     {
       return true;
     }
@@ -189,11 +202,16 @@ public class GameMap
       }
     }
 
+    //builds specified number of rooms
     for (int i = 0; i < numberOfRooms; i++)
     {
       buildRoom();
     }
-    buildRoomExact();
+
+    breakTouchingWalls();
+
+
+    // buildRoomExact();
 
     for (int x = 0; x < X_SIZE; x++)
     {
@@ -202,6 +220,43 @@ public class GameMap
         System.out.print(intGrid[x][y]);
       }
       System.out.println("");
+    }
+  }
+
+  private static void breakTouchingWalls()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        if (intGrid[x][y] == 9)
+        {
+          if (intGrid[x + 1][y] == 9 && intGrid[x - 1][y] == 9 &&
+              intGrid[x][y + 1] == 9)
+          {
+            intGrid[x][y] = 1;
+            intGrid[x][y+1]=1;
+          }
+          else if (intGrid[x + 1][y] == 9 && intGrid[x - 1][y] == 9 &&
+              intGrid[x][y - 1] == 9)
+          {
+            intGrid[x][y] = 1;
+            intGrid[x][y-1]=1;
+          }
+          else if (intGrid[x][y+1] == 9 && intGrid[x][y-1] == 9 &&
+              intGrid[x+1][y] == 9)
+          {
+            intGrid[x][y] = 1;
+            intGrid[x+1][y]=1;
+          }
+          else if (intGrid[x][y+1] == 9 && intGrid[x][y-1] == 9 &&
+              intGrid[x-1][y] == 9)
+          {
+            intGrid[x][y] = 1;
+            intGrid[x-1][y]=1;
+          }
+        }
+      }
     }
   }
 
