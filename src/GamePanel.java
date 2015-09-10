@@ -30,7 +30,8 @@ public class GamePanel extends JPanel
     File map_file = null;
     try
     {
-      map_file = new File(getClass().getResource("resources/level1.map").toURI());
+      map_file =
+          new File(getClass().getResource("resources/level1.map").toURI());
     }
     catch (URISyntaxException e)
     {
@@ -63,11 +64,8 @@ public class GamePanel extends JPanel
   }
 
 
-  public void startAnimation() {
-    animation.start();
-  }
-
-  public void paintComponent(Graphics g) {
+  public void paintComponent(Graphics2D g)
+  {
     super.paintComponent(g);
 
 //    System.out.println("Got here!!!");
