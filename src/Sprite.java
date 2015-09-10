@@ -7,10 +7,14 @@ import java.io.IOException;
  */
 public class Sprite
 {
-  private static BufferedImage sprite_sheet;
-  private static final int TILE_SIZE = 80;
+  private BufferedImage sprite_sheet;
+  private final int TILE_SIZE = 80;
 
-  public static BufferedImage loadSprite(String file)
+  public Sprite(String sprite) {
+    sprite_sheet = loadSprite(sprite);
+  }
+
+  public BufferedImage loadSprite(String file)
   {
 
     BufferedImage sprite = null;
@@ -27,12 +31,7 @@ public class Sprite
     return sprite;
   }
 
-  public static BufferedImage getSprite(String sprite, int row, int col) {
-
-    if (sprite_sheet == null) {
-      sprite_sheet = loadSprite(sprite);
-    }
-
+  public BufferedImage getSprite(int row, int col) {
     // Set back the row and col so that the index starts at 1
     col--;
     row--;
