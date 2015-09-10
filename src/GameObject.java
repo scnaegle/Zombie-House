@@ -25,7 +25,7 @@ public abstract class GameObject implements Object2D {
 
   @Override
   public Rectangle getBoundingRectangle() {
-    return new Rectangle(location.x, location.y, width, height);
+    return new Rectangle(location.getX(), location.getY(), width, height);
   }
 
   @Override

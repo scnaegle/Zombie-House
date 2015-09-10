@@ -24,6 +24,8 @@ public class GamePanel extends JPanel
 
   public GamePanel()
   {
+//    System.out.println("scene_width: " + GUI.SCENE_WIDTH);
+//    System.out.println("scene_height: " + GUI.SCENE_HEIGHT);
     setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
     setBackground(Color.white);
 
@@ -51,10 +53,16 @@ public class GamePanel extends JPanel
       public void actionPerformed(ActionEvent e)
       {
         player.move();
-        randomZombie.move();
-        lineZombie.move();
         if (player.location.x > GUI.SCENE_WIDTH) {
           player.setLocation(new Location(player.location.row, player.location.col, 0, player.location.y));
+        }
+        randomZombie.move();
+        if (randomZombie.location.x > GUI.SCENE_WIDTH) {
+          randomZombie.setLocation(new Location(randomZombie.location.row, randomZombie.location.col, 0, randomZombie.location.y));
+        }
+        lineZombie.move();
+        if (lineZombie.location.x > GUI.SCENE_WIDTH) {
+          lineZombie.setLocation(new Location(lineZombie.location.row, lineZombie.location.col, 0, lineZombie.location.y));
         }
         repaint();
       }
@@ -70,11 +78,11 @@ public class GamePanel extends JPanel
 
     map.paint(g, GUI.tile_size);
 
-    g.drawImage(player.animation.getSprite(), player.location.x,
-        player.location.y, null);
-    g.drawImage(randomZombie.animation.getSprite(), randomZombie.location.x,
-        randomZombie.location.y, null);
-    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.x,
-        lineZombie.location.y, null);
+    g.drawImage(player.animation.getSprite(), player.location.getX(),
+        player.location.getY(), null);
+    g.drawImage(randomZombie.animation.getSprite(), randomZombie.location.getX(),
+        randomZombie.location.getY(), null);
+    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
+        lineZombie.location.getY(), null);
   }
 }
