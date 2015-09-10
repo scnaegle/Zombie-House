@@ -54,12 +54,6 @@ public class GamePanel extends JPanel
     frame_timer.start();
 
     animation.start();
-    // These are animation states
-////    private Animation walkRight = new Animation(walkingRight, 10);
-//    private Animation standing = new Animation(standing, 10);
-
-    // This is the actual animation
-//    private Animation animation = standing;
 
   }
 
