@@ -192,37 +192,12 @@ public class GameMap
     return false;
   }
 
-  private static void generateMap()
-  {
-    for (int x = 0; x < X_SIZE; x++)
-    {
-      for (int y = 0; y < Y_SIZE; y++)
-      {
-        intGrid[x][y] = 0;
-      }
-    }
 
-    //builds specified number of rooms
-    for (int i = 0; i < numberOfRooms; i++)
-    {
-      buildRoom();
-    }
-
-    breakTouchingWalls();
-
-
-    // buildRoomExact();
-
-    for (int x = 0; x < X_SIZE; x++)
-    {
-      for (int y = 0; y < Y_SIZE; y++)
-      {
-        System.out.print(intGrid[x][y]);
-      }
-      System.out.println("");
-    }
-  }
-
+  /**
+   * If two rooms are connected it will break through the walls of the room and form a path,
+   * not only does this connect the rooms, but also builds the obsticle type things
+   * pretty stoked that it worked pleasently. I am sure I will add some obsticles
+   */
   private static void breakTouchingWalls()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -260,6 +235,48 @@ public class GameMap
     }
   }
 
+
+
+
+
+  private static void generateMap()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        intGrid[x][y] = 0;
+      }
+    }
+
+    //builds specified number of rooms
+    for (int i = 0; i < numberOfRooms; i++)
+    {
+      buildRoom();
+    }
+
+    breakTouchingWalls();
+
+    /**
+     * START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * label every room you creat with a number have matching numbers make hallways between
+     * make exit and start room
+     * JUST KEEP SWIMMING
+     */
+   // buildObsticales();
+
+
+    // buildRoomExact();
+
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        System.out.print(intGrid[x][y]);
+      }
+      System.out.println("");
+    }
+  }
 
   /**
    * Creates map from a file
