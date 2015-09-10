@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
 
 
 public class GUI
@@ -22,11 +21,15 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
-  BufferedImage player = null;
   JButton startPause;
-  Timer timer;
-  Boolean pause = false;
+  //Timer timer;
+  boolean pause = true;
 
+  //  public void startTime()
+//  {
+//    timer = new Timer(10,null);
+//    timer.start();
+//  }
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
@@ -69,7 +72,7 @@ public class GUI
     playerStamina = new JLabel("Stamina: ");
 
     startPause = new JButton("Start");
-    startPause.setPreferredSize(new Dimension(40, 24));
+    startPause.setPreferredSize(new Dimension(80, 23));
     startPause.addActionListener(new ActionListener()
     {
       @Override
@@ -78,12 +81,13 @@ public class GUI
         if (pause)
         {
           startPause.setText("Pause");
-          pauseGame();
+          startGame();
+
         }
         else
         {
           startPause.setText("Start");
-          //startGame();
+          pauseGame();
         }
 
       }
@@ -108,9 +112,16 @@ public class GUI
 
   }
 
+  private void startGame()
+  {
+    pause = false;
+    gamePanel.frame_timer.start();
+  }
+
   private void pauseGame()
   {
-    timer.stop();
+    pause = true;
+    gamePanel.frame_timer.stop();
   }
 
 

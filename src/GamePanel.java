@@ -59,7 +59,7 @@ public class GamePanel extends JPanel
         repaint();
       }
     });
-    frame_timer.start();
+    //frame_timer.start();
 
   }
 
