@@ -44,6 +44,16 @@ public class Location
   }
 
   @Override
+  public String toString() {
+    return "Location{" +
+        "row=" + row +
+        ", col=" + col +
+        ", x=" + x +
+        ", y=" + y +
+        '}';
+  }
+
+  @Override
   public boolean equals(Object o)
   {
     if (this == o)
