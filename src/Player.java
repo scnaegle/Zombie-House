@@ -6,7 +6,8 @@ import java.awt.image.BufferedImage;
 public class Player extends GameObject implements Humanoid
 {
   private final int FPS = 60;
-  private final double MOVE_MULTIPLIER = 1.0 / FPS;
+  private final int TILE_SIZE = 80;
+  private final double MOVE_MULTIPLIER = (double)TILE_SIZE / FPS;
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / FPS;
   int sight = 5;
