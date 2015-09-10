@@ -109,7 +109,7 @@ public class GUI
 
 
     window.add(gamePanel, BorderLayout.CENTER);
-    window.add(scorePanel, BorderLayout.NORTH);
+    window.add(viewPanel, BorderLayout.NORTH);
     window.setVisible(true);
     window.setResizable(true);
 
