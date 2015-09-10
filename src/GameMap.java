@@ -10,8 +10,18 @@ import java.util.Scanner;
 
 public class GameMap
 {
-  private static final int X_SIZE = 100;
-  private static final int Y_SIZE = 100;
+  private static final int X_SIZE = 30;
+  private static final int Y_SIZE = 30;
+  private static final int MAX_ROOM_SIZE = 10;
+  private static final int MIN_ROOM_SIZE = 5;
+  private static int roomSize;
+  private static int numberOfRooms = 7;
+  // we are going to need to find a way to change this number when
+  // starting a new level and such
+  private static int buildRoomX;
+  private static int buildRoomY;
+
+  private static Random random = new Random();
 
   private static int[][] intGrid = new int[X_SIZE][Y_SIZE];
 
@@ -65,27 +75,112 @@ public class GameMap
         tile_size);
   }
 
-
-  private static void buildRoom(int xStart, int yStart, int xEnd, int yEnd)
+  public static int roomSize()
   {
-    for (int x = xStart; x < xEnd; x++)
+    int roomSize;
+    while (true)
     {
-      for (int y = yStart; y < yEnd; y++)
+      roomSize = random.nextInt(MAX_ROOM_SIZE) + 1;
+      if (roomSize >= MIN_ROOM_SIZE)
       {
-        intGrid[x][y] = 1;
+        return roomSize;
       }
     }
 
   }
 
+  private static void buildRoomExact()
+  {
+    buildRoomX = 39;
+    buildRoomY = 39;
+    int roomSize = 10;
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
+            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
+            y == (buildRoomY + roomSize - 1)))
+        {
+          intGrid[x][y] = 9;
+        }
+        else if (inBoundsWithBorder(x, y))
+        {
+          intGrid[x][y] = 1;
+        }
+      }
+    }
+  }
+
+  private static void resetRoomDimentions()
+  {
+    buildRoomX = random.nextInt(X_SIZE - 13) + 2;
+    buildRoomY = random.nextInt(Y_SIZE - 13) + 2;
+    roomSize = roomSize();
+  }
+
+  /**
+   * builds a room to go into the maze
+   */
+  private static void buildRoom()
+  {
+    resetRoomDimentions();
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        if (touchingAnotherRoom(x, y))
+        {
+          resetRoomDimentions();
+          x=buildRoomX;
+          y=buildRoomY;
+        }
+      }
+    }
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        // Need to create another method or this if statment... it will do
+        // for now though.
+        if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
+            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
+            y == (buildRoomY + roomSize - 1)))
+        {
+          intGrid[x][y] = 9;
+        }
+        else if (inBoundsWithBorder(x, y))
+        {
+          intGrid[x][y] = 1;
+        }
+      }
+    }
+
+  }
+
+  private static boolean touchingAnotherRoom(int x, int y)
+  {
+    if (intGrid[x][y] == 9 || intGrid[x][y]==1)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  private static boolean inBoundsWithBorder(int x, int y)
+  {
+    if (x < X_SIZE - 1 && x > 1 && y < Y_SIZE - 1 && y > 1)
+    {
+      return true;
+    }
+    return false;
+  }
+
   private static void generateMap()
   {
-    int buildRoomX;
-    int buildRoomY;
-
-     
-    Random random = new Random();
-
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
@@ -94,24 +189,11 @@ public class GameMap
       }
     }
 
-
-
-
-    buildRoomX = random.nextInt(X_SIZE);
-    buildRoomY = random.nextInt(Y_SIZE);
-    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
-
-    buildRoomX = random.nextInt(X_SIZE);
-    buildRoomY = random.nextInt(Y_SIZE);
-    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
-    buildRoomX = random.nextInt(X_SIZE);
-    buildRoomY = random.nextInt(Y_SIZE);
-    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
-    buildRoomX = random.nextInt(X_SIZE);
-    buildRoomY = random.nextInt(Y_SIZE);
-    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
-
-
+    for (int i = 0; i < numberOfRooms; i++)
+    {
+      buildRoom();
+    }
+    buildRoomExact();
 
     for (int x = 0; x < X_SIZE; x++)
     {
