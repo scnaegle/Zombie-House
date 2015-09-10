@@ -6,7 +6,7 @@ import java.awt.*;
 public abstract class GameObject implements Object2D {
   protected int width;
   protected int height;
-  protected Location location;
+  Location location;
 
   @Override
   public int getWidth() {
