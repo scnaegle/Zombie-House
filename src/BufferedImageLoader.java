@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class BufferedImageLoader
 {
-  static BufferedImage[] walking = new BufferedImage[10];
+  //static BufferedImage[] walking = new BufferedImage[10];
   static BufferedImage[] running = new BufferedImage[10];
   BufferedImage player;
 
@@ -21,26 +21,9 @@ public class BufferedImageLoader
     return player;
   }
 
-  /**
-   * Grabs exact 80x80 pixel image from sprite sheet.
-   *
-   * @param col
-   * @param row
-   * @param width
-   * @param height
-   * @return
-   */
-  public BufferedImage grabPlayerImage(int row, int col, int width, int height,
-                                       BufferedImage img)
-  {
-    img = player.getSubimage((col * 80) - 80, (row * 80) - 80,
-        width, height);
-    return img;
-  }
 
-  public void initPlayerSprite()
+  public BufferedImage[] initPlayerSpriteWalk()
   {
-    //BufferedImageLoader loader = new BufferedImageLoader();
     try
     {
       player = loadPlayerSprite("resources/pWalk.png");
@@ -51,13 +34,33 @@ public class BufferedImageLoader
     }
 
 
-    walking[1] = grabPlayerImage(1, 1, GUI.PIXELS, GUI.PIXELS, player);
-    walking[2] = grabPlayerImage(1, 2, GUI.PIXELS, GUI.PIXELS, player);
-    walking[3] = grabPlayerImage(1, 3, GUI.PIXELS, GUI.PIXELS, player);
-    walking[4] = grabPlayerImage(1, 4, GUI.PIXELS, GUI.PIXELS, player);
-    walking[5] = grabPlayerImage(1, 5, GUI.PIXELS, GUI.PIXELS, player);
-    walking[6] = grabPlayerImage(1, 6, GUI.PIXELS, GUI.PIXELS, player);
-    walking[7] = grabPlayerImage(1, 7, GUI.PIXELS, GUI.PIXELS, player);
+    BufferedImage walking[] = {Sprite.getSprite("pWalk", 1, 2),
+        Sprite.getSprite("pWalk", 1, 3),
+        Sprite.getSprite("pWalk", 1, 4),
+        Sprite.getSprite("pWalk", 1, 5),
+        Sprite.getSprite("pWalk", 1, 6),
+        Sprite.getSprite("pWalk", 1, 7)};
+    return walking;
+  }
 
+  public BufferedImage[] initPlayerSpriteRun()
+  {
+    try
+    {
+      player = loadPlayerSprite("resources/pWalk.png");
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
+
+    BufferedImage walking[] = {Sprite.getSprite("pWalk", 1, 2),
+        Sprite.getSprite("pWalk", 1, 3),
+        Sprite.getSprite("pWalk", 1, 4),
+        Sprite.getSprite("pWalk", 1, 5),
+        Sprite.getSprite("pWalk", 1, 6),
+        Sprite.getSprite("pWalk", 1, 7)};
+    return walking;
   }
 }

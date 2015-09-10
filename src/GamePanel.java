@@ -13,14 +13,14 @@ import java.net.URISyntaxException;
  */
 public class GamePanel extends JPanel
 {
+  final int FRAMES_PER_SECOND = 60;
+  final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+  BufferedImageLoader loader = new BufferedImageLoader();
+  Timer frame_timer;
   private GameMap map;
-  private BufferedImage[] walking = {Sprite.getSprite("player", 2, 5), Sprite.getSprite("player", 2, 6), Sprite.getSprite("player", 3, 3)}; // Gets the upper left images of my sprite sheet
+  private BufferedImage[] walking = loader.initPlayerSpriteWalk();
   private Animation walk = new Animation(walking, 10);
   public Animation animation = walk;
-
-  final int FRAMES_PER_SECOND = 25;
-  final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
-  Timer frame_timer;
 
   public GamePanel()
   {
@@ -64,13 +64,13 @@ public class GamePanel extends JPanel
   }
 
 
-  public void paintComponent(Graphics2D g)
+  public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
 
 //    System.out.println("Got here!!!");
     g.setColor(Color.BLACK);
-    g.fillRect(10,10, 50, 50);
+    g.fillRect(10, 10, 50, 50);
     map.paint(g, 10);
 
     g.drawImage(animation.getSprite(), 200, 200, null);

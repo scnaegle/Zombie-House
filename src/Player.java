@@ -1,5 +1,3 @@
-import java.awt.*;
-
 /**
  *
  */
@@ -25,9 +23,15 @@ public class Player extends GameObject implements Humanoid
   Player(int playerSight, int playerHearing, double playerSpeed,
          double playerStamina)
   {
-    this.sight = playerSight;       // perhaps we can make upgrades that can be picked up for
-    this.hearing = playerHearing;   // these things later, like flash light, and hearing aids
-    this.speed = playerSpeed;       // I imaginge it would be similar to the traps we have to
+    this.sight =
+        playerSight;       // perhaps we can make upgrades that can be picked
+    // up for
+    this.hearing =
+        playerHearing;   // these things later, like flash light, and hearing
+    // aids
+    this.speed =
+        playerSpeed;       // I imaginge it would be similar to the traps we
+    // have to
     this.stamina = playerStamina;   // make
   }
 
