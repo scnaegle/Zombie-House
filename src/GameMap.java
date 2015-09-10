@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.xml.bind.SchemaOutputResolver;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +9,8 @@ import java.util.Scanner;
 
 public class GameMap
 {
-  private final int X_SIZE = 100;
-  private final int Y_SIZE = 100;
+  private static final int X_SIZE = 100;
+  private static final int Y_SIZE = 100;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
@@ -61,13 +62,14 @@ public class GameMap
   }
 
 
-  private void generateMap()
+  private static void generateMap()
   {
+    int[][] intGrid = new int[X_SIZE][Y_SIZE];
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-
+        intGrid[x][y] = 0;
       }
     }
   }
@@ -148,6 +150,7 @@ public class GameMap
 
   public static void main(String[] args)
   {
+    /**
     File map_file = null;
     try
     {
@@ -166,5 +169,8 @@ public class GameMap
     {
       System.out.println(tile);
     }
+     */
+
+    generateMap();
   }
 }
