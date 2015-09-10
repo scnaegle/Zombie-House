@@ -3,10 +3,19 @@
  */
 public abstract class Zombie extends GameObject implements Humanoid
 {
+  private final int FPS = 60;
+  private final double MOVE_MULTIPLIER = 1.0 / FPS;
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
   protected Heading heading = Heading.NONE;
   protected double speed = .5;
+  protected Sprite sprite = new Sprite("ZombieSheet");
+  Animation moveDown;
+  Animation moveLeft;
+  Animation moveRight;
+  Animation moveUp;
+  Animation animation = moveLeft;
+
 
   public Zombie(Location location) {
     this.location = location;
@@ -20,8 +29,13 @@ public abstract class Zombie extends GameObject implements Humanoid
       // straight lines will be eaier than diagonol, but I could ver possibly be wrong
       // maybe having them traverse for a certain amount of time in a gerneral
 
-  public void move() {
 
+  public void move() {
+    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+
+
+    animation.update();
   }
 
   @Override
@@ -34,6 +48,11 @@ public abstract class Zombie extends GameObject implements Humanoid
   public Heading getHeading()
   {
     return heading;
+  }
+
+  public void setHeading(Heading heading)
+  {
+    this.heading = heading;
   }
 
   @Override

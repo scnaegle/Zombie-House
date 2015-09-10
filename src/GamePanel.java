@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -18,6 +17,8 @@ public class GamePanel extends JPanel
   Timer frame_timer;
   private GameMap map;
   private Player player = new Player(new Location(5, 5, 100, 100));
+  private Zombie randomZombie =
+      new RandomWalkZombie(new Location(10, 10, 200, 200));
 
   public GamePanel()
   {
@@ -38,6 +39,8 @@ public class GamePanel extends JPanel
     map = new GameMap(map_file);
 
     player.setHeading(Heading.EAST);
+    randomZombie.setHeading(Heading.EAST);
+
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
@@ -45,6 +48,7 @@ public class GamePanel extends JPanel
       public void actionPerformed(ActionEvent e)
       {
         player.move();
+        randomZombie.move();
         if (player.location.x > GUI.SCENE_WIDTH) {
           player.setLocation(new Location(player.location.row, player.location.col, 0, player.location.y));
         }
@@ -62,6 +66,9 @@ public class GamePanel extends JPanel
 
     map.paint(g, 80);
 
-    g.drawImage(player.animation.getSprite(), player.location.x, player.location.y, null);
+    g.drawImage(player.animation.getSprite(), player.location.x,
+        player.location.y, null);
+    g.drawImage(randomZombie.animation.getSprite(), randomZombie.location.x,
+        randomZombie.location.y, null);
   }
 }
