@@ -15,14 +15,9 @@ public class GamePanel extends JPanel
 {
   final int FRAMES_PER_SECOND = 60;
   final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
-  BufferedImageLoader loader = new BufferedImageLoader();
   Timer frame_timer;
   private GameMap map;
-  private BufferedImage[] walking = loader.initPlayerSpriteWalk();
-  private BufferedImage[] running = loader.initPlayerSpriteRun();
-  private Animation walk = new Animation(walking, 5);
-  private Animation run = new Animation(running, 1);
-  public Animation animation = run;
+  private Player player = new Player(new Location(5, 5, 100, 100));
 
   public GamePanel()
   {
@@ -42,28 +37,21 @@ public class GamePanel extends JPanel
 
     map = new GameMap(map_file);
 
-    repaint();
+    player.setHeading(Heading.EAST);
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        walk.update();
-        run.update();
+        player.move();
+        if (player.location.x > GUI.SCENE_WIDTH) {
+          player.setLocation(new Location(player.location.row, player.location.col, 0, player.location.y));
+        }
         repaint();
       }
     });
     frame_timer.start();
-
-    walk.start();
-    run.start();
-    // These are animation states
-////    private Animation walkRight = new Animation(walkingRight, 10);
-//    private Animation standing = new Animation(standing, 10);
-
-    // This is the actual animation
-//    private Animation animation = standing;
 
   }
 
@@ -72,12 +60,8 @@ public class GamePanel extends JPanel
   {
     super.paintComponent(g);
 
-//    System.out.println("Got here!!!");
-    g.setColor(Color.BLACK);
-    g.fillRect(10, 10, 50, 50);
-    map.paint(g, 10);
+    map.paint(g, 80);
 
-    g.drawImage(walk.getSprite(), 200, 200, null);
-    g.drawImage(run.getSprite(), 200, 500, null);
+    g.drawImage(player.animation.getSprite(), player.location.x, player.location.y, null);
   }
 }

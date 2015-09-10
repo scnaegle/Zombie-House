@@ -1,16 +1,28 @@
+import java.awt.image.BufferedImage;
+
 /**
  *
  */
 public class Player extends GameObject implements Humanoid
 {
-  int sight;
-  int hearing;
-  double speed;
-  double stamina;
-  double regen;
+  private final int MOVE_MULTIPLIER = 5;
+  int sight = 5;
+  int hearing = 10;
+  double speed = 1.0;
+  double stamina = 5;
+  double regen = .2;
   Heading heading;
-  Location location;
+  BufferedImageLoader loader = new BufferedImageLoader();
+  private BufferedImage[] walking = loader.initPlayerSpriteWalk();
+  //  private BufferedImage[] running = loader.initPlayerSpriteRun();
+  private Animation walk = new Animation(walking, 5);
+  Animation animation = walk;
 
+
+  public Player(Location location) {
+    this.location = location;
+    animation.start();
+  }
 
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
@@ -45,15 +57,40 @@ public class Player extends GameObject implements Humanoid
     return speed;
   }
 
+  public void setSpeed(double speed) {
+    this.speed = speed;
+  }
+
   @Override
   public Heading getHeading()
   {
     return heading;
   }
 
+//  public void setHeading(String heading_str) {
+//    switch(heading_str) {
+//      case "up":
+//        this.heading = Heading.NORTH;
+//      case "down":
+//        this.heading = Heading.
+//    }
+//  }
+
+  public void setHeading(Heading heading) {
+    this.heading = heading;
+  }
+
   @Override
   public void setLocation(Location new_location) {
     this.location = new_location;
+  }
+
+  public void move() {
+    System.out.println("Moving player");
+    System.out.println("Location: " + location.toString());
+    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    animation.update();
   }
 
 }
