@@ -86,8 +86,6 @@ public class Player extends GameObject implements Humanoid
   }
 
   public void move() {
-    System.out.println("Moving player");
-    System.out.println("Location: " + location.toString());
     location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
     location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
     animation.update();
