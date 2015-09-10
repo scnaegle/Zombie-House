@@ -19,6 +19,8 @@ public class GamePanel extends JPanel
   private Player player = new Player(new Location(5, 5, 100, 100));
   private Zombie randomZombie =
       new RandomWalkZombie(new Location(10, 10, 200, 200));
+  private Zombie lineZombie =
+      new LineWalkZombie(new Location(20, 20, 300, 300));
 
   public GamePanel()
   {
@@ -40,6 +42,7 @@ public class GamePanel extends JPanel
 
     player.setHeading(Heading.EAST);
     randomZombie.setHeading(Heading.EAST);
+    lineZombie.setHeading(Heading.EAST);
 
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
@@ -49,13 +52,14 @@ public class GamePanel extends JPanel
       {
         player.move();
         randomZombie.move();
+        lineZombie.move();
         if (player.location.x > GUI.SCENE_WIDTH) {
           player.setLocation(new Location(player.location.row, player.location.col, 0, player.location.y));
         }
         repaint();
       }
     });
-    frame_timer.start();
+    //frame_timer.start();
 
   }
 
@@ -70,5 +74,7 @@ public class GamePanel extends JPanel
         player.location.y, null);
     g.drawImage(randomZombie.animation.getSprite(), randomZombie.location.x,
         randomZombie.location.y, null);
+    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.x,
+        lineZombie.location.y, null);
   }
 }

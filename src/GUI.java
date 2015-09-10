@@ -1,8 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
 
 
 public class GUI
@@ -12,7 +13,7 @@ public class GUI
   static int SCENE_WIDTH = 1920;
   static int SCENE_HEIGHT = 1080;
   static int tile_size = 80;
-  static JPanel scorePanel; //Will probably need to make another class,
+  static JPanel viewPanel; //Will probably need to make another class,
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -20,8 +21,15 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
-  BufferedImage player = null;
+  JButton startPause;
+  //Timer timer;
+  boolean pause = true;
 
+  //  public void startTime()
+//  {
+//    timer = new Timer(10,null);
+//    timer.start();
+//  }
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
@@ -31,25 +39,30 @@ public class GUI
 //    System.out.println("scene_width: " + SCENE_WIDTH);
 //    System.out.println("scene_height: " + SCENE_HEIGHT);
 //    window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
-    window.addComponentListener(new ComponentListener() {
+    window.addComponentListener(new ComponentListener()
+    {
       @Override
-      public void componentResized(ComponentEvent e) {
+      public void componentResized(ComponentEvent e)
+      {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
       }
 
       @Override
-      public void componentMoved(ComponentEvent e) {
+      public void componentMoved(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentShown(ComponentEvent e) {
+      public void componentShown(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentHidden(ComponentEvent e) {
+      public void componentHidden(ComponentEvent e)
+      {
 
       }
     });
@@ -62,13 +75,36 @@ public class GUI
     playerSpeed = new JLabel("Speed: ");
     playerStamina = new JLabel("Stamina: ");
 
-    scorePanel = new JPanel();
-    scorePanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
-    scorePanel.add(level);
-    scorePanel.add(playerSight);
-    scorePanel.add(playerHearing);
-    scorePanel.add(playerSpeed);
-    scorePanel.add(playerStamina);
+    startPause = new JButton("Start");
+    startPause.setPreferredSize(new Dimension(80, 23));
+    startPause.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        if (pause)
+        {
+          startPause.setText("Pause");
+          startGame();
+
+        }
+        else
+        {
+          startPause.setText("Start");
+          pauseGame();
+        }
+
+      }
+    });
+
+    viewPanel = new JPanel();
+    viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
+    viewPanel.add(startPause);
+    viewPanel.add(level);
+    viewPanel.add(playerSight);
+    viewPanel.add(playerHearing);
+    viewPanel.add(playerSpeed);
+    viewPanel.add(playerStamina);
 
 
 
@@ -77,6 +113,18 @@ public class GUI
     window.setVisible(true);
     window.setResizable(true);
 
+  }
+
+  private void startGame()
+  {
+    pause = false;
+    gamePanel.frame_timer.start();
+  }
+
+  private void pauseGame()
+  {
+    pause = true;
+    gamePanel.frame_timer.stop();
   }
 
 
