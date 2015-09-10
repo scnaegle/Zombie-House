@@ -6,32 +6,42 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GameMap {
-
+public class GameMap
+{
+  private final int X_SIZE = 100;
+  private final int Y_SIZE = 100;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<Tile>();
 
 
-  public GameMap(File file) {
+  public GameMap(File file)
+  {
     createFromFile(file);
   }
 
-  public ArrayList<Tile> getWalls() {
+  public ArrayList<Tile> getWalls()
+  {
     return walls;
   }
 
   /**
-   * This paints the grid between the the given start (row, col) and end (row, col)
+   * This paints the grid between the the given start (row, col) and end
+   * (row, col)
+   *
    * @param g
    * @param start
    * @param end
    * @param tile_size
    */
-  public void paintSection(Graphics g, Location start, Location end, int tile_size) {
-    for(int row = start.row; row < end.row; row++) {
-      for(int col = start.col; col < end.col; col++) {
+  public void paintSection(Graphics g, Location start, Location end,
+                           int tile_size)
+  {
+    for (int row = start.row; row < end.row; row++)
+    {
+      for (int col = start.col; col < end.col; col++)
+      {
         g.setColor(grid[row][col].tile_type.color);
         g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
       }
@@ -40,36 +50,59 @@ public class GameMap {
 
   /**
    * This paints the entire grid from start to finish
+   *
    * @param g
    * @param tile_size
    */
-  public void paint(Graphics g, int tile_size) {
-    paintSection(g, new Location(0, 0), new Location(num_rows, num_cols), tile_size);
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0), new Location(num_rows, num_cols),
+        tile_size);
   }
+
+
+  private void generateMap()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+
+      }
+    }
+  }
+
 
   /**
    * Creates map from a file
+   *
    * @param file
    */
-  private void createFromFile(File file) {
+  private void createFromFile(File file)
+  {
     Scanner sc;
     ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
     int row = 0;
     int col = 0;
 
-    try {
+    try
+    {
       sc = new Scanner(file);
-      while (sc.hasNextLine()) {
+      while (sc.hasNextLine())
+      {
         ArrayList<Tile> row_array = new ArrayList<Tile>();
         String row_string = sc.nextLine();
-        if (!row_string.startsWith("!")) {
+        if (!row_string.startsWith("!"))
+        {
           char[] row_types = row_string.toCharArray();
           col = 0;
 
-          for(char type : row_types) {
+          for (char type : row_types)
+          {
             Tile new_tile = new Tile(row, col, type);
             row_array.add(new_tile);
-            if (new_tile.tile_type == TileType.WALL) {
+            if (new_tile.tile_type == TileType.WALL)
+            {
               walls.add(new_tile);
             }
             col++;
@@ -82,24 +115,30 @@ public class GameMap {
       this.num_rows = grid.size();
       this.num_cols = grid.get(0).size();
       this.grid = new Tile[num_rows][num_cols];
-      for(int i = 0; i < grid.size(); i++) {
+      for (int i = 0; i < grid.size(); i++)
+      {
         Tile[] row_array = new Tile[grid.get(i).size()];
         row_array = grid.get(i).toArray(row_array);
         this.grid[i] = row_array;
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e)
+    {
       System.err.println("Can't find file: " + file.getName());
       System.exit(1);
     }
   }
 
   @Override
-  public String toString() {
+  public String toString()
+  {
     String ret = "GameMap{" +
         "num_rows=" + num_rows +
         ", num_cols=" + num_cols + "}\n";
-    for(int row = 0; row < num_rows; row++) {
-      for(int col = 0; col < num_cols; col++) {
+    for (int row = 0; row < num_rows; row++)
+    {
+      for (int col = 0; col < num_cols; col++)
+      {
         ret += grid[row][col].tile_type.grid_char;
       }
       ret += "\n";
@@ -107,18 +146,24 @@ public class GameMap {
     return ret;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args)
+  {
     File map_file = null;
-    try {
-      map_file = new File(GameMap.class.getResource("resources/level1.map").toURI());
-    } catch (URISyntaxException e) {
+    try
+    {
+      map_file =
+          new File(GameMap.class.getResource("resources/level1.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
       e.printStackTrace();
     }
     System.out.println("file: " + map_file);
     GameMap map = new GameMap(map_file);
     System.out.println("map: " + map.toString());
     System.out.println("map walls: ");
-    for(Tile tile : map.getWalls()) {
+    for (Tile tile : map.getWalls())
+    {
       System.out.println(tile);
     }
   }
