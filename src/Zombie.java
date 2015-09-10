@@ -20,6 +20,10 @@ public abstract class Zombie extends GameObject implements Humanoid
       // straight lines will be eaier than diagonol, but I could ver possibly be wrong
       // maybe having them traverse for a certain amount of time in a gerneral
 
+  public void move() {
+
+  }
+
   @Override
   public double getSpeed()
   {
