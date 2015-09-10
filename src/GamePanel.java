@@ -19,8 +19,10 @@ public class GamePanel extends JPanel
   Timer frame_timer;
   private GameMap map;
   private BufferedImage[] walking = loader.initPlayerSpriteWalk();
-  private Animation walk = new Animation(walking, 10);
-  public Animation animation = walk;
+  private BufferedImage[] running = loader.initPlayerSpriteRun();
+  private Animation walk = new Animation(walking, 5);
+  private Animation run = new Animation(running, 1);
+  public Animation animation = run;
 
   public GamePanel()
   {
@@ -47,13 +49,21 @@ public class GamePanel extends JPanel
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        animation.update();
+        walk.update();
+        run.update();
         repaint();
       }
     });
     frame_timer.start();
 
-    animation.start();
+    walk.start();
+    run.start();
+    // These are animation states
+////    private Animation walkRight = new Animation(walkingRight, 10);
+//    private Animation standing = new Animation(standing, 10);
+
+    // This is the actual animation
+//    private Animation animation = standing;
 
   }
 
@@ -67,6 +77,7 @@ public class GamePanel extends JPanel
     g.fillRect(10, 10, 50, 50);
     map.paint(g, 10);
 
-    g.drawImage(animation.getSprite(), 200, 200, null);
+    g.drawImage(walk.getSprite(), 200, 200, null);
+    g.drawImage(run.getSprite(), 200, 500, null);
   }
 }
