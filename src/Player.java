@@ -15,24 +15,20 @@ public class Player extends GameObject implements Humanoid
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
    *
-   * @param playerSight
-   * @param playerHearing
-   * @param playerSpeed
-   * @param playerStamina
+   * @param player_sight
+   * @param player_hearing
+   * @param player_speed
+   * @param player_stamina
    */
-  Player(int playerSight, int playerHearing, double playerSpeed,
-         double playerStamina)
+  public Player(int player_sight, int player_hearing, double player_speed, double player_stamina)
   {
-    this.sight =
-        playerSight;       // perhaps we can make upgrades that can be picked
+    this.sight = player_sight;       // perhaps we can make upgrades that can be picked
     // up for
-    this.hearing =
-        playerHearing;   // these things later, like flash light, and hearing
+    this.hearing = player_hearing;   // these things later, like flash light, and hearing
     // aids
-    this.speed =
-        playerSpeed;       // I imaginge it would be similar to the traps we
+    this.speed = player_speed;       // I imaginge it would be similar to the traps we
     // have to
-    this.stamina = playerStamina;   // make
+    this.stamina = player_stamina;   // make
   }
 
   /*When not running, playerRegen  deltaTime is added
