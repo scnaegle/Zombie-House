@@ -24,43 +24,45 @@ public class BufferedImageLoader
 
   public BufferedImage[] initPlayerSpriteWalk()
   {
-    try
-    {
-      player = loadPlayerSprite("resources/pWalk.png");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
 
+    Sprite sprite = new Sprite("pWalk");
 
-    BufferedImage walking[] = {Sprite.getSprite("pWalk", 1, 2),
-        Sprite.getSprite("pWalk", 1, 3),
-        Sprite.getSprite("pWalk", 1, 4),
-        Sprite.getSprite("pWalk", 1, 5),
-        Sprite.getSprite("pWalk", 1, 6),
-        Sprite.getSprite("pWalk", 1, 7)};
+    BufferedImage walking[] = {sprite.getSprite(1, 2),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 6),
+        sprite.getSprite(1, 7)};
     return walking;
   }
 
   public BufferedImage[] initPlayerSpriteRun()
   {
-    try
-    {
-      player = loadPlayerSprite("resources/pWalk.png");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
 
+    Sprite sprite = new Sprite("pRun");
+    BufferedImage running[] = {sprite.getSprite(1, 1),
+        sprite.getSprite(1, 2),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 6),
+        sprite.getSprite(1, 7),
+        sprite.getSprite(1, 8),
+        sprite.getSprite(1, 9),
+        sprite.getSprite(1, 10),
+        sprite.getSprite(2, 1),
+        sprite.getSprite(2, 2),
+        sprite.getSprite(2, 3),
+        sprite.getSprite(2, 4),
+        sprite.getSprite(2, 5),
+        sprite.getSprite(2, 6),
+        sprite.getSprite(2, 7),
+        sprite.getSprite(2, 8),
+        sprite.getSprite(2, 9),
+        sprite.getSprite(2, 10),
+        sprite.getSprite(3, 1),
+        sprite.getSprite(3, 2)};
 
-    BufferedImage walking[] = {Sprite.getSprite("pWalk", 1, 2),
-        Sprite.getSprite("pWalk", 1, 3),
-        Sprite.getSprite("pWalk", 1, 4),
-        Sprite.getSprite("pWalk", 1, 5),
-        Sprite.getSprite("pWalk", 1, 6),
-        Sprite.getSprite("pWalk", 1, 7)};
-    return walking;
+    return running;
   }
 }
