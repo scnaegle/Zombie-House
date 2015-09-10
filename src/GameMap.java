@@ -265,7 +265,10 @@ public class GameMap
      * make exit and start room
      * JUST KEEP SWIMMING
      */
-    buildObsticales();
+    for (int i = 0; i <= numberOfObsicles; i++)
+    {
+      buildObsticales();
+    }
 
 
     // buildRoomExact();
@@ -305,8 +308,8 @@ public class GameMap
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        intGrid[xCord][yCord]=7;
-        validSpot=true;
+        intGrid[xCord][yCord] = 7;
+        validSpot = true;
       }
       else
       {
