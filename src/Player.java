@@ -98,7 +98,7 @@ public class Player extends GameObject implements Humanoid
 //      animation = run;
       stamina -= STAMINA_STEP;
     } else {
-      stamina += STAMINA_STEP;
+      stamina += STAMINA_STEP; // call regen()
       Math.min(stamina, max_stamina);
       animation = walk;
       speed = 1;
