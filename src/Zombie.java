@@ -4,7 +4,7 @@
 public abstract class Zombie extends GameObject implements Humanoid
 {
   private final int FPS = 60;
-  private final double MOVE_MULTIPLIER = 1.0 / FPS;
+  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
   protected Heading heading = Heading.NONE;
@@ -31,10 +31,25 @@ public abstract class Zombie extends GameObject implements Humanoid
 
 
   public void move() {
-    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    double increment_x = (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+    double increment_y = (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    location.x += increment_x;
+    location.y += increment_y;
 
-
+    if(increment_x > increment_y) {
+      if (increment_x > 0) {
+        animation = moveRight;
+      } else {
+        animation = moveLeft;
+      }
+    } else {
+      if (increment_y > 0) {
+        animation = moveUp;
+      } else {
+        animation = moveDown;
+      }
+    }
+    animation.start();
     animation.update();
   }
 
