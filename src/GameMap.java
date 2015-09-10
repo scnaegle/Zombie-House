@@ -19,6 +19,7 @@ public class GameMap
   private static final int MIN_ROOM_SIZE = 5;
   private static int roomSize;
   private static int numberOfRooms = 15;
+  private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
   // starting a new level and such
   private static int buildRoomX;
@@ -194,9 +195,12 @@ public class GameMap
 
 
   /**
-   * If two rooms are connected it will break through the walls of the room and form a path,
-   * not only does this connect the rooms, but also builds the obsticle type things
-   * pretty stoked that it worked pleasently. I am sure I will add some obsticles
+   * If two rooms are connected it will break through the walls of the room
+   * and form a path,
+   * not only does this connect the rooms, but also builds the obsticle type
+   * things
+   * pretty stoked that it worked pleasently. I am sure I will add some
+   * obsticles
    */
   private static void breakTouchingWalls()
   {
@@ -210,33 +214,30 @@ public class GameMap
               intGrid[x][y + 1] == 9)
           {
             intGrid[x][y] = 1;
-            intGrid[x][y+1]=1;
+            intGrid[x][y + 1] = 1;
           }
           else if (intGrid[x + 1][y] == 9 && intGrid[x - 1][y] == 9 &&
               intGrid[x][y - 1] == 9)
           {
             intGrid[x][y] = 1;
-            intGrid[x][y-1]=1;
+            intGrid[x][y - 1] = 1;
           }
-          else if (intGrid[x][y+1] == 9 && intGrid[x][y-1] == 9 &&
-              intGrid[x+1][y] == 9)
+          else if (intGrid[x][y + 1] == 9 && intGrid[x][y - 1] == 9 &&
+              intGrid[x + 1][y] == 9)
           {
             intGrid[x][y] = 1;
-            intGrid[x+1][y]=1;
+            intGrid[x + 1][y] = 1;
           }
-          else if (intGrid[x][y+1] == 9 && intGrid[x][y-1] == 9 &&
-              intGrid[x-1][y] == 9)
+          else if (intGrid[x][y + 1] == 9 && intGrid[x][y - 1] == 9 &&
+              intGrid[x - 1][y] == 9)
           {
             intGrid[x][y] = 1;
-            intGrid[x-1][y]=1;
+            intGrid[x - 1][y] = 1;
           }
         }
       }
     }
   }
-
-
-
 
 
   private static void generateMap()
@@ -259,11 +260,15 @@ public class GameMap
 
     /**
      * START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * label every room you creat with a number have matching numbers make hallways between
+     * label every room you creat with a number have matching numbers make
+     * hallways between
      * make exit and start room
      * JUST KEEP SWIMMING
      */
-   // buildObsticales();
+    for (int i = 0; i <= numberOfObsicles; i++)
+    {
+      buildObsticales();
+    }
 
 
     // buildRoomExact();
@@ -275,6 +280,42 @@ public class GameMap
         System.out.print(intGrid[x][y]);
       }
       System.out.println("");
+    }
+  }
+
+  private static boolean cycleSpotsForObsticles(int s, int t)
+  {
+    boolean valid = true;
+    for (int x = s - 1; x <= s + 1; x++)
+    {
+      for (int y = t - 1; y <= t + 1; y++)
+      {
+        if (intGrid[x][y] != 1)
+        {
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
+  private static void buildObsticales()
+  {
+    boolean validSpot = false;
+    int xCord = random.nextInt(X_SIZE - 2) + 1;
+    int yCord = random.nextInt(Y_SIZE - 2) + 1;
+    while (!validSpot)
+    {
+      if (cycleSpotsForObsticles(xCord, yCord))
+      {
+        intGrid[xCord][yCord] = 7;
+        validSpot = true;
+      }
+      else
+      {
+        xCord = random.nextInt(X_SIZE - 2) + 1;
+        yCord = random.nextInt(Y_SIZE - 2) + 1;
+      }
     }
   }
 

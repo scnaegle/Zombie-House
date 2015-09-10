@@ -11,6 +11,7 @@ public class GUI
   final static int PIXELS = 80;
   static int SCENE_WIDTH;
   static int SCENE_HEIGHT;
+  static int tile_size = 80;
   static JPanel scorePanel; //Will probably need to make another class,
   JFrame window;
   GamePanel gamePanel;

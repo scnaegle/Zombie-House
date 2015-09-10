@@ -64,7 +64,7 @@ public class GamePanel extends JPanel
   {
     super.paintComponent(g);
 
-    map.paint(g, 80);
+    map.paint(g, GUI.tile_size);
 
     g.drawImage(player.animation.getSprite(), player.location.x,
         player.location.y, null);
