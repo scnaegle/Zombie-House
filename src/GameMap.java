@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class GameMap
 {
   private static final int X_SIZE = 100;
   private static final int Y_SIZE = 100;
+
+  private static int[][] intGrid = new int[X_SIZE][Y_SIZE];
+
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
@@ -62,15 +66,60 @@ public class GameMap
   }
 
 
+  private static void buildRoom(int xStart, int yStart, int xEnd, int yEnd)
+  {
+    for (int x = xStart; x < xEnd; x++)
+    {
+      for (int y = yStart; y < yEnd; y++)
+      {
+        intGrid[x][y] = 1;
+      }
+    }
+
+  }
+
   private static void generateMap()
   {
-    int[][] intGrid = new int[X_SIZE][Y_SIZE];
+    int buildRoomX;
+    int buildRoomY;
+
+     
+    Random random = new Random();
+
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
         intGrid[x][y] = 0;
       }
+    }
+
+
+
+
+    buildRoomX = random.nextInt(X_SIZE);
+    buildRoomY = random.nextInt(Y_SIZE);
+    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
+
+    buildRoomX = random.nextInt(X_SIZE);
+    buildRoomY = random.nextInt(Y_SIZE);
+    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
+    buildRoomX = random.nextInt(X_SIZE);
+    buildRoomY = random.nextInt(Y_SIZE);
+    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
+    buildRoomX = random.nextInt(X_SIZE);
+    buildRoomY = random.nextInt(Y_SIZE);
+    buildRoom(buildRoomX,buildRoomY,buildRoomX+5,buildRoomY+5);
+
+
+
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        System.out.print(intGrid[x][y]);
+      }
+      System.out.println("");
     }
   }
 
@@ -151,24 +200,24 @@ public class GameMap
   public static void main(String[] args)
   {
     /**
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(GameMap.class.getResource("resources/level1.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
-    System.out.println("file: " + map_file);
-    GameMap map = new GameMap(map_file);
-    System.out.println("map: " + map.toString());
-    System.out.println("map walls: ");
-    for (Tile tile : map.getWalls())
-    {
-      System.out.println(tile);
-    }
+     File map_file = null;
+     try
+     {
+     map_file =
+     new File(GameMap.class.getResource("resources/level1.map").toURI());
+     }
+     catch (URISyntaxException e)
+     {
+     e.printStackTrace();
+     }
+     System.out.println("file: " + map_file);
+     GameMap map = new GameMap(map_file);
+     System.out.println("map: " + map.toString());
+     System.out.println("map walls: ");
+     for (Tile tile : map.getWalls())
+     {
+     System.out.println(tile);
+     }
      */
 
     generateMap();
