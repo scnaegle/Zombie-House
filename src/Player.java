@@ -5,17 +5,22 @@ import java.awt.image.BufferedImage;
  */
 public class Player extends GameObject implements Humanoid
 {
-  private final int MOVE_MULTIPLIER = 5;
+  private final int FPS = 60;
+  private final double MOVE_MULTIPLIER = 1.0 / FPS;
+  private final double STAMINA_PER_SEC = 1.0;
+  private final double STAMINA_STEP = STAMINA_PER_SEC / FPS;
   int sight = 5;
   int hearing = 10;
   double speed = 1.0;
+  double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
   Heading heading;
   BufferedImageLoader loader = new BufferedImageLoader();
   private BufferedImage[] walking = loader.initPlayerSpriteWalk();
-  //  private BufferedImage[] running = loader.initPlayerSpriteRun();
+//  private BufferedImage[] running = loader.initPlayerSpriteRun();
   private Animation walk = new Animation(walking, 5);
+//  private Animation run = new Animation(running, 5);
   Animation animation = walk;
 
 
@@ -40,6 +45,7 @@ public class Player extends GameObject implements Humanoid
     // aids
     this.speed = player_speed;       // I imaginge it would be similar to the traps we
     // have to
+    this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
   }
 
@@ -88,6 +94,15 @@ public class Player extends GameObject implements Humanoid
   public void move() {
     location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
     location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    if (speed > 1 && stamina > 0) {
+//      animation = run;
+      stamina -= STAMINA_STEP;
+    } else {
+      stamina += STAMINA_STEP;
+      Math.min(stamina, max_stamina);
+      animation = walk;
+      speed = 1;
+    }
     animation.update();
   }
 
