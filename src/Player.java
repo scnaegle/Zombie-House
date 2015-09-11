@@ -149,12 +149,14 @@ public class Player extends GameObject implements Humanoid
   public void update() {
     move();
     if (heading == Heading.NONE) {
+      regenerate();
       current_speed = 0;
       animation = stand;
-    } else if (current_speed > 1 && stamina > 0) {
+    } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
       stamina -= STAMINA_STEP;
     } else {
+      regenerate();
       animation = walk;
       current_speed = 1;
     }
