@@ -80,7 +80,7 @@ public class GamePanel extends JPanel implements KeyListener
         }
       }
     });
-    frame_timer.start();
+//    frame_timer.start();
 
   }
 
