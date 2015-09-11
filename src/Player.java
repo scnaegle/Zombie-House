@@ -102,6 +102,7 @@ public class Player extends GameObject implements Humanoid
   {
     stamina += STAMINA_STEP;
     Math.min(stamina, max_stamina);
+    //UHHHH Is stanima becoming too large, should it be reset to 5?
   }
 
   @Override
