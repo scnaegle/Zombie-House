@@ -6,7 +6,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 
-public class GUI //implements KeyListener
+public class GUI
 {
 
   final static int PIXELS = 80;
@@ -25,11 +25,7 @@ public class GUI //implements KeyListener
   JButton startPause;
   boolean pause = true;
 
-  //  public void startTime()
-//  {
-//    timer = new Timer(10,null);
-//    timer.start();
-//  }
+
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");

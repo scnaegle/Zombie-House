@@ -118,14 +118,6 @@ public class Player extends GameObject implements Humanoid
     return heading;
   }
 
-//  public void setHeading(String heading_str) {
-//    switch(heading_str) {
-//      case "up":
-//        this.heading = Heading.NORTH;
-//      case "down":
-//        this.heading = Heading.
-//    }
-//  }
 
   public void setHeading(Heading heading) {
     this.heading = heading;
@@ -136,6 +128,10 @@ public class Player extends GameObject implements Humanoid
     this.location = new_location;
   }
 
+  /**
+   * Tells the sprite how to move based on the heading we give it.
+   * Heading is controlled by keyboard arrows.
+   */
   public void move() {
     location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
     location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;

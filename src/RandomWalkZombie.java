@@ -1,7 +1,7 @@
 import java.awt.image.BufferedImage;
 
 /**
- * Created by sean on 9/8/15.
+ * Sets up the random walk zombies and their animation sprites
  */
 public class RandomWalkZombie extends Zombie
 {
@@ -22,35 +22,35 @@ public class RandomWalkZombie extends Zombie
     animation.start();
   }
 
-  public BufferedImage[] initDown()
+  private BufferedImage[] initDown()
   {
     BufferedImage down[] = {sprite.getSprite(1, 7),
-        sprite.getSprite(1, 8),
-        sprite.getSprite(1, 9),};
+                            sprite.getSprite(1, 8),
+                            sprite.getSprite(1, 9),};
     return down;
   }
 
-  public BufferedImage[] initLeft()
+  private BufferedImage[] initLeft()
   {
     BufferedImage left[] = {sprite.getSprite(2, 7),
-        sprite.getSprite(2, 8),
-        sprite.getSprite(2, 9),};
+                            sprite.getSprite(2, 8),
+                            sprite.getSprite(2, 9),};
     return left;
   }
 
-  public BufferedImage[] initRight()
+  private BufferedImage[] initRight()
   {
     BufferedImage right[] = {sprite.getSprite(3, 7),
-        sprite.getSprite(3, 8),
-        sprite.getSprite(3, 9),};
+                             sprite.getSprite(3, 8),
+                             sprite.getSprite(3, 9),};
     return right;
   }
 
-  public BufferedImage[] initUp()
+  private BufferedImage[] initUp()
   {
     BufferedImage up[] = {sprite.getSprite(4, 7),
-        sprite.getSprite(4, 8),
-        sprite.getSprite(4, 9),};
+                          sprite.getSprite(4, 8),
+                          sprite.getSprite(4, 9),};
     return up;
   }
 }

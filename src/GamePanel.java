@@ -16,13 +16,18 @@ public class GamePanel extends JPanel implements KeyListener
 {
   final int FRAMES_PER_SECOND = 60;
   final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
-  public Player player = new Player(new Location(5, 5, 80, 80));
+  public Player player = new Player(new Location(20, 20, 500, 200));
   Timer frame_timer;
   private GameMap map;
   private Zombie randomZombie =
-      new RandomWalkZombie(new Location(10, 10, 200, 200));
+      new RandomWalkZombie(new Location(200, 200));
   private Zombie lineZombie =
-      new LineWalkZombie(new Location(20, 20, 300, 300));
+      new LineWalkZombie(new Location(300, 300));
+  private Zombie masterZ =
+      new MasterZombie(new Location(100, 100));
+
+  private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
+  private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
 
   public GamePanel()
   {
@@ -80,6 +85,8 @@ public class GamePanel extends JPanel implements KeyListener
               new Location(lineZombie.location.row, lineZombie.location.col, 0,
                   lineZombie.location.y));
         }
+
+        explodingTrap.move();
         repaint();
       }
     });
@@ -105,11 +112,15 @@ public class GamePanel extends JPanel implements KeyListener
           player.location.getY(), null);
     }
 
-    g.drawImage(randomZombie.animation.getSprite(),
-        randomZombie.location.getX(),
-        randomZombie.location.getY(), null);
-    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
-        lineZombie.location.getY(), null);
+    g.drawImage(fireTrap.trap, fireTrap.location.getX(),
+        fireTrap.location.getY(), null);
+    g.drawImage(explodingTrap.fireAnimation.getSprite(),
+        fireTrap.location.getX(), fireTrap.location.getY(), null);
+//    g.drawImage(randomZombie.animation.getSprite(),
+//        randomZombie.location.getX(),
+//        randomZombie.location.getY(), null);
+//    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
+//        lineZombie.location.getY(), null);
   }
 
   @Override

@@ -1,5 +1,8 @@
 /**
- * Created by sean on 9/8/15.
+ * Sets up everything that a zombie has, such as smell, speed, decision rate and
+ * how the sprite will move. Each zombie is an object so it extends GameObject
+ * which implements Object2D. Each zombie also needs to track the human, so it
+ * implements Humanoid which lets it get the human's current location.
  */
 public abstract class Zombie extends GameObject implements Humanoid
 {
@@ -64,6 +67,7 @@ public abstract class Zombie extends GameObject implements Humanoid
   {
     return heading;
   }
+
 
   public void setHeading(Heading heading)
   {

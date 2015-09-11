@@ -1,7 +1,7 @@
 import java.awt.image.BufferedImage;
 
 /**
- * Created by sean on 9/8/15.
+ * Sets up line walk zombies and their sprites.
  */
 public class LineWalkZombie extends Zombie
 {
@@ -19,7 +19,7 @@ public class LineWalkZombie extends Zombie
     animation.start();
   }
 
-  public BufferedImage[] initDown()
+  private BufferedImage[] initDown()
   {
     BufferedImage down[] = {sprite.getSprite(5, 7),
         sprite.getSprite(5, 8),
@@ -27,7 +27,7 @@ public class LineWalkZombie extends Zombie
     return down;
   }
 
-  public BufferedImage[] initLeft()
+  private BufferedImage[] initLeft()
   {
     BufferedImage left[] = {sprite.getSprite(6, 7),
         sprite.getSprite(6, 8),
@@ -35,7 +35,7 @@ public class LineWalkZombie extends Zombie
     return left;
   }
 
-  public BufferedImage[] initRight()
+  private BufferedImage[] initRight()
   {
     BufferedImage right[] = {sprite.getSprite(7, 7),
         sprite.getSprite(7, 8),
@@ -43,7 +43,7 @@ public class LineWalkZombie extends Zombie
     return right;
   }
 
-  public BufferedImage[] initUp()
+  private BufferedImage[] initUp()
   {
     BufferedImage up[] = {sprite.getSprite(8, 7),
         sprite.getSprite(8, 8),
