@@ -17,13 +17,14 @@ public class Player extends GameObject implements Humanoid
   double stamina = 5;
   double regen = .2;
   Heading heading;
-  Sprite stand = new Sprite("pStand");
-  BufferedImage still = stand.getSprite(1, 1);
+  private Sprite stand_sprite = new Sprite("pStand");
+  private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
   private BufferedImage[] running = initPlayerSpriteRun();
   private Animation walk = new Animation(walking, 5);
-  Animation animation = walk;
   private Animation run = new Animation(running, 5);
+  private Animation stand = new Animation(still, 5);
+  Animation animation = walk;
 
   public Player(Location location) {
     this.location = location;
@@ -97,9 +98,10 @@ public class Player extends GameObject implements Humanoid
   /*When not running, playerRegen  deltaTime is added
   to playerStamina up to a maximum of the original
   playerStamina attribute for the level.*/
-  private double regenerate()
+  private void regenerate()
   {
-    return regen;
+    stamina += STAMINA_STEP;
+    Math.min(stamina, max_stamina);
   }
 
   @Override
@@ -133,18 +135,24 @@ public class Player extends GameObject implements Humanoid
    * Heading is controlled by keyboard arrows.
    */
   public void move() {
-    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-    if (speed > 1 && stamina > 0) {
+    if (heading != Heading.NONE) {
+      location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+      location.y -= (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    }
+  }
+
+  public void update() {
+    move();
+    if (heading == Heading.NONE) {
+      speed = 0;
+      animation = stand;
+    } else if (speed > 1 && stamina > 0) {
       animation = run;
       stamina -= STAMINA_STEP;
     } else {
-      stamina += STAMINA_STEP; // call regen()
-      Math.min(stamina, max_stamina);
       animation = walk;
       speed = 1;
     }
     animation.update();
   }
-
 }
