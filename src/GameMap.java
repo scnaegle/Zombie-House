@@ -1,9 +1,6 @@
-import javax.imageio.ImageIO;
-import javax.xml.bind.SchemaOutputResolver;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -24,25 +21,25 @@ public class GameMap
   private static final char ZOMBIE_SPAWN = 'Z';
 
 
-  private static final int X_SIZE = 50;
-  private static final int Y_SIZE = 100;
-  private static final int MAX_ROOM_SIZE = 12;
-  private static final int MIN_ROOM_SIZE = 6;
+  private static final int X_SIZE = 40;
+  private static final int Y_SIZE = 40;
+  private static final int MAX_ROOM_SIZE = 5;
+  private static final int MIN_ROOM_SIZE = 4;
   private static final int END_ROOM_SIZE = 4;
 
   private static int roomSize;
   private static int numberOfRandomHalls = 3;
-  private static int numberOfRooms = 15;
+  private static int numberOfRooms = 5;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
   // starting a new level and such
   private static int buildRoomX;
   private static int buildRoomY;
 
-  private static boolean hallEast = false;
-  private static boolean hallWest = false;
-  private static boolean hallNorth = false;
-  private static boolean hallSouth = false;
+  private static boolean hallRight = false;
+  private static boolean hallLeft = false;
+  private static boolean hallUp = false;
+  private static boolean hallDown = false;
 
   private static Random random = new Random();
 
@@ -126,11 +123,11 @@ public class GameMap
             x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
             y == (buildRoomY + roomSize - 1)))
         {
-          intGrid[x][y] = ROOM_WALL;
+          intGrid[y][x] = ROOM_WALL;
         }
         else if (inBoundsWithBorder(x, y))
         {
-          intGrid[x][y] = BASIC_TILE;
+          intGrid[y][x] = BASIC_TILE;
         }
       }
     }
@@ -201,7 +198,7 @@ public class GameMap
                 (buildRoomX + END_ROOM_SIZE - 1),
                 (buildRoomY + END_ROOM_SIZE - 1)))
         {
-          intGrid[x][y] = ROOM_CORNER;
+          intGrid[y][x] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
         else if (inBoundsWithBorder(x, y) &&
@@ -209,11 +206,11 @@ public class GameMap
                 (buildRoomX + END_ROOM_SIZE - 1),
                 (buildRoomY + END_ROOM_SIZE - 1)))
         {
-          intGrid[x][y] = ROOM_WALL;
+          intGrid[y][x] = ROOM_WALL;
         }
         else if (inBoundsWithBorder(x, y))
         {
-          intGrid[x][y] = END_ROOM;
+          intGrid[y][x] = END_ROOM;
         }
       }
     }
@@ -248,7 +245,7 @@ public class GameMap
                 (buildRoomX + roomSize - 1),
                 (buildRoomY + roomSize - 1)))
         {
-          intGrid[x][y] = ROOM_CORNER;
+          intGrid[y][x] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
         else if (inBoundsWithBorder(x, y) &&
@@ -256,11 +253,11 @@ public class GameMap
                 (buildRoomX + roomSize - 1),
                 (buildRoomY + roomSize - 1)))
         {
-          intGrid[x][y] = ROOM_WALL;
+          intGrid[y][x] = ROOM_WALL;
         }
         else if (inBoundsWithBorder(x, y))
         {
-          intGrid[x][y] = START_ROOM;
+          intGrid[y][x] = START_ROOM;
         }
       }
     }
@@ -297,7 +294,7 @@ public class GameMap
                 (buildRoomX + roomSize - 1),
                 (buildRoomY + roomSize - 1)))
         {
-          intGrid[x][y] = ROOM_CORNER;
+          intGrid[y][x] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
         else if (inBoundsWithBorder(x, y) &&
@@ -305,11 +302,11 @@ public class GameMap
                 (buildRoomX + roomSize - 1),
                 (buildRoomY + roomSize - 1)))
         {
-          intGrid[x][y] = ROOM_WALL;
+          intGrid[y][x] = ROOM_WALL;
         }
         else if (inBoundsWithBorder(x, y))
         {
-          intGrid[x][y] = BASIC_TILE;
+          intGrid[y][x] = BASIC_TILE;
         }
       }
     }
@@ -318,7 +315,7 @@ public class GameMap
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
-    return intGrid[x][y] != EMPTY;
+    return intGrid[y][x] != EMPTY;
   }
 
   private static boolean inBoundsWithBorder(int x, int y)
@@ -345,35 +342,35 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        if (intGrid[x][y] == ROOM_WALL)
+        if (intGrid[y][x] == ROOM_WALL)
         {
-          if (intGrid[x + 1][y] == ROOM_WALL &&
-              intGrid[x - 1][y] == ROOM_WALL &&
-              intGrid[x][y + 1] == ROOM_WALL)
+          if (intGrid[y + 1][x] == ROOM_WALL &&
+              intGrid[y - 1][x] == ROOM_WALL &&
+              intGrid[y][x + 1] == ROOM_WALL)
           {
-            intGrid[x][y] = BASIC_TILE;
-            intGrid[x][y + 1] = BASIC_TILE;
+            intGrid[y][x] = BASIC_TILE;
+            intGrid[y][x + 1] = BASIC_TILE;
           }
-          else if (intGrid[x + 1][y] == ROOM_WALL &&
-              intGrid[x - 1][y] == ROOM_WALL &&
-              intGrid[x][y - 1] == ROOM_WALL)
+          else if (intGrid[y + 1][x] == ROOM_WALL &&
+              intGrid[y - 1][x] == ROOM_WALL &&
+              intGrid[y][x - 1] == ROOM_WALL)
           {
-            intGrid[x][y] = BASIC_TILE;
-            intGrid[x][y - 1] = BASIC_TILE;
+            intGrid[y][x] = BASIC_TILE;
+            intGrid[y][x - 1] = BASIC_TILE;
           }
-          else if (intGrid[x][y + 1] == ROOM_WALL &&
-              intGrid[x][y - 1] == ROOM_WALL &&
-              intGrid[x + 1][y] == ROOM_WALL)
+          else if (intGrid[y][x + 1] == ROOM_WALL &&
+              intGrid[y][x - 1] == ROOM_WALL &&
+              intGrid[y + 1][x] == ROOM_WALL)
           {
-            intGrid[x][y] = BASIC_TILE;
-            intGrid[x + 1][y] = BASIC_TILE;
+            intGrid[y][x] = BASIC_TILE;
+            intGrid[y + 1][x] = BASIC_TILE;
           }
-          else if (intGrid[x][y + 1] == ROOM_WALL &&
-              intGrid[x][y - 1] == ROOM_WALL &&
-              intGrid[x - 1][y] == ROOM_WALL)
+          else if (intGrid[y][x + 1] == ROOM_WALL &&
+              intGrid[y][x - 1] == ROOM_WALL &&
+              intGrid[y - 1][x] == ROOM_WALL)
           {
-            intGrid[x][y] = BASIC_TILE;
-            intGrid[x - 1][y] = BASIC_TILE;
+            intGrid[y][x] = BASIC_TILE;
+            intGrid[y - 1][x] = BASIC_TILE;
           }
         }
       }
@@ -388,7 +385,7 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        intGrid[x][y] = EMPTY;
+        intGrid[y][x] = EMPTY;
       }
     }
 
@@ -408,11 +405,12 @@ public class GameMap
       buildObsticales();
     }
 
-    for (int i = 0; i < numberOfRandomHalls; i++)
-    {
-      makeRandomHalls();
-    }
+//    for (int i = 0; i < numberOfRandomHalls; i++)
+//    {
+//      makeRandomHalls();
+//    }
 
+    makeRandomHalls();
     spawnZombie();
 
     // print out that maze
@@ -420,7 +418,7 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        System.out.print(intGrid[x][y]);
+        System.out.print(intGrid[y][x]);
       }
       System.out.println("");
     }
@@ -433,12 +431,12 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        if (intGrid[x][y] == BASIC_TILE)
+        if (intGrid[y][x] == BASIC_TILE)
         {
           randomNumber = random.nextInt(99);
           if (randomNumber == 0)
           {
-            intGrid[x][y]= ZOMBIE_SPAWN;
+            intGrid[y][x] = ZOMBIE_SPAWN;
           }
         }
       }
@@ -463,7 +461,13 @@ public class GameMap
       }
     }
 
-    if (hallEast)
+    System.out.println("x cord: " + hallX + " y cord: " + hallY);
+    System.out.println("hall r: " + hallRight);
+    System.out.println("hall l: " + hallLeft);
+    System.out.println("hall d: " + hallDown);
+    System.out.println("hall u: " + hallUp);
+    System.out.println();
+    if (hallRight)
     {
       for (int a = hallX; a < X_SIZE - 1; a++)
       {
@@ -473,12 +477,13 @@ public class GameMap
         }
         else
         {
-
+          a = X_SIZE;
         }
       }
-      hallEast = false;
+      hallRight = false;
+
     }
-    if (hallWest)
+    if (hallLeft)
     {
       for (int a = hallX; a > 0; a--)
       {
@@ -488,12 +493,12 @@ public class GameMap
         }
         else
         {
-
+          a = 0;
         }
       }
-      hallWest = false;
+      hallLeft = false;
     }
-    if (hallSouth)
+    if (hallDown)
     {
       for (int a = hallY; a < Y_SIZE - 1; a++)
       {
@@ -503,12 +508,12 @@ public class GameMap
         }
         else
         {
-
+          a = Y_SIZE;
         }
       }
-      hallSouth = false;
+      hallDown = false;
     }
-    if (hallNorth)
+    if (hallUp)
     {
       for (int a = hallY; a > 0; a--)
       {
@@ -518,10 +523,10 @@ public class GameMap
         }
         else
         {
-
+          a = 0;
         }
       }
-      hallNorth = false;
+      hallUp = false;
     }
   }
 
@@ -530,10 +535,18 @@ public class GameMap
     boolean isValid = false;
     for (int a = x; a < X_SIZE; a++)
     {
-      if (intGrid[a][y] == ROOM_WALL)
+      if (intGrid[a][y] == EMPTY || intGrid[a][y] == HALL)
       {
-        hallEast = true;
+
+      }
+      else if (intGrid[a][y] == ROOM_WALL)
+      {
+        hallRight = true;
         isValid = true;
+      }
+      else
+      {
+        break;
       }
     }
 
@@ -541,7 +554,7 @@ public class GameMap
     {
       if (intGrid[a][y] == ROOM_WALL)
       {
-        hallWest = true;
+        hallLeft = true;
         isValid = true;
       }
     }
@@ -550,7 +563,7 @@ public class GameMap
     {
       if (intGrid[x][a] == ROOM_WALL)
       {
-        hallSouth = true;
+        hallDown = true;
         isValid = true;
       }
     }
@@ -559,7 +572,7 @@ public class GameMap
     {
       if (intGrid[x][a] == ROOM_WALL)
       {
-        hallNorth = true;
+        hallUp = true;
         isValid = true;
       }
     }
@@ -573,7 +586,7 @@ public class GameMap
     {
       for (int y = t - 1; y <= t + 1; y++)
       {
-        if (intGrid[x][y] != BASIC_TILE)
+        if (intGrid[y][x] != BASIC_TILE)
         {
           valid = false;
         }
@@ -591,7 +604,7 @@ public class GameMap
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        intGrid[xCord][yCord] = OBSTICLE;
+        intGrid[yCord][xCord] = OBSTICLE;
         validSpot = true;
       }
       else
