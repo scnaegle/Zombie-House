@@ -56,6 +56,10 @@ public abstract class Zombie extends GameObject implements Humanoid
     animation.update();
   }
 
+  public void update() {
+    move();
+  }
+
   @Override
   public double getSpeed()
   {

@@ -34,4 +34,10 @@ public interface Humanoid
    * @return
    */
 //  boolean intersects(Humanoid other);
+
+  /**
+   * Update the Humanoid to determine direction, update location, sprites, etc. and everything else needed
+   * to be done each iteration of the game.
+   */
+  void update();
 }
