@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -34,7 +31,7 @@ public class GamePanel extends JPanel implements KeyListener
 
 //    System.out.println("scene_width: " + GUI.SCENE_WIDTH);
 //    System.out.println("scene_height: " + GUI.SCENE_HEIGHT);
-    //setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
+//    setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
     setBackground(Color.white);
 
     File map_file = null;
@@ -57,7 +54,6 @@ public class GamePanel extends JPanel implements KeyListener
     randomZombie.setHeading(Heading.WEST);
     lineZombie.setHeading(Heading.EAST);
 
-    addKeyListener(this);
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
       @Override
@@ -126,7 +122,7 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyTyped(KeyEvent e)
   {
-
+    System.out.println("Key was typed");
   }
 
   @Override
@@ -134,8 +130,10 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    while (GUI.running)
+    System.out.println("Key was pressed!");
+    if (GUI.running)
     {
+      System.out.println("GUI is running!");
       if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
       {
         System.out.println("Pressing up");
@@ -144,16 +142,19 @@ public class GamePanel extends JPanel implements KeyListener
       }
       if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
       {
+        System.out.println("Pressing down");
         player.heading = Heading.SOUTH;
         player.move();
       }
       if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
       {
+        System.out.println("Pressing right");
         player.heading = Heading.EAST;
         player.move();
       }
       if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
       {
+        System.out.println("Pressing left");
         player.heading = Heading.WEST;
         player.move();
       }
@@ -165,6 +166,7 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
+    System.out.println("Key has been released");
     player.heading = Heading.NONE;
     player.animation.stop();
   }

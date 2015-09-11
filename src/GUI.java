@@ -64,8 +64,8 @@ public class GUI
     });
 
     gamePanel = new GamePanel();
-    //gamePanel.addKeyListener(this);
-    //gamePanel.setFocusable(true);
+    gamePanel.addKeyListener(gamePanel);
+    gamePanel.setFocusable(true);
     gamePanel.requestFocus();
     //gamePanel.setFocusTraversalKeysEnabled(false);
 
@@ -86,7 +86,7 @@ public class GUI
         {
           startPause.setText("Pause");
           startGame();
-
+          gamePanel.requestFocusInWindow();
         }
         else
         {
@@ -109,8 +109,8 @@ public class GUI
 
 
 
-    window.add(gamePanel, BorderLayout.CENTER);
-    window.add(viewPanel, BorderLayout.NORTH);
+    window.getContentPane().add(gamePanel, BorderLayout.CENTER);
+    window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.setVisible(true);
     window.setResizable(true);
 
