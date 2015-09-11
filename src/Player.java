@@ -17,6 +17,8 @@ public class Player extends GameObject implements Humanoid
   double stamina = 5;
   double regen = .2;
   Heading heading;
+  Sprite stand = new Sprite("pStand");
+  BufferedImage still = stand.getSprite(1, 1);
   private BufferedImage[] walking = initPlayerSpriteWalk();
   private BufferedImage[] running = initPlayerSpriteRun();
   private Animation walk = new Animation(walking, 5);
@@ -25,7 +27,7 @@ public class Player extends GameObject implements Humanoid
 
   public Player(Location location) {
     this.location = location;
-    animation.start();
+    //animation.start();
   }
 
   /**

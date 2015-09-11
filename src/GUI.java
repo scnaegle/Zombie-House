@@ -6,7 +6,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 
-public class GUI
+public class GUI //implements KeyListener
 {
 
   final static int PIXELS = 80;
@@ -14,6 +14,7 @@ public class GUI
   static int SCENE_HEIGHT = 1080;
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
+  static boolean running = false;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -22,7 +23,6 @@ public class GUI
   JLabel playerSpeed;
   JLabel playerStamina;
   JButton startPause;
-  //Timer timer;
   boolean pause = true;
 
   //  public void startTime()
@@ -68,6 +68,10 @@ public class GUI
     });
 
     gamePanel = new GamePanel();
+    //gamePanel.addKeyListener(this);
+    //gamePanel.setFocusable(true);
+    gamePanel.requestFocus();
+    //gamePanel.setFocusTraversalKeysEnabled(false);
 
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
@@ -97,6 +101,7 @@ public class GUI
       }
     });
 
+
     viewPanel = new JPanel();
     viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
     viewPanel.add(startPause);
@@ -118,14 +123,61 @@ public class GUI
   private void startGame()
   {
     pause = false;
+    running = true;
     gamePanel.frame_timer.start();
   }
 
   private void pauseGame()
   {
     pause = true;
+    running = false;
     gamePanel.frame_timer.stop();
   }
 
 
+//  @Override
+//  public void keyTyped(KeyEvent e)
+//  {
+//
+//  }
+//
+//  @Override
+//  public void keyPressed(KeyEvent e)
+//  {
+//    int code = e.getKeyCode();
+//
+//    while(running)
+//    {
+//      if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
+//      {
+//        System.out.println("Pressing up");
+//        gamePanel.player.heading = Heading.NORTH;
+//        gamePanel.player.move();
+//      }
+//      if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
+//      {
+//        gamePanel.player.heading = Heading.SOUTH;
+//        gamePanel.player.move();
+//      }
+//      if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
+//      {
+//        gamePanel.player.heading = Heading.EAST;
+//        gamePanel.player.move();
+//      }
+//      if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
+//      {
+//        gamePanel.player.heading = Heading.WEST;
+//        gamePanel.player.move();
+//      }
+//      gamePanel.player.animation.start();
+//      gamePanel.repaint();
+//    }
+//  }
+//
+//  @Override
+//  public void keyReleased(KeyEvent e)
+//  {
+//    gamePanel.player.heading = Heading.NONE;
+//    gamePanel.player.animation.stop();
+//  }
 }
