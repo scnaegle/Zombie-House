@@ -47,7 +47,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     map = new GameMap(map_file);
 
-    player.setHeading(Heading.NONE);
+    player.setHeading(new Heading(Heading.NONE));
     player.setSpeed(1.0);
     System.out.println("Player initialized");
 
@@ -76,6 +76,7 @@ public class GamePanel extends JPanel implements KeyListener
           }
 
           explodingTrap.move();
+//          player.animation.start();
           repaint();
         }
       }
@@ -117,41 +118,37 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    System.out.println("GUI is running!");
     if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
     {
-      System.out.println("Pressing up");
-      player.heading = Heading.NORTH;
-//        player.move();
+      player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
     {
-      System.out.println("Pressing down");
-      player.heading = Heading.SOUTH;
-//        player.move();
+      player.heading.setYMovement(Heading.SOUTH_STEP);
     }
     if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
     {
-      System.out.println("Pressing right");
-      player.heading = Heading.EAST;
-//        player.move();
+      player.heading.setXMovement(Heading.EAST_STEP);
     }
     if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
     {
-      System.out.println("Pressing left");
-      player.heading = Heading.WEST;
-//        player.move();
+      player.heading.setXMovement(Heading.WEST_STEP);
     }
-//      player.animation.start();
-//      repaint();
   }
 
   @Override
   public void keyReleased(KeyEvent e)
   {
-    System.out.println("Key has been released");
-    player.heading = Heading.NONE;
-    player.animation.stop();
+    int code = e.getKeyCode();
+
+    if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W ||
+        code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
+      player.heading.setYMovement(0);
+    }
+    if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A ||
+        code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
+      player.heading.setXMovement(0);
+    }
   }
 
 }
