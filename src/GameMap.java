@@ -21,6 +21,8 @@ public class GameMap
   private static final char HALL = 'H';
   private static final char EMPTY = '.';
   private static final char OBSTICLE = 'O';
+  private static final char ZOMBIE_SPAWN = 'Z';
+
 
   private static final int X_SIZE = 50;
   private static final int Y_SIZE = 100;
@@ -316,7 +318,7 @@ public class GameMap
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
-      return intGrid[x][y] != EMPTY;
+    return intGrid[x][y] != EMPTY;
   }
 
   private static boolean inBoundsWithBorder(int x, int y)
@@ -411,6 +413,8 @@ public class GameMap
       makeRandomHalls();
     }
 
+    spawnZombie();
+
     // print out that maze
     for (int x = 0; x < X_SIZE; x++)
     {
@@ -419,6 +423,25 @@ public class GameMap
         System.out.print(intGrid[x][y]);
       }
       System.out.println("");
+    }
+  }
+
+  private static void spawnZombie()
+  {
+    int randomNumber;
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        if (intGrid[x][y] == BASIC_TILE)
+        {
+          randomNumber = random.nextInt(99);
+          if (randomNumber == 0)
+          {
+            intGrid[x][y]= ZOMBIE_SPAWN;
+          }
+        }
+      }
     }
   }
 
@@ -453,7 +476,7 @@ public class GameMap
 
         }
       }
-      hallEast=false;
+      hallEast = false;
     }
     if (hallWest)
     {
@@ -468,7 +491,7 @@ public class GameMap
 
         }
       }
-      hallWest=false;
+      hallWest = false;
     }
     if (hallSouth)
     {
@@ -483,7 +506,7 @@ public class GameMap
 
         }
       }
-      hallSouth=false;
+      hallSouth = false;
     }
     if (hallNorth)
     {
@@ -498,7 +521,7 @@ public class GameMap
 
         }
       }
-      hallNorth=false;
+      hallNorth = false;
     }
   }
 
