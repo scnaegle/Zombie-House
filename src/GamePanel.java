@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -13,6 +15,12 @@ public class GamePanel extends JPanel implements KeyListener
 {
   final int FRAMES_PER_SECOND = 60;
   final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+
+  private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
+  private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
+  private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
+  private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
+
   public Player player = new Player(new Location(20, 20, 500, 200));
   Timer frame_timer;
   private GameMap map;
@@ -110,7 +118,6 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyTyped(KeyEvent e)
   {
-    System.out.println("Key was typed");
   }
 
   @Override
@@ -118,19 +125,19 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
+    if (KEY_UP.contains(code))
     {
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
-    if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
+    if (KEY_DOWN.contains(code))
     {
       player.heading.setYMovement(Heading.SOUTH_STEP);
     }
-    if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
+    if (KEY_RIGHT.contains(code))
     {
       player.heading.setXMovement(Heading.EAST_STEP);
     }
-    if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
+    if (KEY_LEFT.contains(code))
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
@@ -141,14 +148,11 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W ||
-        code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
+    if (KEY_UP.contains(code) || KEY_DOWN.contains(code)) {
       player.heading.setYMovement(0);
     }
-    if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A ||
-        code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
+    if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
   }
-
 }
