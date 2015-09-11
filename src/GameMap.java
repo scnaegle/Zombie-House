@@ -15,8 +15,8 @@ public class GameMap
   // so these final varibles may not always be final
   private static final int X_SIZE = 50;
   private static final int Y_SIZE = 100;
-  private static final int MAX_ROOM_SIZE = 10;
-  private static final int MIN_ROOM_SIZE = 5;
+  private static final int MAX_ROOM_SIZE = 12;
+  private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
   private static final int EMPTY = 0;
   private static final int END_ROOM = 3;
@@ -26,6 +26,7 @@ public class GameMap
   private static final int START_ROOM = 2;
   private static final int HALL = 4;
   private static int roomSize;
+  private static int numberOfRandomHalls = 3;
   private static int numberOfRooms = 15;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
@@ -127,11 +128,49 @@ public class GameMap
 
   private static void resetRoomDimentions()
   {
-    buildRoomX = random.nextInt(X_SIZE - 13) + 2;
-    buildRoomY = random.nextInt(Y_SIZE - 13) + 2;
+    buildRoomX = random.nextInt(X_SIZE - 15) + 2;
+    buildRoomY = random.nextInt(Y_SIZE - 15) + 2;
     roomSize = roomSize();
   }
 
+  private static boolean wallTile(int x, int y, int xSmallBoundry,
+                                  int ySmallBoundry, int xLargeBoundry,
+                                  int yLargeBoundry)
+  {
+    if (x == xSmallBoundry ||
+        x == (xLargeBoundry) || y == ySmallBoundry ||
+        y == yLargeBoundry)
+    {
+      return true;
+    }
+    return false;
+  }
+
+
+  private static boolean cornerTile(int x, int y, int xSmallBoundry,
+                                    int ySmallBoundry, int xLargeBoundry,
+                                    int yLargeBoundry)
+  {
+    if ((x == xSmallBoundry && y == ySmallBoundry) ||
+        (x == xLargeBoundry && y == ySmallBoundry) ||
+        (x == xSmallBoundry && y == yLargeBoundry) ||
+        (x == xLargeBoundry && y == yLargeBoundry))
+    {
+      return true;
+    }
+
+    return false;
+//
+//    if ((x == buildRoomX && y == buildRoomY) ||
+//        (x == (buildRoomX + END_ROOM_SIZE - 1) && y == buildRoomY) ||
+//        (x == buildRoomX && y == (buildRoomY + END_ROOM_SIZE - 1)) ||
+//        (x == (buildRoomX + END_ROOM_SIZE - 1) &&
+//            y == (buildRoomY + END_ROOM_SIZE - 1)))
+//    {
+//      return true;
+//    }
+//    return false;
+  }
 
   private static void buildEndRoom()
   {
@@ -150,6 +189,7 @@ public class GameMap
       }
     }
 
+
     for (int x = buildRoomX; x < buildRoomX + END_ROOM_SIZE; x++)
     {
       for (int y = buildRoomY; y < buildRoomY + END_ROOM_SIZE; y++)
@@ -157,18 +197,17 @@ public class GameMap
         // Need to create another method or this if statment... it will do
         // for now though.
         if (inBoundsWithBorder(x, y) &&
-            (x == buildRoomX && y == buildRoomY) ||
-            (x == (buildRoomX + END_ROOM_SIZE - 1) && y == buildRoomY) ||
-            (x == buildRoomX && y == (buildRoomY + END_ROOM_SIZE - 1)) ||
-            (x == (buildRoomX + END_ROOM_SIZE - 1) &&
-                y == (buildRoomY + END_ROOM_SIZE - 1)))
+            cornerTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + END_ROOM_SIZE - 1),
+                (buildRoomY + END_ROOM_SIZE - 1)))
         {
           intGrid[x][y] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
-        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
-            x == (buildRoomX + END_ROOM_SIZE - 1) || y == buildRoomY ||
-            y == (buildRoomY + END_ROOM_SIZE - 1)))
+        else if (inBoundsWithBorder(x, y) &&
+            wallTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + END_ROOM_SIZE - 1),
+                (buildRoomY + END_ROOM_SIZE - 1)))
         {
           intGrid[x][y] = ROOM_WALL;
         }
@@ -205,18 +244,17 @@ public class GameMap
         // Need to create another method or this if statment... it will do
         // for now though.
         if (inBoundsWithBorder(x, y) &&
-            (x == buildRoomX && y == buildRoomY) ||
-            (x == (buildRoomX + roomSize - 1) && y == buildRoomY) ||
-            (x == buildRoomX && y == (buildRoomY + roomSize - 1)) ||
-            (x == (buildRoomX + roomSize - 1) &&
-                y == (buildRoomY + roomSize - 1)))
+            cornerTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
         {
           intGrid[x][y] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
-        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
-            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
-            y == (buildRoomY + roomSize - 1)))
+        else if (inBoundsWithBorder(x, y) &&
+            wallTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
         {
           intGrid[x][y] = ROOM_WALL;
         }
@@ -257,18 +295,17 @@ public class GameMap
         // Need to create another method or this if statment... it will do
         // for now though.
         if (inBoundsWithBorder(x, y) &&
-            (x == buildRoomX && y == buildRoomY) ||
-            (x == (buildRoomX + roomSize - 1) && y == buildRoomY) ||
-            (x == buildRoomX && y == (buildRoomY + roomSize - 1)) ||
-            (x == (buildRoomX + roomSize - 1) &&
-                y == (buildRoomY + roomSize - 1)))
+            cornerTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
         {
           intGrid[x][y] = ROOM_CORNER;
         }
         //seriously sorry about the if statments :( It is working though. :)
-        else if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
-            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
-            y == (buildRoomY + roomSize - 1)))
+        else if (inBoundsWithBorder(x, y) &&
+            wallTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
         {
           intGrid[x][y] = ROOM_WALL;
         }
@@ -368,25 +405,18 @@ public class GameMap
     {
       buildRoom();
     }
-
     breakTouchingWalls();
 
-    /**
-     * START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     * label every room you creat with a number have matching numbers make
-     * hallways between
-     * make exit and start room
-     * JUST KEEP SWIMMING
-     */
-    for (int i = 0; i <= numberOfObsicles; i++)
+    //makes obsticles
+    for (int i = 0; i < numberOfObsicles; i++)
     {
       buildObsticales();
     }
 
-
-    makeRandomHalls();
-    makeRandomHalls();
-    makeRandomHalls();
+    for (int i = 0; i < numberOfRandomHalls; i++)
+    {
+      makeRandomHalls();
+    }
     // buildRoomExact();
 
     for (int x = 0; x < X_SIZE; x++)
