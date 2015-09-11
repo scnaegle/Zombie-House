@@ -15,8 +15,8 @@ public class GameMap
   // so these final varibles may not always be final
   private static final int X_SIZE = 50;
   private static final int Y_SIZE = 100;
-  private static final int MAX_ROOM_SIZE = 12;
-  private static final int MIN_ROOM_SIZE = 6;
+  private static final int MAX_ROOM_SIZE = 7;
+  private static final int MIN_ROOM_SIZE = 3;
   private static final int END_ROOM_SIZE = 4;
   private static final int EMPTY = 0;
   private static final int END_ROOM = 3;
@@ -33,6 +33,11 @@ public class GameMap
   // starting a new level and such
   private static int buildRoomX;
   private static int buildRoomY;
+
+  private static boolean hallEast = false;
+  private static boolean hallWest = false;
+  private static boolean hallNorth = false;
+  private static boolean hallSouth = false;
 
   private static Random random = new Random();
 
@@ -133,6 +138,7 @@ public class GameMap
     roomSize = roomSize();
   }
 
+  //checks to see if a wall tile
   private static boolean wallTile(int x, int y, int xSmallBoundry,
                                   int ySmallBoundry, int xLargeBoundry,
                                   int yLargeBoundry)
@@ -146,7 +152,7 @@ public class GameMap
     return false;
   }
 
-
+  //checks to see if it is a corner tile.
   private static boolean cornerTile(int x, int y, int xSmallBoundry,
                                     int ySmallBoundry, int xLargeBoundry,
                                     int yLargeBoundry)
@@ -158,18 +164,7 @@ public class GameMap
     {
       return true;
     }
-
     return false;
-//
-//    if ((x == buildRoomX && y == buildRoomY) ||
-//        (x == (buildRoomX + END_ROOM_SIZE - 1) && y == buildRoomY) ||
-//        (x == buildRoomX && y == (buildRoomY + END_ROOM_SIZE - 1)) ||
-//        (x == (buildRoomX + END_ROOM_SIZE - 1) &&
-//            y == (buildRoomY + END_ROOM_SIZE - 1)))
-//    {
-//      return true;
-//    }
-//    return false;
   }
 
   private static void buildEndRoom()
@@ -417,8 +412,8 @@ public class GameMap
     {
       makeRandomHalls();
     }
-    // buildRoomExact();
 
+    // print out that maze
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
@@ -447,60 +442,77 @@ public class GameMap
       }
     }
 
-    for (int a = hallX; a < X_SIZE - 1; a++)
+    if (hallEast)
     {
-      if (intGrid[a][hallY] == EMPTY)
+      for (int a = hallX; a < X_SIZE - 1; a++)
       {
-        intGrid[a][hallY] = HALL;
-      }
-      else
-      {
+        if (intGrid[a][hallY] == EMPTY)
+        {
+          intGrid[a][hallY] = HALL;
+        }
+        else
+        {
 
+        }
       }
+      hallEast=false;
     }
-    for (int a = hallX; a > 0; a--)
+    if (hallWest)
     {
-      if (intGrid[a][hallY] == EMPTY)
+      for (int a = hallX; a > 0; a--)
       {
-        intGrid[a][hallY] = HALL;
-      }
-      else
-      {
+        if (intGrid[a][hallY] == EMPTY)
+        {
+          intGrid[a][hallY] = HALL;
+        }
+        else
+        {
 
+        }
       }
+      hallWest=false;
     }
-
-    for (int a = hallY; a < Y_SIZE - 1; a++)
+    if (hallSouth)
     {
-      if (intGrid[hallX][a] == EMPTY)
+      for (int a = hallY; a < Y_SIZE - 1; a++)
       {
-        intGrid[hallX][a] = HALL;
-      }
-      else
-      {
+        if (intGrid[hallX][a] == EMPTY)
+        {
+          intGrid[hallX][a] = HALL;
+        }
+        else
+        {
 
+        }
       }
+      hallSouth=false;
     }
-    for (int a = hallY; a > 0; a--)
+    if (hallNorth)
     {
-      if (intGrid[hallX][a] == EMPTY)
+      for (int a = hallY; a > 0; a--)
       {
-        intGrid[hallX][a] = HALL;
-      }
-      else
-      {
+        if (intGrid[hallX][a] == EMPTY)
+        {
+          intGrid[hallX][a] = HALL;
+        }
+        else
+        {
 
+        }
       }
+      hallNorth=false;
     }
   }
 
   private static boolean validHallLocation(int x, int y)
   {
+    boolean isValid = false;
     for (int a = x; a < X_SIZE; a++)
     {
       if (intGrid[a][y] == ROOM_WALL)
       {
-        return true;
+        hallEast = true;
+        isValid = true;
       }
     }
 
@@ -508,7 +520,8 @@ public class GameMap
     {
       if (intGrid[a][y] == ROOM_WALL)
       {
-        return true;
+        hallWest = true;
+        isValid = true;
       }
     }
 
@@ -516,7 +529,8 @@ public class GameMap
     {
       if (intGrid[x][a] == ROOM_WALL)
       {
-        return true;
+        hallSouth = true;
+        isValid = true;
       }
     }
 
@@ -524,10 +538,11 @@ public class GameMap
     {
       if (intGrid[x][a] == ROOM_WALL)
       {
-        return true;
+        hallNorth = true;
+        isValid = true;
       }
     }
-    return false;
+    return isValid;
   }
 
   private static boolean cycleSpotsForObsticles(int s, int t)
