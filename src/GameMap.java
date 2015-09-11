@@ -13,18 +13,21 @@ public class GameMap
 
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
+  private static final char END_ROOM = 'E';
+  private static final char ROOM_WALL = 'W';
+  private static final char ROOM_CORNER = 'C';
+  private static final char BASIC_TILE = 'F';
+  private static final char START_ROOM = 'S';
+  private static final char HALL = 'H';
+  private static final char EMPTY = '.';
+  private static final char OBSTICLE = 'O';
+
   private static final int X_SIZE = 50;
   private static final int Y_SIZE = 100;
-  private static final int MAX_ROOM_SIZE = 7;
-  private static final int MIN_ROOM_SIZE = 3;
+  private static final int MAX_ROOM_SIZE = 12;
+  private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
-  private static final int EMPTY = 0;
-  private static final int END_ROOM = 3;
-  private static final int ROOM_WALL = 9;
-  private static final int ROOM_CORNER = 8;
-  private static final int BASIC_TILE = 1;
-  private static final int START_ROOM = 2;
-  private static final int HALL = 4;
+
   private static int roomSize;
   private static int numberOfRandomHalls = 3;
   private static int numberOfRooms = 15;
@@ -41,7 +44,7 @@ public class GameMap
 
   private static Random random = new Random();
 
-  private static int[][] intGrid = new int[X_SIZE][Y_SIZE];
+  private static char[][] intGrid = new char[X_SIZE][Y_SIZE];
 
   private int num_rows;
   private int num_cols;
@@ -287,8 +290,6 @@ public class GameMap
     {
       for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
       {
-        // Need to create another method or this if statment... it will do
-        // for now though.
         if (inBoundsWithBorder(x, y) &&
             cornerTile(x, y, buildRoomX, buildRoomY,
                 (buildRoomX + roomSize - 1),
@@ -310,16 +311,12 @@ public class GameMap
         }
       }
     }
+    System.out.println("finish room");
   }
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
-
-    if (intGrid[x][y] != EMPTY)
-    {
-      return true;
-    }
-    return false;
+      return intGrid[x][y] != EMPTY;
   }
 
   private static boolean inBoundsWithBorder(int x, int y)
@@ -379,6 +376,7 @@ public class GameMap
         }
       }
     }
+    System.out.println("walls");
   }
 
 
@@ -552,7 +550,7 @@ public class GameMap
     {
       for (int y = t - 1; y <= t + 1; y++)
       {
-        if (intGrid[x][y] != 1)
+        if (intGrid[x][y] != BASIC_TILE)
         {
           valid = false;
         }
@@ -570,7 +568,7 @@ public class GameMap
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        intGrid[xCord][yCord] = 7;
+        intGrid[xCord][yCord] = OBSTICLE;
         validSpot = true;
       }
       else
@@ -579,6 +577,7 @@ public class GameMap
         yCord = random.nextInt(Y_SIZE - 2) + 1;
       }
     }
+    System.out.println("Obsticle");
   }
 
   /**

@@ -141,6 +141,8 @@ public class Player extends GameObject implements Humanoid
     } else {
       stamina += STAMINA_STEP; // call regen()
       Math.min(stamina, max_stamina);
+
+      //UHHHH Is stanima becoming too large, should it be reset to 5?
       animation = walk;
       speed = 1;
     }
