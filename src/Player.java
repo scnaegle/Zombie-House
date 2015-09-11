@@ -10,9 +10,10 @@ public class Player extends GameObject implements Humanoid
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / FPS;
-  int sight = 5;
-  int hearing = 10;
-  double speed = 1.0;
+  private int sight = 5;
+  private int hearing = 10;
+  private double current_speed = 1.0;
+  private double defined_speed = 1.0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -45,7 +46,8 @@ public class Player extends GameObject implements Humanoid
     // up for
     this.hearing = player_hearing;   // these things later, like flash light, and hearing
     // aids
-    this.speed = player_speed;       // I imaginge it would be similar to the traps we
+    this.defined_speed = player_speed;
+    this.current_speed = player_speed;       // I imaginge it would be similar to the traps we
     // have to
     this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
@@ -108,11 +110,11 @@ public class Player extends GameObject implements Humanoid
   @Override
   public double getSpeed()
   {
-    return speed;
+    return current_speed;
   }
 
   public void setSpeed(double speed) {
-    this.speed = speed;
+    this.current_speed = speed;
   }
 
   @Override
@@ -137,22 +139,24 @@ public class Player extends GameObject implements Humanoid
    */
   public void move() {
     if (heading != Heading.NONE) {
-      location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-      location.y -= (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+//      location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+//      location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+      location.x += (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
+      location.y += (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
     }
   }
 
   public void update() {
     move();
     if (heading == Heading.NONE) {
-      speed = 0;
+      current_speed = 0;
       animation = stand;
-    } else if (speed > 1 && stamina > 0) {
+    } else if (current_speed > 1 && stamina > 0) {
       animation = run;
       stamina -= STAMINA_STEP;
     } else {
       animation = walk;
-      speed = 1;
+      current_speed = 1;
     }
     animation.update();
   }
