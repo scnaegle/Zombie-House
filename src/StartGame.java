@@ -1,5 +1,5 @@
 
-public class startGame
+public class StartGame
 {
   public static void main(String[] args)
   {
