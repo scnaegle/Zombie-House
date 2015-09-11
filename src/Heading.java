@@ -30,4 +30,13 @@ public class Heading
   public double getDegrees() {
     return degrees;
   }
+
+  @Override
+  public String toString() {
+    return "Heading{" +
+        "x_movement=" + x_movement +
+        ", y_movement=" + y_movement +
+        ", degrees=" + degrees +
+        '}';
+  }
 }

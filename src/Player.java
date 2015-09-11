@@ -1,7 +1,8 @@
 import java.awt.image.BufferedImage;
 
 /**
- *
+ * Player class sets up the player, loads the walking/ running sprites and
+ * sets up the animation depending on the speed of the player.
  */
 public class Player extends GameObject implements Humanoid
 {
@@ -16,17 +17,17 @@ public class Player extends GameObject implements Humanoid
   double stamina = 5;
   double regen = .2;
   Heading heading;
-  BufferedImageLoader loader = new BufferedImageLoader();
-  private BufferedImage[] walking = loader.initPlayerSpriteWalk();
-//  private BufferedImage[] running = loader.initPlayerSpriteRun();
+  Sprite stand = new Sprite("pStand");
+  BufferedImage still = stand.getSprite(1, 1);
+  private BufferedImage[] walking = initPlayerSpriteWalk();
+  private BufferedImage[] running = initPlayerSpriteRun();
   private Animation walk = new Animation(walking, 5);
-//  private Animation run = new Animation(running, 5);
   Animation animation = walk;
-
+  private Animation run = new Animation(running, 5);
 
   public Player(Location location) {
     this.location = location;
-    animation.start();
+    //animation.start();
   }
 
   /**
@@ -47,6 +48,50 @@ public class Player extends GameObject implements Humanoid
     // have to
     this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
+  }
+
+  public BufferedImage[] initPlayerSpriteWalk()
+  {
+
+    Sprite sprite = new Sprite("pWalk");
+
+    BufferedImage walking[] = {sprite.getSprite(1, 2),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 6),
+        sprite.getSprite(1, 7)};
+    return walking;
+  }
+
+  public BufferedImage[] initPlayerSpriteRun()
+  {
+
+    Sprite sprite = new Sprite("pRun");
+    BufferedImage running[] = {sprite.getSprite(1, 1),
+        sprite.getSprite(1, 2),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 6),
+        sprite.getSprite(1, 7),
+        sprite.getSprite(1, 8),
+        sprite.getSprite(1, 9),
+        sprite.getSprite(1, 10),
+        sprite.getSprite(2, 1),
+        sprite.getSprite(2, 2),
+        sprite.getSprite(2, 3),
+        sprite.getSprite(2, 4),
+        sprite.getSprite(2, 5),
+        sprite.getSprite(2, 6),
+        sprite.getSprite(2, 7),
+        sprite.getSprite(2, 8),
+        sprite.getSprite(2, 9),
+        sprite.getSprite(2, 10),
+        sprite.getSprite(3, 1),
+        sprite.getSprite(3, 2)};
+
+    return running;
   }
 
   /*When not running, playerRegen  deltaTime is added
@@ -73,14 +118,6 @@ public class Player extends GameObject implements Humanoid
     return heading;
   }
 
-//  public void setHeading(String heading_str) {
-//    switch(heading_str) {
-//      case "up":
-//        this.heading = Heading.NORTH;
-//      case "down":
-//        this.heading = Heading.
-//    }
-//  }
 
   public void setHeading(Heading heading) {
     this.heading = heading;
@@ -91,11 +128,15 @@ public class Player extends GameObject implements Humanoid
     this.location = new_location;
   }
 
+  /**
+   * Tells the sprite how to move based on the heading we give it.
+   * Heading is controlled by keyboard arrows.
+   */
   public void move() {
     location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
     location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
     if (speed > 1 && stamina > 0) {
-//      animation = run;
+      animation = run;
       stamina -= STAMINA_STEP;
     } else {
       stamina += STAMINA_STEP; // call regen()

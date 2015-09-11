@@ -5,8 +5,8 @@ public class Location
 {
   int row;
   int col;
-  int x;
-  int y;
+  double x;
+  double y;
 
   public Location() {
 
@@ -17,7 +17,7 @@ public class Location
     this.col = col;
   }
 
-  public Location(int row, int col, int x, int y) {
+  public Location(int row, int col, double x, double y) {
     this(row, col);
     this.x = x;
     this.y = y;
@@ -32,11 +32,11 @@ public class Location
   }
 
   public int getX() {
-    return x;
+    return (int)x;
   }
 
   public int getY() {
-    return y;
+    return (int)y;
   }
 
   public void setRow(int row) {
