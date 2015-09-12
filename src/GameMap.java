@@ -21,14 +21,14 @@ public class GameMap
   private static final char ZOMBIE_SPAWN = 'Z';
 
 
-  private static final int X_SIZE = 40;
-  private static final int Y_SIZE = 40;
-  private static final int MAX_ROOM_SIZE = 7;
-  private static final int MIN_ROOM_SIZE = 4;
+  private static final int X_SIZE = 100;
+  private static final int Y_SIZE = 100;
+  private static final int MAX_ROOM_SIZE = 12;
+  private static final int MIN_ROOM_SIZE = 7;
   private static final int END_ROOM_SIZE = 4;
 
   private static int roomSize;
-  private static int numberOfRandomHalls = 3;
+  private static int numberOfRandomHalls = 10;
   private static int numberOfRooms = 5;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
@@ -43,7 +43,7 @@ public class GameMap
 
   private static Random random = new Random();
 
-  private static char[][] intGrid = new char[X_SIZE][Y_SIZE];
+  private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 
   private int num_rows;
   private int num_cols;
@@ -371,7 +371,6 @@ public class GameMap
     System.out.println("walls");
   }
 
-
   private static void generateMap()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -409,7 +408,7 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        System.out.print(intGrid[y][x]);
+        System.out.print(getGrid(x,y));
       }
       System.out.println("");
     }
@@ -458,20 +457,55 @@ public class GameMap
     }
 
     //hallRight=true;
-    System.out.println("x cord: " + hallX + " y cord: " + hallY);
-    System.out.println("Grid[y][x] = " + intGrid[hallY][hallX]);
+    System.out.println("x cord: " + hallY + " y cord: " + hallX);
+    System.out.println("Grid[y][x] = " + getGrid(hallX,hallY));
     System.out.println("hall r: " + hallRight);
     System.out.println("hall l: " + hallLeft);
     System.out.println("hall d: " + hallDown);
     System.out.println("hall u: " + hallUp);
     System.out.println();
-    if (hallRight)
+
+
+    if (hallUp)
     {
-      for (int a = hallX; a < X_SIZE - 1; a++)
+      for (int a = hallX; a > 0; a--)
       {
         if (canMakeHall(a, hallY))
         {
           setGrid(a, hallY, HALL);
+        }
+        else
+        {
+          System.out.println("making hall up, ended at a=" + a);
+          break;
+        }
+      }
+      hallUp = false;
+    }
+
+    if (hallDown)
+    {
+      for (int a = hallX; a < X_SIZE-1; a++)
+      {
+        if (canMakeHall(a, hallY))
+        {
+          setGrid(a, hallY, HALL);
+        }
+        else
+        {
+          System.out.println("making hall down, ended at a=" + a);
+          break;
+        }
+      }
+      hallDown = false;
+    }
+    if (hallRight)
+    {
+      for (int a = hallY; a < Y_SIZE - 1; a++)
+      {
+        if (canMakeHall(hallX, a))
+        {
+          setGrid(hallX, a, HALL);
         }
         else
         {
@@ -484,38 +518,6 @@ public class GameMap
 
     if (hallLeft)
     {
-      for (int a = hallX; a > 0; a--)
-      {
-        if (canMakeHall(a, hallY))
-        {
-          setGrid(a, hallY, HALL);
-        }
-        else
-        {
-          System.out.println("making hall left, ended at a=" + a);
-          break;
-        }
-      }
-      hallLeft = false;
-    }
-    if (hallDown)
-    {
-      for (int a = hallY; a < Y_SIZE - 1; a++)
-      {
-        if (canMakeHall(hallX, a))
-        {
-          setGrid(hallX, a, HALL);
-        }
-        else
-        {
-          System.out.println("making hall down, ended at a=" + a);
-          break;
-        }
-      }
-      hallDown = false;
-    }
-    if (hallUp)
-    {
       for (int a = hallY; a > 0; a--)
       {
         if (canMakeHall(hallX, a))
@@ -524,11 +526,11 @@ public class GameMap
         }
         else
         {
-          System.out.println("making hall up, ended at a=" + a);
+          System.out.println("making hall left, ended at a=" + a);
           break;
         }
       }
-      hallUp = false;
+      hallLeft = false;
     }
   }
 
@@ -539,7 +541,8 @@ public class GameMap
 
   private static boolean validHallLocation(int x, int y)
   {
-    boolean isValid = false;
+
+    int connectTwoRooms = 0;
     for (int a = x; a < X_SIZE; a++)
     {
       if (canMakeHall(a, y))
@@ -548,8 +551,9 @@ public class GameMap
       }
       else if (getGrid(a, y) == ROOM_WALL)
       {
-        hallRight = true;
-        isValid = true;
+
+        connectTwoRooms++;
+        hallDown = true;
       }
       else
       {
@@ -565,8 +569,8 @@ public class GameMap
       }
       else if (getGrid(a, y) == ROOM_WALL)
       {
-        hallLeft = true;
-        isValid = true;
+        connectTwoRooms++;
+        hallUp = true;
       }
       else
       {
@@ -580,10 +584,10 @@ public class GameMap
       {
 
       }
-      else if (intGrid[x][a] == ROOM_WALL)
+      else if (getGrid(x,a) == ROOM_WALL)
       {
-        hallDown = true;
-        isValid = true;
+        hallRight = true;
+        connectTwoRooms++;
       }
       else
       {
@@ -599,15 +603,29 @@ public class GameMap
       }
       else if (getGrid(x, a) == ROOM_WALL)
       {
-        hallUp = true;
-        isValid = true;
+        hallLeft = true;
+        connectTwoRooms++;
+
       }
       else
       {
         break;
       }
     }
-    return isValid;
+    if(connectTwoRooms > 1)
+    {
+      return true;
+    }
+    else
+    {
+      hallUp =false;
+      hallLeft=false;
+      hallRight = false;
+      hallDown = false;
+      return false;
+
+
+    }
   }
 
   private static boolean cycleSpotsForObsticles(int s, int t)
@@ -617,7 +635,7 @@ public class GameMap
     {
       for (int y = t - 1; y <= t + 1; y++)
       {
-        if (intGrid[y][x] != BASIC_TILE)
+        if (getGrid(x,y) != BASIC_TILE)
         {
           valid = false;
         }
@@ -631,11 +649,12 @@ public class GameMap
     boolean validSpot = false;
     int xCord = random.nextInt(X_SIZE - 2) + 1;
     int yCord = random.nextInt(Y_SIZE - 2) + 1;
+
     while (!validSpot)
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        intGrid[yCord][xCord] = OBSTICLE;
+        setGrid(xCord,yCord,OBSTICLE);
         validSpot = true;
       }
       else
