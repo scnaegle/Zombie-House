@@ -69,15 +69,15 @@ public abstract class Zombie extends GameObject implements Humanoid
     return false;
   }
 
-  protected void chooseDirection() {
+  protected void chooseDirection(Humanoid player) {
     // This is a placeholder that should be overridden.
   }
 
-  public void update() {
+  public void update(Humanoid player) {
     frame++;
     if (frame >= decision_rate * FPS) {
       frame = 0;
-      chooseDirection();
+      chooseDirection(player);
     }
     move();
     determineAnimation();
