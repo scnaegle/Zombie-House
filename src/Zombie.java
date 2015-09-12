@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Sets up everything that a zombie has, such as smell, speed, decision rate and
  * how the sprite will move. Each zombie is an object so it extends GameObject
@@ -8,6 +10,8 @@ public abstract class Zombie extends GameObject implements Humanoid
 {
   private final int FPS = 60;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
+  protected int frame = 0;
+
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
   protected Heading heading = Heading.NONE;
@@ -33,33 +37,52 @@ public abstract class Zombie extends GameObject implements Humanoid
       // maybe having them traverse for a certain amount of time in a gerneral
 
 
-  public void move() {
-//    double increment_x = (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-//    double increment_y = (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-    double increment_x = (speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-    double increment_y = (speed * heading.getYMovement()) * MOVE_MULTIPLIER;
-    location.x += increment_x;
-    location.y += increment_y;
+  protected void move() {
+//    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+//    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    location.x += (speed * heading.getXMovement()) * MOVE_MULTIPLIER;
+    location.y += (speed * heading.getYMovement()) * MOVE_MULTIPLIER;
+  }
 
-    if(increment_x > increment_y) {
-      if (increment_x > 0) {
+  protected void determineAnimation() {
+    double x_move = heading.getXMovement();
+    double y_move = heading.getYMovement();
+    if(x_move > y_move) {
+      if (x_move > 0) {
         animation = moveRight;
-      } else if (increment_x < 0){
+      } else if (x_move < 0){
         animation = moveLeft;
       }
     } else {
-      if (increment_y > 0) {
+      if (y_move > 0) {
         animation = moveUp;
-      } else if (increment_y < 0){
+      } else if (y_move < 0) {
         animation = moveDown;
       }
     }
-    animation.start();
-    animation.update();
+  }
+
+  protected boolean smellPlayer(Humanoid player) {
+    if (getDistance((Object2D)player) <= smell * GUI.tile_size) {
+      return true;
+    }
+    return false;
+  }
+
+  protected void chooseDirection() {
+    // This is a placeholder that should be overridden.
   }
 
   public void update() {
+    frame++;
+    if (frame >= decision_rate * FPS) {
+      frame = 0;
+      chooseDirection();
+    }
     move();
+    determineAnimation();
+    animation.start();
+    animation.update();
   }
 
   @Override
