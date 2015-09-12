@@ -78,12 +78,12 @@ public class GamePanel extends JPanel implements KeyListener
         if (GUI.running) {
           player.update();
 
-          randomZombie.update();
+          randomZombie.update(player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
                 new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
           }
-          lineZombie.update();
+          lineZombie.update(player);
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
@@ -107,9 +107,6 @@ public class GamePanel extends JPanel implements KeyListener
     map.paint(g, GUI.tile_size);
 
 //    System.out.println("player location: " + player.location.toString());
-    g.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
-
     g.drawImage(fireTrap.trap, fireTrap.location.getX(),
         fireTrap.location.getY(), null);
     g.drawImage(explodingTrap.fireAnimation.getSprite(),
@@ -119,6 +116,9 @@ public class GamePanel extends JPanel implements KeyListener
         randomZombie.location.getY(), null);
     g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
         lineZombie.location.getY(), null);
+
+    g.drawImage(player.animation.getSprite(), player.location.getX(),
+        player.location.getY(), null);
 
     //g.drawImage(vignetteCanvas,0,0,null);
   }
