@@ -25,11 +25,11 @@ public class RandomWalkZombie extends Zombie
 
   @Override
   protected void chooseDirection() {
-    System.out.println("Choosing new direction");
+//    System.out.println("Choosing new direction");
     Random rand = new Random();
-    System.out.println("old heading: " + heading.toString());
+//    System.out.println("old heading: " + heading.toString());
     heading.setDegrees(rand.nextInt(360));
-    System.out.println("new heading: " + heading.toString());
+//    System.out.println("new heading: " + heading.toString());
   }
 
   private BufferedImage[] initDown()
