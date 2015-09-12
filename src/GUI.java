@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 
 
 public class GUI
@@ -15,6 +12,8 @@ public class GUI
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
+  static JViewport viewport;
+  static JScrollPane scrollPane;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -31,10 +30,10 @@ public class GUI
     window = new JFrame("Zombie House");
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setLayout(new BorderLayout());
-    window.setExtendedState(window.MAXIMIZED_BOTH);
-//    System.out.println("scene_width: " + SCENE_WIDTH);
-//    System.out.println("scene_height: " + SCENE_HEIGHT);
-//    window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
+    //window.setExtendedState(window.MAXIMIZED_BOTH);
+    window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
+
+
     window.addComponentListener(new ComponentListener()
     {
       @Override
@@ -42,6 +41,7 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
+        System.out.format("SCENE SIZE: (%d, %d)\n", SCENE_WIDTH, SCENE_HEIGHT);
       }
 
       @Override
@@ -68,6 +68,53 @@ public class GUI
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
     //gamePanel.setFocusTraversalKeysEnabled(false);
+
+
+    scrollPane = new JScrollPane(gamePanel);
+    scrollPane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    scrollPane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    /**
+     * Keeps scrollpane from scrolling when arrow keys are pressed.
+     * Should only move based on player's position.
+     */
+    InputMap im = gamePanel.getInputMap();
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Arrow.up");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Arrow.down");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Arrow.right");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Arrow.left");
+
+    AbstractAction doNothing = new AbstractAction()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        // doing nothing
+      }
+    };
+    ActionMap am = gamePanel.getActionMap();
+    am.put("Arrow.up", doNothing);
+    am.put("Arrow.down", doNothing);
+    am.put("Arrow.right", doNothing);
+    am.put("Arrow.left", doNothing);
+
+//    viewport = new JViewport();
+//    viewport.setAlignmentX(gamePanel.player.location.getX());
+//    viewport.setAlignmentY(gamePanel.player.location.getY());
+
+    //scrollPane.setViewportView(gamePanel);
+    //scrollPane.getViewport().setViewPosition(
+    //new Point(gamePanel.player.location.getX(),gamePanel.player.location
+    // .getY()));
+
+//    viewport = new JViewport();
+//    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
+//    viewport.setView(gamePanel);
+//    viewport.setViewPosition(startPoint);
+
+
 
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
@@ -108,11 +155,12 @@ public class GUI
     viewPanel.add(playerStamina);
 
 
-
-    window.getContentPane().add(gamePanel, BorderLayout.CENTER);
+    //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
+    window.pack();
     window.setVisible(true);
     window.setResizable(true);
+    window.getContentPane().add(scrollPane);
 
   }
 
@@ -131,49 +179,5 @@ public class GUI
   }
 
 
-//  @Override
-//  public void keyTyped(KeyEvent e)
-//  {
-//
-//  }
-//
-//  @Override
-//  public void keyPressed(KeyEvent e)
-//  {
-//    int code = e.getKeyCode();
-//
-//    while(running)
-//    {
-//      if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
-//      {
-//        System.out.println("Pressing up");
-//        gamePanel.player.heading = Heading.NORTH;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
-//      {
-//        gamePanel.player.heading = Heading.SOUTH;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
-//      {
-//        gamePanel.player.heading = Heading.EAST;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
-//      {
-//        gamePanel.player.heading = Heading.WEST;
-//        gamePanel.player.move();
-//      }
-//      gamePanel.player.animation.start();
-//      gamePanel.repaint();
-//    }
-//  }
-//
-//  @Override
-//  public void keyReleased(KeyEvent e)
-//  {
-//    gamePanel.player.heading = Heading.NONE;
-//    gamePanel.player.animation.stop();
-//  }
+
 }
