@@ -29,7 +29,6 @@ public class Player extends GameObject implements Humanoid
 
   public Player(Location location) {
     this.location = location;
-    //animation.start();
   }
 
   /**
