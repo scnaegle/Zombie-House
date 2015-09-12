@@ -44,6 +44,7 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
+        System.out.format("SCENE SIZE: (%d, %d)\n", SCENE_WIDTH, SCENE_HEIGHT);
       }
 
       @Override
