@@ -62,6 +62,8 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
     map = new GameMap(map_file);
+    setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
+        map.getHeight(GUI.tile_size)));
 
     player.setHeading(new Heading(Heading.NONE));
     player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT / 2));

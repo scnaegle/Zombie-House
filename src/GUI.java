@@ -1,21 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 
 
 public class GUI
 {
 
   final static int PIXELS = 80;
-  static int SCENE_WIDTH = 1000;
-  static int SCENE_HEIGHT = 1000;
+  static int SCENE_WIDTH = 1920;
+  static int SCENE_HEIGHT = 1080;
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
   static JViewport viewport;
+  static JScrollPane scrollPane;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -25,7 +23,6 @@ public class GUI
   JLabel playerStamina;
   JButton startPause;
   boolean pause = true;
-  private Point startPoint;
 
 
   public void setUpGUI()
@@ -72,11 +69,50 @@ public class GUI
     gamePanel.requestFocus();
     //gamePanel.setFocusTraversalKeysEnabled(false);
 
-    startPoint = new Point(0, 0);
-    viewport = new JViewport();
-    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
-    viewport.setView(gamePanel);
-    viewport.setViewPosition(startPoint);
+
+    scrollPane = new JScrollPane(gamePanel);
+    scrollPane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    scrollPane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    /**
+     * Keeps scrollpane from scrolling when arrow keys are pressed.
+     * Should only move based on player's position.
+     */
+    InputMap im = gamePanel.getInputMap();
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Arrow.up");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Arrow.down");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Arrow.right");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Arrow.left");
+
+    AbstractAction doNothing = new AbstractAction()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        // doing nothing
+      }
+    };
+    ActionMap am = gamePanel.getActionMap();
+    am.put("Arrow.up", doNothing);
+    am.put("Arrow.down", doNothing);
+    am.put("Arrow.right", doNothing);
+    am.put("Arrow.left", doNothing);
+
+//    viewport = new JViewport();
+//    viewport.setAlignmentX(gamePanel.player.location.getX());
+//    viewport.setAlignmentY(gamePanel.player.location.getY());
+
+    //scrollPane.setViewportView(gamePanel);
+    //scrollPane.getViewport().setViewPosition(
+    //new Point(gamePanel.player.location.getX(),gamePanel.player.location
+    // .getY()));
+
+//    viewport = new JViewport();
+//    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
+//    viewport.setView(gamePanel);
+//    viewport.setViewPosition(startPoint);
 
 
 
@@ -119,12 +155,12 @@ public class GUI
     viewPanel.add(playerStamina);
 
 
-    window.getContentPane().add(viewport, BorderLayout.CENTER);
     //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.pack();
     window.setVisible(true);
     window.setResizable(true);
+    window.getContentPane().add(scrollPane);
 
   }
 
