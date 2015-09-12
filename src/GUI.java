@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 
 
 public class GUI
@@ -24,6 +25,8 @@ public class GUI
   JLabel playerStamina;
   JButton startPause;
   boolean pause = true;
+
+
 
 
   public void setUpGUI()
@@ -131,49 +134,5 @@ public class GUI
   }
 
 
-//  @Override
-//  public void keyTyped(KeyEvent e)
-//  {
-//
-//  }
-//
-//  @Override
-//  public void keyPressed(KeyEvent e)
-//  {
-//    int code = e.getKeyCode();
-//
-//    while(running)
-//    {
-//      if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
-//      {
-//        System.out.println("Pressing up");
-//        gamePanel.player.heading = Heading.NORTH;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
-//      {
-//        gamePanel.player.heading = Heading.SOUTH;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
-//      {
-//        gamePanel.player.heading = Heading.EAST;
-//        gamePanel.player.move();
-//      }
-//      if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
-//      {
-//        gamePanel.player.heading = Heading.WEST;
-//        gamePanel.player.move();
-//      }
-//      gamePanel.player.animation.start();
-//      gamePanel.repaint();
-//    }
-//  }
-//
-//  @Override
-//  public void keyReleased(KeyEvent e)
-//  {
-//    gamePanel.player.heading = Heading.NONE;
-//    gamePanel.player.animation.stop();
-//  }
+
 }

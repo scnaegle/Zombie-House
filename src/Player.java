@@ -52,6 +52,10 @@ public class Player extends GameObject implements Humanoid
     this.stamina = player_stamina;   // make
   }
 
+  public int getSight()
+  {
+    return sight;
+  }
   public BufferedImage[] initPlayerSpriteWalk()
   {
 

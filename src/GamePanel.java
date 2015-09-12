@@ -1,6 +1,10 @@
+import sun.awt.image.PixelConverter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -34,6 +38,10 @@ public class GamePanel extends JPanel implements KeyListener
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
 
+  final BufferedImage vignetteCanvas = makeVignette(player.getSight());
+
+
+
   public GamePanel()
   {
 
@@ -41,6 +49,7 @@ public class GamePanel extends JPanel implements KeyListener
 //    System.out.println("scene_height: " + GUI.SCENE_HEIGHT);
 //    setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
     setBackground(Color.white);
+
 
     File map_file = null;
     try
@@ -84,12 +93,12 @@ public class GamePanel extends JPanel implements KeyListener
           }
 
           explodingTrap.move();
-//          player.animation.start();
           repaint();
         }
       }
     });
-//    frame_timer.start();
+
+
 
   }
 
@@ -102,7 +111,7 @@ public class GamePanel extends JPanel implements KeyListener
 
 //    System.out.println("player location: " + player.location.toString());
     g.drawImage(player.animation.getSprite(), player.location.getX(),
-          player.location.getY(), null);
+        player.location.getY(), null);
 
     g.drawImage(fireTrap.trap, fireTrap.location.getX(),
         fireTrap.location.getY(), null);
@@ -113,7 +122,33 @@ public class GamePanel extends JPanel implements KeyListener
         randomZombie.location.getY(), null);
     g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
         lineZombie.location.getY(), null);
+
+    g.drawImage(vignetteCanvas,0,0,null);
   }
+
+  private BufferedImage makeVignette(int sight)
+  {
+    BufferedImage img = new BufferedImage(GUI.SCENE_WIDTH,GUI.SCENE_HEIGHT,
+                                          BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = (Graphics2D) img.getGraphics();
+    float maxDist = (float) Math.sqrt(
+        0.25f * (GUI.SCENE_WIDTH * GUI.SCENE_WIDTH +
+            GUI.SCENE_HEIGHT * GUI.SCENE_HEIGHT));
+
+    float sight_pixels = (float)sight*GUI.tile_size;
+    Point2D center = new Point2D.Float(GUI.SCENE_WIDTH/2, GUI.SCENE_HEIGHT/2);
+    Color[] colors = {new Color(1f,1f,1f,0f),  Color.black};
+    float[] dist = {0.0f, 1f};
+    RadialGradientPaint p = new RadialGradientPaint(center,sight_pixels,dist,colors);
+
+
+    g.setPaint(p);
+    g.fillRect(0, 0, GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT);
+
+    return img;
+  }
+
+
 
   @Override
   public void keyTyped(KeyEvent e)
@@ -142,6 +177,8 @@ public class GamePanel extends JPanel implements KeyListener
       player.heading.setXMovement(Heading.WEST_STEP);
     }
   }
+
+
 
   @Override
   public void keyReleased(KeyEvent e)
