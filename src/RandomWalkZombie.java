@@ -24,43 +24,44 @@ public class RandomWalkZombie extends Zombie
   }
 
   @Override
-  protected void chooseDirection() {
+  protected void chooseDirection(Humanoid player) {
 //    System.out.println("Choosing new direction");
     Random rand = new Random();
 //    System.out.println("old heading: " + heading.toString());
+    // Unless there is a wall in that direction
     heading.setDegrees(rand.nextInt(360));
 //    System.out.println("new heading: " + heading.toString());
   }
 
   private BufferedImage[] initDown()
   {
-    BufferedImage down[] = {sprite.getSprite(1, 7),
-                            sprite.getSprite(1, 8),
-                            sprite.getSprite(1, 9),};
+    BufferedImage down[] = {sprite.getSprite(5, 7),
+        sprite.getSprite(5, 8),
+        sprite.getSprite(5, 9),};
     return down;
   }
 
   private BufferedImage[] initLeft()
   {
-    BufferedImage left[] = {sprite.getSprite(2, 7),
-                            sprite.getSprite(2, 8),
-                            sprite.getSprite(2, 9),};
+    BufferedImage left[] = {sprite.getSprite(6, 7),
+        sprite.getSprite(6, 8),
+        sprite.getSprite(6, 9),};
     return left;
   }
 
   private BufferedImage[] initRight()
   {
-    BufferedImage right[] = {sprite.getSprite(3, 7),
-                             sprite.getSprite(3, 8),
-                             sprite.getSprite(3, 9),};
+    BufferedImage right[] = {sprite.getSprite(7, 7),
+        sprite.getSprite(7, 8),
+        sprite.getSprite(7, 9),};
     return right;
   }
 
   private BufferedImage[] initUp()
   {
-    BufferedImage up[] = {sprite.getSprite(4, 7),
-                          sprite.getSprite(4, 8),
-                          sprite.getSprite(4, 9),};
+    BufferedImage up[] = {sprite.getSprite(8, 7),
+        sprite.getSprite(8, 8),
+        sprite.getSprite(8, 9),};
     return up;
   }
 }
