@@ -28,8 +28,8 @@ public class GameMap
   private static final int END_ROOM_SIZE = 4;
 
   private static int roomSize;
-  private static int numberOfRandomHalls = 10;
-  private static int numberOfRooms = 5;
+  private static int numberOfRandomHalls = 7;
+  private static int numberOfRooms = 7;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
   // starting a new level and such
@@ -401,6 +401,13 @@ public class GameMap
     {
       makeRandomHalls();
     }
+
+    expandHalls();
+
+    makeDoors();
+
+    addWallsToHalls();
+
     spawnZombie();
 
     // print out that maze
@@ -408,9 +415,101 @@ public class GameMap
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        System.out.print(getGrid(x,y));
+        System.out.print(getGrid(x, y));
       }
       System.out.println("");
+    }
+  }
+
+  private static void makeDoors()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (getGrid(x, y) == HALL)
+        {
+          if (getGrid(x + 1, y) == ROOM_WALL)
+          {
+            setGrid(x + 1, y, BASIC_TILE);
+          }
+          if (getGrid(x - 1, y) == ROOM_WALL)
+          {
+            setGrid(x - 1, y, BASIC_TILE);
+          }
+          if (getGrid(x, y + 1) == ROOM_WALL)
+          {
+            setGrid(x, y+1, BASIC_TILE);
+          }
+          if (getGrid(x, y - 1) == ROOM_WALL)
+          {
+            setGrid(x, y-1, BASIC_TILE);
+          }
+        }
+      }
+    }
+  }
+
+  private static void addWallsToHalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (getGrid(x, y) == HALL)
+        {
+          putUpTheWalls(x, y);
+        }
+      }
+    }
+  }
+
+  private static void putUpTheWalls(int x, int y)
+  {
+    if (getGrid(x + 1, y) == EMPTY)
+    {
+      setGrid(x + 1, y, ROOM_WALL);
+    }
+    if (getGrid(x - 1, y) == EMPTY)
+    {
+      setGrid(x - 1, y, ROOM_WALL);
+    }
+    if (getGrid(x, y + 1) == EMPTY)
+    {
+      setGrid(x, y + 1, ROOM_WALL);
+    }
+    if (getGrid(x, y - 1) == EMPTY)
+    {
+      setGrid(x, y - 1, ROOM_WALL);
+    }
+
+  }
+
+
+  private static void expandHalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (getGrid(x, y) == HALL)
+        {
+          if (getGrid(x + 1, y) == HALL && getGrid(x - 1, y) == HALL)
+          {
+            setGrid(x, y - 1, HALL);
+            setGrid(x + 1, y - 1, HALL);
+            setGrid(x - 1, y - 1, HALL);
+
+          }
+
+          if (getGrid(x, y + 1) == HALL && getGrid(x, y - 1) == HALL)
+          {
+            setGrid(x - 1, y, HALL);
+            setGrid(x - 1, y + 1, HALL);
+            setGrid(x - 1, y - 1, HALL);
+          }
+        }
+      }
     }
   }
 
@@ -458,7 +557,7 @@ public class GameMap
 
     //hallRight=true;
     System.out.println("x cord: " + hallY + " y cord: " + hallX);
-    System.out.println("Grid[y][x] = " + getGrid(hallX,hallY));
+    System.out.println("Grid[y][x] = " + getGrid(hallX, hallY));
     System.out.println("hall r: " + hallRight);
     System.out.println("hall l: " + hallLeft);
     System.out.println("hall d: " + hallDown);
@@ -485,7 +584,7 @@ public class GameMap
 
     if (hallDown)
     {
-      for (int a = hallX; a < X_SIZE-1; a++)
+      for (int a = hallX; a < X_SIZE - 1; a++)
       {
         if (canMakeHall(a, hallY))
         {
@@ -542,7 +641,8 @@ public class GameMap
   private static boolean validHallLocation(int x, int y)
   {
 
-    int connectTwoRooms = 0;
+    int connectRooms = 0;
+    int numberOfConnections = random.nextInt(3) + 1;
     for (int a = x; a < X_SIZE; a++)
     {
       if (canMakeHall(a, y))
@@ -552,7 +652,7 @@ public class GameMap
       else if (getGrid(a, y) == ROOM_WALL)
       {
 
-        connectTwoRooms++;
+        connectRooms++;
         hallDown = true;
       }
       else
@@ -569,7 +669,7 @@ public class GameMap
       }
       else if (getGrid(a, y) == ROOM_WALL)
       {
-        connectTwoRooms++;
+        connectRooms++;
         hallUp = true;
       }
       else
@@ -584,10 +684,10 @@ public class GameMap
       {
 
       }
-      else if (getGrid(x,a) == ROOM_WALL)
+      else if (getGrid(x, a) == ROOM_WALL)
       {
         hallRight = true;
-        connectTwoRooms++;
+        connectRooms++;
       }
       else
       {
@@ -604,7 +704,7 @@ public class GameMap
       else if (getGrid(x, a) == ROOM_WALL)
       {
         hallLeft = true;
-        connectTwoRooms++;
+        connectRooms++;
 
       }
       else
@@ -612,14 +712,15 @@ public class GameMap
         break;
       }
     }
-    if(connectTwoRooms > 1)
+    //   numberOfConnections =2;
+    if (connectRooms > numberOfConnections)
     {
       return true;
     }
     else
     {
-      hallUp =false;
-      hallLeft=false;
+      hallUp = false;
+      hallLeft = false;
       hallRight = false;
       hallDown = false;
       return false;
@@ -635,7 +736,7 @@ public class GameMap
     {
       for (int y = t - 1; y <= t + 1; y++)
       {
-        if (getGrid(x,y) != BASIC_TILE)
+        if (getGrid(x, y) != BASIC_TILE)
         {
           valid = false;
         }
@@ -654,7 +755,7 @@ public class GameMap
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        setGrid(xCord,yCord,OBSTICLE);
+        setGrid(xCord, yCord, OBSTICLE);
         validSpot = true;
       }
       else
@@ -666,11 +767,13 @@ public class GameMap
     System.out.println("Obsticle");
   }
 
-  public int getWidth(int tile_size) {
+  public int getWidth(int tile_size)
+  {
     return num_cols * tile_size;
   }
 
-  public int getHeight(int tile_size) {
+  public int getHeight(int tile_size)
+  {
     return num_rows * tile_size;
   }
 
