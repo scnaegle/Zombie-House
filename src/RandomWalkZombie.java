@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  * Sets up the random walk zombies and their animation sprites
@@ -20,6 +21,15 @@ public class RandomWalkZombie extends Zombie
     moveUp = new Animation(up, 5);
     animation = moveLeft;
     animation.start();
+  }
+
+  @Override
+  protected void chooseDirection() {
+    System.out.println("Choosing new direction");
+    Random rand = new Random();
+    System.out.println("old heading: " + heading.toString());
+    heading.setDegrees(rand.nextInt(360));
+    System.out.println("new heading: " + heading.toString());
   }
 
   private BufferedImage[] initDown()
