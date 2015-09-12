@@ -43,6 +43,13 @@ public interface Object2D {
   Location getLocation();
 
   /**
+   * Get the euclidean distance of 1 object to another
+   * @param other The other object to check.
+   * @return double Distance between the 2 objects
+   */
+  double getDistance(Object2D other);
+
+  /**
    * Get the bounding rectangle for the object
    * @return Bounding rectangle.
    */

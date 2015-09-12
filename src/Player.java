@@ -29,7 +29,6 @@ public class Player extends GameObject implements Humanoid
 
   public Player(Location location) {
     this.location = location;
-    //animation.start();
   }
 
   /**
@@ -138,7 +137,11 @@ public class Player extends GameObject implements Humanoid
    * Heading is controlled by keyboard arrows.
    */
   public void move() {
+//    System.out.println("IN MOVE!!!!");
+//    System.out.println("heading: " + heading);
+//    System.out.println("NONE heading: " + Heading.NONE);
     if (heading != Heading.NONE) {
+//      System.out.println("moving....");
 //      location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
 //      location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
       location.x += (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
@@ -148,16 +151,19 @@ public class Player extends GameObject implements Humanoid
 
   public void update() {
     move();
-    if (heading == Heading.NONE) {
+    if (heading.equals(Heading.NONE)) {
+      regenerate();
       current_speed = 0;
       animation = stand;
-    } else if (current_speed > 1 && stamina > 0) {
+    } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
       stamina -= STAMINA_STEP;
     } else {
+      regenerate();
       animation = walk;
       current_speed = 1;
     }
+    animation.start();
     animation.update();
   }
 }

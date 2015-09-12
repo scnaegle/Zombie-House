@@ -34,21 +34,23 @@ public abstract class Zombie extends GameObject implements Humanoid
 
 
   public void move() {
-    double increment_x = (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-    double increment_y = (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+//    double increment_x = (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
+//    double increment_y = (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
+    double increment_x = (speed * heading.getXMovement()) * MOVE_MULTIPLIER;
+    double increment_y = (speed * heading.getYMovement()) * MOVE_MULTIPLIER;
     location.x += increment_x;
     location.y += increment_y;
 
     if(increment_x > increment_y) {
       if (increment_x > 0) {
         animation = moveRight;
-      } else {
+      } else if (increment_x < 0){
         animation = moveLeft;
       }
     } else {
       if (increment_y > 0) {
         animation = moveUp;
-      } else {
+      } else if (increment_y < 0){
         animation = moveDown;
       }
     }

@@ -14,6 +14,11 @@ public class Heading
   static final Heading SE = new Heading(1, -1);
   static final Heading SW = new Heading(-1, -1);
 
+  static final int NORTH_STEP = -1;
+  static final int SOUTH_STEP = 1;
+  static final int WEST_STEP = -1;
+  static final int EAST_STEP = 1;
+
   private int x_movement;
   private int y_movement;
   private double degrees;
@@ -22,6 +27,10 @@ public class Heading
     this.x_movement = x_movement;
     this.y_movement = y_movement;
     this.degrees = Math.atan((double)y_movement / x_movement);
+  }
+
+  public Heading(Heading heading) {
+    this(heading.x_movement, heading.y_movement);
   }
 
   public int getXMovement() {
@@ -34,6 +43,38 @@ public class Heading
 
   public double getDegrees() {
     return degrees;
+  }
+
+  public void setXMovement(int x_movement) {
+    this.x_movement = x_movement;
+  }
+
+  public void setYMovement(int y_movement) {
+    this.y_movement = y_movement;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    //if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Heading heading = (Heading) o;
+
+    if (x_movement != heading.x_movement) return false;
+    if (y_movement != heading.y_movement) return false;
+    return true;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result;
+    long temp;
+    result = x_movement;
+    result = 31 * result + y_movement;
+    temp = Double.doubleToLongBits(degrees);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
   }
 
   @Override

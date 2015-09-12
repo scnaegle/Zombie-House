@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -13,6 +15,12 @@ public class GamePanel extends JPanel implements KeyListener
 {
   final int FRAMES_PER_SECOND = 60;
   final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+
+  private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
+  private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
+  private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
+  private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
+
   public Player player = new Player(new Location(20, 20, 500, 200));
   Timer frame_timer;
   private GameMap map;
@@ -47,7 +55,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     map = new GameMap(map_file);
 
-    player.setHeading(Heading.NONE);
+    player.setHeading(new Heading(Heading.NONE));
     player.setSpeed(1.0);
     System.out.println("Player initialized");
 
@@ -63,10 +71,10 @@ public class GamePanel extends JPanel implements KeyListener
           player.update();
 
           randomZombie.move();
-          if (randomZombie.location.x > GUI.SCENE_WIDTH) {
+          if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
                 new Location(randomZombie.location.row, randomZombie.location.col,
-                    0, randomZombie.location.y));
+                    GUI.SCENE_WIDTH, randomZombie.location.y));
           }
           lineZombie.move();
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
@@ -76,6 +84,7 @@ public class GamePanel extends JPanel implements KeyListener
           }
 
           explodingTrap.move();
+//          player.animation.start();
           repaint();
         }
       }
@@ -109,7 +118,6 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyTyped(KeyEvent e)
   {
-    System.out.println("Key was typed");
   }
 
   @Override
@@ -117,41 +125,34 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    System.out.println("GUI is running!");
-    if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
+    if (KEY_UP.contains(code))
     {
-      System.out.println("Pressing up");
-      player.heading = Heading.NORTH;
-//        player.move();
+      player.heading.setYMovement(Heading.NORTH_STEP);
     }
-    if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
+    if (KEY_DOWN.contains(code))
     {
-      System.out.println("Pressing down");
-      player.heading = Heading.SOUTH;
-//        player.move();
+      player.heading.setYMovement(Heading.SOUTH_STEP);
     }
-    if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
+    if (KEY_RIGHT.contains(code))
     {
-      System.out.println("Pressing right");
-      player.heading = Heading.EAST;
-//        player.move();
+      player.heading.setXMovement(Heading.EAST_STEP);
     }
-    if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
+    if (KEY_LEFT.contains(code))
     {
-      System.out.println("Pressing left");
-      player.heading = Heading.WEST;
-//        player.move();
+      player.heading.setXMovement(Heading.WEST_STEP);
     }
-//      player.animation.start();
-//      repaint();
   }
 
   @Override
   public void keyReleased(KeyEvent e)
   {
-    System.out.println("Key has been released");
-    player.heading = Heading.NONE;
-    player.animation.stop();
-  }
+    int code = e.getKeyCode();
 
+    if (KEY_UP.contains(code) || KEY_DOWN.contains(code)) {
+      player.heading.setYMovement(0);
+    }
+    if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
+      player.heading.setXMovement(0);
+    }
+  }
 }
