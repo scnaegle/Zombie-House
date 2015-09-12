@@ -12,15 +12,15 @@ public class Location
 
   }
 
-  public Location(int row, int col) {
-    this.row = row;
-    this.col = col;
-  }
-
-  public Location(int row, int col, double x, double y) {
-    this(row, col);
+  public Location(double x, double y) {
     this.x = x;
     this.y = y;
+  }
+
+  public Location(double x, double y, int row, int col) {
+    this(x, y);
+    this.row = row;
+    this.col = col;
   }
 
   public int getRow() {
