@@ -71,10 +71,10 @@ public class GamePanel extends JPanel implements KeyListener
           player.update();
 
           randomZombie.move();
-          if (randomZombie.location.x > GUI.SCENE_WIDTH) {
+          if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
                 new Location(randomZombie.location.row, randomZombie.location.col,
-                    0, randomZombie.location.y));
+                    GUI.SCENE_WIDTH, randomZombie.location.y));
           }
           lineZombie.move();
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
