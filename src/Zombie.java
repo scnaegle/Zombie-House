@@ -55,9 +55,9 @@ public abstract class Zombie extends GameObject implements Humanoid
       }
     } else {
       if (y_move > 0) {
-        animation = moveUp;
-      } else if (y_move < 0) {
         animation = moveDown;
+      } else if (y_move < 0) {
+        animation = moveUp;
       }
     }
   }
