@@ -4,18 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferedImage;
 
 
 public class GUI
 {
 
   final static int PIXELS = 80;
-  static int SCENE_WIDTH = 1920;
-  static int SCENE_HEIGHT = 1080;
+  static int SCENE_WIDTH = 1000;
+  static int SCENE_HEIGHT = 1000;
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
+  static JViewport viewport;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -25,8 +25,7 @@ public class GUI
   JLabel playerStamina;
   JButton startPause;
   boolean pause = true;
-
-
+  private Point startPoint;
 
 
   public void setUpGUI()
@@ -34,10 +33,10 @@ public class GUI
     window = new JFrame("Zombie House");
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setLayout(new BorderLayout());
-    window.setExtendedState(window.MAXIMIZED_BOTH);
-//    System.out.println("scene_width: " + SCENE_WIDTH);
-//    System.out.println("scene_height: " + SCENE_HEIGHT);
-//    window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
+    //window.setExtendedState(window.MAXIMIZED_BOTH);
+    window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
+
+
     window.addComponentListener(new ComponentListener()
     {
       @Override
@@ -71,6 +70,14 @@ public class GUI
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
     //gamePanel.setFocusTraversalKeysEnabled(false);
+
+    startPoint = new Point(0, 0);
+    viewport = new JViewport();
+    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
+    viewport.setView(gamePanel);
+    viewport.setViewPosition(startPoint);
+
+
 
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
@@ -111,9 +118,10 @@ public class GUI
     viewPanel.add(playerStamina);
 
 
-
-    window.getContentPane().add(gamePanel, BorderLayout.CENTER);
+    window.getContentPane().add(viewport, BorderLayout.CENTER);
+    //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
+    window.pack();
     window.setVisible(true);
     window.setResizable(true);
 

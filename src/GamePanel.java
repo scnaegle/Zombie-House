@@ -1,8 +1,9 @@
-import sun.awt.image.PixelConverter;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,7 +26,8 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
 
-  public Player player = new Player(new Location(20, 20, 500, 200));
+  public Player player = new Player(5, 10, 1.0, 5);
+  final BufferedImage vignetteCanvas = makeVignette(player.getSight());
   Timer frame_timer;
   private GameMap map;
   private Zombie randomZombie =
@@ -34,11 +36,8 @@ public class GamePanel extends JPanel implements KeyListener
       new LineWalkZombie(new Location(300, 300));
   private Zombie masterZ =
       new MasterZombie(new Location(100, 100));
-
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
-
-  final BufferedImage vignetteCanvas = makeVignette(player.getSight());
 
 
 
@@ -65,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener
     map = new GameMap(map_file);
 
     player.setHeading(new Heading(Heading.NONE));
-    player.setSpeed(1.0);
+    player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT / 2));
     System.out.println("Player initialized");
 
     randomZombie.setHeading(Heading.WEST);
@@ -82,14 +81,12 @@ public class GamePanel extends JPanel implements KeyListener
           randomZombie.move();
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
-                new Location(randomZombie.location.row, randomZombie.location.col,
-                    GUI.SCENE_WIDTH, randomZombie.location.y));
+                new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
           }
           lineZombie.move();
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
-                new Location(lineZombie.location.row, lineZombie.location.col, 0,
-                    lineZombie.location.y));
+                new Location(0, lineZombie.location.y));
           }
 
           explodingTrap.move();
@@ -123,7 +120,7 @@ public class GamePanel extends JPanel implements KeyListener
     g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
         lineZombie.location.getY(), null);
 
-    g.drawImage(vignetteCanvas,0,0,null);
+    //g.drawImage(vignetteCanvas,0,0,null);
   }
 
   private BufferedImage makeVignette(int sight)
@@ -131,9 +128,6 @@ public class GamePanel extends JPanel implements KeyListener
     BufferedImage img = new BufferedImage(GUI.SCENE_WIDTH,GUI.SCENE_HEIGHT,
                                           BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = (Graphics2D) img.getGraphics();
-    float maxDist = (float) Math.sqrt(
-        0.25f * (GUI.SCENE_WIDTH * GUI.SCENE_WIDTH +
-            GUI.SCENE_HEIGHT * GUI.SCENE_HEIGHT));
 
     float sight_pixels = (float)sight*GUI.tile_size;
     Point2D center = new Point2D.Float(GUI.SCENE_WIDTH/2, GUI.SCENE_HEIGHT/2);
