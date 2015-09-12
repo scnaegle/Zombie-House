@@ -616,6 +616,14 @@ public class GameMap
     System.out.println("Obsticle");
   }
 
+  public int getWidth(int tile_size) {
+    return num_cols * tile_size;
+  }
+
+  public int getHeight(int tile_size) {
+    return num_rows * tile_size;
+  }
+
   /**
    * Creates map from a file
    *
