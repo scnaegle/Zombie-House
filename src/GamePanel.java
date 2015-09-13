@@ -139,6 +139,7 @@ public class GamePanel extends JPanel implements KeyListener
     g.drawImage(player.animation.getSprite(), player.location.getX(),
         player.location.getY(), null);
 
+    // Math to make vignette move with viewport
     JViewport vp = (JViewport) getParent();
     int width = vp.getWidth();
     int height = vp.getHeight();
