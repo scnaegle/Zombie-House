@@ -67,7 +67,8 @@ public class GamePanel extends JPanel implements KeyListener
 
     player.setHeading(new Heading(Heading.NONE));
     player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT / 2));
-    System.out.println("Player initialized");
+    //snapViewPortToPlayer();
+
 
     randomZombie.setHeading(Heading.WEST);
     lineZombie.setHeading(Heading.EAST);
@@ -79,12 +80,8 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (GUI.running) {
           player.update();
+          snapViewPortToPlayer();
 
-          JViewport parent_viewport = (JViewport)getParent();
-          Rectangle viewport_rect = parent_viewport.getViewRect();
-          int new_x = (int)(player.location.x - viewport_rect.width / 2);
-          int new_y = (int)(player.location.y - viewport_rect.height / 2);
-          parent_viewport.setViewPosition(new Point(new_x, new_y));
 
           randomZombie.update(player);
           if (randomZombie.location.x < 0) {
@@ -105,6 +102,20 @@ public class GamePanel extends JPanel implements KeyListener
 
 
 
+  }
+
+  public void snapViewPortToPlayer()
+  {
+    /**
+     * Makes the screen follow the player and keeps him in the center of
+     * the screen.
+     */
+    JViewport parent_viewport = (JViewport) getParent();
+    Rectangle viewport_rect = parent_viewport.getViewRect();
+    int new_x = (int) (player.location.x - viewport_rect.width / 2);
+    int new_y = (int) (player.location.y - viewport_rect.height / 2);
+    parent_viewport.setViewPosition(new Point(new_x, new_y));
+    System.out.println(parent_viewport.getViewRect());
   }
 
 
@@ -128,7 +139,13 @@ public class GamePanel extends JPanel implements KeyListener
     g.drawImage(player.animation.getSprite(), player.location.getX(),
         player.location.getY(), null);
 
-    //g.drawImage(vignetteCanvas,0,0,null);
+    JViewport vp = (JViewport) getParent();
+    int width = vp.getWidth();
+    int height = vp.getHeight();
+    int x = vp.getViewPosition().x - (vignetteCanvas.getWidth() - width) / 2;
+    int y = vp.getViewPosition().y - (vignetteCanvas.getHeight() - height) / 2;
+
+    g.drawImage(vignetteCanvas, x, y, null);
   }
 
   private BufferedImage makeVignette(int sight)
