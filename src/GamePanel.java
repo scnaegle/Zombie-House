@@ -18,8 +18,8 @@ import java.util.Arrays;
  */
 public class GamePanel extends JPanel implements KeyListener
 {
-  final int FRAMES_PER_SECOND = 60;
-  final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+  final int FPS = 60;
+  final int SKIP_TICKS = 1000 / FPS;
 
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
@@ -79,6 +79,12 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (GUI.running) {
           player.update();
+
+          JViewport parent_viewport = (JViewport)getParent();
+          Rectangle viewport_rect = parent_viewport.getViewRect();
+          int new_x = (int)(player.location.x - viewport_rect.width / 2);
+          int new_y = (int)(player.location.y - viewport_rect.height / 2);
+          parent_viewport.setViewPosition(new Point(new_x, new_y));
 
           randomZombie.update(player);
           if (randomZombie.location.x < 0) {
