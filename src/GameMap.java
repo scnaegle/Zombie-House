@@ -91,7 +91,7 @@ public class GameMap
    */
   public void paint(Graphics g, int tile_size)
   {
-    paintSection(g, new Location(0, 0), new Location(num_rows, num_cols),
+    paintSection(g, new Location(0, 0, 0, 0), new Location(0, 0, num_rows, num_cols),
         tile_size);
   }
 
@@ -777,6 +777,10 @@ public class GameMap
     return num_rows * tile_size;
   }
 
+  public Tile getTile(int row, int col) {
+    return grid[row][col];
+  }
+
   /**
    * Creates map from a file
    *
@@ -812,8 +816,8 @@ public class GameMap
             col++;
           }
           grid.add(row_array);
+          row++;
         }
-        row++;
       }
 
       this.num_rows = grid.size();
