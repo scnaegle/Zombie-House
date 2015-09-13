@@ -46,10 +46,10 @@ public class Location
   @Override
   public String toString() {
     return "Location{" +
-        "row=" + row +
-        ", col=" + col +
-        ", x=" + x +
+        "x=" + x +
         ", y=" + y +
+        ", row=" + row +
+        ", col=" + col +
         '}';
   }
 
