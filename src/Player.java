@@ -163,15 +163,31 @@ public class Player extends GameObject implements Humanoid
     int col = next_location.getCol(GUI.tile_size);
     GameObject new_location_object = new GameObject(next_location, GUI.tile_size, GUI.tile_size);
 
-    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
-    if (tile_check.tile_type.equals(TileType.WALL) &&
-        new_location_object.intersects(tile_check)) {
-      return true;
-    }
-    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
-    if (tile_check.tile_type.equals(TileType.WALL) &&
-        new_location_object.intersects(tile_check)) {
-      return true;
+//    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
+//    if (tile_check.tile_type.equals(TileType.WALL) &&
+//        new_location_object.intersects(tile_check)) {
+//      return true;
+//    }
+//    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
+//    if (tile_check.tile_type.equals(TileType.WALL) &&
+//        new_location_object.intersects(tile_check)) {
+//      return true;
+//    }
+
+//    System.out.println("***************************************************");
+//    System.out.println("new location: " + new_location_object.location);
+//    System.out.format("current: [row=%d, col=%d]\n", row, col);
+    Tile tile_check;
+    for(int r = row - 1; r <= row + 1; r++) {
+      for(int c = col - 1; c <= col + 1; c++) {
+        tile_check = map.getTile(r, c);
+//        System.out.println("tile_check: " + tile_check);
+        if (tile_check.tile_type.equals(TileType.WALL) &&
+            new_location_object.intersects(tile_check)) {
+//          System.out.println("Hit wall...");
+          return true;
+        }
+      }
     }
     return false;
   }
