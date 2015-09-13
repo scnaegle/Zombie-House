@@ -28,15 +28,6 @@ public abstract class Zombie extends GameObject implements Humanoid
     this.location = location;
   }
 
- // lookForLight();
- // moveToPlayer();
- // roamStraight lines();
-      // -for this method we will need to make sure that we are not trying to move
-      //  the zombies one tile at a time but in a continuios movement, i'm thinking we have them travel in a
-      // straight lines will be eaier than diagonol, but I could ver possibly be wrong
-      // maybe having them traverse for a certain amount of time in a gerneral
-
-
   protected void move() {
 //    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
 //    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
