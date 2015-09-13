@@ -63,7 +63,7 @@ public abstract class Zombie extends GameObject implements Humanoid
     // This is a placeholder that should be overridden.
   }
 
-  public void update(Humanoid player) {
+  public void update(GameMap map, Humanoid player) {
     frame++;
     if (frame >= decision_rate * GamePanel.FPS) {
       frame = 0;
