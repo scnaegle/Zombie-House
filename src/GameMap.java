@@ -404,9 +404,10 @@ public class GameMap
 
     expandHalls();
 
-    makeDoors();
+    makePathFromEnd();
+    // makeDoors();
 
-    addWallsToHalls();
+    // addWallsToHalls();
 
     spawnZombie();
 
@@ -418,6 +419,117 @@ public class GameMap
         System.out.print(getGrid(x, y));
       }
       System.out.println("");
+    }
+  }
+
+  private static void makePathFromEnd()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        if (getGrid(x, y) == END_ROOM)
+        {
+          endAlgorithm(x, y);
+        }
+      }
+    }
+  }
+
+  private static void endAlgorithm(int x, int y)
+  {
+    if (outWardCapable(x, y))
+    {
+
+      System.out.println();
+      System.out.println();
+      System.out.println(hallDown);
+      System.out.println(hallLeft);
+      System.out.println(hallRight);
+      System.out.println(hallUp);
+      System.out.println();
+      System.out.println();
+      for (int a = x; a < X_SIZE; a++)
+      {
+
+      }
+    }
+  }
+
+  private static boolean outWardCapable(int x, int y)
+  {
+    int connectRooms = 0;
+    int numberOfConnections = random.nextInt(3) + 1;
+    for (int a = x; a < X_SIZE; a++)
+    {
+      if (getGrid(a, y) == END_ROOM || getGrid(a, y) == ROOM_WALL ||
+          getGrid(a, y) == ROOM_CORNER)
+      {
+
+      }
+      else
+      {
+        connectRooms++;
+        hallDown = true;
+        break;
+      }
+    }
+
+    for (int a = x; a > 0; a--)
+    {
+      if (getGrid(a, y) == END_ROOM || getGrid(a, y) == ROOM_WALL ||
+          getGrid(a, y) == ROOM_CORNER)
+      {
+
+      }
+      else
+      {
+        connectRooms++;
+        hallUp = true;
+        break;
+      }
+    }
+
+    for (int a = y; a < Y_SIZE; a++)
+    {
+      if (getGrid(x, a) == END_ROOM || getGrid(x, a) == ROOM_WALL ||
+          getGrid(x, a) == ROOM_CORNER)
+      {
+
+      }
+      else
+      {
+        connectRooms++;
+        hallRight = true;
+        break;
+      }
+    }
+    for (int a = y; a > 0; a--)
+    {
+      if (getGrid(x, a) == END_ROOM || getGrid(x, a) == ROOM_WALL ||
+          getGrid(x, a) == ROOM_CORNER)
+      {
+
+      }
+      else
+      {
+        connectRooms++;
+        hallLeft = true;
+        break;
+      }
+    }
+    if (connectRooms > 0)
+    {
+      return true;
+    }
+    else
+    {
+
+      hallDown = false;
+      hallLeft = false;
+      hallUp = false;
+      hallRight = false;
+      return false;
     }
   }
 
@@ -439,11 +551,11 @@ public class GameMap
           }
           if (getGrid(x, y + 1) == ROOM_WALL)
           {
-            setGrid(x, y+1, BASIC_TILE);
+            setGrid(x, y + 1, BASIC_TILE);
           }
           if (getGrid(x, y - 1) == ROOM_WALL)
           {
-            setGrid(x, y-1, BASIC_TILE);
+            setGrid(x, y - 1, BASIC_TILE);
           }
         }
       }
