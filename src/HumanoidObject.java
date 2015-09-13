@@ -1,7 +1,7 @@
 /**
  * Created by sean on 9/8/15.
  */
-public interface Humanoid
+public interface HumanoidObject
 {
 
   /**
@@ -33,5 +33,5 @@ public interface Humanoid
    * @param other
    * @return
    */
-//  boolean intersects(Humanoid other);
+//  boolean intersects(HumanoidObject other);
 }

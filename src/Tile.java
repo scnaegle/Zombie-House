@@ -127,7 +127,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
 
 	@Override
 	public Rectangle getBoundingRectangle() {
-		return null;
+		return new Rectangle(col * GUI.tile_size, row * GUI.tile_size, GUI.tile_size, GUI.tile_size);
 	}
 
 	@Override

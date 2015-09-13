@@ -4,12 +4,11 @@ import java.awt.image.BufferedImage;
  * Player class sets up the player, loads the walking/ running sprites and
  * sets up the animation depending on the speed of the player.
  */
-public class Player extends GameObject implements Humanoid
+public class Player extends GameObject implements HumanoidObject
 {
-  private final int FPS = 60;
-  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
+  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   private final double STAMINA_PER_SEC = 1.0;
-  private final double STAMINA_STEP = STAMINA_PER_SEC / FPS;
+  private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
   private int sight = 5;
   private int hearing = 10;
   private double current_speed = 1.0;
@@ -29,6 +28,12 @@ public class Player extends GameObject implements Humanoid
 
   public Player(Location location) {
     this.location = location;
+  }
+
+  public Player(int width, int height, Location location) {
+    this(location);
+    this.width = width;
+    this.height = height;
   }
 
   /**
@@ -140,22 +145,60 @@ public class Player extends GameObject implements Humanoid
    * Tells the sprite how to move based on the heading we give it.
    * Heading is controlled by keyboard arrows.
    */
-  public void move() {
-//    System.out.println("IN MOVE!!!!");
-//    System.out.println("heading: " + heading);
-//    System.out.println("NONE heading: " + Heading.NONE);
-    if (heading != Heading.NONE) {
+  public void move(Location next_location) {
+    location = next_location;
+  }
+
+  public Location getNextLocation() {
 //      System.out.println("moving....");
 //      location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
 //      location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-      location.x += (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-      location.y += (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
-    }
+    double new_x = location.x + (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
+    double new_y = location.y + (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
+    return new Location(new_x, new_y);
   }
 
-  public void update() {
-    move();
-    if (heading.equals(Heading.NONE)) {
+  public boolean hitWall(GameMap map, Location next_location) {
+    int row = next_location.getRow(GUI.tile_size);
+    int col = next_location.getCol(GUI.tile_size);
+    GameObject new_location_object = new GameObject(next_location, GUI.tile_size, GUI.tile_size);
+
+//    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
+//    if (tile_check.tile_type.equals(TileType.WALL) &&
+//        new_location_object.intersects(tile_check)) {
+//      return true;
+//    }
+//    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
+//    if (tile_check.tile_type.equals(TileType.WALL) &&
+//        new_location_object.intersects(tile_check)) {
+//      return true;
+//    }
+
+//    System.out.println("***************************************************");
+//    System.out.println("new location: " + new_location_object.location);
+//    System.out.format("current: [row=%d, col=%d]\n", row, col);
+    Tile tile_check;
+    for(int r = row - 1; r <= row + 1; r++) {
+      for(int c = col - 1; c <= col + 1; c++) {
+        tile_check = map.getTile(r, c);
+//        System.out.println("tile_check: " + tile_check);
+        if (tile_check.tile_type.equals(TileType.WALL) &&
+            new_location_object.intersects(tile_check)) {
+//          System.out.println("Hit wall...");
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public void update(GameMap map) {
+    Location next_location = getNextLocation();
+    if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
+      move(next_location);
+    }
+
+    if(heading.equals(Heading.NONE)) {
       regenerate();
       current_speed = 0;
       animation = stand;
@@ -170,4 +213,5 @@ public class Player extends GameObject implements Humanoid
     animation.start();
     animation.update();
   }
+
 }

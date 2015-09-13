@@ -24,7 +24,7 @@ public class RandomWalkZombie extends Zombie
   }
 
   @Override
-  protected void chooseDirection(Humanoid player) {
+  protected void chooseDirection(HumanoidObject player) {
 //    System.out.println("Choosing new direction");
     Random rand = new Random();
 //    System.out.println("old heading: " + heading.toString());

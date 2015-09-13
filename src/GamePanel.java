@@ -18,8 +18,8 @@ import java.util.Arrays;
  */
 public class GamePanel extends JPanel implements KeyListener
 {
-  final int FRAMES_PER_SECOND = 60;
-  final int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+  static final int FPS = 60;
+  static final int SKIP_TICKS = 1000 / FPS;
 
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
@@ -38,7 +38,6 @@ public class GamePanel extends JPanel implements KeyListener
       new MasterZombie(new Location(100, 100));
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
-
 
 
   public GamePanel()
@@ -67,7 +66,8 @@ public class GamePanel extends JPanel implements KeyListener
 
     player.setHeading(new Heading(Heading.NONE));
     player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT / 2));
-    System.out.println("Player initialized");
+    //snapViewPortToPlayer();
+
 
     randomZombie.setHeading(Heading.WEST);
     lineZombie.setHeading(Heading.EAST);
@@ -78,14 +78,16 @@ public class GamePanel extends JPanel implements KeyListener
       public void actionPerformed(ActionEvent e)
       {
         if (GUI.running) {
-          player.update();
+          player.update(map);
+          snapViewPortToPlayer();
 
-          randomZombie.update(player);
+
+          randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
                 new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
           }
-          lineZombie.update(player);
+          lineZombie.update(map, player);
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
@@ -96,19 +98,29 @@ public class GamePanel extends JPanel implements KeyListener
         }
       }
     });
+  }
 
-
-
+  public void snapViewPortToPlayer()
+  {
+    /**
+     * Makes the screen follow the player and keeps him in the center of
+     * the screen.
+     */
+    JViewport parent_viewport = (JViewport) getParent();
+    Rectangle viewport_rect = parent_viewport.getViewRect();
+    int new_x = (int) (player.location.x - viewport_rect.width / 2);
+    int new_y = (int) (player.location.y - viewport_rect.height / 2);
+    parent_viewport.setViewPosition(new Point(new_x, new_y));
   }
 
 
+  @Override
   public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
 
     map.paint(g, GUI.tile_size);
 
-//    System.out.println("player location: " + player.location.toString());
     g.drawImage(fireTrap.trap, fireTrap.location.getX(),
         fireTrap.location.getY(), null);
     g.drawImage(explodingTrap.fireAnimation.getSprite(),
@@ -122,7 +134,14 @@ public class GamePanel extends JPanel implements KeyListener
     g.drawImage(player.animation.getSprite(), player.location.getX(),
         player.location.getY(), null);
 
-    //g.drawImage(vignetteCanvas,0,0,null);
+    // Math to make vignette move with viewport
+    JViewport vp = (JViewport) getParent();
+    int width = vp.getWidth();
+    int height = vp.getHeight();
+    int x = vp.getViewPosition().x - (vignetteCanvas.getWidth() - width) / 2;
+    int y = vp.getViewPosition().y - (vignetteCanvas.getHeight() - height) / 2;
+
+    g.drawImage(vignetteCanvas, x, y, null);
   }
 
   private BufferedImage makeVignette(int sight)

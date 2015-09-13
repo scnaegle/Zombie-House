@@ -20,7 +20,7 @@ public class LineWalkZombie extends Zombie
   }
 
   @Override
-  protected void chooseDirection(Humanoid player) {
+  protected void chooseDirection(HumanoidObject player) {
 //    System.out.println("Choosing Line Walk Zombie direction...");
     if (smellPlayer(player)) {
 //      System.out.println("BRAAAAAIIINNNNNNZZZZ");

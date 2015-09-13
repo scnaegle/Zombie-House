@@ -161,6 +161,7 @@ public class GUI
     window.setVisible(true);
     window.setResizable(true);
     window.getContentPane().add(scrollPane);
+    SwingUtilities.invokeLater(() -> gamePanel.snapViewPortToPlayer());
 
   }
 
