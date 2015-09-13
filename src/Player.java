@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
  * Player class sets up the player, loads the walking/ running sprites and
  * sets up the animation depending on the speed of the player.
  */
-public class Player extends GameObject implements Humanoid
+public class Player extends GameObject implements HumanoidObject
 {
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   private final double STAMINA_PER_SEC = 1.0;

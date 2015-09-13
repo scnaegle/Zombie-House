@@ -1,12 +1,10 @@
-import java.util.Random;
-
 /**
  * Sets up everything that a zombie has, such as smell, speed, decision rate and
  * how the sprite will move. Each zombie is an object so it extends GameObject
  * which implements Object2D. Each zombie also needs to track the human, so it
- * implements Humanoid which lets it get the human's current location.
+ * implements HumanoidObject which lets it get the human's current location.
  */
-public abstract class Zombie extends GameObject implements Humanoid
+public abstract class Zombie extends GameObject implements HumanoidObject
 {
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   protected int frame = 0;
@@ -52,18 +50,18 @@ public abstract class Zombie extends GameObject implements Humanoid
     }
   }
 
-  protected boolean smellPlayer(Humanoid player) {
+  protected boolean smellPlayer(HumanoidObject player) {
     if (getDistance((Object2D)player) <= smell * GUI.tile_size) {
       return true;
     }
     return false;
   }
 
-  protected void chooseDirection(Humanoid player) {
+  protected void chooseDirection(HumanoidObject player) {
     // This is a placeholder that should be overridden.
   }
 
-  public void update(GameMap map, Humanoid player) {
+  public void update(GameMap map, HumanoidObject player) {
     frame++;
     if (frame >= decision_rate * GamePanel.FPS) {
       frame = 0;
