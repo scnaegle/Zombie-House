@@ -30,6 +30,12 @@ public class Player extends GameObject implements Humanoid
     this.location = location;
   }
 
+  public Player(int width, int height, Location location) {
+    this(location);
+    this.width = width;
+    this.height = height;
+  }
+
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
    *
@@ -139,22 +145,44 @@ public class Player extends GameObject implements Humanoid
    * Tells the sprite how to move based on the heading we give it.
    * Heading is controlled by keyboard arrows.
    */
-  public void move() {
-//    System.out.println("IN MOVE!!!!");
-//    System.out.println("heading: " + heading);
-//    System.out.println("NONE heading: " + Heading.NONE);
-    if (heading != Heading.NONE) {
+  public void move(Location next_location) {
+    location = next_location;
+  }
+
+  public Location getNextLocation() {
 //      System.out.println("moving....");
 //      location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
 //      location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-      location.x += (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-      location.y += (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
-    }
+    double new_x = location.x + (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
+    double new_y = location.y + (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
+    return new Location(new_x, new_y);
   }
 
-  public void update() {
-    move();
-    if (heading.equals(Heading.NONE)) {
+  public boolean hitWall(GameMap map, Location next_location) {
+    int row = next_location.getRow(GUI.tile_size);
+    int col = next_location.getCol(GUI.tile_size);
+    GameObject new_location_object = new GameObject(next_location, GUI.tile_size, GUI.tile_size);
+
+    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
+    if (tile_check.tile_type.equals(TileType.WALL) &&
+        new_location_object.intersects(tile_check)) {
+      return true;
+    }
+    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
+    if (tile_check.tile_type.equals(TileType.WALL) &&
+        new_location_object.intersects(tile_check)) {
+      return true;
+    }
+    return false;
+  }
+
+  public void update(GameMap map) {
+    Location next_location = getNextLocation();
+    if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
+      move(next_location);
+    }
+
+    if(heading.equals(Heading.NONE)) {
       regenerate();
       current_speed = 0;
       animation = stand;
@@ -169,4 +197,5 @@ public class Player extends GameObject implements Humanoid
     animation.start();
     animation.update();
   }
+
 }
