@@ -40,7 +40,6 @@ public class GamePanel extends JPanel implements KeyListener
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
 
 
-
   public GamePanel()
   {
 
@@ -79,16 +78,16 @@ public class GamePanel extends JPanel implements KeyListener
       public void actionPerformed(ActionEvent e)
       {
         if (GUI.running) {
-          player.update();
+          player.update(map);
           snapViewPortToPlayer();
 
 
-          randomZombie.update(player);
+          randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
                 new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
           }
-          lineZombie.update(player);
+          lineZombie.update(map, player);
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
@@ -99,9 +98,6 @@ public class GamePanel extends JPanel implements KeyListener
         }
       }
     });
-
-
-
   }
 
   public void snapViewPortToPlayer()
@@ -115,17 +111,16 @@ public class GamePanel extends JPanel implements KeyListener
     int new_x = (int) (player.location.x - viewport_rect.width / 2);
     int new_y = (int) (player.location.y - viewport_rect.height / 2);
     parent_viewport.setViewPosition(new Point(new_x, new_y));
-    System.out.println(parent_viewport.getViewRect());
   }
 
 
+  @Override
   public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
 
     map.paint(g, GUI.tile_size);
 
-//    System.out.println("player location: " + player.location.toString());
     g.drawImage(fireTrap.trap, fireTrap.location.getX(),
         fireTrap.location.getY(), null);
     g.drawImage(explodingTrap.fireAnimation.getSprite(),
