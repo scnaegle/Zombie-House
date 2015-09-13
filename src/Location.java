@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Created by scnaegl on 9/8/15.
  */
@@ -23,12 +25,14 @@ public class Location
     this.col = col;
   }
 
-  public int getRow() {
-    return row;
+  public int getRow(int tile_size) {
+    Point center = getCenterPoint(tile_size, tile_size);
+    return (int)(center.y / tile_size);
   }
 
-  public int getCol() {
-    return col;
+  public int getCol(int tile_size) {
+    Point center = getCenterPoint(tile_size, tile_size);
+    return (int)(center.x / tile_size);
   }
 
   public int getX() {
@@ -39,8 +43,8 @@ public class Location
     return (int)y;
   }
 
-  public void setRow(int row) {
-    this.row = row;
+  public Point getCenterPoint(int width, int height) {
+    return new Point((int)x + width / 2, (int)y + height / 2);
   }
 
   @Override
