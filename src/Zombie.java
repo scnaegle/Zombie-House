@@ -8,8 +8,7 @@ import java.util.Random;
  */
 public abstract class Zombie extends GameObject implements Humanoid
 {
-  private final int FPS = 60;
-  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / FPS;
+  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   protected int frame = 0;
 
   protected double decision_rate = 2.0;
@@ -66,7 +65,7 @@ public abstract class Zombie extends GameObject implements Humanoid
 
   public void update(Humanoid player) {
     frame++;
-    if (frame >= decision_rate * FPS) {
+    if (frame >= decision_rate * GamePanel.FPS) {
       frame = 0;
       chooseDirection(player);
     }

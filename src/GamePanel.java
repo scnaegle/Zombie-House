@@ -18,8 +18,8 @@ import java.util.Arrays;
  */
 public class GamePanel extends JPanel implements KeyListener
 {
-  final int FPS = 60;
-  final int SKIP_TICKS = 1000 / FPS;
+  static final int FPS = 60;
+  static final int SKIP_TICKS = 1000 / FPS;
 
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
