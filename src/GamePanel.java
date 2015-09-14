@@ -116,8 +116,8 @@ public class GamePanel extends JPanel implements KeyListener
      */
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
-    int new_x = (int) (player.location.x - viewport_rect.width / 2);
-    int new_y = (int) (player.location.y - viewport_rect.height / 2);
+    int new_x = (int) (player.getCenterPoint().x - viewport_rect.width / 2);
+    int new_y = (int) (player.getCenterPoint().y - viewport_rect.height / 2);
     parent_viewport.setViewPosition(new Point(new_x, new_y));
   }
 
