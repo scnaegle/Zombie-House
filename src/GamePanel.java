@@ -203,7 +203,7 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
-    //player.playSound();
+
 
   }
 
@@ -224,7 +224,6 @@ public class GamePanel extends JPanel implements KeyListener
       player.setWalking();
     }
     player.stopSound();
-
 
   }
 
