@@ -17,7 +17,6 @@ public class SoundLoader implements LineListener
     InputStream inputStream =
         ClassLoader.getSystemResourceAsStream("resources/" + path);
 
-    System.out.println(inputStream);
     try
     {
       AudioInputStream audioStream =
@@ -58,24 +57,6 @@ public class SoundLoader implements LineListener
     thread.start();
   }
 
-//  public static AudioStream loadSound(String file)
-//  {
-//    InputStream sound;
-//    AudioStream audio = null;
-//    try
-//    {
-//      sound = ClassLoader.getSystemClassLoader().getResourceAsStream(
-//          "resources/" + file);
-//      audio = new AudioStream(sound);
-//      // AudioPlayer.player.start(audio);
-//    }
-//    catch (Exception e)
-//    {
-//      e.printStackTrace();
-//    }
-//
-//    return audio;
-//  }
 
   @Override
   public void update(LineEvent event)

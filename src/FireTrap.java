@@ -11,6 +11,7 @@ public class FireTrap extends GameObject
   BufferedImage[] explosion = initExplosion();
   Animation explode = new Animation(explosion, 4);
   Animation fireAnimation = explode;
+  private SoundLoader combust;
 
   public FireTrap(Location location)
   {
@@ -52,5 +53,10 @@ public class FireTrap extends GameObject
   {
     fireAnimation.update();
     fireAnimation.start();
+  }
+
+  public void loadExplosion()
+  {
+    combust = new SoundLoader("explosion.wav");
   }
 }

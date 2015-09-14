@@ -12,7 +12,6 @@ public class GUI
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
-  static JViewport viewport;
   static JScrollPane scrollPane;
   JFrame window;
   GamePanel gamePanel;
@@ -24,6 +23,11 @@ public class GUI
   JButton startPause;
   boolean pause = true;
   Player player;
+  Zombie zombie;
+  FireTrap fireTrap;
+  Zombie randomZombie;
+  Zombie lineZombie;
+  Zombie masterZ;
   private int whichlevel = 1;
 
   public void setUpGUI()
@@ -69,7 +73,6 @@ public class GUI
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
 
-    //gamePanel.setFocusTraversalKeysEnabled(false);
 
 
     scrollPane = new JScrollPane(gamePanel);
@@ -101,21 +104,6 @@ public class GUI
     am.put("Arrow.down", doNothing);
     am.put("Arrow.right", doNothing);
     am.put("Arrow.left", doNothing);
-
-//    viewport = new JViewport();
-//    viewport.setAlignmentX(gamePanel.player.location.getX());
-//    viewport.setAlignmentY(gamePanel.player.location.getY());
-
-    //scrollPane.setViewportView(gamePanel);
-    //scrollPane.getViewport().setViewPosition(
-    //new Point(gamePanel.player.location.getX(),gamePanel.player.location
-    // .getY()));
-
-//    viewport = new JViewport();
-//    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
-//    viewport.setView(gamePanel);
-//    viewport.setViewPosition(startPoint);
-
 
 
     level = new JLabel("Level: ");
@@ -182,6 +170,7 @@ public class GUI
     running = false;
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
+
   }
 
 
@@ -196,8 +185,8 @@ public class GUI
 
   public void initPlayer()
   {
-    player = new Player(5, 10, 1.0, 5);
-    player.setLocation(new Location(SCENE_WIDTH / 2, SCENE_HEIGHT / 2));
+    player = new Player(5, 10, 1.0, 5, 70, 70, new Location(800, 1120));
+//    player.setLocation(new Location(800, 1120));
     player.setHeading(new Heading(Heading.NONE));
 
   }
@@ -207,5 +196,27 @@ public class GUI
   {
     gamePanel.loadMusic();
     player.loadSounds();
+    randomZombie.loadNoises();
+    lineZombie.loadNoises();
+    masterZ.loadNoises();
+    //fireTrap.loadExplosion();
+  }
+
+  /**
+   * Will need to make arrays of zombies. But for now this is ok.
+   */
+  public void initZombies()
+  {
+    randomZombie = new RandomWalkZombie(new Location(700, 1200));
+    lineZombie = new LineWalkZombie(new Location(800, 1300));
+    masterZ = new MasterZombie(new Location(100, 100));
+
+    randomZombie.setHeading(new Heading(Heading.WEST));
+    lineZombie.setHeading(new Heading(Heading.EAST));
+  }
+
+  public void initFireTraps()
+  {
+    //need to create array of firetraps for later, based off of map
   }
 }

@@ -7,21 +7,28 @@
 public abstract class Zombie extends Humanoid implements HumanoidObject
 {
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
+  public boolean inRange = false;
   protected int frame = 0;
-
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
-  protected double speed = .5;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
   Animation moveRight;
   Animation moveUp;
+  private SoundLoader groan;
+  private SoundLoader zWalk;
+  private SoundLoader bite;
+  private SoundLoader hitObst;
+  private SoundLoader sound;
 
 
   public Zombie(Location location) {
     this.location = location;
-    this.speed = 0.5;
+    this.defined_speed = .5;
+    this.current_speed = .5;
+    this.width = GUI.tile_size - 10;
+    this.height = GUI.tile_size - 10;
   }
 
   protected void determineAnimation() {
@@ -64,38 +71,45 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     {
       move(getNextLocation());
     }
+    // Determines sounds based on player hearing
+    if (!inRange)
+    {
+      stopSound();
+    }
+    else if (inRange && !hitWall(map, next_location))
+    {
+      System.out.println("  z is walking");
+      sound = zWalk;
+      playSound();
+    }
+    else if (inRange && hitWall(map, next_location))
+    {
+      System.out.println("  z hit wall");
+      sound = hitObst;
+      playSound();
+    }
     determineAnimation();
     animation.start();
     animation.update();
   }
 
-  @Override
-  public double getSpeed()
+  public void loadNoises()
   {
-    return speed;
+    groan = new SoundLoader("zGroan.wav");
+    zWalk = new SoundLoader("zWalk.wav");
+    bite = new SoundLoader("zBite.wav");
+    hitObst = new SoundLoader("zHitObst.wav");
+    sound = zWalk;
+
   }
 
-  @Override
-  public Heading getHeading()
+  public void playSound()
   {
-    return heading;
+    sound.playLooped();
   }
 
-
-  public void setHeading(Heading heading)
+  public void stopSound()
   {
-    this.heading = heading;
-  }
-
-  @Override
-  public Location getLocation()
-  {
-    return location;
-  }
-
-  @Override
-  public void setLocation(Location new_location)
-  {
-    this.location = new_location;
+    sound.stop();
   }
 }

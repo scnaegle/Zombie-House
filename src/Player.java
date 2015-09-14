@@ -8,6 +8,9 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
+  public boolean isRunning;
+  public boolean isWalking;
+  public boolean isStill;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -24,10 +27,13 @@ public class Player extends Humanoid implements HumanoidObject
   private SoundLoader walkSound;
   private SoundLoader runSound;
   private SoundLoader sound;
+  private SoundLoader scream;
 
 
   public Player(Location location) {
     this.location = location;
+    this.width = GUI.tile_size;
+    this.height = GUI.tile_size;
   }
 
   public Player(int width, int height, Location location) {
@@ -55,6 +61,15 @@ public class Player extends Humanoid implements HumanoidObject
     // have to
     this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
+    this.width = GUI.tile_size;
+    this.height = GUI.tile_size;
+  }
+
+  public Player(int sight, int hearing, double speed, double stamina, int width, int height, Location location) {
+    this(sight, hearing, speed, stamina);
+    this.width = width;
+    this.height = height;
+    this.location = location;
   }
 
   public int getSight()
@@ -134,27 +149,38 @@ public class Player extends Humanoid implements HumanoidObject
     if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
       move(next_location);
     }
-
-    //sound.stop();
-
     if(heading.equals(Heading.NONE)) {
       regenerate();
       current_speed = 0;
       animation = stand;
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
-      sound = runSound;
-      // sound.playLooped();
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
       sound = walkSound;
-      // sound.playLooped();
       current_speed = 1.0;
     }
+
+    if (isStill)
+    {
+      stopSound();
+    }
+    if (!isWalking && isRunning)
+    {
+      sound = runSound;
+      playSound();
+    }
+    else if (!isRunning && isWalking)
+    {
+      sound = walkSound;
+      playSound();
+    }
+
     animation.start();
     animation.update();
+
 
   }
 
@@ -163,6 +189,10 @@ public class Player extends Humanoid implements HumanoidObject
   public void setRunning()
   {
     current_speed = 2 * defined_speed;
+  }
+
+  public void setWalking() {
+    this.current_speed = defined_speed;
   }
 
   public double getStamina()
@@ -174,6 +204,7 @@ public class Player extends Humanoid implements HumanoidObject
   {
     runSound = new SoundLoader("pRunSound.wav");
     walkSound = new SoundLoader("pWalkSound.wav");
+    scream = new SoundLoader("pScream.wav");
     sound = walkSound;
   }
 
@@ -186,5 +217,6 @@ public class Player extends Humanoid implements HumanoidObject
   {
     sound.stop();
   }
+
 
 }

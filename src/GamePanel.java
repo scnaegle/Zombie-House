@@ -27,18 +27,15 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
-  private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
+  private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
   Timer frame_timer;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
   private GameMap map;
-  private Zombie randomZombie =
-      new RandomWalkZombie(new Location(500, 500));
-  private Zombie lineZombie =
-      new LineWalkZombie(new Location(300, 300));
-  private Zombie masterZ =
-      new MasterZombie(new Location(100, 100));
+  private Zombie randomZombie;
+  private Zombie lineZombie;
+  private Zombie masterZ;
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
 
@@ -47,6 +44,9 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
+    randomZombie = parent.randomZombie;
+    lineZombie = parent.lineZombie;
+    masterZ = parent.masterZ;
 
     setBackground(Color.white);
     vignetteCanvas = makeVignette(player.getSight());
@@ -67,14 +67,8 @@ public class GamePanel extends JPanel implements KeyListener
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
-    //player.setHeading(new Heading(Heading.NONE));
-    //player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT /
-    // 2));
-    //snapViewPortToPlayer();
 
 
-    randomZombie.setHeading(new Heading(Heading.WEST));
-    lineZombie.setHeading(new Heading(Heading.EAST));
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
@@ -87,7 +81,6 @@ public class GamePanel extends JPanel implements KeyListener
           snapViewPortToPlayer();
 
 
-
           randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
@@ -97,6 +90,20 @@ public class GamePanel extends JPanel implements KeyListener
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
+
+            //Determines if player can hear zombie
+            if (player.getDistance(randomZombie) < player.getHearing())
+            {
+              System.out.println("Random z is in range");
+              randomZombie.inRange = true;
+
+            }
+            if (player.getDistance(lineZombie) < player.getHearing())
+            {
+              System.out.println("Line z is in range");
+              lineZombie.inRange = true;
+
+            }
           }
 
           explodingTrap.move();
@@ -116,8 +123,8 @@ public class GamePanel extends JPanel implements KeyListener
      */
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
-    int new_x = (int) (player.location.x - viewport_rect.width / 2);
-    int new_y = (int) (player.location.y - viewport_rect.height / 2);
+    int new_x = (int) (player.getCenterPoint().x - viewport_rect.width / 2);
+    int new_y = (int) (player.getCenterPoint().y - viewport_rect.height / 2);
     parent_viewport.setViewPosition(new Point(new_x, new_y));
   }
 
@@ -181,30 +188,42 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyPressed(KeyEvent e)
   {
+    player.isStill = false;
     int code = e.getKeyCode();
 
-    if (KEY_R.contains(code) && (player.getSpeed() != 0))
+    if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
+      player.isRunning = true;
+      player.isWalking = false;
 
     }
     if (KEY_UP.contains(code))
     {
       player.heading.setYMovement(Heading.NORTH_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
+
     }
     if (KEY_DOWN.contains(code))
     {
       player.heading.setYMovement(Heading.SOUTH_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
     if (KEY_RIGHT.contains(code))
     {
       player.heading.setXMovement(Heading.EAST_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
     if (KEY_LEFT.contains(code))
     {
       player.heading.setXMovement(Heading.WEST_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
-    //player.playSound();
+
 
   }
 
@@ -213,6 +232,9 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
+    player.isStill = true;
+    player.isRunning = false;
+    player.isWalking = false;
     int code = e.getKeyCode();
 
     if (KEY_UP.contains(code) || KEY_DOWN.contains(code)) {
@@ -221,14 +243,18 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
-    player.stopSound();
+    if (KEY_RUN.contains(code))
+    {
+      player.setWalking();
+      player.isWalking = true;
+    }
 
 
   }
 
   public void startMusic()
   {
-    loadAmbience.play();
+    loadAmbience.playLooped();
   }
 
   public void stopMusic()

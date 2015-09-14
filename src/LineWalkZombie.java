@@ -9,6 +9,7 @@ public class LineWalkZombie extends Zombie
   BufferedImage[] left = initLeft();
   BufferedImage[] right = initRight();
   BufferedImage[] up = initUp();
+
   public LineWalkZombie(Location location) {
     super(location);
     moveDown = new Animation(down, 5);
