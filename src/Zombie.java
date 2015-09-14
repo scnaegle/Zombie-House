@@ -11,7 +11,6 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
 
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
-  protected double speed = .5;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
@@ -21,7 +20,8 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
 
   public Zombie(Location location) {
     this.location = location;
-    this.speed = 0.5;
+    this.defined_speed = .5;
+    this.current_speed = .5;
   }
 
   protected void determineAnimation() {
@@ -69,33 +69,4 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     animation.update();
   }
 
-  @Override
-  public double getSpeed()
-  {
-    return speed;
-  }
-
-  @Override
-  public Heading getHeading()
-  {
-    return heading;
-  }
-
-
-  public void setHeading(Heading heading)
-  {
-    this.heading = heading;
-  }
-
-  @Override
-  public Location getLocation()
-  {
-    return location;
-  }
-
-  @Override
-  public void setLocation(Location new_location)
-  {
-    this.location = new_location;
-  }
 }
