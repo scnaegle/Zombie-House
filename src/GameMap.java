@@ -91,7 +91,8 @@ public class GameMap
    */
   public void paint(Graphics g, int tile_size)
   {
-    paintSection(g, new Location(0, 0, 0, 0), new Location(0, 0, num_rows, num_cols),
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
         tile_size);
   }
 
@@ -404,14 +405,16 @@ public class GameMap
 
     expandHalls();
 
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        System.out.print(getGrid(x, y));
+      }
+      System.out.println("");
+    }
     makePathFromEnd();
-    // makeDoors();
 
-    // addWallsToHalls();
-
-    spawnZombie();
-
-    // print out that maze
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
@@ -422,6 +425,15 @@ public class GameMap
     }
   }
 
+
+  // makeDoors();
+
+  // addWallsToHalls();
+
+  //   spawnZombie();
+
+  // print out that maze
+
   private static void makePathFromEnd()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -430,29 +442,133 @@ public class GameMap
       {
         if (getGrid(x, y) == END_ROOM)
         {
-          endAlgorithm(x, y);
+          startEndAlgorithm(x, y);
         }
       }
     }
   }
 
+  private static void startEndAlgorithm(int x, int y)
+  {
+    //   System.out.println(getGrid(x, y - 1));
+    if (getGrid(x - 1, y) == ROOM_WALL)
+    {
+      System.out.println(x - 1);
+      System.out.println(y);
+      endAlgorithm(x - 1, y);
+    }
+
+    if (getGrid(x + 1, y) == ROOM_WALL)
+    {
+      System.out.println(x - 1);
+      System.out.println(y);
+      endAlgorithm(x + 1, y);
+    }
+
+    if (getGrid(x, y + 1) == ROOM_WALL)
+    {
+      System.out.println(x);
+      System.out.println(y);
+      endAlgorithm(x, y + 1);
+    }
+
+    if (getGrid(x, y - 1) == ROOM_WALL)
+    {
+      System.out.println(x - 1);
+      System.out.println(y);
+      endAlgorithm(x, y - 1);
+    }
+
+
+  }
+
   private static void endAlgorithm(int x, int y)
   {
-    if (outWardCapable(x, y))
-    {
+    boolean valid = false;
+    int pickDirection;
+    pickDirection = random.nextInt(3);
 
-      System.out.println();
-      System.out.println();
-      System.out.println(hallDown);
-      System.out.println(hallLeft);
-      System.out.println(hallRight);
-      System.out.println(hallUp);
-      System.out.println();
-      System.out.println();
-      for (int a = x; a < X_SIZE; a++)
+    if (pickDirection == 0)
+    {
+      if (getGrid(x - 1, y) == EMPTY)
+      {
+        System.out.println("hi 0");
+        System.out.println(getGrid(x - 1, y));
+        getGrid(x - 1, y);
+        valid = true;
+        endAlgorithm(x - 1, y);
+      }
+      if (valid)
+      {
+        setGrid(x - 1, y, HALL);
+        return;
+      }
+      pickDirection = 1;
+      if (pickDirection == 1)
+      {
+        if (getGrid(x + 1, y) == EMPTY)
+        {
+          System.out.println("hi 1");
+          System.out.println(getGrid(x + 1, y));
+          getGrid(x + 1, y);
+          valid = true;
+          endAlgorithm(x + 1, y);
+        }
+        if (valid)
+        {
+          setGrid(x + 1, y, HALL);
+          return;
+        }
+      }
+      pickDirection = 2;
+      if (pickDirection == 2)
       {
 
+        if (getGrid(x, y - 1) == EMPTY)
+        {
+          System.out.println("hi 2");
+          System.out.println(getGrid(x, y - 1));
+          getGrid(x, y - 1);
+          valid = true;
+          endAlgorithm(x, y - 1);
+        }
+        if (valid)
+        {
+          setGrid(x, y - 1, HALL);
+          return;
+        }
       }
+      pickDirection = 3;
+      if (pickDirection == 3)
+      {
+
+        if (getGrid(x, y + 1) == EMPTY)
+        {
+          System.out.println("hi 3");
+          System.out.println(getGrid(x, y + 1));
+          getGrid(x, y + 1);
+          valid = true;
+          endAlgorithm(x, y + 1);
+        }
+        if (valid)
+        {
+          setGrid(x, y + 1, HALL);
+          return;
+        }
+      }
+      return;
+    }
+    else if (pickDirection == 1)
+    {
+
+    }
+    else if (pickDirection == 2 && touchingAnotherRoom(x, y))
+    {
+
+    }
+    else if (pickDirection == 3 && touchingAnotherRoom(x, y))
+    {
+
     }
   }
 
@@ -889,7 +1005,8 @@ public class GameMap
     return num_rows * tile_size;
   }
 
-  public Tile getTile(int row, int col) {
+  public Tile getTile(int row, int col)
+  {
     return grid[row][col];
   }
 
