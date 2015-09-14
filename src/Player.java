@@ -57,6 +57,13 @@ public class Player extends Humanoid implements HumanoidObject
     this.stamina = player_stamina;   // make
   }
 
+  public Player(int sight, int hearing, double speed, double stamina, int width, int height, Location location) {
+    this(sight, hearing, speed, stamina);
+    this.width = width;
+    this.height = height;
+    this.location = location;
+  }
+
   public int getSight()
   {
     return sight;
