@@ -17,7 +17,6 @@ public class SoundLoader implements LineListener
     InputStream inputStream =
         ClassLoader.getSystemResourceAsStream("resources/" + path);
 
-    System.out.println(inputStream);
     try
     {
       AudioInputStream audioStream =

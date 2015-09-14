@@ -33,12 +33,9 @@ public class GamePanel extends JPanel implements KeyListener
   private GUI parent;
   private Player player;
   private GameMap map;
-  private Zombie randomZombie =
-      new RandomWalkZombie(new Location(700, 1200));
-  private Zombie lineZombie =
-      new LineWalkZombie(new Location(800, 1300));
-  private Zombie masterZ =
-      new MasterZombie(new Location(100, 100));
+  private Zombie randomZombie;
+  private Zombie lineZombie;
+  private Zombie masterZ;
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
 
@@ -47,6 +44,9 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
+    randomZombie = parent.randomZombie;
+    lineZombie = parent.lineZombie;
+    masterZ = parent.masterZ;
 
     setBackground(Color.white);
     vignetteCanvas = makeVignette(player.getSight());
@@ -68,8 +68,7 @@ public class GamePanel extends JPanel implements KeyListener
         map.getHeight(GUI.tile_size)));
 
 
-    randomZombie.setHeading(new Heading(Heading.WEST));
-    lineZombie.setHeading(new Heading(Heading.EAST));
+
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
@@ -82,7 +81,6 @@ public class GamePanel extends JPanel implements KeyListener
           snapViewPortToPlayer();
 
 
-
           randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
@@ -92,6 +90,20 @@ public class GamePanel extends JPanel implements KeyListener
           if (lineZombie.location.x > GUI.SCENE_WIDTH) {
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
+
+            //Determines if player can hear zombie
+            if (player.getDistance(randomZombie) < player.getHearing())
+            {
+              System.out.println("Random z is in range");
+              randomZombie.inRange = true;
+
+            }
+            if (player.getDistance(lineZombie) < player.getHearing())
+            {
+              System.out.println("Line z is in range");
+              lineZombie.inRange = true;
+
+            }
           }
 
           explodingTrap.move();
@@ -242,7 +254,7 @@ public class GamePanel extends JPanel implements KeyListener
 
   public void startMusic()
   {
-    loadAmbience.play();
+    loadAmbience.playLooped();
   }
 
   public void stopMusic()

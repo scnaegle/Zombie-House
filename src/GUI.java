@@ -23,6 +23,11 @@ public class GUI
   JButton startPause;
   boolean pause = true;
   Player player;
+  Zombie zombie;
+  FireTrap fireTrap;
+  Zombie randomZombie;
+  Zombie lineZombie;
+  Zombie masterZ;
   private int whichlevel = 1;
 
   public void setUpGUI()
@@ -191,5 +196,27 @@ public class GUI
   {
     gamePanel.loadMusic();
     player.loadSounds();
+    randomZombie.loadNoises();
+    lineZombie.loadNoises();
+    masterZ.loadNoises();
+    //fireTrap.loadExplosion();
+  }
+
+  /**
+   * Will need to make arrays of zombies. But for now this is ok.
+   */
+  public void initZombies()
+  {
+    randomZombie = new RandomWalkZombie(new Location(700, 1200));
+    lineZombie = new LineWalkZombie(new Location(800, 1300));
+    masterZ = new MasterZombie(new Location(100, 100));
+
+    randomZombie.setHeading(new Heading(Heading.WEST));
+    lineZombie.setHeading(new Heading(Heading.EAST));
+  }
+
+  public void initFireTraps()
+  {
+    //need to create array of firetraps for later, based off of map
   }
 }

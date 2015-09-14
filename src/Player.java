@@ -27,6 +27,7 @@ public class Player extends Humanoid implements HumanoidObject
   private SoundLoader walkSound;
   private SoundLoader runSound;
   private SoundLoader sound;
+  private SoundLoader scream;
 
 
   public Player(Location location) {
@@ -148,8 +149,6 @@ public class Player extends Humanoid implements HumanoidObject
     if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
       move(next_location);
     }
-
-
     if(heading.equals(Heading.NONE)) {
       regenerate();
       current_speed = 0;
@@ -205,6 +204,7 @@ public class Player extends Humanoid implements HumanoidObject
   {
     runSound = new SoundLoader("pRunSound.wav");
     walkSound = new SoundLoader("pWalkSound.wav");
+    scream = new SoundLoader("pScream.wav");
     sound = walkSound;
   }
 
@@ -217,5 +217,6 @@ public class Player extends Humanoid implements HumanoidObject
   {
     sound.stop();
   }
+
 
 }

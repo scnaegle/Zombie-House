@@ -5,6 +5,8 @@ public class StartGame
   {
     GUI g = new GUI();
     g.initPlayer();
+    g.initZombies();
+    g.initFireTraps();
     g.setUpGUI();
     g.loadSounds();
     g.updateLabels();
