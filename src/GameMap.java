@@ -49,7 +49,7 @@ public class GameMap
 
   private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
   private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
-//  private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE]
+  private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
