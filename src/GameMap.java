@@ -26,6 +26,10 @@ public class GameMap
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 7;
   private static final int END_ROOM_SIZE = 4;
+  private static final int UP = 0;
+  private static final int DOWN = 1;
+  private static final int LEFT = 2;
+  private static final int RIGHT = 3;
 
   private static int roomSize;
   private static int numberOfRandomHalls = 7;
@@ -44,7 +48,8 @@ public class GameMap
   private static Random random = new Random();
 
   private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
-
+  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
+  private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
@@ -91,7 +96,8 @@ public class GameMap
    */
   public void paint(Graphics g, int tile_size)
   {
-    paintSection(g, new Location(0, 0, 0, 0), new Location(0, 0, num_rows, num_cols),
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
         tile_size);
   }
 
@@ -404,14 +410,16 @@ public class GameMap
 
     expandHalls();
 
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        System.out.print(getGrid(x, y));
+      }
+      System.out.println("");
+    }
     makePathFromEnd();
-    // makeDoors();
 
-    // addWallsToHalls();
-
-    spawnZombie();
-
-    // print out that maze
     for (int x = 0; x < X_SIZE; x++)
     {
       for (int y = 0; y < Y_SIZE; y++)
@@ -422,6 +430,15 @@ public class GameMap
     }
   }
 
+
+  // makeDoors();
+
+  // addWallsToHalls();
+
+  //   spawnZombie();
+
+  // print out that maze
+
   private static void makePathFromEnd()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -430,107 +447,204 @@ public class GameMap
       {
         if (getGrid(x, y) == END_ROOM)
         {
-          endAlgorithm(x, y);
+
+          System.out.println("starting out output "+x+" " + y);
+//          startEndAlgorithm(x, y);
+
         }
       }
     }
   }
 
-  private static void endAlgorithm(int x, int y)
+  private static void startEndAlgorithm(int x, int y)
   {
-    if (outWardCapable(x, y))
+    //   System.out.println(getGrid(x, y - 1));
+    if (getGrid(x - 1, y) == ROOM_WALL)
     {
+      endAlgorithm(x - 1, y, UP);
+    }
 
-      System.out.println();
-      System.out.println();
-      System.out.println(hallDown);
-      System.out.println(hallLeft);
-      System.out.println(hallRight);
-      System.out.println(hallUp);
-      System.out.println();
-      System.out.println();
-      for (int a = x; a < X_SIZE; a++)
+    else if (getGrid(x + 1, y) == ROOM_WALL)
+    {
+      endAlgorithm(x + 1, y, DOWN);
+    }
+
+    else if (getGrid(x, y + 1) == ROOM_WALL)
+    {
+      endAlgorithm(x, y + 1, RIGHT);
+    }
+
+    else if (getGrid(x, y - 1) == ROOM_WALL)
+    {
+      endAlgorithm(x, y - 1, LEFT);
+    }
+
+
+  }
+
+
+  private static void endAlgorithm(int x, int y, int prevDirection)
+  {
+    System.out.println(x);
+    System.out.println(y);
+    System.out.println();
+    int[] pickRandomDirection = {0, 1, 2, 3};
+    shuffleArray(pickRandomDirection);
+    boolean visited = false;
+    for (int i = 0; i < 4; i++)
+    {
+      if (pickRandomDirection[i] == UP && getGrid(x - 1, y) == EMPTY)
       {
-
+        visited = true;
+        endAlgorithm(x - 1, y, UP);
+      }
+      if (pickRandomDirection[i] == DOWN && getGrid(x + 1, y) == EMPTY)
+      {
+        visited = true;
+        endAlgorithm(x + 1, y, DOWN);
+      }
+      if (pickRandomDirection[i] == LEFT && getGrid(x, y - 1) == EMPTY)
+      {
+        visited = true;
+        endAlgorithm(x, y - 1, LEFT);
+      }
+      if (pickRandomDirection[i] == RIGHT && getGrid(x, y + 1) == EMPTY)
+      {
+        visited = true;
+        endAlgorithm(x, y + 1, RIGHT);
       }
     }
   }
 
-  private static boolean outWardCapable(int x, int y)
+  private static void shuffleArray(int[] pickRandomDirection)
   {
-    int connectRooms = 0;
-    int numberOfConnections = random.nextInt(3) + 1;
-    for (int a = x; a < X_SIZE; a++)
+    for (int i = 0; i < pickRandomDirection.length; i++)
     {
-      if (getGrid(a, y) == END_ROOM || getGrid(a, y) == ROOM_WALL ||
-          getGrid(a, y) == ROOM_CORNER)
-      {
-
-      }
-      else
-      {
-        connectRooms++;
-        hallDown = true;
-        break;
-      }
+      int randVar = random.nextInt(3);
+      int temp = pickRandomDirection[i];
+      pickRandomDirection[i] = pickRandomDirection[randVar];
+      pickRandomDirection[randVar] = temp;
     }
+  }
 
-    for (int a = x; a > 0; a--)
-    {
-      if (getGrid(a, y) == END_ROOM || getGrid(a, y) == ROOM_WALL ||
-          getGrid(a, y) == ROOM_CORNER)
-      {
 
-      }
-      else
-      {
-        connectRooms++;
-        hallUp = true;
-        break;
-      }
-    }
+  //making generic algorithm to push out straight hallways
+  //need previous directions
 
-    for (int a = y; a < Y_SIZE; a++)
-    {
-      if (getGrid(x, a) == END_ROOM || getGrid(x, a) == ROOM_WALL ||
-          getGrid(x, a) == ROOM_CORNER)
-      {
 
-      }
-      else
-      {
-        connectRooms++;
-        hallRight = true;
-        break;
-      }
-    }
-    for (int a = y; a > 0; a--)
-    {
-      if (getGrid(x, a) == END_ROOM || getGrid(x, a) == ROOM_WALL ||
-          getGrid(x, a) == ROOM_CORNER)
-      {
+  private static void endAlgorithm1(int x, int y, int pickDirection)
+  {
+//    boolean valid = false;
+//
+//    if (pickDirection == 0 && canMoveUp(x, y))
+//    {
+//      if (getGrid(x - 1, y) == EMPTY && inBoundsWithBorder(x, y))
+//      {
+//        System.out.println("hi 0");
+//        System.out.println(getGrid(x - 1, y));
+//        getGrid(x - 1, y);
+//        valid = true;
+//        endAlgorithm(x - 1, y, UP);
+//      }
+//
+//      if (valid)
+//      {
+//        setGrid(x - 1, y, HALL);
+//        return;
+//      }
+//      pickDirection = 1;
+//
+///*
+//      if (pickDirection == 1)
+//      {
+//        if (getGrid(x + 1, y) == EMPTY && inBoundsWithBorder(x+1,y))
+//        {
+//          System.out.println("hi 1");
+//          System.out.println(getGrid(x + 1, y));
+//          getGrid(x + 1, y);
+//          valid = true;
+//          endAlgorithm(x + 1, y);
+//        }
+//        if (valid)
+//        {
+//          setGrid(x + 1, y, HALL);
+//          return;
+//        }
+//      }
+//      pickDirection = 2;
+//      if (pickDirection == 2)
+//      {
+//
+//        if (getGrid(x, y - 1) == EMPTY && inBoundsWithBorder(x,y-1))
+//        {
+//          System.out.println("hi 2");
+//          System.out.println(getGrid(x, y - 1));
+//          getGrid(x, y - 1);
+//          valid = true;
+//          endAlgorithm(x, y - 1);
+//        }
+//        if (valid)
+//        {
+//          setGrid(x, y - 1, HALL);
+//          return;
+//        }
+//      }
+//      pickDirection = 3;
+//      if (pickDirection == 3)
+//      {
+//
+//        if (getGrid(x, y + 1) == EMPTY && inBoundsWithBorder(x,y +1))
+//        {
+//          System.out.println("hi 3");
+//          System.out.println(getGrid(x, y + 1));
+//          getGrid(x, y + 1);
+//          valid = true;
+//          endAlgorithm(x, y + 1);
+//        }
+//        if (valid)
+//        {
+//          setGrid(x, y + 1, HALL);
+//          return;
+//        }
+//      }
+//      */
+//      return;
+//    }
+//    else if (pickDirection == 1)
+//    {
+//
+//    }
+//    else if (pickDirection == 2 && touchingAnotherRoom(x, y))
+//    {
+//
+//    }
+//    else if (pickDirection == 3 && touchingAnotherRoom(x, y))
+//    {
+//
+//    }
+//  }
 
-      }
-      else
-      {
-        connectRooms++;
-        hallLeft = true;
-        break;
-      }
-    }
-    if (connectRooms > 0)
-    {
-      return true;
-    }
-    else
-    {
-
-      hallDown = false;
-      hallLeft = false;
-      hallUp = false;
-      hallRight = false;
-      return false;
-    }
+//  private static boolean canMoveUp(int x, int y)
+//  {
+//    for (int a = x; a > 0; a--)
+//    {
+//      if(getGrid(a,y)!=EMPTY){
+//        return true;
+//      }
+//    }
+//    return false;
+//  }
+//
+//  private static boolean canMoveDown(int x, int y)
+//  {
+//    for (int a = x; a < X_SIZE; a++)
+//    {
+//      if(getGrid(a,y)!=EMPTY){
+//        return true;
+//      }
+//    }
+//    return false;
+//  }
   }
 
   private static void makeDoors()
@@ -656,7 +770,8 @@ public class GameMap
     int hallY = random.nextInt(Y_SIZE - 10) + 5;
     while (!valid)
     {
-      if (touchingAnotherRoom(hallX, hallY) || !validHallLocation(hallX, hallY))
+      if (touchingAnotherRoom(hallX, hallY) ||
+          !validHallLocationForHalls(hallX, hallY))
       {
         hallX = random.nextInt(X_SIZE - 10) + 5;
         hallY = random.nextInt(Y_SIZE - 10) + 5;
@@ -750,7 +865,12 @@ public class GameMap
     return (getGrid(x, y) == EMPTY || getGrid(x, y) == HALL);
   }
 
-  private static boolean validHallLocation(int x, int y)
+  private static boolean canMakeHallForAlg(int x, int y)
+  {
+    return (getGrid(x, y) == EMPTY);
+  }
+
+  private static boolean validHallLocationForHalls(int x, int y)
   {
 
     int connectRooms = 0;
@@ -825,7 +945,7 @@ public class GameMap
       }
     }
     //   numberOfConnections =2;
-    if (connectRooms > numberOfConnections)
+    if (connectRooms > 2)
     {
       return true;
     }
@@ -889,7 +1009,8 @@ public class GameMap
     return num_rows * tile_size;
   }
 
-  public Tile getTile(int row, int col) {
+  public Tile getTile(int row, int col)
+  {
     return grid[row][col];
   }
 
