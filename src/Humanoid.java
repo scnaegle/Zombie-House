@@ -65,7 +65,7 @@ public class Humanoid extends GameObject implements HumanoidObject
   public boolean hitWall(GameMap map, Location next_location) {
     int row = next_location.getRow(GUI.tile_size);
     int col = next_location.getCol(GUI.tile_size);
-    GameObject new_location_object = new GameObject(next_location, GUI.tile_size, GUI.tile_size);
+    GameObject new_location_object = new GameObject(next_location, width, height);
 
 //    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
 //    if (tile_check.tile_type.equals(TileType.WALL) &&
