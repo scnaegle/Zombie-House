@@ -67,11 +67,6 @@ public class GamePanel extends JPanel implements KeyListener
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
-    //player.setHeading(new Heading(Heading.NONE));
-    //player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT /
-    // 2));
-    //snapViewPortToPlayer();
-
 
     randomZombie.setHeading(new Heading(Heading.WEST));
     lineZombie.setHeading(new Heading(Heading.EAST));
@@ -181,27 +176,40 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyPressed(KeyEvent e)
   {
+    player.isStill = false;
     int code = e.getKeyCode();
 
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
+      player.isRunning = true;
+      player.isWalking = false;
+
     }
     if (KEY_UP.contains(code))
     {
       player.heading.setYMovement(Heading.NORTH_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
+
     }
     if (KEY_DOWN.contains(code))
     {
       player.heading.setYMovement(Heading.SOUTH_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
     if (KEY_RIGHT.contains(code))
     {
       player.heading.setXMovement(Heading.EAST_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
     if (KEY_LEFT.contains(code))
     {
       player.heading.setXMovement(Heading.WEST_STEP);
+      player.isRunning = false;
+      player.isWalking = true;
     }
 
 
@@ -212,6 +220,9 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
+    player.isStill = true;
+    player.isRunning = false;
+    player.isWalking = false;
     int code = e.getKeyCode();
 
     if (KEY_UP.contains(code) || KEY_DOWN.contains(code)) {
@@ -220,10 +231,12 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
-    if (KEY_RUN.contains(code)) {
+    if (KEY_RUN.contains(code))
+    {
       player.setWalking();
+      player.isWalking = true;
     }
-    player.stopSound();
+
 
   }
 

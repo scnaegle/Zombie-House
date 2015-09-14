@@ -8,6 +8,9 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
+  public boolean isRunning;
+  public boolean isWalking;
+  public boolean isStill;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -147,18 +150,29 @@ public class Player extends Humanoid implements HumanoidObject
       regenerate();
       current_speed = 0;
       animation = stand;
-      stopSound();
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
-      sound = runSound;
-      playSound();
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
       sound = walkSound;
-      playSound();
       current_speed = 1.0;
+    }
+
+    if (isStill)
+    {
+      stopSound();
+    }
+    if (!isWalking && isRunning)
+    {
+      sound = runSound;
+      playSound();
+    }
+    else if (!isRunning && isWalking)
+    {
+      sound = walkSound;
+      playSound();
     }
 
     animation.start();

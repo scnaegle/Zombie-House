@@ -12,7 +12,6 @@ public class GUI
   static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
-  static JViewport viewport;
   static JScrollPane scrollPane;
   JFrame window;
   GamePanel gamePanel;
@@ -69,7 +68,6 @@ public class GUI
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
 
-    //gamePanel.setFocusTraversalKeysEnabled(false);
 
 
     scrollPane = new JScrollPane(gamePanel);
@@ -101,21 +99,6 @@ public class GUI
     am.put("Arrow.down", doNothing);
     am.put("Arrow.right", doNothing);
     am.put("Arrow.left", doNothing);
-
-//    viewport = new JViewport();
-//    viewport.setAlignmentX(gamePanel.player.location.getX());
-//    viewport.setAlignmentY(gamePanel.player.location.getY());
-
-    //scrollPane.setViewportView(gamePanel);
-    //scrollPane.getViewport().setViewPosition(
-    //new Point(gamePanel.player.location.getX(),gamePanel.player.location
-    // .getY()));
-
-//    viewport = new JViewport();
-//    viewport.setSize(SCENE_WIDTH, SCENE_HEIGHT - 25);
-//    viewport.setView(gamePanel);
-//    viewport.setViewPosition(startPoint);
-
 
 
     level = new JLabel("Level: ");
