@@ -28,6 +28,8 @@ public class Player extends Humanoid implements HumanoidObject
 
   public Player(Location location) {
     this.location = location;
+    this.width = GUI.tile_size;
+    this.height = GUI.tile_size;
   }
 
   public Player(int width, int height, Location location) {
@@ -55,6 +57,8 @@ public class Player extends Humanoid implements HumanoidObject
     // have to
     this.max_stamina = player_stamina;
     this.stamina = player_stamina;   // make
+    this.width = GUI.tile_size;
+    this.height = GUI.tile_size;
   }
 
   public Player(int sight, int hearing, double speed, double stamina, int width, int height, Location location) {

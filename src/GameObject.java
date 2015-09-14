@@ -47,7 +47,7 @@ public class GameObject implements Object2D {
   }
 
   public Point getCenterPoint() {
-    return location.getCenterPoint(GUI.tile_size, GUI.tile_size);
+    return location.getCenterPoint(width, height);
   }
 
   @Override
