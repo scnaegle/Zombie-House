@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements KeyListener
   Timer frame_timer;
   private GameMap map;
   private Zombie randomZombie =
-      new RandomWalkZombie(new Location(200, 200));
+      new RandomWalkZombie(new Location(500, 500));
   private Zombie lineZombie =
       new LineWalkZombie(new Location(300, 300));
   private Zombie masterZ =
@@ -69,8 +69,8 @@ public class GamePanel extends JPanel implements KeyListener
     //snapViewPortToPlayer();
 
 
-    randomZombie.setHeading(Heading.WEST);
-    lineZombie.setHeading(Heading.EAST);
+    randomZombie.setHeading(new Heading(Heading.WEST));
+    lineZombie.setHeading(new Heading(Heading.EAST));
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
