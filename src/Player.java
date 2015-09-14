@@ -1,4 +1,3 @@
-import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import java.awt.image.BufferedImage;
@@ -25,6 +24,7 @@ public class Player extends Humanoid implements HumanoidObject
   private Animation run = new Animation(running, 2);
   private Animation stand = new Animation(still, 5);
   private AudioStream walkSound = SoundLoader.loadSound("pWalkSound.wav");
+  public AudioStream sound = walkSound;
   private AudioStream runSound = SoundLoader.loadSound("pRunSound.wav");
 
 
@@ -62,6 +62,11 @@ public class Player extends Humanoid implements HumanoidObject
   public int getSight()
   {
     return sight;
+  }
+
+  public int getHearing()
+  {
+    return hearing;
   }
   public BufferedImage[] initPlayerSpriteWalk()
   {
@@ -137,16 +142,17 @@ public class Player extends Humanoid implements HumanoidObject
       animation = stand;
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
-      AudioPlayer.player.start(runSound);
+      sound = runSound;
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
-      AudioPlayer.player.start(walkSound);
+      sound = walkSound;
       current_speed = 1.0;
     }
     animation.start();
     animation.update();
+
   }
 
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
@@ -154,5 +160,10 @@ public class Player extends Humanoid implements HumanoidObject
   public void setRunning()
   {
     current_speed = 2 * defined_speed;
+  }
+
+  public double getStamina()
+  {
+    return stamina;
   }
 }

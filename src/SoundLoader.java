@@ -2,6 +2,9 @@ import sun.audio.AudioStream;
 
 import java.io.InputStream;
 
+/**
+ * This class loads in audio in the form of .wav files and makes them playable
+ */
 public class SoundLoader
 {
 
