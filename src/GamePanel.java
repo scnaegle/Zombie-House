@@ -186,7 +186,6 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_R.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-
     }
     if (KEY_UP.contains(code))
     {
@@ -222,6 +221,7 @@ public class GamePanel extends JPanel implements KeyListener
       player.heading.setXMovement(0);
     }
 
+    player.stopSound();
 
   }
 

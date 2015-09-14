@@ -134,7 +134,7 @@ public class Player extends Humanoid implements HumanoidObject
     if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
       move(next_location);
     }
-    
+
 
     if(heading.equals(Heading.NONE)) {
       regenerate();
@@ -153,6 +153,7 @@ public class Player extends Humanoid implements HumanoidObject
       playSound();
       current_speed = 1.0;
     }
+
     animation.start();
     animation.update();
 
