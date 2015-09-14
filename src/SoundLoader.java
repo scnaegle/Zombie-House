@@ -12,47 +12,50 @@ public class SoundLoader implements LineListener
   Thread thread;
   Clip audioClip;
 
+  public SoundLoader(String path)
+  {
+    InputStream inputStream =
+        ClassLoader.getSystemResourceAsStream("resources/" + path);
 
-  void play(String audioFilePath)
+    System.out.println(inputStream);
+    try
+    {
+      AudioInputStream audioStream =
+          AudioSystem.getAudioInputStream(inputStream);
+      AudioFormat format = audioStream.getFormat();
+      DataLine.Info info = new DataLine.Info(Clip.class, format);
+      audioClip = (Clip) AudioSystem.getLine(info);
+      audioClip.addLineListener(SoundLoader.this);
+      audioClip.open(audioStream);
+
+    }
+    catch (UnsupportedAudioFileException e)
+    {
+      e.printStackTrace();
+    }
+    catch (LineUnavailableException e)
+    {
+      e.printStackTrace();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+
+  void play()
   {
     thread = new Thread(new Runnable()
     {
       @Override
       public void run()
       {
-        InputStream inputStream =
-            getClass().getResourceAsStream("resources/" + audioFilePath);
-
-        try
-        {
-          AudioInputStream audioStream =
-              AudioSystem.getAudioInputStream(inputStream);
-          AudioFormat format = audioStream.getFormat();
-          DataLine.Info info = new DataLine.Info(Clip.class, format);
-          audioClip = (Clip) AudioSystem.getLine(info);
-          audioClip.addLineListener(SoundLoader.this);
-          audioClip.open(audioStream);
-          audioClip.start();
-
-        }
-        catch (UnsupportedAudioFileException e)
-        {
-          e.printStackTrace();
-        }
-        catch (LineUnavailableException e)
-        {
-          e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-
+        audioClip.start();
 
       }
     });
     thread.start();
-
   }
 
 //  public static AudioStream loadSound(String file)
@@ -92,6 +95,17 @@ public class SoundLoader implements LineListener
 
   }
 
+  public void playLooped(int loops)
+  {
+    audioClip.loop(loops);
+    play();
+  }
+
+  public void playLooped()
+  {
+    audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+    play();
+  }
 
   public void stop()
   {

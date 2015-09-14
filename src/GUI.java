@@ -68,6 +68,7 @@ public class GUI
     gamePanel.addKeyListener(gamePanel);
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
+
     //gamePanel.setFocusTraversalKeysEnabled(false);
 
 
@@ -198,5 +199,13 @@ public class GUI
     player = new Player(5, 10, 1.0, 5);
     player.setLocation(new Location(SCENE_WIDTH / 2, SCENE_HEIGHT / 2));
     player.setHeading(new Heading(Heading.NONE));
+
+  }
+
+
+  public void loadSounds()
+  {
+    gamePanel.loadMusic();
+    player.loadSounds();
   }
 }

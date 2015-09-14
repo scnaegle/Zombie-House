@@ -21,9 +21,9 @@ public class Player extends Humanoid implements HumanoidObject
   Animation animation = walk;
   private Animation run = new Animation(running, 2);
   private Animation stand = new Animation(still, 5);
-  // private AudioStream walkSound = SoundLoader.loadSound("pWalkSound.wav");
-  //public AudioStream sound = walkSound;
-//  private AudioStream runSound = SoundLoader.loadSound("pRunSound.wav");
+  private SoundLoader walkSound;
+  private SoundLoader runSound;
+  private SoundLoader sound;
 
 
   public Player(Location location) {
@@ -129,10 +129,13 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   public void update(GameMap map) {
+
     Location next_location = getNextLocation();
     if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
       move(next_location);
     }
+
+    //sound.stop();
 
     if(heading.equals(Heading.NONE)) {
       regenerate();
@@ -140,12 +143,14 @@ public class Player extends Humanoid implements HumanoidObject
       animation = stand;
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
-      //sound = runSound;
+      sound = runSound;
+      // sound.playLooped();
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
-      // sound = walkSound;
+      sound = walkSound;
+      // sound.playLooped();
       current_speed = 1.0;
     }
     animation.start();
@@ -164,4 +169,22 @@ public class Player extends Humanoid implements HumanoidObject
   {
     return stamina;
   }
+
+  public void loadSounds()
+  {
+    runSound = new SoundLoader("pRunSound.wav");
+    walkSound = new SoundLoader("pWalkSound.wav");
+    sound = walkSound;
+  }
+
+  public void playSound()
+  {
+    sound.playLooped();
+  }
+
+  public void stopSound()
+  {
+    sound.stop();
+  }
+
 }

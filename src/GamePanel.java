@@ -28,12 +28,8 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
-  public long frameCount = 0;
-  public long frameStart;
-  public SoundLoader load = new SoundLoader();
   Timer frame_timer;
-  //private AudioStream music = SoundLoader.("ambience.wav");
-  String music = "ambience.wav";
+  private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
   private GameMap map;
@@ -87,8 +83,6 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (GUI.running) {
 
-          //AudioPlayer.player.start(music);
-
           player.update(map);
           snapViewPortToPlayer();
 
@@ -109,10 +103,7 @@ public class GamePanel extends JPanel implements KeyListener
           repaint();
 
         }
-        else
-        {
-          load.audioClip.stop();
-        }
+
       }
     });
   }
@@ -195,7 +186,6 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_R.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-      //AudioPlayer.player.stop(player.sound);
 
     }
     if (KEY_UP.contains(code))
@@ -214,8 +204,8 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
+    //player.playSound();
 
-    //AudioPlayer.player.start(player.sound);
   }
 
 
@@ -231,17 +221,24 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
+    player.stopSound();
 
-    //AudioPlayer.player.stop(player.sound);
+
   }
 
   public void startMusic()
   {
-    load.play(music);
+    loadAmbience.play();
   }
 
   public void stopMusic()
   {
-    load.stop();
+    loadAmbience.stop();
+  }
+
+  public void loadMusic()
+  {
+    loadAmbience = new SoundLoader("ambience.wav");
+
   }
 }

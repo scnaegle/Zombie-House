@@ -6,6 +6,7 @@ public class StartGame
     GUI g = new GUI();
     g.initPlayer();
     g.setUpGUI();
+    g.loadSounds();
     g.updateLabels();
 
 
