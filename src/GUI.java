@@ -182,6 +182,7 @@ public class GUI
     running = false;
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
+
   }
 
 

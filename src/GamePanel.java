@@ -204,7 +204,7 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
-    //player.playSound();
+
 
   }
 
@@ -221,7 +221,6 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
-    player.stopSound();
 
 
   }

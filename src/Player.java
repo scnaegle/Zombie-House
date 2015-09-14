@@ -134,27 +134,28 @@ public class Player extends Humanoid implements HumanoidObject
     if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
       move(next_location);
     }
-
-    //sound.stop();
+    
 
     if(heading.equals(Heading.NONE)) {
       regenerate();
       current_speed = 0;
       animation = stand;
+      stopSound();
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
       sound = runSound;
-      // sound.playLooped();
+      playSound();
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
       sound = walkSound;
-      // sound.playLooped();
+      playSound();
       current_speed = 1.0;
     }
     animation.start();
     animation.update();
+
 
   }
 
