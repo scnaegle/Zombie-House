@@ -18,6 +18,8 @@ import java.util.Arrays;
  */
 public class GamePanel extends JPanel implements KeyListener
 {
+
+  // How fast the timer should tick. Ranges from 35ish to 50ish.
   static final int FPS = 60;
   static final int SKIP_TICKS = 1000 / FPS;
 
@@ -25,9 +27,12 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
+  private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
 
   public Player player = new Player(5, 10, 1.0, 5);
   final BufferedImage vignetteCanvas = makeVignette(player.getSight());
+  public long frameCount = 0;
+  public long frameStart;
   Timer frame_timer;
   private GameMap map;
   private Zombie randomZombie =
@@ -95,7 +100,11 @@ public class GamePanel extends JPanel implements KeyListener
 
           explodingTrap.move();
           repaint();
+
         }
+        frameCount++;
+        long time = System.currentTimeMillis();
+        //System.out.println((double)(frameCount*1000)/(time-frameStart));
       }
     });
   }
@@ -175,6 +184,10 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
+    if (KEY_R.contains(code) && (player.getSpeed() != 0))
+    {
+      player.setRunning();
+    }
     if (KEY_UP.contains(code))
     {
       player.heading.setYMovement(Heading.NORTH_STEP);
@@ -191,6 +204,7 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
+
   }
 
 

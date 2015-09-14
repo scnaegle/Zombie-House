@@ -3,7 +3,8 @@
  */
 public class Humanoid extends GameObject implements HumanoidObject
 {
-  protected final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
+  protected final double MOVE_MULTIPLIER =
+      (double) (GUI.tile_size / GamePanel.FPS);
   protected double defined_speed = 1.0;
   protected double current_speed = 1.0;
   Heading heading;
@@ -31,15 +32,15 @@ public class Humanoid extends GameObject implements HumanoidObject
   }
 
   @Override
-  public void setLocation(Location new_location)
-  {
-    this.location = new_location;
-  }
-
-  @Override
   public Location getLocation()
   {
     return location;
+  }
+
+  @Override
+  public void setLocation(Location new_location)
+  {
+    this.location = new_location;
   }
 
   /**
@@ -54,8 +55,10 @@ public class Humanoid extends GameObject implements HumanoidObject
 //    System.out.println("moving...");
 //    location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
 //    location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-    double new_x = location.x + (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-    double new_y = location.y + (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
+    double new_x = location.x + ((current_speed * GUI.tile_size / GamePanel.FPS)
+        * heading.getXMovement() * MOVE_MULTIPLIER);
+    double new_y = location.y + ((current_speed * GUI.tile_size / GamePanel.FPS)
+        * heading.getYMovement() * MOVE_MULTIPLIER);
     return new Location(new_x, new_y);
   }
 

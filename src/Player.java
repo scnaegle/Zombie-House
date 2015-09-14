@@ -8,19 +8,19 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  private int sight = 5;
-  private int hearing = 10;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
+  private int sight = 5;
+  private int hearing = 10;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
   private BufferedImage[] running = initPlayerSpriteRun();
-  private Animation walk = new Animation(walking, 5);
-  private Animation run = new Animation(running, 5);
-  private Animation stand = new Animation(still, 5);
+  private Animation walk = new Animation(walking, 2);
   Animation animation = walk;
+  private Animation run = new Animation(running, 2);
+  private Animation stand = new Animation(still, 5);
 
   public Player(Location location) {
     this.location = location;
@@ -135,10 +135,16 @@ public class Player extends Humanoid implements HumanoidObject
     } else {
       regenerate();
       animation = walk;
-      current_speed = 1;
+      current_speed = 1.0;
     }
     animation.start();
     animation.update();
   }
 
+  // Called when 'r' is pressed so that the speed stays at 2 times what it was
+  // instead of updating when r is held down.
+  public void setRunning()
+  {
+    current_speed = 2 * defined_speed;
+  }
 }

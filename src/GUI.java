@@ -170,6 +170,7 @@ public class GUI
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
+    gamePanel.frameStart = System.currentTimeMillis();
   }
 
   private void pauseGame()
