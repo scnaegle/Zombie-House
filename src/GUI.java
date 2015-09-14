@@ -198,7 +198,7 @@ public class GUI
   public void initPlayer()
   {
     player = new Player(5, 10, 1.0, 5);
-    player.setLocation(new Location(SCENE_WIDTH / 2, SCENE_HEIGHT / 2));
+    player.setLocation(new Location(800, 1120));
     player.setHeading(new Heading(Heading.NONE));
 
   }

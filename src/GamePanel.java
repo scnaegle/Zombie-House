@@ -34,9 +34,9 @@ public class GamePanel extends JPanel implements KeyListener
   private Player player;
   private GameMap map;
   private Zombie randomZombie =
-      new RandomWalkZombie(new Location(500, 500));
+      new RandomWalkZombie(new Location(700, 1200));
   private Zombie lineZombie =
-      new LineWalkZombie(new Location(300, 300));
+      new LineWalkZombie(new Location(800, 1300));
   private Zombie masterZ =
       new MasterZombie(new Location(100, 100));
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
