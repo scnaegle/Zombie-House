@@ -22,6 +22,8 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     this.location = location;
     this.defined_speed = .5;
     this.current_speed = .5;
+    this.width = 70;
+    this.height = 70;
   }
 
   protected void determineAnimation() {
