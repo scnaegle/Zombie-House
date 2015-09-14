@@ -1,5 +1,3 @@
-import sun.audio.AudioStream;
-
 import java.awt.image.BufferedImage;
 
 /**
@@ -23,9 +21,9 @@ public class Player extends Humanoid implements HumanoidObject
   Animation animation = walk;
   private Animation run = new Animation(running, 2);
   private Animation stand = new Animation(still, 5);
-  private AudioStream walkSound = SoundLoader.loadSound("pWalkSound.wav");
-  public AudioStream sound = walkSound;
-  private AudioStream runSound = SoundLoader.loadSound("pRunSound.wav");
+  // private AudioStream walkSound = SoundLoader.loadSound("pWalkSound.wav");
+  //public AudioStream sound = walkSound;
+//  private AudioStream runSound = SoundLoader.loadSound("pRunSound.wav");
 
 
   public Player(Location location) {
@@ -142,12 +140,12 @@ public class Player extends Humanoid implements HumanoidObject
       animation = stand;
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
-      sound = runSound;
+      //sound = runSound;
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
-      sound = walkSound;
+      // sound = walkSound;
       current_speed = 1.0;
     }
     animation.start();

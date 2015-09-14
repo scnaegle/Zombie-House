@@ -1,6 +1,3 @@
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,7 +30,10 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
   public long frameCount = 0;
   public long frameStart;
+  public SoundLoader load = new SoundLoader();
   Timer frame_timer;
+  //private AudioStream music = SoundLoader.("ambience.wav");
+  String music = "ambience.wav";
   private GUI parent;
   private Player player;
   private GameMap map;
@@ -45,7 +45,6 @@ public class GamePanel extends JPanel implements KeyListener
       new MasterZombie(new Location(100, 100));
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
-  private AudioStream music = SoundLoader.loadSound("ambience.wav");
 
 
   public GamePanel(GUI parent)
@@ -87,7 +86,8 @@ public class GamePanel extends JPanel implements KeyListener
       public void actionPerformed(ActionEvent e)
       {
         if (GUI.running) {
-          AudioPlayer.player.start(music);
+
+          //AudioPlayer.player.start(music);
 
           player.update(map);
           snapViewPortToPlayer();
@@ -109,10 +109,10 @@ public class GamePanel extends JPanel implements KeyListener
           repaint();
 
         }
-        AudioPlayer.player.stop(music);
-        frameCount++;
-        long time = System.currentTimeMillis();
-        //System.out.println((double)(frameCount*1000)/(time-frameStart));
+        else
+        {
+          load.audioClip.stop();
+        }
       }
     });
   }
@@ -195,7 +195,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_R.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-      AudioPlayer.player.stop(player.sound);
+      //AudioPlayer.player.stop(player.sound);
 
     }
     if (KEY_UP.contains(code))
@@ -215,7 +215,7 @@ public class GamePanel extends JPanel implements KeyListener
       player.heading.setXMovement(Heading.WEST_STEP);
     }
 
-    AudioPlayer.player.start(player.sound);
+    //AudioPlayer.player.start(player.sound);
   }
 
 
@@ -232,6 +232,16 @@ public class GamePanel extends JPanel implements KeyListener
       player.heading.setXMovement(0);
     }
 
-    AudioPlayer.player.stop(player.sound);
+    //AudioPlayer.player.stop(player.sound);
+  }
+
+  public void startMusic()
+  {
+    load.play(music);
+  }
+
+  public void stopMusic()
+  {
+    load.stop();
   }
 }

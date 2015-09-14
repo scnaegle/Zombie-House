@@ -171,7 +171,8 @@ public class GUI
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
-    gamePanel.frameStart = System.currentTimeMillis();
+    gamePanel.startMusic();
+
   }
 
   private void pauseGame()
@@ -179,6 +180,7 @@ public class GUI
     pause = true;
     running = false;
     gamePanel.frame_timer.stop();
+    gamePanel.stopMusic();
   }
 
 
