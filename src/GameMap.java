@@ -48,7 +48,7 @@ public class GameMap
   private static Random random = new Random();
 
   private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
-  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
+//  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
   private int num_rows;
   private int num_cols;
@@ -115,29 +115,6 @@ public class GameMap
 
   }
 
-  private static void buildRoomExact()
-  {
-    buildRoomX = 39;
-    buildRoomY = 39;
-    int roomSize = 10;
-
-    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
-    {
-      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
-      {
-        if (inBoundsWithBorder(x, y) && (x == buildRoomX ||
-            x == (buildRoomX + roomSize - 1) || y == buildRoomY ||
-            y == (buildRoomY + roomSize - 1)))
-        {
-          setGrid(x, y, ROOM_WALL);
-        }
-        else if (inBoundsWithBorder(x, y))
-        {
-          setGrid(x, y, BASIC_TILE);
-        }
-      }
-    }
-  }
 
   private static void setGrid(int x, int y, char val)
   {
