@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
-  private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
+  private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
   Timer frame_timer;
   private SoundLoader loadAmbience;
   private GUI parent;
@@ -183,10 +183,9 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
-    if (KEY_R.contains(code) && (player.getSpeed() != 0))
+    if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-
     }
     if (KEY_UP.contains(code))
     {
@@ -220,6 +219,9 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
+    }
+    if (KEY_RUN.contains(code)) {
+      player.setWalking();
     }
     player.stopSound();
 

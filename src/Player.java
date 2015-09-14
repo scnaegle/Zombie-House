@@ -172,6 +172,10 @@ public class Player extends Humanoid implements HumanoidObject
     current_speed = 2 * defined_speed;
   }
 
+  public void setWalking() {
+    this.current_speed = defined_speed;
+  }
+
   public double getStamina()
   {
     return stamina;
