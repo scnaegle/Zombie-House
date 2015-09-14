@@ -23,7 +23,8 @@ public class GUI
   JLabel playerStamina;
   JButton startPause;
   boolean pause = true;
-
+  Player player;
+  private int whichlevel = 1;
 
   public void setUpGUI()
   {
@@ -63,7 +64,7 @@ public class GUI
       }
     });
 
-    gamePanel = new GamePanel();
+    gamePanel = new GamePanel(this);
     gamePanel.addKeyListener(gamePanel);
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
@@ -170,6 +171,7 @@ public class GUI
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
+    gamePanel.frameStart = System.currentTimeMillis();
   }
 
   private void pauseGame()
@@ -180,5 +182,19 @@ public class GUI
   }
 
 
+  public void updateLabels()
+  {
+    level.setText("Level: " + whichlevel);
+    playerSight.setText("Sight: " + player.getSight());
+    playerHearing.setText("Hearing: " + player.getHearing());
+    playerSpeed.setText("Speed: " + player.getSpeed());
+    playerStamina.setText("Stamina: " + player.getStamina());
+  }
 
+  public void initPlayer()
+  {
+    player = new Player(5, 10, 1.0, 5);
+    player.setLocation(new Location(SCENE_WIDTH / 2, SCENE_HEIGHT / 2));
+    player.setHeading(new Heading(Heading.NONE));
+  }
 }

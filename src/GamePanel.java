@@ -1,3 +1,6 @@
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,35 +21,40 @@ import java.util.Arrays;
  */
 public class GamePanel extends JPanel implements KeyListener
 {
+
+  // How fast the timer should tick. Ranges from 35ish to 50ish.
   static final int FPS = 60;
   static final int SKIP_TICKS = 1000 / FPS;
-
+  final BufferedImage vignetteCanvas;
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
-
-  public Player player = new Player(5, 10, 1.0, 5);
-  final BufferedImage vignetteCanvas = makeVignette(player.getSight());
+  private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
+  public long frameCount = 0;
+  public long frameStart;
   Timer frame_timer;
+  private GUI parent;
+  private Player player;
   private GameMap map;
   private Zombie randomZombie =
-      new RandomWalkZombie(new Location(200, 200));
+      new RandomWalkZombie(new Location(500, 500));
   private Zombie lineZombie =
       new LineWalkZombie(new Location(300, 300));
   private Zombie masterZ =
       new MasterZombie(new Location(100, 100));
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
+  private AudioStream music = SoundLoader.loadSound("ambience.wav");
 
 
-  public GamePanel()
+  public GamePanel(GUI parent)
   {
+    this.parent = parent;
+    player = parent.player;
 
-//    System.out.println("scene_width: " + GUI.SCENE_WIDTH);
-//    System.out.println("scene_height: " + GUI.SCENE_HEIGHT);
-//    setPreferredSize(new Dimension(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT - 25));
     setBackground(Color.white);
+    vignetteCanvas = makeVignette(player.getSight());
 
 
     File map_file = null;
@@ -64,13 +72,14 @@ public class GamePanel extends JPanel implements KeyListener
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
-    player.setHeading(new Heading(Heading.NONE));
-    player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT / 2));
+    //player.setHeading(new Heading(Heading.NONE));
+    //player.setLocation(new Location(GUI.SCENE_WIDTH / 2, GUI.SCENE_HEIGHT /
+    // 2));
     //snapViewPortToPlayer();
 
 
-    randomZombie.setHeading(Heading.WEST);
-    lineZombie.setHeading(Heading.EAST);
+    randomZombie.setHeading(new Heading(Heading.WEST));
+    lineZombie.setHeading(new Heading(Heading.EAST));
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
@@ -78,8 +87,11 @@ public class GamePanel extends JPanel implements KeyListener
       public void actionPerformed(ActionEvent e)
       {
         if (GUI.running) {
+          AudioPlayer.player.start(music);
+
           player.update(map);
           snapViewPortToPlayer();
+
 
 
           randomZombie.update(map, player);
@@ -95,7 +107,12 @@ public class GamePanel extends JPanel implements KeyListener
 
           explodingTrap.move();
           repaint();
+
         }
+        AudioPlayer.player.stop(music);
+        frameCount++;
+        long time = System.currentTimeMillis();
+        //System.out.println((double)(frameCount*1000)/(time-frameStart));
       }
     });
   }
@@ -175,6 +192,12 @@ public class GamePanel extends JPanel implements KeyListener
   {
     int code = e.getKeyCode();
 
+    if (KEY_R.contains(code) && (player.getSpeed() != 0))
+    {
+      player.setRunning();
+      AudioPlayer.player.stop(player.sound);
+
+    }
     if (KEY_UP.contains(code))
     {
       player.heading.setYMovement(Heading.NORTH_STEP);
@@ -191,6 +214,8 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
+
+    AudioPlayer.player.start(player.sound);
   }
 
 
@@ -206,5 +231,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
+
+    AudioPlayer.player.stop(player.sound);
   }
 }

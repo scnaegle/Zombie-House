@@ -4,32 +4,24 @@
  * which implements Object2D. Each zombie also needs to track the human, so it
  * implements HumanoidObject which lets it get the human's current location.
  */
-public abstract class Zombie extends GameObject implements HumanoidObject
+public abstract class Zombie extends Humanoid implements HumanoidObject
 {
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   protected int frame = 0;
 
   protected double decision_rate = 2.0;
   protected double smell = 7.0;
-  protected Heading heading = Heading.NONE;
   protected double speed = .5;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
   Animation moveRight;
   Animation moveUp;
-  Animation animation = moveLeft;
 
 
   public Zombie(Location location) {
     this.location = location;
-  }
-
-  protected void move() {
-//    location.x += (speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-//    location.y += (speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-    location.x += (speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-    location.y += (speed * heading.getYMovement()) * MOVE_MULTIPLIER;
+    this.speed = 0.5;
   }
 
   protected void determineAnimation() {
@@ -67,7 +59,11 @@ public abstract class Zombie extends GameObject implements HumanoidObject
       frame = 0;
       chooseDirection(player);
     }
-    move();
+    Location next_location = getNextLocation();
+    if (!hitWall(map, next_location))
+    {
+      move(getNextLocation());
+    }
     determineAnimation();
     animation.start();
     animation.update();

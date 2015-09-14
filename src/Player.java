@@ -1,30 +1,32 @@
+import sun.audio.AudioStream;
+
 import java.awt.image.BufferedImage;
 
 /**
  * Player class sets up the player, loads the walking/ running sprites and
  * sets up the animation depending on the speed of the player.
  */
-public class Player extends GameObject implements HumanoidObject
+public class Player extends Humanoid implements HumanoidObject
 {
-  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  private int sight = 5;
-  private int hearing = 10;
-  private double current_speed = 1.0;
-  private double defined_speed = 1.0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
-  Heading heading;
+  private int sight = 5;
+  private int hearing = 10;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
   private BufferedImage[] running = initPlayerSpriteRun();
-  private Animation walk = new Animation(walking, 5);
-  private Animation run = new Animation(running, 5);
-  private Animation stand = new Animation(still, 5);
+  private Animation walk = new Animation(walking, 2);
   Animation animation = walk;
+  private Animation run = new Animation(running, 2);
+  private Animation stand = new Animation(still, 5);
+  private AudioStream walkSound = SoundLoader.loadSound("pWalkSound.wav");
+  public AudioStream sound = walkSound;
+  private AudioStream runSound = SoundLoader.loadSound("pRunSound.wav");
+
 
   public Player(Location location) {
     this.location = location;
@@ -60,6 +62,11 @@ public class Player extends GameObject implements HumanoidObject
   public int getSight()
   {
     return sight;
+  }
+
+  public int getHearing()
+  {
+    return hearing;
   }
   public BufferedImage[] initPlayerSpriteWalk()
   {
@@ -115,81 +122,12 @@ public class Player extends GameObject implements HumanoidObject
     //UHHHH Is stanima becoming too large, should it be reset to 5?
   }
 
-  @Override
-  public double getSpeed()
-  {
-    return current_speed;
-  }
-
-  public void setSpeed(double speed) {
-    this.current_speed = speed;
-  }
-
-  @Override
-  public Heading getHeading()
-  {
-    return heading;
-  }
-
-
-  public void setHeading(Heading heading) {
-    this.heading = heading;
-  }
-
-  @Override
-  public void setLocation(Location new_location) {
-    this.location = new_location;
-  }
-
   /**
    * Tells the sprite how to move based on the heading we give it.
    * Heading is controlled by keyboard arrows.
    */
   public void move(Location next_location) {
     location = next_location;
-  }
-
-  public Location getNextLocation() {
-//      System.out.println("moving....");
-//      location.x += (current_speed * Math.cos(heading.getDegrees())) * MOVE_MULTIPLIER;
-//      location.y -= (current_speed * Math.sin(heading.getDegrees())) * MOVE_MULTIPLIER;
-    double new_x = location.x + (current_speed * heading.getXMovement()) * MOVE_MULTIPLIER;
-    double new_y = location.y + (current_speed * heading.getYMovement()) * MOVE_MULTIPLIER;
-    return new Location(new_x, new_y);
-  }
-
-  public boolean hitWall(GameMap map, Location next_location) {
-    int row = next_location.getRow(GUI.tile_size);
-    int col = next_location.getCol(GUI.tile_size);
-    GameObject new_location_object = new GameObject(next_location, GUI.tile_size, GUI.tile_size);
-
-//    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
-//    if (tile_check.tile_type.equals(TileType.WALL) &&
-//        new_location_object.intersects(tile_check)) {
-//      return true;
-//    }
-//    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
-//    if (tile_check.tile_type.equals(TileType.WALL) &&
-//        new_location_object.intersects(tile_check)) {
-//      return true;
-//    }
-
-//    System.out.println("***************************************************");
-//    System.out.println("new location: " + new_location_object.location);
-//    System.out.format("current: [row=%d, col=%d]\n", row, col);
-    Tile tile_check;
-    for(int r = row - 1; r <= row + 1; r++) {
-      for(int c = col - 1; c <= col + 1; c++) {
-        tile_check = map.getTile(r, c);
-//        System.out.println("tile_check: " + tile_check);
-        if (tile_check.tile_type.equals(TileType.WALL) &&
-            new_location_object.intersects(tile_check)) {
-//          System.out.println("Hit wall...");
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   public void update(GameMap map) {
@@ -204,14 +142,28 @@ public class Player extends GameObject implements HumanoidObject
       animation = stand;
     } else if (current_speed > defined_speed && stamina > 0) {
       animation = run;
+      sound = runSound;
       stamina -= STAMINA_STEP;
     } else {
       regenerate();
       animation = walk;
-      current_speed = 1;
+      sound = walkSound;
+      current_speed = 1.0;
     }
     animation.start();
     animation.update();
+
   }
 
+  // Called when 'r' is pressed so that the speed stays at 2 times what it was
+  // instead of updating when r is held down.
+  public void setRunning()
+  {
+    current_speed = 2 * defined_speed;
+  }
+
+  public double getStamina()
+  {
+    return stamina;
+  }
 }
