@@ -68,6 +68,7 @@ public class GUI
     gamePanel.addKeyListener(gamePanel);
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
+
     //gamePanel.setFocusTraversalKeysEnabled(false);
 
 
@@ -171,7 +172,8 @@ public class GUI
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
-    gamePanel.frameStart = System.currentTimeMillis();
+    gamePanel.startMusic();
+
   }
 
   private void pauseGame()
@@ -179,6 +181,7 @@ public class GUI
     pause = true;
     running = false;
     gamePanel.frame_timer.stop();
+    gamePanel.stopMusic();
   }
 
 
@@ -196,5 +199,13 @@ public class GUI
     player = new Player(5, 10, 1.0, 5);
     player.setLocation(new Location(SCENE_WIDTH / 2, SCENE_HEIGHT / 2));
     player.setHeading(new Heading(Heading.NONE));
+
+  }
+
+
+  public void loadSounds()
+  {
+    gamePanel.loadMusic();
+    player.loadSounds();
   }
 }

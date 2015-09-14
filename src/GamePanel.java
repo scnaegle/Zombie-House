@@ -1,6 +1,3 @@
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,9 +28,8 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_R = new ArrayList<>(Arrays.asList(KeyEvent.VK_R));
-  public long frameCount = 0;
-  public long frameStart;
   Timer frame_timer;
+  private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
   private GameMap map;
@@ -45,7 +41,6 @@ public class GamePanel extends JPanel implements KeyListener
       new MasterZombie(new Location(100, 100));
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
-  private AudioStream music = SoundLoader.loadSound("ambience.wav");
 
 
   public GamePanel(GUI parent)
@@ -87,7 +82,6 @@ public class GamePanel extends JPanel implements KeyListener
       public void actionPerformed(ActionEvent e)
       {
         if (GUI.running) {
-          AudioPlayer.player.start(music);
 
           player.update(map);
           snapViewPortToPlayer();
@@ -109,10 +103,7 @@ public class GamePanel extends JPanel implements KeyListener
           repaint();
 
         }
-        AudioPlayer.player.stop(music);
-        frameCount++;
-        long time = System.currentTimeMillis();
-        //System.out.println((double)(frameCount*1000)/(time-frameStart));
+
       }
     });
   }
@@ -195,7 +186,6 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_R.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-      AudioPlayer.player.stop(player.sound);
 
     }
     if (KEY_UP.contains(code))
@@ -214,8 +204,8 @@ public class GamePanel extends JPanel implements KeyListener
     {
       player.heading.setXMovement(Heading.WEST_STEP);
     }
+    //player.playSound();
 
-    AudioPlayer.player.start(player.sound);
   }
 
 
@@ -231,7 +221,24 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_LEFT.contains(code) || KEY_RIGHT.contains(code)) {
       player.heading.setXMovement(0);
     }
+    player.stopSound();
 
-    AudioPlayer.player.stop(player.sound);
+
+  }
+
+  public void startMusic()
+  {
+    loadAmbience.play();
+  }
+
+  public void stopMusic()
+  {
+    loadAmbience.stop();
+  }
+
+  public void loadMusic()
+  {
+    loadAmbience = new SoundLoader("ambience.wav");
+
   }
 }
