@@ -136,7 +136,7 @@ public class Player extends Humanoid implements HumanoidObject
   private void regenerate()
   {
     stamina += STAMINA_STEP;
-    Math.min(stamina, max_stamina);
+    stamina = Math.min(stamina, max_stamina);
   }
 
   /**
