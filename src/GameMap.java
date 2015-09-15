@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -54,6 +55,9 @@ public class GameMap
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<Tile>();
+  ArrayList<Zombie> zombies = new ArrayList<Zombie>();
+
+  private static final double ZOMBIE_SPAWN_RATE = 0.01;
 
 
   public GameMap(File file)
@@ -1000,6 +1004,7 @@ public class GameMap
   {
     Scanner sc;
     ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
+    Random rand = new Random();
     int row = 0;
     int col = 0;
 
@@ -1022,6 +1027,16 @@ public class GameMap
             if (new_tile.tile_type == TileType.WALL)
             {
               walls.add(new_tile);
+            }
+            if (new_tile.tile_type == TileType.BRICK) {
+              if (rand.nextDouble() < .01) {
+                Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
+                if (rand.nextInt(2) == 0) {
+                  zombies.add(new RandomWalkZombie(location));
+                } else {
+                  zombies.add(new LineWalkZombie(location));
+                }
+              }
             }
             col++;
           }
@@ -1066,27 +1081,25 @@ public class GameMap
 
   public static void main(String[] args)
   {
-    /**
      File map_file = null;
      try
      {
-     map_file =
-     new File(GameMap.class.getResource("resources/level1.map").toURI());
+        map_file = new File(GameMap.class.getResource("resources/level1.map").toURI());
      }
      catch (URISyntaxException e)
      {
-     e.printStackTrace();
+       e.printStackTrace();
      }
      System.out.println("file: " + map_file);
      GameMap map = new GameMap(map_file);
      System.out.println("map: " + map.toString());
-     System.out.println("map walls: ");
-     for (Tile tile : map.getWalls())
-     {
-     System.out.println(tile);
-     }
-     */
+     System.out.println("zombies: " + map.zombies.size());
+//     System.out.println("map walls: ");
+//     for (Tile tile : map.getWalls())
+//     {
+//     System.out.println(tile);
+//     }
 
-    generateMap();
+//    generateMap();
   }
 }
