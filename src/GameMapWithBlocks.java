@@ -76,9 +76,9 @@ public class GameMapWithBlocks
       makeRandomHalls();
     }
     //   searchAlgorithm(END_ROOM);
-    expandHalls();
+    //  expandHalls();
     makeDoors();
-    addWallsToHalls();
+    //  addWallsToHalls();
     spawnZombie();
 
     for (int y = 0; y < Y_SIZE; y++)
@@ -97,9 +97,24 @@ public class GameMapWithBlocks
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-  
+        if (isHall(x,y))
+        {
+          if (isWall(x+1,y)) {
+
+          }
+        }
       }
     }
+  }
+
+  private static boolean isWall(int x, int y)
+  {
+    return getBlock(x + 1, y).type == ROOM_WALL;
+  }
+
+  private static boolean isHall(int x, int y)
+  {
+    return getBlock(x, y).type == HALL;
   }
 
   private static void searchAlgorithm(char type)

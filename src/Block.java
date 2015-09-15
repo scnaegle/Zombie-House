@@ -12,7 +12,7 @@ public class Block
   boolean corner = false;
   boolean wall = false;
   boolean hall =false;
-
+  boolean doorways = false;
 
   char type;
   int x;

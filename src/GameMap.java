@@ -385,7 +385,11 @@ public class GameMap
       makeRandomHalls();
     }
 
-    expandHalls();
+
+    makeDoors();
+
+
+//    expandHalls();
 
     for (int x = 0; x < X_SIZE; x++)
     {
@@ -395,7 +399,7 @@ public class GameMap
       }
       System.out.println("");
     }
-    makePathFromEnd();
+//    makePathFromEnd();
 
     for (int x = 0; x < X_SIZE; x++)
     {
@@ -407,8 +411,6 @@ public class GameMap
     }
   }
 
-
-  // makeDoors();
 
   // addWallsToHalls();
 
