@@ -71,23 +71,24 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     {
       move(getNextLocation());
     }
-    // Determines sounds based on player hearing
-    if (!inRange)
+    //Sees if zombie is in player hearing's range
+    if (getDistance((Object2D) player) <= ((Player) player).getHearing())
     {
-      stopSound();
-    }
-    else if (inRange && !hitWall(map, next_location))
-    {
-      System.out.println("  z is walking");
       sound = zWalk;
       playSound();
     }
-    else if (inRange && hitWall(map, next_location))
+    else
     {
-      System.out.println("  z hit wall");
-      sound = hitObst;
-      playSound();
+      stopSound();
     }
+
+    if (getDistance((Object2D) player) <= 2 * ((Player) player).getHearing()
+        && hitWall(map, next_location))
+    {
+      sound = hitObst;
+      sound.play();
+    }
+
     determineAnimation();
     animation.start();
     animation.update();

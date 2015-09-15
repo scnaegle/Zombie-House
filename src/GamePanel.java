@@ -92,18 +92,6 @@ public class GamePanel extends JPanel implements KeyListener
                 new Location(0, lineZombie.location.y));
 
             //Determines if player can hear zombie
-            if (player.getDistance(randomZombie) < player.getHearing())
-            {
-              System.out.println("Random z is in range");
-              randomZombie.inRange = true;
-
-            }
-            if (player.getDistance(lineZombie) < player.getHearing())
-            {
-              System.out.println("Line z is in range");
-              lineZombie.inRange = true;
-
-            }
           }
 
           explodingTrap.move();
