@@ -19,6 +19,7 @@ public class RandomWalkZombie extends Zombie
     moveLeft = new Animation(left, 5);
     moveRight = new Animation(right, 5);
     moveUp = new Animation(up, 5);
+    this.heading = new Heading(Heading.NONE);
     animation = moveLeft;
     animation.start();
   }
