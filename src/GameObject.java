@@ -3,10 +3,20 @@ import java.awt.*;
 /**
  * Created by scnaegl on 9/9/15.
  */
-public abstract class GameObject implements Object2D {
+public class GameObject implements Object2D {
   protected int width;
   protected int height;
   Location location;
+
+  public GameObject() {
+
+  }
+
+  public GameObject(Location location, int width, int height) {
+    this.location = location;
+    this.width = width;
+    this.height = height;
+  }
 
   @Override
   public int getWidth() {
@@ -24,15 +34,29 @@ public abstract class GameObject implements Object2D {
   }
 
   @Override
+  public double getDistance(Object2D other) {
+    double diff_x = Math.abs(location.x - other.getLocation().x);
+    double diff_y = Math.abs(location.y - other.getLocation().y);
+    return Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2));
+  }
+
+  public double getDirectionTo(Object2D other) {
+    double diff_x = other.getLocation().x - location.x;
+    double diff_y = other.getLocation().y - location.y;
+    return Math.atan2(diff_y, diff_x);
+  }
+
+  public Point getCenterPoint() {
+    return location.getCenterPoint(width, height);
+  }
+
+  @Override
   public Rectangle getBoundingRectangle() {
-    return new Rectangle(location.x, location.y, width, height);
+    return new Rectangle(location.getX(), location.getY(), width, height);
   }
 
   @Override
   public boolean intersects(Object2D other) {
-    if (location.equals(other.getLocation())) {
-      return true;
-    }
-    return false;
+    return getBoundingRectangle().intersects(other.getBoundingRectangle());
   }
 }

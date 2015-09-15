@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Created by scnaegl on 9/8/15.
  */
@@ -5,51 +7,53 @@ public class Location
 {
   int row;
   int col;
-  int x;
-  int y;
+  double x;
+  double y;
 
   public Location() {
 
   }
 
-  public Location(int row, int col) {
-    this.row = row;
-    this.col = col;
-  }
-
-  public Location(int row, int col, int x, int y) {
-    this(row, col);
+  public Location(double x, double y) {
     this.x = x;
     this.y = y;
   }
 
-  public int getRow() {
-    return row;
+  public Location(double x, double y, int row, int col) {
+    this(x, y);
+    this.row = row;
+    this.col = col;
   }
 
-  public int getCol() {
-    return col;
+  public int getRow(int tile_size) {
+    Point center = getCenterPoint(tile_size, tile_size);
+    return (int)(center.y / tile_size);
+  }
+
+  public int getCol(int tile_size) {
+    Point center = getCenterPoint(tile_size, tile_size);
+    return (int)(center.x / tile_size);
   }
 
   public int getX() {
-    return x;
+    return (int)x;
   }
 
   public int getY() {
-    return y;
+    return (int)y;
   }
 
-  public void setRow(int row) {
-    this.row = row;
+  public Point getCenterPoint(int width, int height) {
+    return new Point((int)x + width / 2, (int)y + height / 2);
   }
 
   @Override
   public String toString() {
     return "Location{" +
-        "row=" + row +
-        ", col=" + col +
-        ", x=" + x +
+        "x=" + x +
         ", y=" + y +
+        ", row=" + row +
+        ", col=" + col +
         '}';
   }
 
