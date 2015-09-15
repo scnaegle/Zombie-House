@@ -46,9 +46,6 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
-    randomZombie = parent.randomZombie;
-    lineZombie = parent.lineZombie;
-    masterZ = parent.masterZ;
 
     setBackground(Color.white);
     vignetteCanvas = makeVignette(player.getSight());
@@ -70,6 +67,9 @@ public class GamePanel extends JPanel implements KeyListener
         map.getHeight(GUI.tile_size)));
 
 
+    for(Zombie zombie : map.zombies) {
+      zombie.loadNoises();
+    }
 
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
@@ -83,25 +83,26 @@ public class GamePanel extends JPanel implements KeyListener
           snapViewPortToPlayer();
 
           //Add stuff to check if player/zombie interacts for bite sound
-          randomZombie.update(map, player);
-          if (randomZombie.location.x < 0) {
-            randomZombie.setLocation(
-                new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
-          }
-          lineZombie.update(map, player);
-          if (lineZombie.location.x > GUI.SCENE_WIDTH) {
-            lineZombie.setLocation(
-                new Location(0, lineZombie.location.y));
-
-          }
-//          for(Zombie z : parent.zombieList)
-//          {
-//            if(z.bitesPlayer(player))
+//          randomZombie.update(map, player);
+//          if (randomZombie.location.x < 0) {
+//            randomZombie.setLocation(
+//                new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
+//          }
+//          lineZombie.update(map, player);
+//          if (lineZombie.location.x > GUI.SCENE_WIDTH) {
+//            lineZombie.setLocation(
+//                new Location(0, lineZombie.location.y));
+//
+//          }
+          for(Zombie zombie : map.zombies)
+          {
+            zombie.update(map, player);
+//            if(zombie.bitesPlayer(player))
 //            {
-//              z.setBite();
+//              zombie.setBite();
 //              sound.play();
 //            }
-//          }
+          }
 
           explodingTrap.move();
           repaint();
@@ -144,11 +145,15 @@ public class GamePanel extends JPanel implements KeyListener
         fireTrap.location.getY(), null);
     g2.drawImage(explodingTrap.fireAnimation.getSprite(),
         fireTrap.location.getX(), fireTrap.location.getY(), null);
-    g2.drawImage(randomZombie.animation.getSprite(),
-        randomZombie.location.getX(),
-        randomZombie.location.getY(), null);
-    g2.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
-        lineZombie.location.getY(), null);
+//    g2.drawImage(randomZombie.animation.getSprite(),
+//        randomZombie.location.getX(),
+//        randomZombie.location.getY(), null);
+//    g2.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
+//        lineZombie.location.getY(), null);
+
+    for(Zombie zombie : map.zombies) {
+      g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
+    }
 
     g2.drawImage(player.animation.getSprite(), player.location.getX(),
         player.location.getY(), null);
