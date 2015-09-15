@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
 
 public class GUI
@@ -14,7 +13,6 @@ public class GUI
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
   static JScrollPane scrollPane;
-  public List<Zombie> zombieList;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -25,11 +23,8 @@ public class GUI
   JButton startPause;
   boolean pause = true;
   Player player;
-  Zombie zombie;
   FireTrap fireTrap;
-  Zombie randomZombie;
-  Zombie lineZombie;
-  Zombie masterZ;
+
   private int whichlevel = 1;
 
   public void setUpGUI()
@@ -201,30 +196,7 @@ public class GUI
   {
     gamePanel.loadMusic();
     player.loadSounds();
-    randomZombie.loadNoises();
-    lineZombie.loadNoises();
-    masterZ.loadNoises();
     //fireTrap.loadExplosion();
-  }
-
-  /**
-   * Will need to make arrays of zombies. But for now this is ok.
-   */
-  public void initZombies()
-  {
-
-    randomZombie = new RandomWalkZombie(new Location(700, 1200));
-    lineZombie = new LineWalkZombie(new Location(800, 1300));
-    masterZ = new MasterZombie(new Location(900, 1300));
-
-    randomZombie.setHeading(new Heading(Heading.WEST));
-    lineZombie.setHeading(new Heading(Heading.EAST));
-
-//    zombieList.add(randomZombie);
-//    zombieList.add(lineZombie);
-//    zombieList.add(masterZ);
-
-
   }
 
   public void initFireTraps()

@@ -46,9 +46,6 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
-    randomZombie = parent.randomZombie;
-    lineZombie = parent.lineZombie;
-    masterZ = parent.masterZ;
 
     setBackground(Color.white);
     vignetteCanvas = makeVignette(player.getSight());
