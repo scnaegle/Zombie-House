@@ -3,6 +3,7 @@
  */
 public class Block
 {
+  boolean zombieSpawn = false;
   boolean partOfRoom = false;
   boolean partOfStartRoom=false;
   boolean partOfEndRoom=false;
@@ -10,12 +11,12 @@ public class Block
   boolean goal = false;
   boolean corner = false;
   boolean wall = false;
+  boolean hall =false;
 
 
   char type;
   int x;
   int y;
-
   public Block(int x, int y, char type)
   {
     this.x = x;

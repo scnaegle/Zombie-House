@@ -16,7 +16,7 @@ public enum TileType {
 		BURNT(4, '4',1, new Color(22, 22, 22)),
 		START(5, 'S',1, new Color(216, 216, 25)),
 		EXIT(6, 'E', 9999, new Color(0, 0, 0)),
-		WALL(5, 'B', 9999, Color.BLACK);
+		WALL(7, 'B', 9999, Color.BLACK);
 		int value;
 		char grid_char;
 		Integer movement_cost;

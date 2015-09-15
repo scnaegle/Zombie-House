@@ -25,10 +25,10 @@ public class GameMapWithBlocks
   private static final char ZOMBIE_SPAWN = 'Z';
 
 
-  private static final int X_SIZE = 40;
-  private static final int Y_SIZE = 20;
-  private static final int MAX_ROOM_SIZE = 5;
-  private static final int MIN_ROOM_SIZE = 3;
+  private static final int X_SIZE = 100;
+  private static final int Y_SIZE = 50;
+  private static final int MAX_ROOM_SIZE = 12;
+  private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
   private static final int UP = 0;
   private static final int DOWN = 1;
@@ -71,9 +71,13 @@ public class GameMapWithBlocks
     }
     breakTouchingWalls();
     buildObsticales();
-    makeRandomHalls();
-    searchAlgorithm(END_ROOM);
+    for (int i = 0; i < numberOfRandomHalls; i++)
+    {
+      makeRandomHalls();
+    }
+    //   searchAlgorithm(END_ROOM);
     expandHalls();
+    makeDoors();
     addWallsToHalls();
     spawnZombie();
 
@@ -84,6 +88,17 @@ public class GameMapWithBlocks
         System.out.print(getBlock(x, y).type);
       }
       System.out.println("");
+    }
+  }
+
+  private static void makeDoors()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+  
+      }
     }
   }
 
@@ -159,53 +174,78 @@ public class GameMapWithBlocks
     {
       if (pickRandomDirection[i] == RIGHT)
       {
-        if (emptyBlock(x+1,y))
+        if (emptyBlock(x + 1, y)/*inbounds and empty type*/)
         {
-          setVisitedTrue(x,y);
+          setVisitedTrue(x, y);
           System.out.println("Right");
           algorithm(x + 1, y, END_ROOM);
         }
-
+        else if (getBlock(x + 1, y).partOfRoom == true)
+        {
+          getBlock(x, y).hall = true;
+          setBlockType(x, y, HALL);
+          return;
+        }
       }
       if (pickRandomDirection[i] == UP)
       {
-
-        if (emptyBlock(x,y-1))
+        if (emptyBlock(x, y - 1))
         {
-
-          setVisitedTrue(x,y);
+          setVisitedTrue(x, y);
           System.out.println("UP");
           algorithm(x, y - 1, END_ROOM);
+        }
+        else if (getBlock(x, y - 1).partOfRoom == true)
+        {
+          getBlock(x, y).hall = true;
+          setBlockType(x, y, HALL);
+          return;
         }
       }
       if (pickRandomDirection[i] == LEFT)
       {
-        if (emptyBlock(x-1,y))
+        if (emptyBlock(x - 1, y))
         {
-
-
-          setVisitedTrue(x,y);
+          setVisitedTrue(x, y);
           System.out.println("Left");
           algorithm(x - 1, y, END_ROOM);
+        }
+        else if (getBlock(x - 1, y).partOfRoom == true)
+        {
+          getBlock(x, y).hall = true;
+          setBlockType(x, y, HALL);
+          return;
         }
       }
       if (pickRandomDirection[i] == RIGHT)
       {
-        if (emptyBlock(x + 1, y))
+        if (emptyBlock(x, y + 1))
         {
-          setVisitedTrue(x,y);
+          setVisitedTrue(x, y);
           System.out.println("down");
           algorithm(x, y + 1, END_ROOM);
         }
-
+        else if (getBlock(x + 1, y).partOfRoom == true)
+        {
+          getBlock(x, y).hall = true;
+          setBlockType(x, y, HALL);
+          return;
+        }
       }
       System.out.println();
     }
+    if (getBlock(x, y).visited == true)
+    {
+      setBlockType(x, y, HALL);
+      getBlock(x, y).hall = true;
+      return;
+    }
+
   }
 
   private static void setVisitedTrue(int x, int y)
   {
-    getBlock(x,y).visited =true;
+    getBlock(x, y).visited = true;
   }
 
   private static boolean emptyBlock(int x, int y)
@@ -236,7 +276,7 @@ public class GameMapWithBlocks
           randomNumber = random.nextInt(99);
           if (randomNumber == 0)
           {
-            setBlockType(x, y, ZOMBIE_SPAWN);
+            getBlock(x, y).zombieSpawn = true;
           }
         }
       }
@@ -291,16 +331,6 @@ public class GameMapWithBlocks
       }
     }
 
-//    //hallRight=true;
-//    System.out.println("x cord: " + hallY + " y cord: " + hallX);
-////    System.out.println("Grid[y][x] = " + getGrid(hallX, hallY));
-//    System.out.println("hall r: " + hallRight);
-//    System.out.println("hall l: " + hallLeft);
-//    System.out.println("hall d: " + hallDown);
-//    System.out.println("hall u: " + hallUp);
-//    System.out.println();
-//
-
     if (hallUp)
     {
       for (int a = hallX; a > 0; a--)
@@ -308,6 +338,7 @@ public class GameMapWithBlocks
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
+          getBlock(a, hallY).hall = true;
         }
         else
         {
@@ -531,7 +562,7 @@ public class GameMapWithBlocks
         {
           setBlockType(x, y, ROOM_CORNER);
           getBlock(x, y).corner = true;
-
+          getBlock(x, y).partOfRoom = true;
         }
         //seriously sorry about the if statments :( It is working though. :)
         else if (inBoundsWithBorder(x, y) &&
@@ -541,6 +572,7 @@ public class GameMapWithBlocks
         {
           setBlockType(x, y, ROOM_WALL);
           getBlock(x, y).wall = true;
+          getBlock(x, y).partOfRoom = true;
         }
         else if (inBoundsWithBorder(x, y) && type == BASIC_TILE)
         {
@@ -551,11 +583,13 @@ public class GameMapWithBlocks
         {
           setBlockType(x, y, END_ROOM);
           getBlock(x, y).partOfEndRoom = true;
+          getBlock(x, y).partOfRoom = true;
         }
         else
         {
           setBlockType(x, y, START_ROOM);
           getBlock(x, y).partOfStartRoom = true;
+          getBlock(x, y).partOfRoom = true;
         }
       }
     }
@@ -647,8 +681,8 @@ public class GameMapWithBlocks
 
   private static void resetRoomDimentions()
   {
-    buildRoomX = random.nextInt(X_SIZE - 6) + 1;
-    buildRoomY = random.nextInt(Y_SIZE - 6) + 1;
+    buildRoomX = random.nextInt(X_SIZE - 14) + 1;
+    buildRoomY = random.nextInt(Y_SIZE - 14) + 1;
     roomSize = makeRoomSize();
   }
 
@@ -662,7 +696,6 @@ public class GameMapWithBlocks
         return roomSize;
       }
     }
-
   }
 
   public static void main(String[] args)
