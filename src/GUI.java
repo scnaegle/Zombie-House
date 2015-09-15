@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,13 +7,14 @@ import java.util.List;
 public class GUI
 {
 
-  final static int PIXELS = 80;
+
+  final static int tile_size = 80;
   static int SCENE_WIDTH = 1920;
   static int SCENE_HEIGHT = 1080;
-  static int tile_size = 80;
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
   static JScrollPane scrollPane;
+  public List<Zombie> zombieList;
   JFrame window;
   GamePanel gamePanel;
   JLabel level;
@@ -30,7 +30,6 @@ public class GUI
   Zombie randomZombie;
   Zombie lineZombie;
   Zombie masterZ;
-  List<Zombie> zombieList;
   private int whichlevel = 1;
 
   public void setUpGUI()
@@ -71,10 +70,12 @@ public class GUI
       }
     });
 
+
     gamePanel = new GamePanel(this);
     gamePanel.addKeyListener(gamePanel);
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
+
 
 
 
@@ -214,15 +215,16 @@ public class GUI
 
     randomZombie = new RandomWalkZombie(new Location(700, 1200));
     lineZombie = new LineWalkZombie(new Location(800, 1300));
-    masterZ = new MasterZombie(new Location(100, 100));
-
-    zombieList.add(randomZombie);
-    zombieList.add(lineZombie);
-    zombieList.add(masterZ);
-
+    masterZ = new MasterZombie(new Location(900, 1300));
 
     randomZombie.setHeading(new Heading(Heading.WEST));
     lineZombie.setHeading(new Heading(Heading.EAST));
+
+//    zombieList.add(randomZombie);
+//    zombieList.add(lineZombie);
+//    zombieList.add(masterZ);
+
+
   }
 
   public void initFireTraps()

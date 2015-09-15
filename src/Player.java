@@ -10,10 +10,10 @@ public class Player extends Humanoid implements HumanoidObject
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
   private final double PICKUP_TIME = 5.0;
   private final double PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
-  protected int frame = 0;
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
+  protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -147,70 +147,64 @@ public class Player extends Humanoid implements HumanoidObject
     location = next_location;
   }
 
-  public void update(GameMap map) {
-    if (is_picking_up) {
+  public void update(GameMap map)
+  {
+    if (is_picking_up)
+    {
       frame++;
-      if(frame >= PICKUP_FRAMES) {
+      if (frame >= PICKUP_FRAMES)
+      {
         fire_traps++;
         frame = 0;
         is_picking_up = false;
       }
-    } else {
+    }
+    else
+    {
       Location next_location = getNextLocation();
-      if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
+      if (!heading.equals(Heading.NONE) && !hitWall(map, next_location))
+      {
         move(next_location);
       }
-      if(heading.equals(Heading.NONE)) {
+      if (heading.equals(Heading.NONE))
+      {
         regenerate();
         current_speed = 0;
         animation = stand;
-      } else if (current_speed > defined_speed && stamina > 0) {
+      }
+      else if (current_speed > defined_speed && stamina > 0)
+      {
         animation = run;
         stamina -= STAMINA_STEP;
-      } else {
+      }
+      else
+      {
         regenerate();
         animation = walk;
-        sound = walkSound;
         current_speed = 1.0;
       }
 
-    Location next_location = getNextLocation();
-    if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
-      move(next_location);
-    }
-    if(heading.equals(Heading.NONE)) {
-      regenerate();
-      current_speed = 0;
-      animation = stand;
-    } else if (current_speed > defined_speed && stamina > 0) {
-      animation = run;
-      stamina -= STAMINA_STEP;
-    } else {
-      regenerate();
-      animation = walk;
-      sound = walkSound;
-      current_speed = 1.0;
-    }
+      // Decides which sound to play based on state of player
+      if (isStill)
+      {
+        stopSound();
+      }
+      if (!isWalking && isRunning)
+      {
+        sound = runSound;
+        playSound();
+      }
+      else if (!isRunning && isWalking)
+      {
+        sound = walkSound;
+        playSound();
+      }
 
-    if (isStill)
-    {
-      stopSound();
-    }
-    if (!isWalking && isRunning)
-    {
-      sound = runSound;
-      playSound();
-    }
-    else if (!isRunning && isWalking)
-    {
-      sound = walkSound;
-      playSound();
-    }
-
-    animation.start();
-    animation.update();
+      animation.start();
+      animation.update();
 
 
+    }
   }
 
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
@@ -249,7 +243,8 @@ public class Player extends Humanoid implements HumanoidObject
     sound.stop();
   }
 
-  public void pickupFireTrap() {
+  public void pickupFireTrap()
+  {
 
   }
 
