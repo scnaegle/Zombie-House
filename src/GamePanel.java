@@ -27,13 +27,13 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
+  public GameMap map;
   Timer frame_timer;
   int xScale;
   JViewport vp;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-  private GameMap map;
   private Zombie randomZombie;
   private Zombie lineZombie;
   private Zombie masterZ;
@@ -97,12 +97,9 @@ public class GamePanel extends JPanel implements KeyListener
           for(Zombie zombie : map.zombies)
           {
             zombie.update(map, player);
-//            if(zombie.bitesPlayer(player))
-//            {
-//              zombie.setBite();
-//              sound.play();
-//            }
           }
+
+          parent.updateLabels();
 
           explodingTrap.move();
           repaint();

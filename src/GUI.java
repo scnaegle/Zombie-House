@@ -20,12 +20,19 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
+  JLabel zombieSpawn;
+  JLabel zombieSpeed;
+  JLabel zombieSmell;
+  JLabel zombieRate;
+  JLabel fireSpawn;
   JButton startPause;
+
   boolean pause = true;
   Player player;
   FireTrap fireTrap;
 
   private int whichlevel = 1;
+  private Zombie zombie;
 
   public void setUpGUI()
   {
@@ -110,6 +117,11 @@ public class GUI
     playerHearing = new JLabel("Hearing: ");
     playerSpeed = new JLabel("Speed: ");
     playerStamina = new JLabel("Stamina: ");
+    zombieSmell = new JLabel("Z-Smell: ");
+    zombieRate = new JLabel("Z-Decision Rate: ");
+    zombieSpawn = new JLabel("Z-Spawn Rate: ");
+    zombieSpeed = new JLabel("Z-Speed: ");
+    fireSpawn = new JLabel("Fire Trap Spawn: ");
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
@@ -136,12 +148,17 @@ public class GUI
 
     viewPanel = new JPanel();
     viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
-    viewPanel.add(startPause);
     viewPanel.add(level);
     viewPanel.add(playerSight);
     viewPanel.add(playerHearing);
     viewPanel.add(playerSpeed);
     viewPanel.add(playerStamina);
+    viewPanel.add(startPause);
+    viewPanel.add(zombieSpawn);
+    viewPanel.add(zombieSpeed);
+    viewPanel.add(zombieSmell);
+    viewPanel.add(zombieRate);
+    viewPanel.add(fireSpawn);
 
 
     //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
@@ -180,7 +197,15 @@ public class GUI
     playerSight.setText("Sight: " + player.getSight());
     playerHearing.setText("Hearing: " + player.getHearing());
     playerSpeed.setText("Speed: " + player.getSpeed());
-    playerStamina.setText("Stamina: " + player.getStamina());
+    playerStamina
+        .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
+
+//    zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
+//    zombieRate.setText("Z-Decision Rate: " + zombie.getDecisionRate());
+//    zombieSmell.setText("Z-Smell: "+zombie.getSmell());
+//    zombieSpawn.setText("Z-Spawn Rate: "+gamePanel.map.getZombieSpawnRate());
+
+
   }
 
   public void initPlayer()

@@ -8,6 +8,6 @@ public class StartGame
     g.initFireTraps();
     g.setUpGUI();
     g.loadSounds();
-    g.updateLabels();
+    //g.updateLabels();
   }
 }
