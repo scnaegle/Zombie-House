@@ -8,14 +8,19 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  public boolean isRunning;
-  public boolean isWalking;
-  public boolean isStill;
+  private final double PICKUP_TIME = 5.0;
+  private final double PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
+  public boolean isRunning = false;
+  public boolean isWalking = false;
+  public boolean isStill = true;
+  protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
   private int sight = 5;
   private int hearing = 10;
+  private int fire_traps = 0;
+  private boolean is_picking_up = false;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
@@ -132,7 +137,6 @@ public class Player extends Humanoid implements HumanoidObject
   {
     stamina += STAMINA_STEP;
     Math.min(stamina, max_stamina);
-    //UHHHH Is stanima becoming too large, should it be reset to 5?
   }
 
   /**
@@ -143,45 +147,64 @@ public class Player extends Humanoid implements HumanoidObject
     location = next_location;
   }
 
-  public void update(GameMap map) {
-
-    Location next_location = getNextLocation();
-    if (!heading.equals(Heading.NONE) && !hitWall(map, next_location)) {
-      move(next_location);
-    }
-    if(heading.equals(Heading.NONE)) {
-      regenerate();
-      current_speed = 0;
-      animation = stand;
-    } else if (current_speed > defined_speed && stamina > 0) {
-      animation = run;
-      stamina -= STAMINA_STEP;
-    } else {
-      regenerate();
-      animation = walk;
-      sound = walkSound;
-      current_speed = 1.0;
-    }
-
-    if (isStill)
+  public void update(GameMap map)
+  {
+    if (is_picking_up)
     {
-      stopSound();
+      frame++;
+      if (frame >= PICKUP_FRAMES)
+      {
+        fire_traps++;
+        frame = 0;
+        is_picking_up = false;
+      }
     }
-    if (!isWalking && isRunning)
+    else
     {
-      sound = runSound;
-      playSound();
+      Location next_location = getNextLocation();
+      if (!heading.equals(Heading.NONE) && !hitWall(map, next_location))
+      {
+        move(next_location);
+      }
+      if (heading.equals(Heading.NONE))
+      {
+        regenerate();
+        current_speed = 0;
+        animation = stand;
+      }
+      else if (current_speed > defined_speed && stamina > 0)
+      {
+        animation = run;
+        stamina -= STAMINA_STEP;
+      }
+      else
+      {
+        regenerate();
+        animation = walk;
+        current_speed = 1.0;
+      }
+
+      // Decides which sound to play based on state of player
+      if (isStill)
+      {
+        stopSound();
+      }
+      if (!isWalking && isRunning)
+      {
+        sound = runSound;
+        playSound();
+      }
+      else if (!isRunning && isWalking)
+      {
+        sound = walkSound;
+        playSound();
+      }
+
+      animation.start();
+      animation.update();
+
+
     }
-    else if (!isRunning && isWalking)
-    {
-      sound = walkSound;
-      playSound();
-    }
-
-    animation.start();
-    animation.update();
-
-
   }
 
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
@@ -189,10 +212,12 @@ public class Player extends Humanoid implements HumanoidObject
   public void setRunning()
   {
     current_speed = 2 * defined_speed;
+    isRunning = true;
   }
 
   public void setWalking() {
     this.current_speed = defined_speed;
+    isWalking = true;
   }
 
   public double getStamina()
@@ -218,5 +243,9 @@ public class Player extends Humanoid implements HumanoidObject
     sound.stop();
   }
 
+  public void pickupFireTrap()
+  {
+
+  }
 
 }

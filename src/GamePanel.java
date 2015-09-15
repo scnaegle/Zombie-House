@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 /**
  * Having this larger class that extends JPanel will allow easier access to
  * drawing, moving, sizing, and will make things neater.
@@ -29,6 +28,8 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
   Timer frame_timer;
+  int xScale;
+  JViewport vp;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
@@ -38,6 +39,7 @@ public class GamePanel extends JPanel implements KeyListener
   private Zombie masterZ;
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
+  private SoundLoader sound;
 
 
   public GamePanel(GUI parent)
@@ -80,7 +82,7 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
-
+          //Add stuff to check if player/zombie interacts for bite sound
           randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
@@ -91,20 +93,15 @@ public class GamePanel extends JPanel implements KeyListener
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
 
-            //Determines if player can hear zombie
-            if (player.getDistance(randomZombie) < player.getHearing())
-            {
-              System.out.println("Random z is in range");
-              randomZombie.inRange = true;
-
-            }
-            if (player.getDistance(lineZombie) < player.getHearing())
-            {
-              System.out.println("Line z is in range");
-              lineZombie.inRange = true;
-
-            }
           }
+//          for(Zombie z : parent.zombieList)
+//          {
+//            if(z.bitesPlayer(player))
+//            {
+//              z.setBite();
+//              sound.play();
+//            }
+//          }
 
           explodingTrap.move();
           repaint();
@@ -115,12 +112,12 @@ public class GamePanel extends JPanel implements KeyListener
     });
   }
 
+  /**
+   * Makes the screen follow the player and keeps him in the center of
+   * the screen.
+   */
   public void snapViewPortToPlayer()
   {
-    /**
-     * Makes the screen follow the player and keeps him in the center of
-     * the screen.
-     */
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
     int new_x = (int) (player.getCenterPoint().x - viewport_rect.width / 2);
@@ -133,30 +130,33 @@ public class GamePanel extends JPanel implements KeyListener
   public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
-
-    map.paint(g, GUI.tile_size);
-
-    g.drawImage(fireTrap.trap, fireTrap.location.getX(),
-        fireTrap.location.getY(), null);
-    g.drawImage(explodingTrap.fireAnimation.getSprite(),
-        fireTrap.location.getX(), fireTrap.location.getY(), null);
-    g.drawImage(randomZombie.animation.getSprite(),
-        randomZombie.location.getX(),
-        randomZombie.location.getY(), null);
-    g.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
-        lineZombie.location.getY(), null);
-
-    g.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
-
-    // Math to make vignette move with viewport
-    JViewport vp = (JViewport) getParent();
+    Graphics2D g2 = (Graphics2D) g;
+    vp = (JViewport) getParent();
     int width = vp.getWidth();
     int height = vp.getHeight();
     int x = vp.getViewPosition().x - (vignetteCanvas.getWidth() - width) / 2;
     int y = vp.getViewPosition().y - (vignetteCanvas.getHeight() - height) / 2;
 
-    g.drawImage(vignetteCanvas, x, y, null);
+
+    map.paint(g2, GUI.tile_size);
+
+    g2.drawImage(fireTrap.trap, fireTrap.location.getX(),
+        fireTrap.location.getY(), null);
+    g2.drawImage(explodingTrap.fireAnimation.getSprite(),
+        fireTrap.location.getX(), fireTrap.location.getY(), null);
+    g2.drawImage(randomZombie.animation.getSprite(),
+        randomZombie.location.getX(),
+        randomZombie.location.getY(), null);
+    g2.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
+        lineZombie.location.getY(), null);
+
+    g2.drawImage(player.animation.getSprite(), player.location.getX(),
+        player.location.getY(), null);
+
+    // Math to make vignette move with viewport
+
+    g2.drawImage(vignetteCanvas, x, y, null);
+
   }
 
   private BufferedImage makeVignette(int sight)
@@ -194,7 +194,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-      player.isRunning = true;
+//      player.isRunning = true;
       player.isWalking = false;
 
     }
@@ -246,7 +246,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code))
     {
       player.setWalking();
-      player.isWalking = true;
+      //player.isWalking = true;
     }
 
 
