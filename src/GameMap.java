@@ -1030,12 +1030,14 @@ public class GameMap
             }
             if (new_tile.tile_type == TileType.BRICK) {
               if (rand.nextDouble() < .01) {
+                Zombie zombie;
                 Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
                 if (rand.nextInt(2) == 0) {
-                  zombies.add(new RandomWalkZombie(location));
+                  zombie = new RandomWalkZombie(location);
                 } else {
-                  zombies.add(new LineWalkZombie(location));
+                  zombie = new LineWalkZombie(location);
                 }
+                zombies.add(zombie);
               }
             }
             col++;
