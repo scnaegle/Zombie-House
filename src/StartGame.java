@@ -1,17 +1,11 @@
 
-public class StartGame
+public class startGame
 {
   public static void main(String[] args)
   {
+//    BufferedImageLoader load = new BufferedImageLoader();
+//    load.initPlayerSpriteWalk();
     GUI g = new GUI();
-    g.initPlayer();
-    g.initZombies();
-    g.initFireTraps();
     g.setUpGUI();
-    g.loadSounds();
-    g.updateLabels();
-
-
   }
-
 }
