@@ -8,9 +8,9 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  public boolean isRunning;
-  public boolean isWalking;
-  public boolean isStill;
+  public boolean isRunning = false;
+  public boolean isWalking = false;
+  public boolean isStill = true;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -189,10 +189,12 @@ public class Player extends Humanoid implements HumanoidObject
   public void setRunning()
   {
     current_speed = 2 * defined_speed;
+    isRunning = true;
   }
 
   public void setWalking() {
     this.current_speed = defined_speed;
+    isWalking = true;
   }
 
   public double getStamina()

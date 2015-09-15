@@ -182,7 +182,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-      player.isRunning = true;
+//      player.isRunning = true;
       player.isWalking = false;
 
     }
@@ -234,7 +234,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code))
     {
       player.setWalking();
-      player.isWalking = true;
+      //player.isWalking = true;
     }
 
 
