@@ -80,7 +80,7 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
-
+          //Add stuff to check if player/zombie interacts for bite sound
           randomZombie.update(map, player);
           if (randomZombie.location.x < 0) {
             randomZombie.setLocation(
@@ -91,7 +91,7 @@ public class GamePanel extends JPanel implements KeyListener
             lineZombie.setLocation(
                 new Location(0, lineZombie.location.y));
 
-            //Determines if player can hear zombie
+
           }
 
           explodingTrap.move();
@@ -103,12 +103,12 @@ public class GamePanel extends JPanel implements KeyListener
     });
   }
 
+  /**
+   * Makes the screen follow the player and keeps him in the center of
+   * the screen.
+   */
   public void snapViewPortToPlayer()
   {
-    /**
-     * Makes the screen follow the player and keeps him in the center of
-     * the screen.
-     */
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
     int new_x = (int) (player.getCenterPoint().x - viewport_rect.width / 2);

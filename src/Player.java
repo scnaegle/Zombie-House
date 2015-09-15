@@ -11,6 +11,7 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
+  public SoundLoader scream;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
@@ -27,7 +28,7 @@ public class Player extends Humanoid implements HumanoidObject
   private SoundLoader walkSound;
   private SoundLoader runSound;
   private SoundLoader sound;
-  private SoundLoader scream;
+  private Zombie zombie;
 
 
   public Player(Location location) {
@@ -178,11 +179,13 @@ public class Player extends Humanoid implements HumanoidObject
       playSound();
     }
 
+
     animation.start();
     animation.update();
 
 
   }
+
 
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
   // instead of updating when r is held down.

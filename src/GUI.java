@@ -1,6 +1,8 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 
 public class GUI
@@ -28,6 +30,7 @@ public class GUI
   Zombie randomZombie;
   Zombie lineZombie;
   Zombie masterZ;
+  List<Zombie> zombieList;
   private int whichlevel = 1;
 
   public void setUpGUI()
@@ -171,6 +174,7 @@ public class GUI
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
 
+
   }
 
 
@@ -207,9 +211,15 @@ public class GUI
    */
   public void initZombies()
   {
+
     randomZombie = new RandomWalkZombie(new Location(700, 1200));
     lineZombie = new LineWalkZombie(new Location(800, 1300));
     masterZ = new MasterZombie(new Location(100, 100));
+
+    zombieList.add(randomZombie);
+    zombieList.add(lineZombie);
+    zombieList.add(masterZ);
+
 
     randomZombie.setHeading(new Heading(Heading.WEST));
     lineZombie.setHeading(new Heading(Heading.EAST));
