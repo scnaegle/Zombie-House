@@ -97,10 +97,23 @@ public class GameMapWithBlocks
     {
       for (int y = 0; y < Y_SIZE; y++)
       {
-        if (isHall(x,y))
+        if (isHall(x, y))
         {
-          if (isWall(x+1,y)) {
-
+          if (isWall(x + 1, y))
+          {
+            setBlockType(x + 1, y, BASIC_TILE);
+          }
+          if (isWall(x - 1, y))
+          {
+            setBlockType(x - 1, y, BASIC_TILE);
+          }
+          if (isWall(x, y + 1))
+          {
+            setBlockType(x, y + 1, BASIC_TILE);
+          }
+          if (isWall(x, y - 1))
+          {
+            setBlockType(x, y - 1, BASIC_TILE);
           }
         }
       }
@@ -109,7 +122,7 @@ public class GameMapWithBlocks
 
   private static boolean isWall(int x, int y)
   {
-    return getBlock(x + 1, y).type == ROOM_WALL;
+    return getBlock(x, y).type == ROOM_WALL;
   }
 
   private static boolean isHall(int x, int y)
