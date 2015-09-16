@@ -166,10 +166,15 @@ public class Player extends Humanoid implements HumanoidObject
     }
     else
     {
-      Location next_location = getNextLocation();
-      if (!heading.equals(Heading.NONE) && !hitWall(map, next_location))
+//      Location next_location = getNextLocation();
+      if (!heading.equals(Heading.NONE))
       {
-        move(next_location);
+        if (!hitWallInXDirection(map)) {
+          moveX();
+        }
+        if (!hitWallInYDirection(map)) {
+          moveY();
+        }
       }
       if (heading.equals(Heading.NONE))
       {

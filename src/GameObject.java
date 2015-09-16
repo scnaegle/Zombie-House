@@ -56,8 +56,26 @@ public class GameObject implements Object2D {
     return new Rectangle(location.getX(), location.getY(), width, height);
   }
 
+  public Rectangle getCenteredBoundingRectangle() {
+    Rectangle rect = getBoundingRectangle();
+//    System.out.println("GETTING IN BOUNDING RECT!!");
+    rect.x += (GUI.tile_size - width) / 2;
+    rect.y += (GUI.tile_size - height) / 2;
+    return rect;
+  }
+
   @Override
   public boolean intersects(Object2D other) {
     return getBoundingRectangle().intersects(other.getBoundingRectangle());
+  }
+
+  @Override
+  public String toString() {
+    return "GameObject{" +
+        "width=" + width +
+        ", height=" + height +
+        ", location=" + location +
+        ", bounding_rectangle=" + getBoundingRectangle() +
+        '}';
   }
 }

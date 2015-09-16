@@ -155,12 +155,12 @@ public class GamePanel extends JPanel implements KeyListener
             trap.location.getX(), trap.location.getY(), null);
       }
     }
-    g2.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
-
     for(Zombie zombie : map.zombies) {
       g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
     }
+
+    g2.drawImage(player.animation.getSprite(), player.location.getX(),
+        player.location.getY(), null);
 
 
 
