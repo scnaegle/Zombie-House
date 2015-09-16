@@ -62,9 +62,10 @@ public class FireTrap extends GameObject
         System.out.println("Zombie touched trap");
         exploding = true;
         sound.play();
-        fireAnimation.start();
         fireAnimation.update();
+        fireAnimation.start();
       }
+      exploding = false;
     }
 
   }

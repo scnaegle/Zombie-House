@@ -35,9 +35,9 @@ public class GamePanel extends JPanel implements KeyListener
   private GUI parent;
   private Player player;
 
-  private Zombie zombie;
-  private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
-  private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
+//  private Zombie zombie;
+//  private FireTrap fireTrap;
+
   private SoundLoader sound;
 
 
@@ -90,6 +90,7 @@ public class GamePanel extends JPanel implements KeyListener
           {
             zombie.update(map, player);
           }
+
           for (FireTrap traps : map.traps)
           {
             traps.update(map.zombies);
@@ -141,7 +142,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     for (FireTrap trap : map.traps)
     {
-      if (!fireTrap.exploding)
+      if (!trap.exploding)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);

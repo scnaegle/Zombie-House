@@ -82,6 +82,7 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
       sound.play();
     }
 
+
     //Sees if zombie is in player hearing's range
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
