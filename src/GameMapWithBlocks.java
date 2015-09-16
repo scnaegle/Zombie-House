@@ -72,7 +72,7 @@ public class GameMapWithBlocks
     }
 
     buildRoom(START_ROOM, true);
-    buildRoom(END_ROOM, false);
+    //buildRoom(END_ROOM, false);
     for (int i = 0; i < numberOfRooms; i++)
     {
       buildRoom(BASIC_TILE, false);
@@ -120,9 +120,9 @@ public class GameMapWithBlocks
   {
     roomSize = 4;
 
-    for (int x = random.nextInt(X_SIZE); x < X_SIZE - 1; x++)
+    for (int x = random.nextInt(X_SIZE - 2) + 1; x < X_SIZE - 1; x++)
     {
-      for (int y = random.nextInt(Y_SIZE); y < Y_SIZE - 1; y++)
+      for (int y = random.nextInt(Y_SIZE - 2) + 1; y < Y_SIZE - 1; y++)
       {
         if (validEndLocationHorozantal(x, y))
         {
@@ -133,6 +133,11 @@ public class GameMapWithBlocks
         {
           placeEndPeicesVerticle(x, y);
           return;
+        }
+        if (x == X_SIZE - 2 && y == Y_SIZE - 2)
+        {
+          x = random.nextInt(X_SIZE - 2) + 1;
+          y = random.nextInt(Y_SIZE - 2) + 1;
         }
       }
     }
@@ -148,22 +153,14 @@ public class GameMapWithBlocks
       setBlockType(x + 2, y + 2, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
       setBlockType(x, y + 2, BASIC_TILE);
-      setBlockType(x,y+1,ROOM_WALL);
-      setBlockType(x,y+2,ROOM_WALL);
-      setBlockType(x,y+3,ROOM_WALL);
-      setBlockType(x+1,y+3,ROOM_WALL);
-      setBlockType(x+2,y+3,ROOM_WALL);
-      setBlockType(x+3,y+3,ROOM_WALL);
-      setBlockType(x+3,y+2,ROOM_WALL);
-      setBlockType(x+3,y+1,ROOM_WALL);
-      setBlockType(x+1,y,ROOM_WALL);
-      setBlockType(x+2,y,ROOM_WALL);
-      setBlockType(x+3,y,ROOM_WALL);
-      setBlockType(x+3,y+1,ROOM_WALL);
-      setBlockType(x+3,y+2,ROOM_WALL);
-      setBlockType(x+3,y+3,ROOM_WALL);
-      setBlockType(x+2,y+3,ROOM_WALL);
-      setBlockType(x+1,y+3,ROOM_WALL);
+      setBlockType(x + 1, y, ROOM_WALL);
+      setBlockType(x + 2, y, ROOM_WALL);
+      setBlockType(x + 3, y, ROOM_WALL);
+      setBlockType(x + 3, y + 1, ROOM_WALL);
+      setBlockType(x + 3, y + 2, ROOM_WALL);
+      setBlockType(x + 3, y + 3, ROOM_WALL);
+      setBlockType(x + 2, y  +3, ROOM_WALL);
+      setBlockType(x + 1, y +3, ROOM_WALL);
 
     }
     else if (isEmpty(x - 1, y + 1))
@@ -174,14 +171,14 @@ public class GameMapWithBlocks
       setBlockType(x - 2, y + 2, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
       setBlockType(x, y + 2, BASIC_TILE);
-      setBlockType(x-1,y,ROOM_WALL);
-      setBlockType(x-2,y,ROOM_WALL);
-      setBlockType(x-3,y,ROOM_WALL);
-      setBlockType(x-3,y+1,ROOM_WALL);
-      setBlockType(x-3,y+2,ROOM_WALL);
-      setBlockType(x-3,y+3,ROOM_WALL);
-      setBlockType(x-2,y+3,ROOM_WALL);
-      setBlockType(x-1,y+3,ROOM_WALL);
+      setBlockType(x - 1, y, ROOM_WALL);
+      setBlockType(x - 2, y, ROOM_WALL);
+      setBlockType(x - 3, y, ROOM_WALL);
+      setBlockType(x - 3, y + 1, ROOM_WALL);
+      setBlockType(x - 3, y + 2, ROOM_WALL);
+      setBlockType(x - 3, y + 3, ROOM_WALL);
+      setBlockType(x - 2, y + 3, ROOM_WALL);
+      setBlockType(x - 1, y + 3, ROOM_WALL);
     }
 
   }
@@ -196,14 +193,14 @@ public class GameMapWithBlocks
       setBlockType(x + 2, y + 2, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
       setBlockType(x + 2, y, BASIC_TILE);
-      setBlockType(x,y+1,ROOM_WALL);
-      setBlockType(x,y+2,ROOM_WALL);
-      setBlockType(x,y+3,ROOM_WALL);
-      setBlockType(x+1,y+3,ROOM_WALL);
-      setBlockType(x+2,y+3,ROOM_WALL);
-      setBlockType(x+3,y+3,ROOM_WALL);
-      setBlockType(x+3,y+2,ROOM_WALL);
-      setBlockType(x+3,y+1,ROOM_WALL);
+      setBlockType(x, y + 1, ROOM_WALL);
+      setBlockType(x, y + 2, ROOM_WALL);
+      setBlockType(x, y + 3, ROOM_WALL);
+      setBlockType(x + 1, y + 3, ROOM_WALL);
+      setBlockType(x + 2, y + 3, ROOM_WALL);
+      setBlockType(x + 3, y + 3, ROOM_WALL);
+      setBlockType(x + 3, y + 2, ROOM_WALL);
+      setBlockType(x + 3, y + 1, ROOM_WALL);
 
 
     }
@@ -215,14 +212,14 @@ public class GameMapWithBlocks
       setBlockType(x + 2, y - 2, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
       setBlockType(x + 2, y, BASIC_TILE);
-      setBlockType(x,y-1,ROOM_WALL);
-      setBlockType(x,y-2,ROOM_WALL);
-      setBlockType(x,y-3,ROOM_WALL);
-      setBlockType(x+1,y-3,ROOM_WALL);
-      setBlockType(x+2,y-3,ROOM_WALL);
-      setBlockType(x+3,y-3,ROOM_WALL);
-      setBlockType(x+3,y-2,ROOM_WALL);
-      setBlockType(x+3,y-1,ROOM_WALL);
+      setBlockType(x, y - 1, ROOM_WALL);
+      setBlockType(x, y - 2, ROOM_WALL);
+      setBlockType(x, y - 3, ROOM_WALL);
+      setBlockType(x + 1, y - 3, ROOM_WALL);
+      setBlockType(x + 2, y - 3, ROOM_WALL);
+      setBlockType(x + 3, y - 3, ROOM_WALL);
+      setBlockType(x + 3, y - 2, ROOM_WALL);
+      setBlockType(x + 3, y - 1, ROOM_WALL);
 
     }
   }
@@ -230,20 +227,22 @@ public class GameMapWithBlocks
   private static boolean validEndLocationHorozantal(int x, int y)
   {
     return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
-        isWall(x + 3, y)));
+        isWall(x + 3, y)) && inBoundsWithBorder(x + 3, y) &&
+        (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1)));
   }
 
   private static boolean validEndLocationVerticle(int x, int y)
   {
     return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
-        isWall(x, y + 3));
+        isWall(x, y + 3) && inBoundsWithBorder(x, y + 3) &&
+        (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
   }
 
   private static void chizelWalls()
   {
-    for (int y = 0; y < Y_SIZE; y++)
+    for (int y = 1; y < Y_SIZE-1; y++)
     {
-      for (int x = 0; x < X_SIZE; x++)
+      for (int x = 1; x < X_SIZE-1; x++)
       {
         if (isHall(x, y) && surroundedThreeSide(x, y))
         {
@@ -379,9 +378,9 @@ public class GameMapWithBlocks
 
   private static void makeDoors()
   {
-    for (int x = 0; x < X_SIZE; x++)
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
-      for (int y = 0; y < Y_SIZE; y++)
+      for (int y = 1; y < Y_SIZE - 1; y++)
       {
         if (isHall(x, y))
         {
@@ -491,9 +490,9 @@ public class GameMapWithBlocks
 
   private static void addWallsToHalls()
   {
-    for (int x = 0; x < X_SIZE; x++)
+    for (int x = 1; x < X_SIZE-1; x++)
     {
-      for (int y = 0; y < Y_SIZE; y++)
+      for (int y = 1; y < Y_SIZE-1; y++)
       {
         if (getBlock(x, y).type == HALL)
         {
@@ -646,9 +645,9 @@ public class GameMapWithBlocks
 
   private static void expandHalls()
   {
-    for (int x = 0; x < X_SIZE; x++)
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
-      for (int y = 0; y < Y_SIZE; y++)
+      for (int y = 1; y < Y_SIZE - 1; y++)
       {
         if (getBlock(x, y).type == HALL)
         {
@@ -936,7 +935,7 @@ public class GameMapWithBlocks
           setBlockType(x, y, BASIC_TILE);
           getBlock(x, y).partOfRoom = true;
         }
-        else if (inBoundsWithBorder(x, y) && type == START_ROOM)
+        else if (inBoundsWithBorder(x, y) && type == END_ROOM)
         {
           setBlockType(x, y, END_ROOM);
           getBlock(x, y).partOfEndRoom = true;
