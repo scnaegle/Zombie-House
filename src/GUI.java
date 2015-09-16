@@ -32,6 +32,7 @@ public class GUI
   private JLabel traps;
   private int whichlevel = 1;
   private Zombie zombie;
+  private JLabel playerRegen;
 
   public void getSettings()
   {
@@ -51,16 +52,18 @@ public class GUI
     JLabel ZoSmell = new JLabel("   Zombie Smell: ");
     JLabel ZoRate = new JLabel("   Zombie Decision Rate: ");
     JLabel fSpawn = new JLabel("    Fire Trap Spawn: ");
+    JLabel PlRegen = new JLabel("   Player Regenerate: ");
 
-    JTextField pSpeed = new JTextField();
-    JTextField pSight = new JTextField();
-    JTextField pHearing = new JTextField();
-    JTextField pStamina = new JTextField();
-    JTextField zSpawn = new JTextField();
-    JTextField zSpeed = new JTextField();
-    JTextField zSmell = new JTextField();
-    JTextField zRate = new JTextField();
-    JTextField fireSpawn = new JTextField();
+    JTextField pSpeed = new JTextField("1.0");
+    JTextField pSight = new JTextField("5");
+    JTextField pHearing = new JTextField("10");
+    JTextField pStamina = new JTextField("5.0");
+    JTextField zSpawn = new JTextField("0.01");
+    JTextField zSpeed = new JTextField("0.5");
+    JTextField zSmell = new JTextField("7.0");
+    JTextField zRate = new JTextField("2.0");
+    JTextField fireSpawn = new JTextField("0.01");
+    JTextField pRegen = new JTextField("0.2");
 
     JPanel settings = new JPanel();
     JPanel textFields = new JPanel();
@@ -81,29 +84,32 @@ public class GUI
     words.add(PlSpeed);
     words.add(Box.createRigidArea(new Dimension(10, 30)));
     words.add(PlHearing);
-    words.add(Box.createRigidArea(new Dimension(10, 35)));
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
     words.add(PlSight);
     words.add(Box.createRigidArea(new Dimension(10, 30)));
     words.add(PlStamina);
-    words.add(Box.createRigidArea(new Dimension(10, 35)));
-    words.add(ZoSpeed);
-    words.add(Box.createRigidArea(new Dimension(10, 40)));
-    words.add(ZoSmell);
     words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(PlRegen);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(ZoSpeed);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(ZoSmell);
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(ZoRate);
     words.add(Box.createRigidArea(new Dimension(10, 30)));
     words.add(ZoSpawn);
-    words.add(Box.createRigidArea(new Dimension(10, 35)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(fSpawn);
 
     textFields.add(pSpeed);
-    textFields.add(pSight);
     textFields.add(pHearing);
+    textFields.add(pSight);
     textFields.add(pStamina);
-    textFields.add(zSpawn);
-    textFields.add(zSmell);
+    textFields.add(pRegen);
     textFields.add(zSpeed);
+    textFields.add(zSmell);
     textFields.add(zRate);
+    textFields.add(zSpawn);
     textFields.add(fireSpawn);
 
     everything.add(words, BorderLayout.WEST);
@@ -113,22 +119,56 @@ public class GUI
     settings.setPreferredSize(new Dimension(500, 500));
     popup.add(settings, BorderLayout.CENTER);
 
-    //Object[] option = {"Start"};
-//    int dialog = JOptionPane.showOptionDialog(popup,"Please choose your
-// settings:",
-//        "Settings",JOptionPane.YES_OPTION,JOptionPane.PLAIN_MESSAGE,null,
-// option,option[0]);
 
     popup.pack();
     popup.setVisible(true);
-    //String input = JOptionPane.showInputDialog(window, "Type something");
-    //int num = Integer.parseInt(input);
-    //System.out.println(num);
-    // if(dialog == JOptionPane.YES_OPTION){
-    //initPlayer();
-    //setUpGUI();
-    // }
+
+    start.addActionListener(new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        String one = pSpeed.getText();
+        String two = pHearing.getText();
+        String three = pSight.getText();
+        String four = pStamina.getText();
+        String five = pRegen.getText();
+        String six = zSpeed.getText();
+        String seven = zSmell.getText();
+        String eight = zRate.getText();
+        String nine = zSpawn.getText();
+        String ten = fireSpawn.getText();
+
+        double speed = Double.parseDouble(one);
+        int hearing = Integer.parseInt(two);
+        int sight = Integer.parseInt(three);
+        double stamina = Double.parseDouble(four);
+        double regen = Double.parseDouble(five);
+        double zspeed = Double.parseDouble(six);
+        double smell = Double.parseDouble(seven);
+        double drate = Double.parseDouble(eight);
+        double zspawn = Double.parseDouble(nine);
+        double fspawn = Double.parseDouble(ten);
+
+        initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
+            new Location(800, 1120));
+        initZombies(zspeed, smell, drate, zspawn);
+
+        setUpGUI();
+        loadSounds();
+
+      }
+    });
   }
+
+  private void initZombies(double zspeed, double smell, double drate,
+                           double zspawn)
+  {
+    zombie = new Zombie(zspeed, smell, drate);
+    zombie.setSpawn_rate(zspawn);
+    //zombie.setHeading(new Heading(Heading.NONE));
+  }
+
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
@@ -218,6 +258,7 @@ public class GUI
     zombieSpeed = new JLabel("Z-Speed: ");
     fireSpawn = new JLabel("Fire Trap Spawn: ");
     traps = new JLabel("Fire traps: ");
+    playerRegen = new JLabel("RegenRate: ");
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
@@ -296,6 +337,7 @@ public class GUI
     playerSpeed.setText("Speed: " + player.getSpeed());
     playerStamina
         .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
+    playerRegen.setText("RegenRate: " + player.getRegenRate());
     traps.setText("Fire traps: " + player.getFire_traps());
 
   }
@@ -308,9 +350,11 @@ public class GUI
   }
 
 
-  public void initPlayer()
+  public void initPlayer(int sight, int hearing, double speed, double stamina,
+                         double regen, int width, int height, Location location)
   {
-    player = new Player(5, 10, 1.0, 5, 70, 70, new Location(800, 1120));
+    player = new Player(sight, hearing, speed, stamina, regen, width, height,
+        location);
 //    player.setLocation(new Location(800, 1120));
     player.setHeading(new Heading(Heading.NONE));
 

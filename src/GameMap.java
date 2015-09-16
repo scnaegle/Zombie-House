@@ -31,7 +31,7 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
-  private static final double ZOMBIE_SPAWN_RATE = 0.01;
+  private static final double ZOMBIE_SPAWN_RATE = Zombie.spawn_rate;
   private static int roomSize;
   private static int numberOfRandomHalls = 7;
   private static int numberOfRooms = 7;
@@ -45,8 +45,8 @@ public class GameMap
   private static boolean hallUp = false;
   private static boolean hallDown = false;
   private static Random random = new Random();
-  private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 //  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
+private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();

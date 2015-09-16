@@ -4,13 +4,14 @@
  * which implements Object2D. Each zombie also needs to track the human, so it
  * implements HumanoidObject which lets it get the human's current location.
  */
-public abstract class Zombie extends Humanoid implements HumanoidObject
+public class Zombie extends Humanoid implements HumanoidObject
 {
+  static double spawn_rate;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   protected int frame = 0;
-  protected double decision_rate = 2.0;
-  protected double smell = 7.0;
+  protected double decision_rate;
+  protected double smell;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
@@ -27,10 +28,23 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
 
   public Zombie(Location location) {
     this.location = location;
-    this.defined_speed = .5;
-    this.current_speed = .5;
     this.width = GUI.tile_size - 10;
     this.height = GUI.tile_size - 10;
+  }
+
+  public Zombie(double speed, double smell, double decision_rate)
+  {
+    this.current_speed = speed;
+    this.defined_speed = speed;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
+
+
+  }
+
+  public void setSpawn_rate(double spawn_rate)
+  {
+    this.spawn_rate = spawn_rate;
   }
 
   public double getSpeed()
