@@ -33,6 +33,23 @@ public class GUI
   private int whichlevel = 1;
   private Zombie zombie;
 
+  public void getSettings()
+  {
+    //JOptionPane optionPane = new JOptionPane("Settings");
+    Object[] option = {"Start"};
+//    int dialog = JOptionPane.showOptionDialog(window,"Please choose your
+// settings:",
+//        "Settings",JOptionPane.YES_OPTION,JOptionPane.PLAIN_MESSAGE,null,
+// option,option[0]);
+
+    String input = JOptionPane.showInputDialog(window, "Type something");
+    int num = Integer.parseInt(input);
+    System.out.println(num);
+//    if(dialog == JOptionPane.YES_OPTION){
+//      initPlayer();
+//      setUpGUI();
+//    }
+  }
   public void setUpGUI()
   {
     window = new JFrame("Zombie House");
