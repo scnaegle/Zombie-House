@@ -41,6 +41,9 @@ public class GamePanel extends JPanel implements KeyListener
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
   private SoundLoader sound;
 
+  int last_fps_time = 0;
+  int fps = 0;
+
 
   public GamePanel(GUI parent)
   {
@@ -72,44 +75,72 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-    frame_timer = new Timer(SKIP_TICKS, new ActionListener()
-    {
-      @Override
-      public void actionPerformed(ActionEvent e)
-      {
-        if (GUI.running) {
-
-          player.update(map);
-          snapViewPortToPlayer();
-
-          //Add stuff to check if player/zombie interacts for bite sound
-//          randomZombie.update(map, player);
-//          if (randomZombie.location.x < 0) {
-//            randomZombie.setLocation(
-//                new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
-//          }
-//          lineZombie.update(map, player);
-//          if (lineZombie.location.x > GUI.SCENE_WIDTH) {
-//            lineZombie.setLocation(
-//                new Location(0, lineZombie.location.y));
-//
-//          }
-          for(Zombie zombie : map.zombies)
-          {
-            zombie.update(map, player);
-          }
-
-          parent.updateLabels();
-
-          explodingTrap.move();
-          repaint();
-
-        }
-
-      }
-    });
+//    frame_timer = new Timer(SKIP_TICKS, new ActionListener()
+//    {
+//      @Override
+//      public void actionPerformed(ActionEvent e)
+//      {
+//        doGameUpdates();
+//        repaint();
+//      }
+//    });
   }
 
+  public void gameLoop() {
+    long last_loop_time = System.nanoTime();
+    final int TARGET_FPS = 30;
+    final long NANO_SECONDS = 1000000000;
+    final long MILLI_SECONDS = 1000000;
+    final long OPTIMAL_TIME = NANO_SECONDS / TARGET_FPS;
+
+
+    while (GUI.running) {
+      long now = System.nanoTime();
+      long update_length = now - last_loop_time;
+      last_loop_time = now;
+      double delta = update_length / (double)OPTIMAL_TIME;
+
+      last_fps_time += update_length;
+      fps++;
+
+      System.out.println("last_fps_time: " + last_fps_time);
+      System.out.println("fps: " + fps);
+      if (last_fps_time >= NANO_SECONDS) {
+        System.out.println("(FPS: " + fps + ")");
+        last_fps_time = 0;
+        fps = 0;
+      }
+
+      doGameUpdates(delta);
+      System.out.println("DONE DOING GAME UPDATES");
+
+      repaint();
+      System.out.println("DONE repainting...");
+
+      try {
+        long sleep_time = (last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS;
+        System.out.println("sleep_time: " + sleep_time);
+//        Thread.sleep((last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS);
+        Thread.sleep(sleep_time);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void doGameUpdates(double delta) {
+    player.update(map);
+    snapViewPortToPlayer();
+
+    for(Zombie zombie : map.zombies)
+    {
+      zombie.update(map, player);
+    }
+
+    parent.updateLabels();
+
+//    explodingTrap.move();
+  }
   /**
    * Makes the screen follow the player and keeps him in the center of
    * the screen.
@@ -127,6 +158,7 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void paintComponent(Graphics g)
   {
+    System.out.println("Painting game map...");
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
     vp = (JViewport) getParent();

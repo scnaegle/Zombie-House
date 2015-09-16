@@ -25,6 +25,7 @@ public class GUI
   JLabel zombieSmell;
   JLabel zombieRate;
   JLabel fireSpawn;
+  JLabel fps_label;
   JButton startPause;
 
   boolean pause = true;
@@ -122,6 +123,7 @@ public class GUI
     zombieSpawn = new JLabel("Z-Spawn Rate: ");
     zombieSpeed = new JLabel("Z-Speed: ");
     fireSpawn = new JLabel("Fire Trap Spawn: ");
+    fps_label = new JLabel("FPS: ");
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
@@ -159,6 +161,7 @@ public class GUI
     viewPanel.add(zombieSmell);
     viewPanel.add(zombieRate);
     viewPanel.add(fireSpawn);
+    viewPanel.add(fps_label);
 
 
     //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
@@ -175,7 +178,8 @@ public class GUI
   {
     pause = false;
     running = true;
-    gamePanel.frame_timer.start();
+//    gamePanel.frame_timer.start();
+    gamePanel.gameLoop();
     gamePanel.startMusic();
 
   }
@@ -184,7 +188,7 @@ public class GUI
   {
     pause = true;
     running = false;
-    gamePanel.frame_timer.stop();
+//    gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
 
 
@@ -199,6 +203,7 @@ public class GUI
     playerSpeed.setText("Speed: " + player.getSpeed());
     playerStamina
         .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
+    fps_label.setText("FPS: " + gamePanel.fps);
 
 //    zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
 //    zombieRate.setText("Z-Decision Rate: " + zombie.getDecisionRate());
