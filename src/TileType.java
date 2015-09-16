@@ -9,14 +9,20 @@ import java.awt.Color;
  * @author sean
  *
  */
+
+
 public enum TileType {
+
+
 		GRASS(1, '.',1, new Color(145, 179, 140)),
 		BRICK(2, '*',1, new Color(93, 93, 93)),
 		TRAP(3, '3',1, new Color(230, 9, 13)),
 		BURNT(4, '4',1, new Color(22, 22, 22)),
 		START(5, 'S',1, new Color(216, 216, 25)),
 		EXIT(6, 'E', 9999, new Color(0, 0, 0)),
-		WALL(7, 'B', 9999, Color.BLACK);
+		WALL(7, 'B', 9999, Color.BLACK),
+	  OBSTICLE(8, 'O', 9999, new Color(25, 56,89)),
+		DOOR(9,'`',1,new Color(100,100,100));
 		int value;
 		char grid_char;
 		Integer movement_cost;
