@@ -253,12 +253,11 @@ public class GUI
     playerSpeed = new JLabel("Speed: ");
     playerStamina = new JLabel("Stamina: ");
     zombieSmell = new JLabel("Z-Smell: ");
-    zombieRate = new JLabel("Z-Decision Rate: ");
-    zombieSpawn = new JLabel("Z-Spawn Rate: ");
+
+
     zombieSpeed = new JLabel("Z-Speed: ");
-    fireSpawn = new JLabel("Fire Trap Spawn: ");
     traps = new JLabel("Fire traps: ");
-    playerRegen = new JLabel("RegenRate: ");
+
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
@@ -292,11 +291,9 @@ public class GUI
     viewPanel.add(playerStamina);
     viewPanel.add(traps);
     viewPanel.add(startPause);
-    viewPanel.add(zombieSpawn);
+
     viewPanel.add(zombieSpeed);
     viewPanel.add(zombieSmell);
-    viewPanel.add(zombieRate);
-    viewPanel.add(fireSpawn);
 
 
     //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
@@ -337,16 +334,16 @@ public class GUI
     playerSpeed.setText("Speed: " + player.getSpeed());
     playerStamina
         .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
-    playerRegen.setText("RegenRate: " + player.getRegenRate());
-    traps.setText("Fire traps: " + player.getFire_traps());
+
 
   }
   public void updateZombieLabels()
   {
     zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
-    zombieRate.setText("Z-Decision Rate: " + zombie.getDecisionRate());
+
     zombieSmell.setText("Z-Smell: " + zombie.getSmell());
-    zombieSpawn.setText("Z-Spawn Rate: " + gamePanel.map.getZombieSpawnRate());
+    traps.setText("Fire traps: " + player.getFire_traps());
+
   }
 
 
