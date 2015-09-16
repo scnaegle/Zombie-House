@@ -14,7 +14,7 @@ public class GameMapWithBlocks
 
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
-  private static final char DOOR = 'D';
+  private static final char DOOR = '`';
   private static final char END_ROOM = 'E';
   private static final char ROOM_WALL = 'W';
   private static final char ROOM_CORNER = 'C';
@@ -120,9 +120,9 @@ public class GameMapWithBlocks
   {
     roomSize = 4;
 
-    for (int x = random.nextInt(X_SIZE - 2) + 1; x < X_SIZE - 1; x++)
+    for (int x = random.nextInt(X_SIZE - 6) + 3; x < X_SIZE - 3; x++)
     {
-      for (int y = random.nextInt(Y_SIZE - 2) + 1; y < Y_SIZE - 1; y++)
+      for (int y = random.nextInt(Y_SIZE - 6) + 3; y < Y_SIZE - 3; y++)
       {
         if (validEndLocationHorozantal(x, y))
         {
