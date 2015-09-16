@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class GameMap
 {
+  private static final boolean SHOW_COORDS = false;
 
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
@@ -985,6 +986,10 @@ public class GameMap
       {
         g.setColor(grid[row][col].tile_type.color);
         g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
+        if (SHOW_COORDS) {
+          g.setColor(Color.WHITE);
+          g.drawString(String.format("(%d, %d)", row, col).toString(), col * tile_size + (tile_size / 4), row * tile_size + (tile_size / 2));
+        }
       }
     }
   }
