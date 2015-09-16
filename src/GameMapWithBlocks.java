@@ -37,8 +37,9 @@ public class GameMapWithBlocks
   private static final int RIGHT = 3;
 
   private static int roomSize;
-  private static int numberOfRandomHalls = 5;
-  private static int numberOfRooms = 8;
+  private static int numberOfInitalHalls = 2;
+  private static int numberOfRandomHalls = 2;
+  private static int numberOfRooms = 10;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
   // starting a new level and such
@@ -65,7 +66,7 @@ public class GameMapWithBlocks
         blockGrid[y][x] = new Block(x, y, EMPTY);
       }
     }
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < numberOfInitalHalls; i++)
     {
       makeInitalHalls();
     }
@@ -93,6 +94,8 @@ public class GameMapWithBlocks
     spawnZombie();
     turnHallsToFloors();
     turnCornersToWalls();
+    endRoom();
+
     //makeInteriorWalls();
 
     Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
@@ -111,6 +114,129 @@ public class GameMapWithBlocks
       }
       System.out.println("");
     }
+  }
+
+  private static void endRoom()
+  {
+    roomSize = 4;
+
+    for (int x = random.nextInt(X_SIZE); x < X_SIZE - 1; x++)
+    {
+      for (int y = random.nextInt(Y_SIZE); y < Y_SIZE - 1; y++)
+      {
+        if (validEndLocationHorozantal(x, y))
+        {
+          placeEndPeicesHorzantal(x, y);
+          return;
+        }
+        else if (validEndLocationVerticle(x, y))
+        {
+          placeEndPeicesVerticle(x, y);
+          return;
+        }
+      }
+    }
+  }
+
+  private static void placeEndPeicesVerticle(int x, int y)
+  {
+    if (isEmpty(x + 1, y + 1))
+    {
+      setBlockType(x + 1, y + 1, END_ROOM);
+      setBlockType(x + 2, y + 1, END_ROOM);
+      setBlockType(x + 1, y + 2, END_ROOM);
+      setBlockType(x + 2, y + 2, END_ROOM);
+      setBlockType(x, y + 1, BASIC_TILE);
+      setBlockType(x, y + 2, BASIC_TILE);
+      setBlockType(x,y+1,ROOM_WALL);
+      setBlockType(x,y+2,ROOM_WALL);
+      setBlockType(x,y+3,ROOM_WALL);
+      setBlockType(x+1,y+3,ROOM_WALL);
+      setBlockType(x+2,y+3,ROOM_WALL);
+      setBlockType(x+3,y+3,ROOM_WALL);
+      setBlockType(x+3,y+2,ROOM_WALL);
+      setBlockType(x+3,y+1,ROOM_WALL);
+      setBlockType(x+1,y,ROOM_WALL);
+      setBlockType(x+2,y,ROOM_WALL);
+      setBlockType(x+3,y,ROOM_WALL);
+      setBlockType(x+3,y+1,ROOM_WALL);
+      setBlockType(x+3,y+2,ROOM_WALL);
+      setBlockType(x+3,y+3,ROOM_WALL);
+      setBlockType(x+2,y+3,ROOM_WALL);
+      setBlockType(x+1,y+3,ROOM_WALL);
+
+    }
+    else if (isEmpty(x - 1, y + 1))
+    {
+      setBlockType(x - 1, y + 1, END_ROOM);
+      setBlockType(x - 2, y + 1, END_ROOM);
+      setBlockType(x - 1, y + 2, END_ROOM);
+      setBlockType(x - 2, y + 2, END_ROOM);
+      setBlockType(x, y + 1, BASIC_TILE);
+      setBlockType(x, y + 2, BASIC_TILE);
+      setBlockType(x-1,y,ROOM_WALL);
+      setBlockType(x-2,y,ROOM_WALL);
+      setBlockType(x-3,y,ROOM_WALL);
+      setBlockType(x-3,y+1,ROOM_WALL);
+      setBlockType(x-3,y+2,ROOM_WALL);
+      setBlockType(x-3,y+3,ROOM_WALL);
+      setBlockType(x-2,y+3,ROOM_WALL);
+      setBlockType(x-1,y+3,ROOM_WALL);
+    }
+
+  }
+
+  private static void placeEndPeicesHorzantal(int x, int y)
+  {
+    if (isEmpty(x + 1, y + 1))
+    {
+      setBlockType(x + 1, y + 1, END_ROOM);
+      setBlockType(x + 1, y + 2, END_ROOM);
+      setBlockType(x + 2, y + 1, END_ROOM);
+      setBlockType(x + 2, y + 2, END_ROOM);
+      setBlockType(x + 1, y, BASIC_TILE);
+      setBlockType(x + 2, y, BASIC_TILE);
+      setBlockType(x,y+1,ROOM_WALL);
+      setBlockType(x,y+2,ROOM_WALL);
+      setBlockType(x,y+3,ROOM_WALL);
+      setBlockType(x+1,y+3,ROOM_WALL);
+      setBlockType(x+2,y+3,ROOM_WALL);
+      setBlockType(x+3,y+3,ROOM_WALL);
+      setBlockType(x+3,y+2,ROOM_WALL);
+      setBlockType(x+3,y+1,ROOM_WALL);
+
+
+    }
+    else if (isEmpty(x + 1, y - 1))
+    {
+      setBlockType(x + 1, y - 1, END_ROOM);
+      setBlockType(x + 1, y - 2, END_ROOM);
+      setBlockType(x + 2, y - 1, END_ROOM);
+      setBlockType(x + 2, y - 2, END_ROOM);
+      setBlockType(x + 1, y, BASIC_TILE);
+      setBlockType(x + 2, y, BASIC_TILE);
+      setBlockType(x,y-1,ROOM_WALL);
+      setBlockType(x,y-2,ROOM_WALL);
+      setBlockType(x,y-3,ROOM_WALL);
+      setBlockType(x+1,y-3,ROOM_WALL);
+      setBlockType(x+2,y-3,ROOM_WALL);
+      setBlockType(x+3,y-3,ROOM_WALL);
+      setBlockType(x+3,y-2,ROOM_WALL);
+      setBlockType(x+3,y-1,ROOM_WALL);
+
+    }
+  }
+
+  private static boolean validEndLocationHorozantal(int x, int y)
+  {
+    return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
+        isWall(x + 3, y)));
+  }
+
+  private static boolean validEndLocationVerticle(int x, int y)
+  {
+    return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
+        isWall(x, y + 3));
   }
 
   private static void chizelWalls()
@@ -300,9 +426,11 @@ public class GameMapWithBlocks
         {
           setBlockType(x, y, ROOM_WALL);
         }
-        if (isDoor(x, y) && (isEmpty(x+1,y)||isEmpty(x-1,y)||isEmpty(x,y+1)||isEmpty(x,y-1)))
+        if (isDoor(x, y) &&
+            (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y + 1) ||
+                isEmpty(x, y - 1)))
         {
-          setBlockType(x,y,ROOM_WALL);
+          setBlockType(x, y, ROOM_WALL);
         }
       }
     }
