@@ -16,15 +16,15 @@ public class GameMapWithBlocks
   // so these final varibles may not always be final
   private static final char DOOR = '`';
   private static final char END_ROOM = 'E';
-  private static final char ROOM_WALL = 'W';
+  private static final char ROOM_WALL = 'B';
   private static final char ROOM_CORNER = 'C';
-  private static final char BASIC_TILE = '.';
+  private static final char BASIC_TILE = '*';
   private static final char START_ROOM = 'S';
   private static final char HALL = 'H';
-  private static final char EMPTY = ' ';
+  private static final char EMPTY = '.';
   private static final char OBSTICLE = 'O';
   private static final char ZOMBIE_SPAWN = 'Z';
-  private static final char INSIDE_WALL = '*';
+  private static final char INSIDE_WALL = 'I';
 
   private static final int X_SIZE = 75;
   private static final int Y_SIZE = 75;
@@ -95,7 +95,7 @@ public class GameMapWithBlocks
     turnHallsToFloors();
     turnCornersToWalls();
     endRoom();
-
+    turnDoorToFloor();
     //makeInteriorWalls();
 
     Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
@@ -103,7 +103,7 @@ public class GameMapWithBlocks
     {
       for (int x = 0; x < X_SIZE; x++)
       {
-        // tileGrid[y][x] = getBlock(x,y).toTile();
+         tileGrid[y][x] = getBlock(x,y).toTile();
       }
     }
     for (int y = 0; y < Y_SIZE; y++)
@@ -113,6 +113,20 @@ public class GameMapWithBlocks
         System.out.print(getBlock(x, y).type);
       }
       System.out.println("");
+    }
+  }
+
+  private static void turnDoorToFloor()
+  {
+    for (int y = 1; y < Y_SIZE-1; y++)
+    {
+      for (int x = 1; x < X_SIZE-1; x++)
+      {
+        if (isDoor(x, y))
+        {
+          setBlockType(x, y, BASIC_TILE);
+        }
+      }
     }
   }
 
