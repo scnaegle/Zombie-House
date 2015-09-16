@@ -53,8 +53,10 @@ public class GameMap
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
+
   private ArrayList<Tile> walls = new ArrayList<>();
   private double FIRE_SPAWN_RATE = 0.1;
+
 
   public GameMap(File file)
   {
@@ -1115,6 +1117,4 @@ public class GameMap
     }
     return ret;
   }
-
-
 }

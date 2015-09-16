@@ -299,7 +299,6 @@ public class GUI
     traps.setText("Fire traps: " + player.getFire_traps());
 
   }
-
   public void updateZombieLabels()
   {
     zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
@@ -307,6 +306,7 @@ public class GUI
     zombieSmell.setText("Z-Smell: " + zombie.getSmell());
     zombieSpawn.setText("Z-Spawn Rate: " + gamePanel.map.getZombieSpawnRate());
   }
+
 
   public void initPlayer()
   {

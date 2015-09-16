@@ -82,7 +82,6 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
       sound.play();
     }
 
-
     //Sees if zombie is in player hearing's range
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
@@ -91,13 +90,18 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
       sound = zWalk;
       playSound();
     }
+//    else
+//    {
+//      System.out.println("  Can't hear zombie anymore");
+//      stopSound();
+//    }
 
 
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
-      //System.out.println("Zombie hit wall");
+      System.out.println("Zombie hit wall");
       sound = hitObst;
       sound.play();
     }
