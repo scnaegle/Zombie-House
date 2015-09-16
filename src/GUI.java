@@ -35,20 +35,99 @@ public class GUI
 
   public void getSettings()
   {
-    //JOptionPane optionPane = new JOptionPane("Settings");
-    Object[] option = {"Start"};
-//    int dialog = JOptionPane.showOptionDialog(window,"Please choose your
+    JFrame popup = new JFrame("Settings");
+    popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    popup.setLayout(new BorderLayout());
+
+    JLabel choose = new JLabel("Choose your settings: ");
+    JButton start = new JButton("Start");
+
+    JLabel PlSpeed = new JLabel("   Player Speed: ");
+    JLabel PlSight = new JLabel("   Player Sight: ");
+    JLabel PlHearing = new JLabel("   Player Hearing: ");
+    JLabel PlStamina = new JLabel("   Player Stamina: ");
+    JLabel ZoSpawn = new JLabel("   Zombie Spawn Rate: ");
+    JLabel ZoSpeed = new JLabel("   Zombie Speed: ");
+    JLabel ZoSmell = new JLabel("   Zombie Smell: ");
+    JLabel ZoRate = new JLabel("   Zombie Decision Rate: ");
+    JLabel fSpawn = new JLabel("    Fire Trap Spawn: ");
+
+    JTextField pSpeed = new JTextField();
+    JTextField pSight = new JTextField();
+    JTextField pHearing = new JTextField();
+    JTextField pStamina = new JTextField();
+    JTextField zSpawn = new JTextField();
+    JTextField zSpeed = new JTextField();
+    JTextField zSmell = new JTextField();
+    JTextField zRate = new JTextField();
+    JTextField fireSpawn = new JTextField();
+
+    JPanel settings = new JPanel();
+    JPanel textFields = new JPanel();
+    JPanel words = new JPanel();
+    words.setLayout(new BoxLayout(words, BoxLayout.PAGE_AXIS));
+    words.setPreferredSize(new Dimension(200, 400));
+    JPanel everything = new JPanel();
+    everything.setPreferredSize(new Dimension(500, 480));
+    everything.setLayout(new BorderLayout());
+    textFields.setLayout(new BoxLayout(textFields, BoxLayout.PAGE_AXIS));
+    textFields.setPreferredSize(new Dimension(300, 400));
+    settings.setLayout(new BorderLayout());
+
+    settings.add(choose, BorderLayout.NORTH);
+    settings.add(everything, BorderLayout.CENTER);
+
+    words.add(Box.createRigidArea(new Dimension(10, 20)));
+    words.add(PlSpeed);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(PlHearing);
+    words.add(Box.createRigidArea(new Dimension(10, 35)));
+    words.add(PlSight);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(PlStamina);
+    words.add(Box.createRigidArea(new Dimension(10, 35)));
+    words.add(ZoSpeed);
+    words.add(Box.createRigidArea(new Dimension(10, 40)));
+    words.add(ZoSmell);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(ZoRate);
+    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(ZoSpawn);
+    words.add(Box.createRigidArea(new Dimension(10, 35)));
+    words.add(fSpawn);
+
+    textFields.add(pSpeed);
+    textFields.add(pSight);
+    textFields.add(pHearing);
+    textFields.add(pStamina);
+    textFields.add(zSpawn);
+    textFields.add(zSmell);
+    textFields.add(zSpeed);
+    textFields.add(zRate);
+    textFields.add(fireSpawn);
+
+    everything.add(words, BorderLayout.WEST);
+    everything.add(textFields, BorderLayout.EAST);
+    settings.add(start, BorderLayout.SOUTH);
+
+    settings.setPreferredSize(new Dimension(500, 500));
+    popup.add(settings, BorderLayout.CENTER);
+
+    //Object[] option = {"Start"};
+//    int dialog = JOptionPane.showOptionDialog(popup,"Please choose your
 // settings:",
 //        "Settings",JOptionPane.YES_OPTION,JOptionPane.PLAIN_MESSAGE,null,
 // option,option[0]);
 
-    String input = JOptionPane.showInputDialog(window, "Type something");
-    int num = Integer.parseInt(input);
-    System.out.println(num);
-//    if(dialog == JOptionPane.YES_OPTION){
-//      initPlayer();
-//      setUpGUI();
-//    }
+    popup.pack();
+    popup.setVisible(true);
+    //String input = JOptionPane.showInputDialog(window, "Type something");
+    //int num = Integer.parseInt(input);
+    //System.out.println(num);
+    // if(dialog == JOptionPane.YES_OPTION){
+    //initPlayer();
+    //setUpGUI();
+    // }
   }
   public void setUpGUI()
   {
