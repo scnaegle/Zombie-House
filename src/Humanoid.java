@@ -103,6 +103,6 @@ public class Humanoid extends GameObject implements HumanoidObject
         return true;
       }
     }
-    return false
+    return false;
   }
 }
