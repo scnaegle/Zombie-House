@@ -71,11 +71,9 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     }
 //    System.out.println("heading: " + heading);
     if (!hitWallInXDirection(map)) {
-//      System.out.println("Moving in x direction");
       moveX();
     }
     if (!hitWallInYDirection(map)) {
-//      System.out.println("Moving in Y direction");
       moveY();
     }
 
