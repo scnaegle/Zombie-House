@@ -19,7 +19,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int FPS = 60;
+  static final int FPS = 30;
   static final int SKIP_TICKS = 1000 / FPS;
   final BufferedImage vignetteCanvas;
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
@@ -34,9 +34,8 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-  private Zombie randomZombie;
-  private Zombie lineZombie;
-  private Zombie masterZ;
+
+  private Zombie zombie;
   private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
   private SoundLoader sound;
@@ -71,6 +70,11 @@ public class GamePanel extends JPanel implements KeyListener
       zombie.loadNoises();
     }
 
+    for (FireTrap traps : map.traps)
+    {
+      traps.loadExplosion();
+    }
+
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
     {
@@ -82,32 +86,26 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
-          //Add stuff to check if player/zombie interacts for bite sound
-//          randomZombie.update(map, player);
-//          if (randomZombie.location.x < 0) {
-//            randomZombie.setLocation(
-//                new Location(GUI.SCENE_WIDTH, randomZombie.location.y));
-//          }
-//          lineZombie.update(map, player);
-//          if (lineZombie.location.x > GUI.SCENE_WIDTH) {
-//            lineZombie.setLocation(
-//                new Location(0, lineZombie.location.y));
-//
-//          }
           for(Zombie zombie : map.zombies)
           {
             zombie.update(map, player);
           }
+          for (FireTrap traps : map.traps)
+          {
+            traps.update(map.zombies);
+          }
 
-          parent.updateLabels();
+          parent.updatePlayerLabels();
+          //parent.updateZombieLabels();
 
-          explodingTrap.move();
+
           repaint();
 
         }
 
       }
     });
+
   }
 
   /**
@@ -129,6 +127,8 @@ public class GamePanel extends JPanel implements KeyListener
   {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
+
+    // Math to make vignette move with viewport
     vp = (JViewport) getParent();
     int width = vp.getWidth();
     int height = vp.getHeight();
@@ -138,24 +138,28 @@ public class GamePanel extends JPanel implements KeyListener
 
     map.paint(g2, GUI.tile_size);
 
-    g2.drawImage(fireTrap.trap, fireTrap.location.getX(),
-        fireTrap.location.getY(), null);
-    g2.drawImage(explodingTrap.fireAnimation.getSprite(),
-        fireTrap.location.getX(), fireTrap.location.getY(), null);
-//    g2.drawImage(randomZombie.animation.getSprite(),
-//        randomZombie.location.getX(),
-//        randomZombie.location.getY(), null);
-//    g2.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
-//        lineZombie.location.getY(), null);
+
+    for (FireTrap trap : map.traps)
+    {
+      if (!fireTrap.exploding)
+      {
+        g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
+            null);
+      }
+      else
+      {
+        g2.drawImage(trap.fireAnimation.getSprite(),
+            trap.location.getX(), trap.location.getY(), null);
+      }
+    }
+    g2.drawImage(player.animation.getSprite(), player.location.getX(),
+        player.location.getY(), null);
 
     for(Zombie zombie : map.zombies) {
       g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
     }
 
-    g2.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
 
-    // Math to make vignette move with viewport
 
     g2.drawImage(vignetteCanvas, x, y, null);
 

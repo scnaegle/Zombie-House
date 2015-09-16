@@ -5,9 +5,8 @@ public class StartGame
   {
     GUI g = new GUI();
     g.initPlayer();
-    g.initFireTraps();
     g.setUpGUI();
     g.loadSounds();
-    //g.updateLabels();
+    //g.updatePlayerLabels();
   }
 }

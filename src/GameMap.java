@@ -48,11 +48,13 @@ public class GameMap
   private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 //  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
-  ArrayList<Zombie> zombies = new ArrayList<Zombie>();
+  ArrayList<Zombie> zombies = new ArrayList<>();
+  ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
-  private ArrayList<Tile> walls = new ArrayList<Tile>();
+  private ArrayList<Tile> walls = new ArrayList<>();
+  private double FIRE_SPAWN_RATE = 0.1;
 
   public GameMap(File file)
   {
@@ -1049,15 +1051,28 @@ public class GameMap
               walls.add(new_tile);
             }
             if (new_tile.tile_type == TileType.BRICK) {
-              if (rand.nextDouble() < .01) {
+              if (rand.nextDouble() < ZOMBIE_SPAWN_RATE)
+              {
                 Zombie zombie;
                 Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
-                if (rand.nextInt(2) == 0) {
+                if (rand.nextBoolean())
+                {
                   zombie = new RandomWalkZombie(location);
                 } else {
                   zombie = new LineWalkZombie(location);
                 }
                 zombies.add(zombie);
+              }
+
+              if (rand.nextDouble() < FIRE_SPAWN_RATE)
+              {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(location);
+                traps.add(fireTrap);
+
               }
             }
             col++;
@@ -1100,4 +1115,6 @@ public class GameMap
     }
     return ret;
   }
+
+
 }

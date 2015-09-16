@@ -37,7 +37,8 @@ public class GameObject implements Object2D {
   public double getDistance(Object2D other) {
     double diff_x = Math.abs(location.x - other.getLocation().x);
     double diff_y = Math.abs(location.y - other.getLocation().y);
-    return Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2));
+    return (diff_y + diff_x);
+    //return Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2));
   }
 
   public double getDirectionTo(Object2D other) {

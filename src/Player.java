@@ -86,6 +86,11 @@ public class Player extends Humanoid implements HumanoidObject
   {
     return hearing;
   }
+
+  public int getFire_traps()
+  {
+    return fire_traps;
+  }
   public BufferedImage[] initPlayerSpriteWalk()
   {
 
