@@ -19,7 +19,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int FPS = 60;
+  static final int FPS = 30;
   static final int SKIP_TICKS = 1000 / FPS;
   final BufferedImage vignetteCanvas;
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
@@ -98,13 +98,13 @@ public class GamePanel extends JPanel implements KeyListener
       long now = System.nanoTime();
       long update_length = now - last_loop_time;
       last_loop_time = now;
-      double delta = update_length / (double)OPTIMAL_TIME;
+      double delta = update_length / ((double)OPTIMAL_TIME);
 
       last_fps_time += update_length;
       fps++;
 
       System.out.println("last_fps_time: " + last_fps_time);
-      System.out.println("fps: " + fps);
+//      System.out.println("fps: " + fps);
       if (last_fps_time >= NANO_SECONDS) {
         System.out.println("(FPS: " + fps + ")");
         last_fps_time = 0;
@@ -115,6 +115,7 @@ public class GamePanel extends JPanel implements KeyListener
       System.out.println("DONE DOING GAME UPDATES");
 
       repaint();
+      snapViewPortToPlayer();
       System.out.println("DONE repainting...");
 
       try {
@@ -129,8 +130,8 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
   public void doGameUpdates(double delta) {
+    System.out.println("delta: " + delta);
     player.update(map);
-    snapViewPortToPlayer();
 
     for(Zombie zombie : map.zombies)
     {
@@ -149,8 +150,8 @@ public class GamePanel extends JPanel implements KeyListener
   {
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
-    int new_x = (int) (player.getCenterPoint().x - viewport_rect.width / 2);
-    int new_y = (int) (player.getCenterPoint().y - viewport_rect.height / 2);
+    int new_x = (player.getCenterPoint().x - viewport_rect.width / 2);
+    int new_y = (player.getCenterPoint().y - viewport_rect.height / 2);
     parent_viewport.setViewPosition(new Point(new_x, new_y));
   }
 
@@ -170,10 +171,10 @@ public class GamePanel extends JPanel implements KeyListener
 
     map.paint(g2, GUI.tile_size);
 
-    g2.drawImage(fireTrap.trap, fireTrap.location.getX(),
-        fireTrap.location.getY(), null);
-    g2.drawImage(explodingTrap.fireAnimation.getSprite(),
-        fireTrap.location.getX(), fireTrap.location.getY(), null);
+//    g2.drawImage(fireTrap.trap, fireTrap.location.getX(),
+//        fireTrap.location.getY(), null);
+//    g2.drawImage(explodingTrap.fireAnimation.getSprite(),
+//        fireTrap.location.getX(), fireTrap.location.getY(), null);
 //    g2.drawImage(randomZombie.animation.getSprite(),
 //        randomZombie.location.getX(),
 //        randomZombie.location.getY(), null);
