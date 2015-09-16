@@ -21,6 +21,8 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
   private SoundLoader bite;
   private SoundLoader hitObst;
   private SoundLoader sound;
+  private String decisionRate;
+  private String spawnRate;
 
 
   public Zombie(Location location) {
@@ -31,6 +33,10 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     this.height = GUI.tile_size - 10;
   }
 
+  public double getSpeed()
+  {
+    return current_speed;
+  }
   protected void determineAnimation() {
     double x_move = heading.getXMovement();
     double y_move = heading.getYMovement();
@@ -73,22 +79,33 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     }
 
 
-    //Sees if zombie is in player hearing's range
-    if (getDistance((Object2D) player) <=
-        ((Player) player).getHearing() * GUI.tile_size)
+    if (bitesPlayer(player))
     {
+      setBite();
+      sound.play();
+    }
+
+    //Sees if zombie is in player hearing's range
+    double range = ((Player) player).getHearing() * GUI.tile_size;
+    if (getDistance((Object2D) player) <=
+        range)
+    {
+
       sound = zWalk;
-      //playSound();
+
+      playSound();
     }
 //    else
 //    {
+//      System.out.println("  Can't hear zombie anymore");
 //      stopSound();
 //    }
+
     //Sees is zombie is in 2*hearing range and hits wall
-    if (getDistance((Object2D) player) <=
-        2 * ((Player) player).getHearing() * GUI.tile_size
-        && hitWall(map, next_location))
+    if (getDistance((Object2D) player) <= 2 * range &&
+        hitWall(map, next_location))
     {
+      System.out.println("Zombie hit wall");
       sound = hitObst;
       sound.play();
     }
@@ -119,7 +136,7 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
     sound.stop();
   }
 
-  public boolean bitesPlayer(Humanoid player)
+  public boolean bitesPlayer(HumanoidObject player)
   {
     return (intersects((Object2D) player));
 
@@ -129,4 +146,15 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
   {
     sound = bite;
   }
+
+  public double getDecisionRate()
+  {
+    return decision_rate;
+  }
+
+  public double getSmell()
+  {
+    return smell;
+  }
+
 }
