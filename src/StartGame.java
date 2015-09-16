@@ -4,6 +4,7 @@ public class StartGame
   public static void main(String[] args)
   {
     GUI g = new GUI();
+    g.getSettings();
     g.initPlayer();
     g.setUpGUI();
     g.loadSounds();
