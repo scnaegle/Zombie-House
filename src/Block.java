@@ -5,23 +5,29 @@ public class Block
 {
   boolean zombieSpawn = false;
   boolean partOfRoom = false;
-  boolean partOfStartRoom=false;
-  boolean partOfEndRoom=false;
-  boolean visited =false;
+  boolean partOfStartRoom = false;
+  boolean partOfEndRoom = false;
+  boolean visited = false;
   boolean goal = false;
   boolean corner = false;
   boolean wall = false;
-  boolean hall =false;
+  boolean hall = false;
   boolean doorways = false;
 
   char type;
   int x;
   int y;
+
   public Block(int x, int y, char type)
   {
     this.x = x;
     this.y = y;
     this.type = type;
+  }
+
+  public Tile toTile()
+  {
+   return new Tile(y, x, type);
   }
 
   private int getX()
@@ -43,6 +49,7 @@ public class Block
   {
     return visited;
   }
+
   private boolean isGoal()
   {
     return goal;

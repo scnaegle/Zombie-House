@@ -20,6 +20,23 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	
 	protected int row;
 	protected int col;
+
+	boolean zombieSpawn = false;
+	boolean partOfRoom = false;
+	boolean partOfStartRoom=false;
+	boolean partOfEndRoom=false;
+	boolean visited =false;
+	boolean goal = false;
+	boolean corner = false;
+	boolean wall = false;
+	boolean hall =false;
+	boolean doorways = false;
+
+	char type;
+	int x;
+	int y;
+
+
 	protected TileType tile_type;
 
 	/*
@@ -27,6 +44,8 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	 * @param row
 	 * @param col
 	 */
+	//row is y
+	//col is x
 	public Tile(int row, int col) {
 		this.row = row;
 		this.col = col;

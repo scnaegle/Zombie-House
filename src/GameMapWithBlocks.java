@@ -14,19 +14,20 @@ public class GameMapWithBlocks
 
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
+  private static final char DOOR = 'D';
   private static final char END_ROOM = 'E';
   private static final char ROOM_WALL = 'W';
   private static final char ROOM_CORNER = 'C';
-  private static final char BASIC_TILE = 'F';
+  private static final char BASIC_TILE = '.';
   private static final char START_ROOM = 'S';
   private static final char HALL = 'H';
-  private static final char EMPTY = '.';
+  private static final char EMPTY = ' ';
   private static final char OBSTICLE = 'O';
   private static final char ZOMBIE_SPAWN = 'Z';
+  private static final char INSIDE_WALL = '*';
 
-
-  private static final int X_SIZE = 100;
-  private static final int Y_SIZE = 50;
+  private static final int X_SIZE = 75;
+  private static final int Y_SIZE = 75;
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
@@ -36,8 +37,8 @@ public class GameMapWithBlocks
   private static final int RIGHT = 3;
 
   private static int roomSize;
-  private static int numberOfRandomHalls = 7;
-  private static int numberOfRooms = 7;
+  private static int numberOfRandomHalls = 5;
+  private static int numberOfRooms = 8;
   private static int numberOfObsicles = 3;
   // we are going to need to find a way to change this number when
   // starting a new level and such
@@ -53,6 +54,8 @@ public class GameMapWithBlocks
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
 
 
+  //make a method to make sure start and end rooms are not close to eachother
+
   private static void generateMap()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -62,25 +65,44 @@ public class GameMapWithBlocks
         blockGrid[y][x] = new Block(x, y, EMPTY);
       }
     }
+    for (int i = 0; i < 2; i++)
+    {
+      makeInitalHalls();
+    }
 
-    buildRoom(START_ROOM);
-    buildRoom(END_ROOM);
+    buildRoom(START_ROOM, true);
+    buildRoom(END_ROOM, false);
     for (int i = 0; i < numberOfRooms; i++)
     {
-      buildRoom(BASIC_TILE);
+      buildRoom(BASIC_TILE, false);
     }
+
+    chizelWalls();
     breakTouchingWalls();
     buildObsticales();
+    makeConnectingHalls();
+
     for (int i = 0; i < numberOfRandomHalls; i++)
     {
       makeRandomHalls();
     }
     //   searchAlgorithm(END_ROOM);
-    //  expandHalls();
+    expandHalls();
     makeDoors();
-    //  addWallsToHalls();
+    addWallsToHalls();
     spawnZombie();
+    turnHallsToFloors();
+    turnCornersToWalls();
+    //makeInteriorWalls();
 
+    Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
+    for (int y = 0; y < Y_SIZE; y++)
+    {
+      for (int x = 0; x < X_SIZE; x++)
+      {
+        // tileGrid[y][x] = getBlock(x,y).toTile();
+      }
+    }
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
@@ -88,6 +110,144 @@ public class GameMapWithBlocks
         System.out.print(getBlock(x, y).type);
       }
       System.out.println("");
+    }
+  }
+
+  private static void chizelWalls()
+  {
+    for (int y = 0; y < Y_SIZE; y++)
+    {
+      for (int x = 0; x < X_SIZE; x++)
+      {
+        if (isHall(x, y) && surroundedThreeSide(x, y))
+        {
+          setBlockType(x, y, EMPTY);
+        }
+      }
+    }
+
+    for (int y = Y_SIZE - 1; y > 0; y--)
+    {
+      for (int x = X_SIZE - 1; x > 0; x--)
+      {
+        if (isHall(x, y) && surroundedThreeSide(x, y))
+        {
+          setBlockType(x, y, EMPTY);
+        }
+      }
+    }
+  }
+
+  private static boolean surroundedThreeSide(int x, int y)
+  {
+    return ((isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y + 1)) ||
+        (isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y - 1)) ||
+        (isEmpty(x + 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)) ||
+        (isEmpty(x - 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)));
+  }
+
+  private static void makeInitalHalls()
+  {
+    int randomX = random.nextInt(X_SIZE - 2) + 1;
+    int randomY = random.nextInt(Y_SIZE - 1) + 1;
+
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      setBlockType(x, randomY, HALL);
+    }
+
+    for (int y = 1; y < Y_SIZE - 1; y++)
+    {
+      setBlockType(randomX, y, HALL);
+    }
+  }
+
+  private static void makeConnectingHalls()
+  {
+
+  }
+
+  private static void makeInteriorWalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (isWall(x, y))
+        {
+          System.out.println(getBlock(x, y).corner);
+          if (surroundingSpotEmpty(x, y))
+          {
+
+          }
+          else
+          {
+            setBlockType(x, y, INSIDE_WALL);
+          }
+        }
+        if (isInsideWall(x, y) && cornerOfRoom(x, y))
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+      }
+    }
+  }
+
+  private static boolean cornerOfRoom(int x, int y)
+  {
+    return (isWall(x + 1, y) && isWall(x, y + 1)) ||
+        (isWall(x - 1, y) && isWall(x, y - 1)) ||
+        (isWall(x + 1, y) && isWall(x, y - 1)) ||
+        (isWall(x - 1, y) && isWall(x, y + 1));
+  }
+
+  private static boolean isInsideWall(int x, int y)
+  {
+    return getBlock(x, y).type == INSIDE_WALL;
+  }
+
+  private static boolean surroundingSpotEmpty(int x, int y)
+  {
+    return (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y - 1) ||
+        isEmpty(x, y + 1));
+  }
+
+  private static boolean isEmpty(int x, int y)
+  {
+    return getBlock(x, y).type == EMPTY;
+  }
+
+
+  private static void turnCornersToWalls()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        if (isCorner(x, y))
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+      }
+    }
+  }
+
+  private static boolean isCorner(int x, int y)
+  {
+    return getBlock(x, y).type == ROOM_CORNER;
+  }
+
+  private static void turnHallsToFloors()
+  {
+    for (int x = 0; x < X_SIZE; x++)
+    {
+      for (int y = 0; y < Y_SIZE; y++)
+      {
+        if (isHall(x, y))
+        {
+          setBlockType(x, y, BASIC_TILE);
+        }
+      }
     }
   }
 
@@ -101,23 +261,68 @@ public class GameMapWithBlocks
         {
           if (isWall(x + 1, y))
           {
-            setBlockType(x + 1, y, BASIC_TILE);
+            setBlockType(x + 1, y, DOOR);
           }
           if (isWall(x - 1, y))
           {
-            setBlockType(x - 1, y, BASIC_TILE);
+            setBlockType(x - 1, y, DOOR);
           }
           if (isWall(x, y + 1))
           {
-            setBlockType(x, y + 1, BASIC_TILE);
+            setBlockType(x, y + 1, DOOR);
           }
           if (isWall(x, y - 1))
           {
-            setBlockType(x, y - 1, BASIC_TILE);
+            setBlockType(x, y - 1, DOOR);
           }
         }
       }
     }
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (isDoor(x, y) && isDoor(x + 1, y) && isDoor(x + 2, y))
+        {
+          setBlockType(x, y, ROOM_WALL);
+          setBlockType(x + 1, y, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x, y + 1) && isDoor(x, y + 2))
+        {
+          setBlockType(x, y, ROOM_WALL);
+          setBlockType(x, y + 1, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x + 1, y) && chanceForRandomBuild())
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x, y + 1) && chanceForRandomBuild())
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+        if (isDoor(x, y) && (isEmpty(x+1,y)||isEmpty(x-1,y)||isEmpty(x,y+1)||isEmpty(x,y-1)))
+        {
+          setBlockType(x,y,ROOM_WALL);
+        }
+      }
+    }
+  }
+
+  private static boolean isDoor(int x, int y)
+  {
+    return getBlock(x, y).type == DOOR;
+  }
+
+  private static boolean chanceForRandomBuild()
+  {
+    boolean makeNumber = false;
+    int number = random.nextInt(99);
+    if (number < 50)
+    {
+      makeNumber = true;
+    }
+    //return true;
+    return makeNumber;
   }
 
   private static boolean isWall(int x, int y)
@@ -384,6 +589,8 @@ public class GameMapWithBlocks
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
+          getBlock(a, hallY).hall = true;
+
         }
         else
         {
@@ -503,7 +710,7 @@ public class GameMapWithBlocks
       }
     }
     //   numberOfConnections =2;
-    if (connectRooms > 2)
+    if (connectRooms > numberOfConnections)
     {
       return true;
     }
@@ -564,21 +771,15 @@ public class GameMapWithBlocks
   }
 
 
-  private static void buildRoom(char type)
+  private static void buildRoom(char type, boolean firstRoom)
   {
     resetRoomDimentions();
-    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    if (type == END_ROOM || type == START_ROOM)
     {
-      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
-      {
-        if (touchingAnotherRoom(x, y))
-        {
-          resetRoomDimentions();
-          x = buildRoomX;
-          y = buildRoomY;
-        }
-      }
+      roomSize = 4;
     }
+    alreadyBuilt(type);
+
     for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
     {
       for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
@@ -622,6 +823,95 @@ public class GameMapWithBlocks
       }
     }
     System.out.println("finish room");
+  }
+
+  private static void alreadyBuilt(char type)
+  {
+    boolean hallTouched = false;
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
+            (buildRoomX + roomSize - 1),
+            (buildRoomY + roomSize - 1)))
+        {
+          hallTouched = true;
+        }
+        if (touchingAnotherRoomExceptHall(x + 1, y - 1) ||
+            touchingAnotherRoomExceptHall(x + 1, y) ||
+            touchingAnotherRoomExceptHall(x + 1, y + 1) ||
+            touchingAnotherRoomExceptHall(x, y - 1) ||
+            touchingAnotherRoomExceptHall(x, y) ||
+            touchingAnotherRoomExceptHall(x, y + 1) ||
+            touchingAnotherRoomExceptHall(x - 1, y - 1) ||
+            touchingAnotherRoomExceptHall(x - 1, y) ||
+            touchingAnotherRoomExceptHall(x, y + 1))
+        {
+          hallTouched = false;
+          resetRoomDimentions();
+          if (type == START_ROOM || type == END_ROOM)
+          {
+            roomSize = 4;
+          }
+          x = buildRoomX;
+          y = buildRoomY;
+        }
+      }
+    }
+    if (!hallTouched)
+    {
+      resetRoomDimentions();
+      if (type == START_ROOM || type == END_ROOM)
+      {
+        roomSize = 4;
+      }
+      alreadyBuilt(type);
+    }
+  }
+
+  private static boolean touchingAnotherRoomExceptHall(int x, int y)
+  {
+
+    return isWall(x, y) || isCorner(x, y) || isBasic(x, y);
+  }
+
+  private static boolean isBasic(int x, int y)
+  {
+    return getBlock(x, y).type == BASIC_TILE;
+  }
+
+  private static boolean closeToAnotherRoom(int x, int y)
+  {
+    for (int a = x; a < x + 6; x++)
+    {
+      if (!isEmpty(a, y) && inBoundsWithBorder(a, y))
+      {
+        return true;
+      }
+    }
+    for (int a = x; a > x - 6; x--)
+    {
+      if (!isEmpty(a, y) && inBoundsWithBorder(a, y))
+      {
+        return true;
+      }
+    }
+    for (int a = y; a < y + 6; a++)
+    {
+      if (!isEmpty(x, a) && inBoundsWithBorder(x, a))
+      {
+        return true;
+      }
+    }
+    for (int a = y; a > y - 6; a--)
+    {
+      if (!isEmpty(x, a) && inBoundsWithBorder(x, a))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static void breakTouchingWalls()
