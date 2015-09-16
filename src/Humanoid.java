@@ -126,7 +126,7 @@ public class Humanoid extends GameObject implements HumanoidObject
   protected boolean hitWallInYDirection(GameMap map) {
     Location next_location = new Location(location.x, location.y + getYMovement());
     GameObject new_location_object = new GameObject(next_location, width, height);
-    int row = next_location.getRow(GUI.tile_size) + (int)Math.ceil(heading.getYMovement());
+    int row = next_location.getRow(GUI.tile_size) + heading.getRowMovement();
     int col = next_location.getCol(GUI.tile_size);
 
     Tile tile_check;
@@ -144,7 +144,7 @@ public class Humanoid extends GameObject implements HumanoidObject
     Location next_location = new Location(location.x + getXMovement(), location.y);
     GameObject new_location_object = new GameObject(next_location, width, height);
     int row = next_location.getRow(GUI.tile_size);
-    int col = next_location.getCol(GUI.tile_size) + (int)Math.ceil(heading.getXMovement());
+    int col = next_location.getCol(GUI.tile_size) + heading.getColMovement();
 
     Tile tile_check;
     for(int r = row - 1; r <= row + 1; r++) {
