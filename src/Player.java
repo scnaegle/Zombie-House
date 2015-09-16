@@ -86,6 +86,11 @@ public class Player extends Humanoid implements HumanoidObject
   {
     return hearing;
   }
+
+  public int getFire_traps()
+  {
+    return fire_traps;
+  }
   public BufferedImage[] initPlayerSpriteWalk()
   {
 
@@ -136,7 +141,7 @@ public class Player extends Humanoid implements HumanoidObject
   private void regenerate()
   {
     stamina += STAMINA_STEP;
-    Math.min(stamina, max_stamina);
+    stamina = Math.min(stamina, max_stamina);
   }
 
   /**

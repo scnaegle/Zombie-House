@@ -31,7 +31,7 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
-
+  private static final double ZOMBIE_SPAWN_RATE = 0.01;
   private static int roomSize;
   private static int numberOfRandomHalls = 7;
   private static int numberOfRooms = 7;
@@ -40,69 +40,25 @@ public class GameMap
   // starting a new level and such
   private static int buildRoomX;
   private static int buildRoomY;
-
   private static boolean hallRight = false;
   private static boolean hallLeft = false;
   private static boolean hallUp = false;
   private static boolean hallDown = false;
-
   private static Random random = new Random();
-
   private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 //  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
+  ArrayList<Zombie> zombies = new ArrayList<>();
+  ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
-  private ArrayList<Tile> walls = new ArrayList<Tile>();
-  ArrayList<Zombie> zombies = new ArrayList<Zombie>();
-
-  private static final double ZOMBIE_SPAWN_RATE = 0.01;
-
+  private ArrayList<Tile> walls = new ArrayList<>();
+  private double FIRE_SPAWN_RATE = 0.1;
 
   public GameMap(File file)
   {
     createFromFile(file);
-  }
-
-  public ArrayList<Tile> getWalls()
-  {
-    return walls;
-  }
-
-  /**
-   * This paints the grid between the the given start (row, col) and end
-   * (row, col)
-   *
-   * @param g
-   * @param start
-   * @param end
-   * @param tile_size
-   */
-  public void paintSection(Graphics g, Location start, Location end,
-                           int tile_size)
-  {
-    for (int row = start.row; row < end.row; row++)
-    {
-      for (int col = start.col; col < end.col; col++)
-      {
-        g.setColor(grid[row][col].tile_type.color);
-        g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
-      }
-    }
-  }
-
-  /**
-   * This paints the entire grid from start to finish
-   *
-   * @param g
-   * @param tile_size
-   */
-  public void paint(Graphics g, int tile_size)
-  {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
   }
 
   public static int roomSize()
@@ -118,7 +74,6 @@ public class GameMap
     }
 
   }
-
 
   private static void setGrid(int x, int y, char val)
   {
@@ -248,7 +203,6 @@ public class GameMap
     System.out.println("finish start room");
   }
 
-
   /**
    * builds a room to go into the maze
    */
@@ -306,7 +260,6 @@ public class GameMap
   {
     return (x < X_SIZE - 1 && x > 1 && y < Y_SIZE - 1 && y > 1);
   }
-
 
   /**
    * If two rooms are connected it will break through the walls of the room
@@ -415,13 +368,6 @@ public class GameMap
     }
   }
 
-
-  // addWallsToHalls();
-
-  //   spawnZombie();
-
-  // print out that maze
-
   private static void makePathFromEnd()
   {
     for (int x = 0; x < X_SIZE; x++)
@@ -431,7 +377,7 @@ public class GameMap
         if (getGrid(x, y) == END_ROOM)
         {
 
-          System.out.println("starting out output "+x+" " + y);
+          System.out.println("starting out output " + x + " " + y);
 //          startEndAlgorithm(x, y);
 
         }
@@ -464,7 +410,6 @@ public class GameMap
 
 
   }
-
 
   private static void endAlgorithm(int x, int y, int prevDirection)
   {
@@ -511,9 +456,11 @@ public class GameMap
   }
 
 
-  //making generic algorithm to push out straight hallways
-  //need previous directions
+  // addWallsToHalls();
 
+  //   spawnZombie();
+
+  // print out that maze
 
   private static void endAlgorithm1(int x, int y, int pickDirection)
   {
@@ -694,6 +641,9 @@ public class GameMap
 
   }
 
+
+  //making generic algorithm to push out straight hallways
+  //need previous directions
 
   private static void expandHalls()
   {
@@ -982,6 +932,76 @@ public class GameMap
     System.out.println("Obsticle");
   }
 
+  public static void main(String[] args)
+  {
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(GameMap.class.getResource("resources/level1.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+    System.out.println("file: " + map_file);
+    GameMap map = new GameMap(map_file);
+    System.out.println("map: " + map.toString());
+    System.out.println("zombies: " + map.zombies.size());
+//     System.out.println("map walls: ");
+//     for (Tile tile : map.getWalls())
+//     {
+//     System.out.println(tile);
+//     }
+
+//    generateMap();
+  }
+
+  public double getZombieSpawnRate()
+  {
+    return ZOMBIE_SPAWN_RATE;
+  }
+
+  public ArrayList<Tile> getWalls()
+  {
+    return walls;
+  }
+
+  /**
+   * This paints the grid between the the given start (row, col) and end
+   * (row, col)
+   *
+   * @param g
+   * @param start
+   * @param end
+   * @param tile_size
+   */
+  public void paintSection(Graphics g, Location start, Location end,
+                           int tile_size)
+  {
+    for (int row = start.row; row < end.row; row++)
+    {
+      for (int col = start.col; col < end.col; col++)
+      {
+        g.setColor(grid[row][col].tile_type.color);
+        g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
+      }
+    }
+  }
+
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
+
   public int getWidth(int tile_size)
   {
     return num_cols * tile_size;
@@ -1031,15 +1051,28 @@ public class GameMap
               walls.add(new_tile);
             }
             if (new_tile.tile_type == TileType.BRICK) {
-              if (rand.nextDouble() < .01) {
+              if (rand.nextDouble() < ZOMBIE_SPAWN_RATE)
+              {
                 Zombie zombie;
                 Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
-                if (rand.nextInt(2) == 0) {
+                if (rand.nextBoolean())
+                {
                   zombie = new RandomWalkZombie(location);
                 } else {
                   zombie = new LineWalkZombie(location);
                 }
                 zombies.add(zombie);
+              }
+
+              if (rand.nextDouble() < FIRE_SPAWN_RATE)
+              {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(location);
+                traps.add(fireTrap);
+
               }
             }
             col++;
@@ -1083,27 +1116,5 @@ public class GameMap
     return ret;
   }
 
-  public static void main(String[] args)
-  {
-     File map_file = null;
-     try
-     {
-        map_file = new File(GameMap.class.getResource("resources/level1.map").toURI());
-     }
-     catch (URISyntaxException e)
-     {
-       e.printStackTrace();
-     }
-     System.out.println("file: " + map_file);
-     GameMap map = new GameMap(map_file);
-     System.out.println("map: " + map.toString());
-     System.out.println("zombies: " + map.zombies.size());
-//     System.out.println("map walls: ");
-//     for (Tile tile : map.getWalls())
-//     {
-//     System.out.println(tile);
-//     }
 
-//    generateMap();
-  }
 }

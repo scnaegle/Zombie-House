@@ -62,7 +62,7 @@ public class Humanoid extends GameObject implements HumanoidObject
     return new Location(new_x, new_y);
   }
 
-  public boolean hitWall(GameMap map, Location next_location) {
+  protected boolean hitWall(GameMap map, Location next_location) {
     int row = next_location.getRow(GUI.tile_size);
     int col = next_location.getCol(GUI.tile_size);
     GameObject new_location_object = new GameObject(next_location, width, height);
@@ -91,6 +91,16 @@ public class Humanoid extends GameObject implements HumanoidObject
 //          System.out.println("Hit wall...");
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+  protected boolean hitZombie(GameMap map, Location next_location) {
+    GameObject new_location_object = new GameObject(next_location, width, height);
+    for(Zombie zombie : map.zombies) {
+      if (new_location_object.intersects(zombie)) {
+        return true;
       }
     }
     return false;
