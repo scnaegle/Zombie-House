@@ -70,11 +70,14 @@ public class Player extends Humanoid implements HumanoidObject
     this.height = GUI.tile_size;
   }
 
-  public Player(int sight, int hearing, double speed, double stamina, int width, int height, Location location) {
+  public Player(int sight, int hearing, double speed, double stamina,
+                double regen, int width, int height, Location location)
+  {
     this(sight, hearing, speed, stamina);
     this.width = width;
     this.height = height;
     this.location = location;
+    this.regen = regen;
   }
 
   public int getSight()
@@ -258,4 +261,8 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
+  public double getRegenRate()
+  {
+    return regen;
+  }
 }
