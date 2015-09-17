@@ -56,6 +56,17 @@ public class GameMap
 
   private ArrayList<Tile> walls = new ArrayList<>();
 
+  public GameMap(GameMapWithBlocks mapWithBlocks)
+    {
+      for (Tile[] row : mapWithBlocks.tileGrid)
+      {
+        for (Tile col : row)
+        {
+
+        }
+      }
+
+    }
 
   public GameMap(File file)
   {

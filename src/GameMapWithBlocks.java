@@ -48,6 +48,8 @@ public class GameMapWithBlocks
   private static final int RIGHT = 3;
 
 
+
+
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
   private static int numberOfRooms = 10;
@@ -70,6 +72,7 @@ public class GameMapWithBlocks
 
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
+  Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
 
   /**
    * generates the map through many many methods
@@ -141,6 +144,7 @@ public class GameMapWithBlocks
         tileGrid[y][x] = getBlock(x, y).toTile();
       }
     }
+
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
@@ -251,6 +255,8 @@ public class GameMapWithBlocks
   /**
    * if it is able to place place the end peices horozantily
    * it will make a 2x2 end room
+   * I wanted to do this another way, but honestly coding it in this way was the easiest
+   * thing i could think of
    *
    * @param x
    * @param y
@@ -1018,7 +1024,7 @@ public class GameMapWithBlocks
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        setBlockType(xCord, yCord, OBSTICLE);
+        setBlockType(xCord, yCord, ROOM_WALL);
         validSpot = true;
       }
       else
