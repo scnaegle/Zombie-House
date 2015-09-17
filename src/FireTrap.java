@@ -58,7 +58,7 @@ public class FireTrap extends GameObject
   }
 
 
-  public void update(GameMap map)
+  public void update(GameMap map, Player player)
   {
     for (Zombie zombie : map.zombies)
     {
@@ -72,8 +72,11 @@ public class FireTrap extends GameObject
         }
         exploding = false;
       }
-   }
-
+      if (intersects(player))
+      {
+        System.out.println("player on trap");
+      }
+    }
   }
 
   public void loadExplosion()

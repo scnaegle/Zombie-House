@@ -158,11 +158,13 @@ public class GUI
         zspawn = Double.parseDouble(nine);
         fspawn = Double.parseDouble(ten);
 
+        System.out.println("making player");
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
             new Location(800, 1120));
 
 
         setUpGUI();
+
         loadSounds();
         popup.dispose();
       }
@@ -178,7 +180,6 @@ public class GUI
     window.setLayout(new BorderLayout());
     //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
-
 
     window.addComponentListener(new ComponentListener()
     {
@@ -218,11 +219,13 @@ public class GUI
 
 
 
+
     scrollPane = new JScrollPane(gamePanel);
     scrollPane.setVerticalScrollBarPolicy(
         ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
     scrollPane.setHorizontalScrollBarPolicy(
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
 
     /**
      * Keeps scrollpane from scrolling when arrow keys are pressed.
@@ -263,14 +266,19 @@ public class GUI
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
-    startPause.addActionListener(new ActionListener() {
+    startPause.addActionListener(new ActionListener()
+    {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        if (pause) {
+      public void actionPerformed(ActionEvent e)
+      {
+        if (pause)
+        {
           startPause.setText("Pause");
           startGame();
           gamePanel.requestFocusInWindow();
-        } else {
+        }
+        else
+        {
           startPause.setText("Start");
           pauseGame();
         }
@@ -360,6 +368,11 @@ public class GUI
     gamePanel.loadMusic();
     player.loadSounds();
     //fireTrap.loadExplosion();
+  }
+
+  public void loadTiles()
+  {
+
   }
 
   public void initFireTraps()

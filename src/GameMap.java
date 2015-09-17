@@ -128,10 +128,11 @@ public class GameMap
     {
       for (int col = start.col; col < end.col; col++)
       {
-        g.setColor(grid[row][col].tile_type.color);
-        g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
-        if (SHOW_COORDS)
-        {
+        //g.setColor(grid[row][col].tile_type.color);
+        //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
+        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
+            row * GUI.tile_size, null);
+        if (SHOW_COORDS) {
           g.setColor(Color.WHITE);
           g.drawString(String.format("(%d, %d)", row, col).toString(),
               col * tile_size + (tile_size / 4),
@@ -202,8 +203,7 @@ public class GameMap
             {
               walls.add(new_tile);
             }
-            if (new_tile.tile_type == TileType.BRICK)
-            {
+            if (new_tile.tile_type == TileType.BRICK) {
               if (rand.nextDouble() < GUI.zspawn)
               {
                 Zombie zombie;

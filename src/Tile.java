@@ -3,10 +3,7 @@
  */
 
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 /**
  * @author Sean Naegle
@@ -34,9 +31,9 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	char type;
 	int x;
 	int y;
-  private BufferedImage floorTile = loadTile("floor");
-  private BufferedImage wallTile = loadTile("wall");
-  private BufferedImage grassTile = loadTile("grass");
+//  private BufferedImage floorTile = loadTile("floor");
+//  private BufferedImage wallTile = loadTile("wall");
+//  private BufferedImage grassTile = loadTile("grass");
 
   /*
    * Tile constructor
@@ -109,23 +106,23 @@ public class Tile extends GameObject implements Comparable<Tile> {
 
 	}
 
-  public BufferedImage loadTile(String file)
-  {
-
-    BufferedImage tile = null;
-
-    try
-    {
-      tile = ImageIO
-          .read(Sprite.class.getResource("resources/" + file + ".jpg"));
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-
-    return tile;
-  }
+//  public BufferedImage loadTile(String file)
+//  {
+//
+//    BufferedImage tile = null;
+//
+//    try
+//    {
+//      tile = ImageIO
+//          .read(Sprite.class.getResource("resources/" + file + ".jpg"));
+//    }
+//    catch (IOException e)
+//    {
+//      e.printStackTrace();
+//    }
+//
+//    return tile;
+//  }
 
   /**
    * get X coordinate
@@ -171,7 +168,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
    * @param g Graphics object
    */
   public void paint(Graphics g) {
-    g.setColor(tile_type.color);
+    // g.setColor(tile_type.);
     g.fillRect(row, col, WIDTH, HEIGHT);
     g.setColor(Color.WHITE);
     g.drawRect(row, col, WIDTH, HEIGHT);
