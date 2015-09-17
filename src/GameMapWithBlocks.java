@@ -36,8 +36,8 @@ public class GameMapWithBlocks
   private static final char OBSTICLE = 'O';
   private static final char INSIDE_WALL = 'I';
 
-  private static final int X_SIZE = 75; // used to set size of grid
-  private static final int Y_SIZE = 75; // used to set size of grid
+  public static final int X_SIZE = 75; // used to set size of grid
+  public static final int Y_SIZE = 75; // used to set size of grid
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
