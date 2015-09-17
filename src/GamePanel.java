@@ -86,6 +86,15 @@ public class GamePanel extends JPanel implements KeyListener
 //    });
   }
 
+  public void runGameLoop() {
+    Thread loop = new Thread() {
+      public void run() {
+        gameLoop();
+      }
+    };
+    loop.start();
+  }
+
   public void gameLoop() {
     long last_loop_time = System.nanoTime();
     final int TARGET_FPS = 30;
@@ -124,6 +133,8 @@ public class GamePanel extends JPanel implements KeyListener
 //        Thread.sleep((last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS);
         Thread.sleep(sleep_time);
       } catch (InterruptedException e) {
+        e.printStackTrace();
+      } catch (IllegalArgumentException e) {
         e.printStackTrace();
       }
     }
