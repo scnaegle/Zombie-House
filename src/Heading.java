@@ -47,6 +47,22 @@ public class Heading
     return y_movement;
   }
 
+  public int getColMovement() {
+    if (x_movement >= 0) {
+      return (int)Math.ceil(x_movement);
+    } else {
+      return (int)Math.floor(x_movement);
+    }
+  }
+
+  public int getRowMovement() {
+    if (y_movement >= 0) {
+      return (int)Math.ceil(y_movement);
+    } else {
+      return (int)Math.floor(y_movement);
+    }
+  }
+
   public double getDegrees() {
     return degrees;
   }

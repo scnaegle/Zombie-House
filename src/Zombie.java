@@ -84,10 +84,12 @@ public class Zombie extends Humanoid implements HumanoidObject
       frame = 0;
       chooseDirection(player);
     }
-    Location next_location = getNextLocation();
-    if (!hitWall(map, next_location))
-    {
-      move(getNextLocation());
+//    System.out.println("heading: " + heading);
+    if (!hitWallInXDirection(map)) {
+      moveX();
+    }
+    if (!hitWallInYDirection(map)) {
+      moveY();
     }
 
 
@@ -112,6 +114,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 //    }
 
 
+    Location next_location = getNextLocation();
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
