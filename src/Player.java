@@ -194,7 +194,7 @@ public class Player extends Humanoid implements HumanoidObject
       {
         regenerate();
         animation = walk;
-        current_speed = 1.0;
+        current_speed = defined_speed;
       }
 
       // Decides which sound to play based on state of player
