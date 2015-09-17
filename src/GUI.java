@@ -203,7 +203,7 @@ public class GUI
     playerSpeed.setText("Speed: " + player.getSpeed());
     playerStamina
         .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
-    fps_label.setText("FPS: " + gamePanel.fps);
+    fps_label.setText("FPS: " + gamePanel.shown_fps);
 
 //    zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
 //    zombieRate.setText("Z-Decision Rate: " + zombie.getDecisionRate());

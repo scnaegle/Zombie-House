@@ -41,8 +41,7 @@ public class GamePanel extends JPanel implements KeyListener
   private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
   private SoundLoader sound;
 
-  int last_fps_time = 0;
-  int fps = 0;
+  int shown_fps = 0;
 
 
   public GamePanel(GUI parent)
@@ -102,6 +101,8 @@ public class GamePanel extends JPanel implements KeyListener
     final long MILLI_SECONDS = 1000000;
     final long OPTIMAL_TIME = NANO_SECONDS / TARGET_FPS;
 
+    int last_fps_time = 0;
+    int fps = 0;
 
     while (GUI.running) {
       long now = System.nanoTime();
@@ -112,24 +113,20 @@ public class GamePanel extends JPanel implements KeyListener
       last_fps_time += update_length;
       fps++;
 
-      System.out.println("last_fps_time: " + last_fps_time);
-//      System.out.println("fps: " + fps);
       if (last_fps_time >= NANO_SECONDS) {
         System.out.println("(FPS: " + fps + ")");
+        shown_fps = fps;
         last_fps_time = 0;
         fps = 0;
       }
 
       doGameUpdates(delta);
-      System.out.println("DONE DOING GAME UPDATES");
 
       repaint();
       snapViewPortToPlayer();
-      System.out.println("DONE repainting...");
 
       try {
         long sleep_time = (last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS;
-        System.out.println("sleep_time: " + sleep_time);
 //        Thread.sleep((last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS);
         Thread.sleep(sleep_time);
       } catch (InterruptedException e) {
@@ -141,7 +138,6 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
   public void doGameUpdates(double delta) {
-    System.out.println("delta: " + delta);
     player.update(map);
 
     for(Zombie zombie : map.zombies)
@@ -153,6 +149,7 @@ public class GamePanel extends JPanel implements KeyListener
 
 //    explodingTrap.move();
   }
+
   /**
    * Makes the screen follow the player and keeps him in the center of
    * the screen.
@@ -170,7 +167,6 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void paintComponent(Graphics g)
   {
-    System.out.println("Painting game map...");
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
     vp = (JViewport) getParent();
