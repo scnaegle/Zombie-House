@@ -17,10 +17,10 @@ public class Player extends Humanoid implements HumanoidObject
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
+  boolean is_picking_up = false;
   private int sight = 5;
   private int hearing = 10;
   private int fire_traps = 0;
-  private boolean is_picking_up = false;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();

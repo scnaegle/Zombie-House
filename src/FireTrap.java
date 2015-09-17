@@ -53,7 +53,7 @@ public class FireTrap extends GameObject
   }
 
 
-  public void update(List<Zombie> zombies)
+  public void update(List<Zombie> zombies, Player player)
   {
     for (Zombie zombie : zombies)
     {
@@ -66,6 +66,10 @@ public class FireTrap extends GameObject
         fireAnimation.start();
       }
       exploding = false;
+    }
+    if (intersects(player))
+    {
+      System.out.println("player on trap");
     }
 
   }
