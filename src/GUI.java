@@ -15,7 +15,7 @@ public class GUI
   public static double stamina;
   public static double regen;
   public static double zspeed;
-  public static double zSmell;
+  public static double zsmell;
   public static double drate;
   public static double zspawn;
   public static double fspawn;
@@ -153,7 +153,7 @@ public class GUI
         stamina = Double.parseDouble(four);
         regen = Double.parseDouble(five);
         zspeed = Double.parseDouble(six);
-        GUI.zSmell = Double.parseDouble(seven);
+        zsmell = Double.parseDouble(seven);
         drate = Double.parseDouble(eight);
         zspawn = Double.parseDouble(nine);
         fspawn = Double.parseDouble(ten);
@@ -263,19 +263,14 @@ public class GUI
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
-    startPause.addActionListener(new ActionListener()
-    {
+    startPause.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e)
-      {
-        if (pause)
-        {
+      public void actionPerformed(ActionEvent e) {
+        if (pause) {
           startPause.setText("Pause");
           startGame();
           gamePanel.requestFocusInWindow();
-        }
-        else
-        {
+        } else {
           startPause.setText("Start");
           pauseGame();
         }
@@ -343,7 +338,7 @@ public class GUI
   {
     zombieSpeed.setText("Z-Speed: " + zspeed);
 
-    zombieSmell.setText("Z-Smell: " + zSmell);
+    zombieSmell.setText("Z-Smell: " + zsmell);
     traps.setText("Fire traps: " + player.getFire_traps());
 
   }

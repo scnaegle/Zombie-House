@@ -32,7 +32,6 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
-  private static final double ZOMBIE_SPAWN_RATE = Zombie.spawn_rate;
   private static int roomSize;
   private static int numberOfRandomHalls = 7;
   private static int numberOfRooms = 7;
@@ -47,7 +46,7 @@ public class GameMap
   private static boolean hallDown = false;
   private static Random random = new Random();
 //  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
-private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
+  private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
@@ -56,7 +55,6 @@ private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
   private Tile[][] grid;
 
   private ArrayList<Tile> walls = new ArrayList<>();
-  private double FIRE_SPAWN_RATE = 0.1;
 
 
   public GameMap(File file)
@@ -962,7 +960,7 @@ private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 
   public double getZombieSpawnRate()
   {
-    return ZOMBIE_SPAWN_RATE;
+    return GUI.zspawn;
   }
 
   public ArrayList<Tile> getWalls()
@@ -1058,20 +1056,20 @@ private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
               walls.add(new_tile);
             }
             if (new_tile.tile_type == TileType.BRICK) {
-              if (rand.nextDouble() < ZOMBIE_SPAWN_RATE)
+              if (rand.nextDouble() < GUI.zspawn)
               {
                 Zombie zombie;
                 Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
                 if (rand.nextBoolean())
                 {
-                  zombie = new RandomWalkZombie(location);
+                  zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate, location);
                 } else {
-                  zombie = new LineWalkZombie(location);
+                  zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate, location);
                 }
                 zombies.add(zombie);
               }
 
-              if (rand.nextDouble() < FIRE_SPAWN_RATE)
+              if (rand.nextDouble() < GUI.fspawn)
               {
                 FireTrap fireTrap;
                 Location location =
