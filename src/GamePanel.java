@@ -95,9 +95,9 @@ public class GamePanel extends JPanel implements KeyListener
             zombie.update(map, player);
           }
 
-          for (FireTrap traps : map.traps)
+          for (FireTrap trap : map.traps)
           {
-            traps.update(map.zombies, player);
+            trap.update(map, player);
           }
           parent.updatePlayerLabels();
           parent.updateZombieLabels();

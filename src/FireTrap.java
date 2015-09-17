@@ -21,6 +21,11 @@ public class FireTrap extends GameObject
     this.location = location;
   }
 
+  public FireTrap(int width, int height, Location location) {
+    this(location);
+    this.width = width;
+    this.height = height;
+  }
   private BufferedImage[] initExplosion()
   {
     Sprite sprite = new Sprite("explode");
@@ -53,25 +58,25 @@ public class FireTrap extends GameObject
   }
 
 
-  public void update(List<Zombie> zombies, Player player)
+  public void update(GameMap map, Player player)
   {
-    for (Zombie zombie : zombies)
+    for (Zombie zombie : map.zombies)
     {
-      if (intersects(zombie))
-      {
-        System.out.println("Zombie touched trap");
-        exploding = true;
-        sound.play();
-        fireAnimation.update();
-        fireAnimation.start();
+      if (getDistance(zombie) < GUI.tile_size) {
+        if (getCenteredBoundingRectangle().intersects(zombie.getCenteredBoundingRectangle())) {
+          System.out.println("Zombie touched trap");
+          exploding = true;
+          sound.play();
+          fireAnimation.update();
+          fireAnimation.start();
+        }
+        exploding = false;
       }
-      exploding = false;
+      if (intersects(player))
+      {
+        System.out.println("player on trap");
+      }
     }
-    if (intersects(player))
-    {
-      System.out.println("player on trap");
-    }
-
   }
 
   public void loadExplosion()
