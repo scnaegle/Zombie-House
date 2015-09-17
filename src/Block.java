@@ -1,6 +1,13 @@
 /**
  * Created by Tyler on 9/14/2015.
  */
+
+/**
+ * block class
+ * each block represents a tile grid in the map
+ * blocks have many boolean values that can give much information into
+ * game logic
+ */
 public class Block
 {
   boolean zombieSpawn = false;
@@ -18,6 +25,13 @@ public class Block
   int x;
   int y;
 
+  /**
+   * takes a int x, and y to let you know where the tile is in general
+   * takes a type to tell you what kind of block it is
+   * @param x
+   * @param y
+   * @param type
+   */
   public Block(int x, int y, char type)
   {
     this.x = x;
@@ -25,6 +39,11 @@ public class Block
     this.type = type;
   }
 
+  /**
+   * we have this to tile method because it is needed because the rest of the
+   * program is using it.
+   * @return
+   */
   public Tile toTile()
   {
    return new Tile(y, x, type);
