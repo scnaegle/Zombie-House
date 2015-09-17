@@ -1,16 +1,17 @@
 /**
- * Sets up everything that a zombie has, such as smell, speed, decision rate and
+ * Sets up everything that a zombie has, such as zSmell, speed, decision rate
+ * and
  * how the sprite will move. Each zombie is an object so it extends GameObject
  * which implements Object2D. Each zombie also needs to track the human, so it
  * implements HumanoidObject which lets it get the human's current location.
  */
-public abstract class Zombie extends Humanoid implements HumanoidObject
+public class Zombie extends Humanoid implements HumanoidObject
 {
+  public static double decision_rate;
+  public static double smell;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   protected int frame = 0;
-  protected double decision_rate = 2.0;
-  protected double smell = 7.0;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
@@ -21,16 +22,21 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
   private SoundLoader bite;
   private SoundLoader hitObst;
   private SoundLoader sound;
-  private String decisionRate;
-  private String spawnRate;
 
 
   public Zombie(Location location) {
     this.location = location;
-    this.defined_speed = .5;
-    this.current_speed = .5;
     this.width = GUI.tile_size - 10;
     this.height = GUI.tile_size - 10;
+  }
+
+  public Zombie(double speed, double smell, double decision_rate, Location location)
+  {
+    this(location);
+    this.current_speed = speed;
+    this.defined_speed = speed;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
   }
 
   public double getSpeed()
@@ -56,10 +62,7 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
   }
 
   protected boolean smellPlayer(HumanoidObject player) {
-    if (getDistance((Object2D)player) <= smell * GUI.tile_size) {
-      return true;
-    }
-    return false;
+    return getDistance((Object2D) player) <= smell * GUI.tile_size;
   }
 
   protected void chooseDirection(HumanoidObject player) {
@@ -72,10 +75,12 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
       frame = 0;
       chooseDirection(player);
     }
-    Location next_location = getNextLocation();
-    if (!hitWall(map, next_location))
-    {
-      move(getNextLocation());
+//    System.out.println("heading: " + heading);
+    if (!hitWallInXDirection(map)) {
+      moveX();
+    }
+    if (!hitWallInYDirection(map)) {
+      moveY();
     }
 
 
@@ -87,12 +92,10 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
 
     //Sees if zombie is in player hearing's range
     double range = ((Player) player).getHearing() * GUI.tile_size;
-    if (getDistance((Object2D) player) <=
-        range)
+    if (getDistance((Object2D) player) <= range)
     {
-
+      //System.out.println(Math.round(getDistance((Object2D) player)));
       sound = zWalk;
-
       playSound();
     }
 //    else
@@ -101,11 +104,13 @@ public abstract class Zombie extends Humanoid implements HumanoidObject
 //      stopSound();
 //    }
 
+
+    Location next_location = getNextLocation();
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
-      System.out.println("Zombie hit wall");
+//      System.out.println("Zombie hit wall");
       sound = hitObst;
       sound.play();
     }

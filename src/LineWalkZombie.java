@@ -21,6 +21,14 @@ public class LineWalkZombie extends Zombie
     animation.start();
   }
 
+  public LineWalkZombie(double speed, double smell, double decision_rate, Location location) {
+    this(location);
+    this.defined_speed = speed;
+    this.current_speed = speed;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
+  }
+
   @Override
   protected void chooseDirection(HumanoidObject player) {
 //    System.out.println("Choosing Line Walk Zombie direction...");

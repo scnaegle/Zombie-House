@@ -21,6 +21,8 @@ public class GamePanel extends JPanel implements KeyListener
   // How fast the timer should tick. Ranges from 35ish to 50ish.
   static final int FPS = 30;
   static final int SKIP_TICKS = 1000 / FPS;
+  final static int SHOWN_TILES = 24;
+  final static int DEFAULT_WIDTH = SHOWN_TILES * GUI.tile_size;
   final BufferedImage vignetteCanvas;
   private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
   private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
@@ -34,11 +36,10 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-  private Zombie randomZombie;
-  private Zombie lineZombie;
-  private Zombie masterZ;
-  private FireTrap fireTrap = new FireTrap(new Location(50, 50, 100, 100));
-  private FireTrap explodingTrap = new FireTrap(new Location(20, 10, 200, 100));
+
+//  private Zombie zombie;
+//  private FireTrap fireTrap;
+
   private SoundLoader sound;
 
   int shown_fps = 0;
@@ -73,16 +74,12 @@ public class GamePanel extends JPanel implements KeyListener
       zombie.loadNoises();
     }
 
+    for (FireTrap traps : map.traps)
+    {
+      traps.loadExplosion();
+    }
 
-//    frame_timer = new Timer(SKIP_TICKS, new ActionListener()
-//    {
-//      @Override
-//      public void actionPerformed(ActionEvent e)
-//      {
-//        doGameUpdates();
-//        repaint();
-//      }
-//    });
+
   }
 
   public void runGameLoop() {
@@ -139,13 +136,19 @@ public class GamePanel extends JPanel implements KeyListener
 
   public void doGameUpdates(double delta) {
     player.update(map);
+//    snapViewPortToPlayer();
 
     for(Zombie zombie : map.zombies)
     {
       zombie.update(map, player);
     }
 
-    parent.updateLabels();
+    for (FireTrap traps : map.traps)
+    {
+      traps.update(map.zombies);
+    }
+    parent.updatePlayerLabels();
+    parent.updateZombieLabels();
 
 //    explodingTrap.move();
   }
@@ -158,8 +161,12 @@ public class GamePanel extends JPanel implements KeyListener
   {
     JViewport parent_viewport = (JViewport) getParent();
     Rectangle viewport_rect = parent_viewport.getViewRect();
-    int new_x = (player.getCenterPoint().x - viewport_rect.width / 2);
-    int new_y = (player.getCenterPoint().y - viewport_rect.height / 2);
+    double scale = ((double) parent_viewport.getWidth()) / DEFAULT_WIDTH;
+
+    int new_x =
+        (int) (player.getCenterPoint().x * scale - viewport_rect.width / 2);
+    int new_y =
+        (int) (player.getCenterPoint().y * scale - viewport_rect.height / 2);
     parent_viewport.setViewPosition(new Point(new_x, new_y));
   }
 
@@ -170,24 +177,32 @@ public class GamePanel extends JPanel implements KeyListener
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
     vp = (JViewport) getParent();
+
+    double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
+    g2.scale(scale, scale);
+
+    // Math to make vignette move with viewport
     int width = vp.getWidth();
     int height = vp.getHeight();
-    int x = vp.getViewPosition().x - (vignetteCanvas.getWidth() - width) / 2;
-    int y = vp.getViewPosition().y - (vignetteCanvas.getHeight() - height) / 2;
+
 
 
     map.paint(g2, GUI.tile_size);
 
-//    g2.drawImage(fireTrap.trap, fireTrap.location.getX(),
-//        fireTrap.location.getY(), null);
-//    g2.drawImage(explodingTrap.fireAnimation.getSprite(),
-//        fireTrap.location.getX(), fireTrap.location.getY(), null);
-//    g2.drawImage(randomZombie.animation.getSprite(),
-//        randomZombie.location.getX(),
-//        randomZombie.location.getY(), null);
-//    g2.drawImage(lineZombie.animation.getSprite(), lineZombie.location.getX(),
-//        lineZombie.location.getY(), null);
 
+    for (FireTrap trap : map.traps)
+    {
+      if (!trap.exploding)
+      {
+        g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
+            null);
+      }
+      else
+      {
+        g2.drawImage(trap.fireAnimation.getSprite(),
+            trap.location.getX(), trap.location.getY(), null);
+      }
+    }
     for(Zombie zombie : map.zombies) {
       g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
     }
@@ -195,9 +210,11 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(player.animation.getSprite(), player.location.getX(),
         player.location.getY(), null);
 
-    // Math to make vignette move with viewport
+    int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
+    int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
+    ;
 
-    g2.drawImage(vignetteCanvas, x, y, null);
+    g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
   }
 

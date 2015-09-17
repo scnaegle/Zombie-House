@@ -1,17 +1,20 @@
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * Allows us to create firetraps and load images for the explosion
  */
 public class FireTrap extends GameObject
 {
+  public boolean exploding = false;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
-
   BufferedImage[] explosion = initExplosion();
   Animation explode = new Animation(explosion, 4);
   Animation fireAnimation = explode;
   private SoundLoader combust;
+  private GamePanel gamePanel;
+  private SoundLoader sound;
 
   public FireTrap(Location location)
   {
@@ -49,14 +52,27 @@ public class FireTrap extends GameObject
     return explode;
   }
 
-  public void move()
+
+  public void update(List<Zombie> zombies)
   {
-    fireAnimation.update();
-    fireAnimation.start();
+    for (Zombie zombie : zombies)
+    {
+      if (intersects(zombie))
+      {
+        System.out.println("Zombie touched trap");
+        exploding = true;
+        sound.play();
+        fireAnimation.update();
+        fireAnimation.start();
+      }
+      exploding = false;
+    }
+
   }
 
   public void loadExplosion()
   {
     combust = new SoundLoader("explosion.wav");
+    sound = combust;
   }
 }

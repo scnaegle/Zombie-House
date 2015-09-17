@@ -24,6 +24,14 @@ public class RandomWalkZombie extends Zombie
     animation.start();
   }
 
+  public RandomWalkZombie(double speed, double smell, double decision_rate, Location location) {
+    this(location);
+    this.defined_speed = speed;
+    this.current_speed = speed;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
+  }
+
   @Override
   protected void chooseDirection(HumanoidObject player) {
 //    System.out.println("Choosing new direction");

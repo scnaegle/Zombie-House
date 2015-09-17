@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class GameMap
 {
+  private static final boolean SHOW_COORDS = false;
 
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
@@ -31,7 +32,6 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
-  private static final double ZOMBIE_SPAWN_RATE = 0.01;
   private static int roomSize;
   private static int numberOfRandomHalls = 7;
   private static int numberOfRooms = 7;
@@ -45,14 +45,17 @@ public class GameMap
   private static boolean hallUp = false;
   private static boolean hallDown = false;
   private static Random random = new Random();
-  private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
 //  private static boolean[][] visitedGrid = new boolean[Y_SIZE][X_SIZE];
+  private static char[][] intGrid = new char[Y_SIZE][X_SIZE];
   private static Block[][] blockGrid= new Block[Y_SIZE][X_SIZE];
-  ArrayList<Zombie> zombies = new ArrayList<Zombie>();
+  ArrayList<Zombie> zombies = new ArrayList<>();
+  ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
-  private ArrayList<Tile> walls = new ArrayList<Tile>();
+
+  private ArrayList<Tile> walls = new ArrayList<>();
+
 
   public GameMap(File file)
   {
@@ -957,7 +960,7 @@ public class GameMap
 
   public double getZombieSpawnRate()
   {
-    return ZOMBIE_SPAWN_RATE;
+    return GUI.zspawn;
   }
 
   public ArrayList<Tile> getWalls()
@@ -983,6 +986,10 @@ public class GameMap
       {
         g.setColor(grid[row][col].tile_type.color);
         g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
+        if (SHOW_COORDS) {
+          g.setColor(Color.WHITE);
+          g.drawString(String.format("(%d, %d)", row, col).toString(), col * tile_size + (tile_size / 4), row * tile_size + (tile_size / 2));
+        }
       }
     }
   }
@@ -1049,15 +1056,28 @@ public class GameMap
               walls.add(new_tile);
             }
             if (new_tile.tile_type == TileType.BRICK) {
-              if (rand.nextDouble() < .01) {
+              if (rand.nextDouble() < GUI.zspawn)
+              {
                 Zombie zombie;
                 Location location = new Location(col * GUI.tile_size, row * GUI.tile_size);
-                if (rand.nextInt(2) == 0) {
-                  zombie = new RandomWalkZombie(location);
+                if (rand.nextBoolean())
+                {
+                  zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate, location);
                 } else {
-                  zombie = new LineWalkZombie(location);
+                  zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate, location);
                 }
                 zombies.add(zombie);
+              }
+
+              if (rand.nextDouble() < GUI.fspawn)
+              {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(location);
+                traps.add(fireTrap);
+
               }
             }
             col++;

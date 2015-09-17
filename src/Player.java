@@ -70,11 +70,14 @@ public class Player extends Humanoid implements HumanoidObject
     this.height = GUI.tile_size;
   }
 
-  public Player(int sight, int hearing, double speed, double stamina, int width, int height, Location location) {
+  public Player(int sight, int hearing, double speed, double stamina,
+                double regen, int width, int height, Location location)
+  {
     this(sight, hearing, speed, stamina);
     this.width = width;
     this.height = height;
     this.location = location;
+    this.regen = regen;
   }
 
   public int getSight()
@@ -85,6 +88,11 @@ public class Player extends Humanoid implements HumanoidObject
   public int getHearing()
   {
     return hearing;
+  }
+
+  public int getFire_traps()
+  {
+    return fire_traps;
   }
   public BufferedImage[] initPlayerSpriteWalk()
   {
@@ -161,10 +169,15 @@ public class Player extends Humanoid implements HumanoidObject
     }
     else
     {
-      Location next_location = getNextLocation();
-      if (!heading.equals(Heading.NONE) && !hitWall(map, next_location))
+//      Location next_location = getNextLocation();
+      if (!heading.equals(Heading.NONE))
       {
-        move(next_location);
+        if (!hitWallInXDirection(map)) {
+          moveX();
+        }
+        if (!hitWallInYDirection(map)) {
+          moveY();
+        }
       }
       if (heading.equals(Heading.NONE))
       {
@@ -248,4 +261,8 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
+  public double getRegenRate()
+  {
+    return regen;
+  }
 }
