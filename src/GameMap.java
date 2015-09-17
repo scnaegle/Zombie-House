@@ -79,6 +79,7 @@ public class GameMap
 
   public static void main(String[] args)
   {
+    GameMapWithBlocks gameMap = new GameMapWithBlocks();
     File map_file = null;
     try
     {
