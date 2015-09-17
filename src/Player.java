@@ -13,6 +13,7 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
+  public boolean is_putting_down = false;
   protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
@@ -165,6 +166,16 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps++;
         frame = 0;
         is_picking_up = false;
+      }
+    }
+    else if (is_putting_down)
+    {
+      frame++;
+      if (frame >= PICKUP_FRAMES)
+      {
+        fire_traps--;
+        frame = 0;
+        is_putting_down = false;
       }
     }
     else

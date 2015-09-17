@@ -155,7 +155,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     for (FireTrap trap : map.traps)
     {
-      if (!trap.exploding && !player.is_picking_up)
+      if (!player.is_picking_up || player.is_putting_down)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);
@@ -253,6 +253,13 @@ public class GamePanel extends JPanel implements KeyListener
         if (player.intersects(trap))
         {
           player.is_picking_up = true;
+        }
+
+        if (player.getFire_traps() > 0 && map.getTile
+            (player.location.getRow(GUI.tile_size), player.location.getCol
+                (GUI.tile_size)).equals(TileType.BRICK))
+        {
+          player.is_putting_down = true;
         }
 
       }
