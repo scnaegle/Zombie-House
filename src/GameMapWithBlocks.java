@@ -48,8 +48,6 @@ public class GameMapWithBlocks
   private static final int RIGHT = 3;
 
 
-
-
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
   private static int numberOfRooms = 10;
@@ -107,7 +105,8 @@ public class GameMapWithBlocks
     }
 
     chizelWalls(); // makes protruding halls shaven off so map has even halls
- //   breakTouchingWalls(); // if two rooms are touching it will break the walls
+    //   breakTouchingWalls(); // if two rooms are touching it will break the
+    // walls
     /**
      * Need adjustment to make larger obsitcles and such
      */
@@ -136,15 +135,17 @@ public class GameMapWithBlocks
     //makeInteriorWalls();
 
     //makes the tile map
+    System.out.println("help");
     Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
       {
+        System.out.println(x);
         tileGrid[y][x] = getBlock(x, y).toTile();
       }
     }
-
+    System.out.println("help1");
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
@@ -255,7 +256,8 @@ public class GameMapWithBlocks
   /**
    * if it is able to place place the end peices horozantily
    * it will make a 2x2 end room
-   * I wanted to do this another way, but honestly coding it in this way was the easiest
+   * I wanted to do this another way, but honestly coding it in this way was
+   * the easiest
    * thing i could think of
    *
    * @param x
@@ -1130,7 +1132,7 @@ public class GameMapWithBlocks
         {
           hallTouched = true;
         }
-        if (placeRoom(x,y))
+        if (placeRoom(x, y))
         {
           hallTouched = false;
           resetRoomDimentions();
