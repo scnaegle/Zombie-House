@@ -8,6 +8,17 @@ public class GUI
 
 
   final static int tile_size = 80;
+  //Making attributes static so every class can use them
+  public static double speed;
+  public static int hearing;
+  public static int sight;
+  public static double stamina;
+  public static double regen;
+  public static double zspeed;
+  public static double zSmell;
+  public static double drate;
+  public static double zspawn;
+  public static double fspawn;
   static int SCENE_WIDTH = 1920;
   static int SCENE_HEIGHT = 1080;
   static JPanel viewPanel; //Will probably need to make another class,
@@ -20,11 +31,8 @@ public class GUI
   JLabel playerHearing;
   JLabel playerSpeed;
   JLabel playerStamina;
-  JLabel zombieSpawn;
   JLabel zombieSpeed;
   JLabel zombieSmell;
-  JLabel zombieRate;
-  JLabel fireSpawn;
   JButton startPause;
   boolean pause = true;
   Player player;
@@ -139,35 +147,29 @@ public class GUI
         String nine = zSpawn.getText();
         String ten = fireSpawn.getText();
 
-        double speed = Double.parseDouble(one);
-        int hearing = Integer.parseInt(two);
-        int sight = Integer.parseInt(three);
-        double stamina = Double.parseDouble(four);
-        double regen = Double.parseDouble(five);
-        double zspeed = Double.parseDouble(six);
-        double smell = Double.parseDouble(seven);
-        double drate = Double.parseDouble(eight);
-        double zspawn = Double.parseDouble(nine);
-        double fspawn = Double.parseDouble(ten);
+        speed = Double.parseDouble(one);
+        hearing = Integer.parseInt(two);
+        sight = Integer.parseInt(three);
+        stamina = Double.parseDouble(four);
+        regen = Double.parseDouble(five);
+        zspeed = Double.parseDouble(six);
+        GUI.zSmell = Double.parseDouble(seven);
+        drate = Double.parseDouble(eight);
+        zspawn = Double.parseDouble(nine);
+        fspawn = Double.parseDouble(ten);
 
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
             new Location(800, 1120));
-        initZombies(zspeed, smell, drate, zspawn);
+
 
         setUpGUI();
         loadSounds();
-
+        popup.dispose();
       }
     });
+
   }
 
-  private void initZombies(double zspeed, double smell, double drate,
-                           double zspawn)
-  {
-    zombie = new Zombie(zspeed, smell, drate);
-    zombie.setSpawn_rate(zspawn);
-    //zombie.setHeading(new Heading(Heading.NONE));
-  }
 
   public void setUpGUI()
   {
@@ -339,9 +341,9 @@ public class GUI
   }
   public void updateZombieLabels()
   {
-    zombieSpeed.setText("Z-Speed: " + zombie.getSpeed());
+    zombieSpeed.setText("Z-Speed: " + zspeed);
 
-    zombieSmell.setText("Z-Smell: " + zombie.getSmell());
+    zombieSmell.setText("Z-Smell: " + zSmell);
     traps.setText("Fire traps: " + player.getFire_traps());
 
   }

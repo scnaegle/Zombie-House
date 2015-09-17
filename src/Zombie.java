@@ -1,17 +1,18 @@
 /**
- * Sets up everything that a zombie has, such as smell, speed, decision rate and
+ * Sets up everything that a zombie has, such as zSmell, speed, decision rate
+ * and
  * how the sprite will move. Each zombie is an object so it extends GameObject
  * which implements Object2D. Each zombie also needs to track the human, so it
  * implements HumanoidObject which lets it get the human's current location.
  */
 public class Zombie extends Humanoid implements HumanoidObject
 {
+  public static double decision_rate;
+  public static double smell;
   static double spawn_rate;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   protected int frame = 0;
-  protected double decision_rate;
-  protected double smell;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
   Animation moveLeft;
