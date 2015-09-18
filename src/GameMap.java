@@ -62,7 +62,7 @@ public class GameMap
 
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
-  Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
+  private static Tile[][] tileGrid = new Tile[Y_SIZE][X_SIZE];
 
   private static final boolean SHOW_COORDS = false;
 
@@ -73,7 +73,6 @@ public class GameMap
   private Tile[][] grid;
 
   private ArrayList<Tile> walls = new ArrayList<>();
-
 
 
   /**
@@ -1262,13 +1261,22 @@ public class GameMap
     generateMap();
     int r = 0;
     Random rand = new Random();
+
+    for (Tile[] row : tileGrid)
+    {
+      for (Tile col : row)
+      {
+        System.out.println(col.tile_type);
+      }
+    }
     for (Tile[] row : tileGrid)
     {
 
       int c = 0;
       for (Tile col : row)
       {
- //       grid[r][c] = col;
+
+        //       grid[r][c] = col;
         if (col.tile_type == TileType.WALL)
         {
           walls.add(col);
@@ -1362,7 +1370,8 @@ public class GameMap
         //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
         g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
             row * GUI.tile_size, null);
-        if (SHOW_COORDS) {
+        if (SHOW_COORDS)
+        {
           g.setColor(Color.WHITE);
           g.drawString(String.format("(%d, %d)", row, col).toString(),
               col * tile_size + (tile_size / 4),
@@ -1384,8 +1393,6 @@ public class GameMap
         new Location(0, 0, num_rows, num_cols),
         tile_size);
   }
-
-
 
 
   public static void main(String[] args)
