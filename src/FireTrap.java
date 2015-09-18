@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * Allows us to create firetraps and load images for the explosion
@@ -64,7 +63,7 @@ public class FireTrap extends GameObject
     {
       if (getDistance(zombie) < GUI.tile_size) {
         if (getCenteredBoundingRectangle().intersects(zombie.getCenteredBoundingRectangle())) {
-          System.out.println("Zombie touched trap");
+          // System.out.println("Zombie touched trap");
           exploding = true;
           sound.play();
           fireAnimation.update();

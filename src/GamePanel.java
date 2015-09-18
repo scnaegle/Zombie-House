@@ -49,7 +49,7 @@ public class GamePanel extends JPanel implements KeyListener
     this.parent = parent;
     player = parent.player;
 
-    setBackground(Color.white);
+    setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
 
 
@@ -93,6 +93,15 @@ public class GamePanel extends JPanel implements KeyListener
           for(Zombie zombie : map.zombies)
           {
             zombie.update(map, player);
+
+            if (zombie.bitPlayer == true)
+            {
+              System.out.println("zombie bit player");
+              zombie.stopSound();
+              GUI.running = false;
+              parent.pauseGame();
+              GUI.showDeathDialog();
+            }
           }
 
           for (FireTrap trap : map.traps)
