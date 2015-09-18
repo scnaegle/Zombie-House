@@ -64,13 +64,13 @@ public class GUI
     {
       g.whichLevel = 1;
       g.window.dispose();
-      // g.getSettings();
+      g.getSettings();
     }
   }
 
-  public void getSettings(GameMap map)
+  public void getSettings()
   {
-    this.map = map;
+    //this.map = map;
     JFrame popup = new JFrame("Settings");
     popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     popup.setLayout(new BorderLayout());
@@ -185,6 +185,7 @@ public class GUI
         zspawn = Double.parseDouble(nine);
         fspawn = Double.parseDouble(ten);
 
+        map = new GameMap();
         System.out.println("making player");
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
             map.start_location);

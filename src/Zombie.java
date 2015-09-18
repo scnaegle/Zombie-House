@@ -98,7 +98,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     {
       //System.out.println(Math.round(getDistance((Object2D) player)));
       sound = zWalk;
-      playSound();
+      sound.playLooped();
     }
 //    else
 //    {
@@ -131,16 +131,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     hitObst = new SoundLoader("zHitObst.wav");
     sound = zWalk;
 
-  }
-
-  public void playSound()
-  {
-    sound.playLooped();
-  }
-
-  public void stopSound()
-  {
-    sound.stop();
   }
 
   public boolean bitesPlayer(HumanoidObject player)

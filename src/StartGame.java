@@ -3,10 +3,10 @@ public class StartGame
 {
   public static void main(String[] args)
   {
-    GameMap map = new GameMap();
+    //GameMap map = new GameMap();
 
     GUI g = new GUI();
-    g.getSettings(map);
+    g.getSettings();
 
     // g.initPlayer();
     //g.setUpGUI();

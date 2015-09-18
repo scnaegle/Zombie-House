@@ -91,20 +91,26 @@ public class GameMap
         {
           if (rand.nextDouble() < GUI.zspawn)
           {
+            System.out.println("tile is a brick");
             Zombie zombie;
             Location location =
-                new Location(c * GUI.tile_size, r * GUI.tile_size);
+                new Location(new_tile.col * GUI.tile_size,
+                    new_tile.row * GUI.tile_size);
             if (rand.nextBoolean())
             {
+              System.out.println("made random zombie");
               zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                   location);
             }
             else
             {
+              System.out.println("made line zombie");
+
               zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                   location);
             }
             zombies.add(zombie);
+            System.out.println(zombies);
           }
 
           if (rand.nextDouble() < GUI.fspawn)
@@ -1439,16 +1445,20 @@ public class GameMap
                     new Location(col * GUI.tile_size, row * GUI.tile_size);
                 if (rand.nextBoolean())
                 {
+                  System.out.println("made random zombie");
                   zombie =
                       new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                           location);
                 }
                 else
                 {
+                  System.out.println("made line zombie");
+
                   zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                       location);
                 }
                 zombies.add(zombie);
+                System.out.println(zombies);
               }
 
               if (rand.nextDouble() < GUI.fspawn)

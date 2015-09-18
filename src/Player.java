@@ -213,12 +213,12 @@ public class Player extends Humanoid implements HumanoidObject
       {
         stopSound();
       }
-      if (!isWalking && isRunning)
+      else if (isRunning)
       {
         sound = runSound;
         playSound();
       }
-      else if (!isRunning && isWalking)
+      else if (isWalking)
       {
         sound = walkSound;
         playSound();
