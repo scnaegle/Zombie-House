@@ -143,7 +143,6 @@ public class GameMap
   }
 
 
-
   /**
    * generates the map through many many methods
    */
@@ -1359,7 +1358,8 @@ public class GameMap
         //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
         g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
             row * GUI.tile_size, null);
-        if (SHOW_COORDS) {
+        if (SHOW_COORDS)
+        {
           g.setColor(Color.WHITE);
           g.drawString(String.format("(%d, %d)", row, col).toString(),
               col * tile_size + (tile_size / 4),
@@ -1381,8 +1381,6 @@ public class GameMap
         new Location(0, 0, num_rows, num_cols),
         tile_size);
   }
-
-
 
 
 //    GameMapWithBlocks gameMap = new GameMapWithBlocks();

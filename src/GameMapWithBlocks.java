@@ -145,7 +145,7 @@ public class GameMapWithBlocks
     {
       for (int x = 0; x < X_SIZE; x++)
       {
-        System.out.println(x);
+   //     System.out.println(x);
         tileGrid[y][x] = getBlock(x, y).toTile();
       }
     }
