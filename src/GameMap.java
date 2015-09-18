@@ -92,7 +92,7 @@ public class GameMap
         Tile new_tile = new Tile(block.y, block.x, block.type);
         grid[r][c] = new_tile;
         if (new_tile.tile_type == TileType.START) {
-          start_location = new Location(new_tile.location.col * GUI.tile_size, new_tile.location.row * GUI.tile_size);
+          start_location = new Location(new_tile.col * GUI.tile_size, new_tile.row * GUI.tile_size);
         }
         if (new_tile.tile_type == TileType.WALL)
         {
