@@ -198,7 +198,7 @@ public class GameMap
     turnCornersToWalls(); // turns corners to walls
     makeEndRoom(); // makes an end room
     turnDoorToFloor(); // makes door to floor
-    //makeInteriorWalls();
+    makeInteriorWalls();
 
     System.out.println("help1");
     for (int y = 0; y < Y_SIZE; y++)
@@ -456,7 +456,7 @@ public class GameMap
       {
         if (isWall(x, y))
         {
-          System.out.println(getBlock(x, y).corner);
+         // System.out.println(getBlock(x, y).corner);
           if (surroundingSpotEmpty(x, y))
           {
 
@@ -465,10 +465,6 @@ public class GameMap
           {
             setBlockType(x, y, INSIDE_WALL);
           }
-        }
-        if (isInsideWall(x, y) && cornerOfRoom(x, y))
-        {
-          setBlockType(x, y, ROOM_WALL);
         }
       }
     }
