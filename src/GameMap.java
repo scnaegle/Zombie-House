@@ -73,7 +73,7 @@ public class GameMap
 
   private ArrayList<Tile> walls = new ArrayList<>();
 
-  private Location start_location;
+  Location start_location;
 
 
   public GameMap()
