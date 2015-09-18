@@ -13,14 +13,15 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
+  public boolean is_putting_down = false;
   protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
+  boolean is_picking_up = false;
   private int sight = 5;
   private int hearing = 10;
   private int fire_traps = 0;
-  private boolean is_picking_up = false;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
@@ -167,6 +168,16 @@ public class Player extends Humanoid implements HumanoidObject
         is_picking_up = false;
       }
     }
+    else if (is_putting_down)
+    {
+      frame++;
+      if (frame >= PICKUP_FRAMES)
+      {
+        fire_traps--;
+        frame = 0;
+        is_putting_down = false;
+      }
+    }
     else
     {
 //      Location next_location = getNextLocation();
@@ -194,7 +205,7 @@ public class Player extends Humanoid implements HumanoidObject
       {
         regenerate();
         animation = walk;
-        current_speed = 1.0;
+        current_speed = defined_speed;
       }
 
       // Decides which sound to play based on state of player

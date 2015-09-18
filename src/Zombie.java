@@ -11,6 +11,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   public static double smell;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
+  public boolean bitPlayer = false;
   protected int frame = 0;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
@@ -88,6 +89,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     {
       setBite();
       sound.play();
+      bitPlayer = true;
     }
 
     //Sees if zombie is in player hearing's range

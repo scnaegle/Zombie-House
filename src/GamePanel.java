@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
+
   public GameMap map;
   Timer frame_timer;
   int xScale;
@@ -48,7 +49,7 @@ public class GamePanel extends JPanel implements KeyListener
     this.parent = parent;
     player = parent.player;
 
-    setBackground(Color.white);
+    setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
 
 
@@ -67,6 +68,7 @@ public class GamePanel extends JPanel implements KeyListener
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
+    System.out.println("reached this point");
 
     for(Zombie zombie : map.zombies) {
       zombie.loadNoises();
@@ -91,11 +93,20 @@ public class GamePanel extends JPanel implements KeyListener
           for(Zombie zombie : map.zombies)
           {
             zombie.update(map, player);
+
+            if (zombie.bitPlayer == true)
+            {
+              System.out.println("zombie bit player");
+              zombie.stopSound();
+              GUI.running = false;
+              parent.pauseGame();
+              GUI.showDeathDialog();
+            }
           }
 
-          for (FireTrap traps : map.traps)
+          for (FireTrap trap : map.traps)
           {
-            traps.update(map.zombies);
+            trap.update(map, player);
           }
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
@@ -153,12 +164,13 @@ public class GamePanel extends JPanel implements KeyListener
 
     for (FireTrap trap : map.traps)
     {
-      if (!trap.exploding)
+      if (!player.is_picking_up || player.is_putting_down)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);
       }
-      else
+
+      if (trap.exploding)
       {
         g2.drawImage(trap.fireAnimation.getSprite(),
             trap.location.getX(), trap.location.getY(), null);
@@ -242,6 +254,24 @@ public class GamePanel extends JPanel implements KeyListener
       player.heading.setXMovement(Heading.WEST_STEP);
       player.isRunning = false;
       player.isWalking = true;
+    }
+    if (code == KeyEvent.VK_P)
+    {
+      for (FireTrap trap : map.traps)
+      {
+        if (player.intersects(trap))
+        {
+          player.is_picking_up = true;
+        }
+
+        if (player.getFire_traps() > 0 && map.getTile
+            (player.location.getRow(GUI.tile_size), player.location.getCol
+                (GUI.tile_size)).equals(TileType.BRICK))
+        {
+          player.is_putting_down = true;
+        }
+
+      }
     }
 
 
