@@ -31,6 +31,7 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
 
   public GameMap map;
+  public GameMap procedureGenMap;
   Timer frame_timer;
   int xScale;
   JViewport vp;
@@ -64,7 +65,9 @@ public class GamePanel extends JPanel implements KeyListener
       e.printStackTrace();
     }
 
-    map = new GameMap(map_file);
+    //map = new GameMap(map_file);
+    map = new GameMap();
+    //map = new GameMap(procedureGenerateMap);
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 

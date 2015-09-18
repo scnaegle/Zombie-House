@@ -72,10 +72,14 @@ public class GameMapWithBlocks
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
   Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
 
+    public GameMapWithBlocks()
+    {
+
+    }
   /**
    * generates the map through many many methods
    */
-  private static void generateMap()
+  public static void generateMap()
   {
     for (int x = 0; x < X_SIZE; x++)
     {
