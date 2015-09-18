@@ -1268,7 +1268,7 @@ public class GameMap
       int c = 0;
       for (Tile col : row)
       {
-        grid[r][c] = col;
+ //       grid[r][c] = col;
         if (col.tile_type == TileType.WALL)
         {
           walls.add(col);
