@@ -1259,9 +1259,10 @@ public class GameMap
 
   public GameMap()
   {
+    generateMap();
     int r = 0;
     Random rand = new Random();
-    for (Tile[] row : mapWithBlocks.tileGrid)
+    for (Tile[] row : tileGrid)
     {
 
       int c = 0;
