@@ -83,7 +83,7 @@ public class GameMap
         if (new_tile.tile_type == TileType.START) {
           start_location = new Location(new_tile.col * GUI.tile_size, new_tile.row * GUI.tile_size);
         }
-        if (new_tile.tile_type == TileType.WALL)
+        if (new_tile.tile_type == TileType.WALL ||  new_tile.tile_type == TileType.INSIDEWALL)
         {
           walls.add(new_tile);
         }
