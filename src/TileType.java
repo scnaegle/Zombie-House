@@ -40,8 +40,10 @@ public enum TileType {
 
 
 		}
-		
-		public static TileType fromGridChar(char value) throws IllegalArgumentException {
+
+	public static TileType fromGridChar(char value)
+			throws IllegalArgumentException
+	{
 			try{
 				for (TileType type : TileType.values()) {
 					//System.out.println("getting tile value");

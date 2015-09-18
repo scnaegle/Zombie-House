@@ -97,6 +97,10 @@ public class GamePanel extends JPanel implements KeyListener
           {
             zombie.update(map, player);
 
+            if (parent.pause = true)
+            {
+              zombie.stopSound();
+            }
             if (zombie.bitPlayer == true)
             {
               System.out.println("zombie bit player");
@@ -105,6 +109,8 @@ public class GamePanel extends JPanel implements KeyListener
               parent.pauseGame();
               GUI.showDeathDialog();
             }
+
+
           }
 
           for (FireTrap trap : map.traps)
@@ -118,6 +124,7 @@ public class GamePanel extends JPanel implements KeyListener
           repaint();
 
         }
+
 
       }
     });
