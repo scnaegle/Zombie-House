@@ -94,18 +94,14 @@ public class GamePanel extends JPanel implements KeyListener
           {
             zombie.update(map, player);
 
-            if (parent.pause)
-            {
-              sound.stop();
-            }
 
             if (zombie.bitPlayer)
             {
               System.out.println("zombie bit player");
-              sound.stop();
+              zombie.sound.stop();
               GUI.running = false;
               parent.pauseGame();
-              GUI.showDeathDialog();
+              GUI.showDeathDialog(parent);
             }
 
 
@@ -318,6 +314,19 @@ public class GamePanel extends JPanel implements KeyListener
   public void stopMusic()
   {
     loadAmbience.stop();
+  }
+
+  public void stopAllSounds()
+  {
+    for (Zombie zombie : map.zombies)
+    {
+      zombie.sound.stop();
+    }
+    for (FireTrap trap : map.traps)
+    {
+      trap.sound.stop();
+    }
+    player.stopSound();
   }
 
   public void loadMusic()

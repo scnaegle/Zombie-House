@@ -43,14 +43,14 @@ public class GUI
   private Zombie zombie;
   private JLabel playerRegen;
 
-  public static void showDeathDialog()
+  public static void showDeathDialog(GUI parent)
   {
-    GUI g = new GUI();
+
 
     Object[] options = {"Restart", "Exit"};
 
     int option = JOptionPane
-        .showOptionDialog(g.window, "Aw, you died! Try again?",
+        .showOptionDialog(parent.window, "Aw, you died! Try again?",
             "YOU WERE BITEN",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
@@ -62,9 +62,9 @@ public class GUI
     }
     else if (option == 0)
     {
-      g.whichLevel = 1;
-      g.window.dispose();
-      g.getSettings();
+      parent.whichLevel = 1;
+      parent.window.dispose();
+      parent.getSettings();
     }
   }
 
@@ -353,6 +353,7 @@ public class GUI
     running = false;
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
+    gamePanel.stopAllSounds();
 
 
   }

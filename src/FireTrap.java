@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 public class FireTrap extends GameObject
 {
   public boolean exploding = false;
+  public SoundLoader sound;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
@@ -13,7 +14,6 @@ public class FireTrap extends GameObject
   Animation fireAnimation = explode;
   private SoundLoader combust;
   private GamePanel gamePanel;
-  private SoundLoader sound;
 
   public FireTrap(Location location)
   {

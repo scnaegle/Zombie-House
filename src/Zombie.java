@@ -12,6 +12,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   public boolean bitPlayer = false;
+  public SoundLoader sound;
   protected int frame = 0;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
@@ -22,7 +23,6 @@ public class Zombie extends Humanoid implements HumanoidObject
   private SoundLoader zWalk;
   private SoundLoader bite;
   private SoundLoader hitObst;
-  private SoundLoader sound;
 
 
   public Zombie(Location location) {
