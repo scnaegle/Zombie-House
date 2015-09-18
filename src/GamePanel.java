@@ -6,8 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,29 +47,28 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
+    map = parent.map;
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
 
 
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(getClass().getResource("resources/level1.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
+//    File map_file = null;
+//    try
+//    {
+//      map_file =
+//          new File(getClass().getResource("resources/level1.map").toURI());
+//    }
+//    catch (URISyntaxException e)
+//    {
+//      e.printStackTrace();
+//    }
 
-    //map = new GameMap(map_file);
-    map = new GameMap();
-    //map = new GameMap(procedureGenerateMap);
+
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
-    System.out.println("reached this point");
+    //System.out.println("reached this point");
 
     for(Zombie zombie : map.zombies) {
       zombie.loadNoises();
@@ -97,11 +94,8 @@ public class GamePanel extends JPanel implements KeyListener
           {
             zombie.update(map, player);
 
-            if (parent.pause = true)
-            {
-              zombie.stopSound();
-            }
-            if (zombie.bitPlayer == true)
+
+            if (zombie.bitPlayer)
             {
               System.out.println("zombie bit player");
               zombie.stopSound();

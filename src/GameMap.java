@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,6 +11,8 @@ public class GameMap
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
 
+  public static final int X_SIZE = 75; // used to set size of grid
+  public static final int Y_SIZE = 75; // used to set size of grid
   /**
    * These are the "types" that we have to put into the Tile class
    * <p>
@@ -27,9 +28,6 @@ public class GameMap
   private static final char EMPTY = '.';
   private static final char OBSTICLE = 'O';
   private static final char INSIDE_WALL = 'I';
-
-  public static final int X_SIZE = 75; // used to set size of grid
-  public static final int Y_SIZE = 75; // used to set size of grid
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
@@ -38,20 +36,17 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
-
-
+  private static final boolean SHOW_COORDS = false;
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
   private static int numberOfRooms = 10;
-  private static int numberOfObsicles = 3;
 
   // we are going to need to find a way to change this number when
   // starting a new level and such
-
+  private static int numberOfObsicles = 3;
   private static int roomSize;
   private static int buildRoomX;
   private static int buildRoomY;
-
   /**
    * used to determine if a hall can be made
    */
@@ -59,21 +54,15 @@ public class GameMap
   private static boolean hallLeft = false;
   private static boolean hallUp = false;
   private static boolean hallDown = false;
-
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
-
-  private static final boolean SHOW_COORDS = false;
-
+  public Location start_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
-
   private ArrayList<Tile> walls = new ArrayList<>();
-
-  Location start_location;
 
 
   public GameMap()
@@ -1456,8 +1445,7 @@ public class GameMap
                 }
                 else
                 {
-                  zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI
- .drate,
+                  zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                       location);
                 }
                 zombies.add(zombie);
@@ -1515,8 +1503,8 @@ public class GameMap
     return ret;
   }
 
-  public static void main(String[] args)
-  {
-    generateMap();
-  }
+//  public static void main(String[] args)
+//  {
+//   // generateMap();
+//  }
 }

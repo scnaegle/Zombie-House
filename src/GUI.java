@@ -25,6 +25,7 @@ public class GUI
   static boolean running = false;
   static JScrollPane scrollPane;
   public int whichLevel = 1;
+  public GameMap map;
   JFrame window = new JFrame("Zombie House");
   GamePanel gamePanel;
   JLabel level;
@@ -63,12 +64,13 @@ public class GUI
     {
       g.whichLevel = 1;
       g.window.dispose();
-      g.getSettings();
+      // g.getSettings();
     }
   }
 
-  public void getSettings()
+  public void getSettings(GameMap map)
   {
+    this.map = map;
     JFrame popup = new JFrame("Settings");
     popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     popup.setLayout(new BorderLayout());
@@ -185,7 +187,7 @@ public class GUI
 
         System.out.println("making player");
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
-            new Location(800, 1120));
+            map.start_location);
 
 
         setUpGUI();
@@ -390,6 +392,14 @@ public class GUI
     gamePanel.loadMusic();
     player.loadSounds();
     //fireTrap.loadExplosion();
+  }
+
+  public void createMap()
+  {
+    this.map = new GameMap();
+    //map = new GameMap(procedureGenerateMap);
+
+
   }
 
 }
