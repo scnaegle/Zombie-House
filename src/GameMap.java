@@ -1198,7 +1198,7 @@ public class GameMap
           resetRoomDimentions();
           if (type == START_ROOM || type == END_ROOM)
           {
-            roomSize = 4;
+            roomSize = 3;
           }
           x = buildRoomX;
           y = buildRoomY;
@@ -1210,7 +1210,7 @@ public class GameMap
       resetRoomDimentions();
       if (type == START_ROOM || type == END_ROOM)
       {
-        roomSize = 4;
+        roomSize = 3;
       }
       alreadyBuilt(type);
     }
