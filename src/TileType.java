@@ -23,7 +23,8 @@ public enum TileType {
 	START(5, 'S', 1, "floor"),
 	EXIT(6, 'E', 9999, "floor"),
 	WALL(7, 'B', 9999, "wall"),
-	OBSTICLE(8, 'O', 9999, "wall"),
+	INSIDEWALL(8,'I',9999,"wall"),
+	OBSTICLE(9, 'O', 9999, "wall"),
 	//DOOR(9,'`',1,new Color(100,100,100)
 	;
 		int value;
