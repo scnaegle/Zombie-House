@@ -13,6 +13,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   public boolean inRange = false;
   public boolean bitPlayer = false;
   public SoundLoader sound;
+  public boolean zombieDied = false;
   protected int frame = 0;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
@@ -23,6 +24,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   private SoundLoader zWalk;
   private SoundLoader bite;
   private SoundLoader hitObst;
+  private FireTrap trap;
 
 
   public Zombie(Location location) {
@@ -116,7 +118,6 @@ public class Zombie extends Humanoid implements HumanoidObject
       sound = hitObst;
       sound.play();
     }
-
 
     determineAnimation();
     animation.start();

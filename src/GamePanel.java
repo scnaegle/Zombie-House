@@ -100,8 +100,7 @@ public class GamePanel extends JPanel implements KeyListener
               System.out.println("zombie bit player");
               parent.running = false;
               parent.pauseGame();
-//              stopAllSounds();
-//              stopMusic();
+              stopAllSounds();
               GUI.showDeathDialog(parent);
             }
 
@@ -182,7 +181,11 @@ public class GamePanel extends JPanel implements KeyListener
       }
     }
     for(Zombie zombie : map.zombies) {
-      g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
+      if (!zombie.zombieDied)
+      {
+        g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(),
+            zombie.location.getY(), null);
+      }
     }
 
     g2.drawImage(player.animation.getSprite(), player.location.getX(),
