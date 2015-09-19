@@ -24,7 +24,9 @@ public class GUI
   static JPanel viewPanel; //Will probably need to make another class,
   static boolean running = false;
   static JScrollPane scrollPane;
-  JFrame window;
+  public int whichLevel = 1;
+  public GameMap map;
+  JFrame window = new JFrame("Zombie House");
   GamePanel gamePanel;
   JLabel level;
   JLabel playerSight;
@@ -39,12 +41,36 @@ public class GUI
   Player player;
   FireTrap fireTrap;
   private JLabel traps;
-  private int whichlevel = 1;
   private Zombie zombie;
   private JLabel playerRegen;
 
+  public static void showDeathDialog(GUI parent)
+  {
+
+    Object[] options = {"Restart", "Exit"};
+
+    int option = JOptionPane
+        .showOptionDialog(parent.window, "Aw, you died! Try again?",
+            "YOU WERE BITEN",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
+            options, options[0]);
+
+    if (option == 0)
+    {
+      parent.whichLevel = 1;
+      parent.window.dispose();
+      parent.getSettings();
+    }
+    else if (option == 1)
+    {
+      System.out.println("exiting");
+      System.exit(0);
+    }
+  }
+
   public void getSettings()
   {
+    //this.map = map;
     JFrame popup = new JFrame("Settings");
     popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     popup.setLayout(new BorderLayout());
@@ -159,11 +185,14 @@ public class GUI
         zspawn = Double.parseDouble(nine);
         fspawn = Double.parseDouble(ten);
 
+        map = new GameMap();
+        System.out.println("making player");
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
-            new Location(800, 1120));
+            map.start_location);
 
 
         setUpGUI();
+
         loadSounds();
         popup.dispose();
       }
@@ -171,15 +200,13 @@ public class GUI
 
   }
 
-
   public void setUpGUI()
   {
-    window = new JFrame("Zombie House");
+
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setLayout(new BorderLayout());
     //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
-
 
     window.addComponentListener(new ComponentListener()
     {
@@ -219,11 +246,13 @@ public class GUI
 
 
 
+
     scrollPane = new JScrollPane(gamePanel);
     scrollPane.setVerticalScrollBarPolicy(
         ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
     scrollPane.setHorizontalScrollBarPolicy(
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
 
     /**
      * Keeps scrollpane from scrolling when arrow keys are pressed.
@@ -263,15 +292,18 @@ public class GUI
 
     startPause = new JButton("Start");
     startPause.setPreferredSize(new Dimension(80, 23));
-    startPause.addActionListener(new ActionListener() {
+    startPause.addActionListener(new ActionListener()
+    {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        if (pause) {
-          startPause.setText("Pause");
+      public void actionPerformed(ActionEvent e)
+      {
+        if (pause)
+        {
           startGame();
           gamePanel.requestFocusInWindow();
-        } else {
-          startPause.setText("Start");
+        }
+        else
+        {
           pauseGame();
         }
 
@@ -306,6 +338,7 @@ public class GUI
 
   private void startGame()
   {
+    startPause.setText("Pause");
     pause = false;
     running = true;
 //    gamePanel.frame_timer.start();
@@ -314,20 +347,21 @@ public class GUI
 
   }
 
-  private void pauseGame()
+  public void pauseGame()
   {
+    startPause.setText("Start");
     pause = true;
     running = false;
 //    gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
+    gamePanel.stopAllSounds();
 
 
   }
 
-
   public void updatePlayerLabels()
   {
-    level.setText("Level: " + whichlevel);
+    level.setText("Level: " + whichLevel);
     playerSight.setText("Sight: " + player.getSight());
     playerHearing.setText("Hearing: " + player.getHearing());
     playerSpeed.setText("Speed: " + player.getSpeed());
@@ -337,6 +371,7 @@ public class GUI
 
 
   }
+
   public void updateZombieLabels()
   {
     zombieSpeed.setText("Z-Speed: " + zspeed);
@@ -345,7 +380,6 @@ public class GUI
     traps.setText("Fire traps: " + player.getFire_traps());
 
   }
-
 
   public void initPlayer(int sight, int hearing, double speed, double stamina,
                          double regen, int width, int height, Location location)
@@ -357,7 +391,6 @@ public class GUI
 
   }
 
-
   public void loadSounds()
   {
     gamePanel.loadMusic();
@@ -365,8 +398,12 @@ public class GUI
     //fireTrap.loadExplosion();
   }
 
-  public void initFireTraps()
+  public void createMap()
   {
-    //need to create array of firetraps for later, based off of map
+    this.map = new GameMap();
+    //map = new GameMap(procedureGenerateMap);
+
+
   }
+
 }

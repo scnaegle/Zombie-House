@@ -3,10 +3,7 @@
  */
 
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * @author Sean Naegle
@@ -20,8 +17,8 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	
 	protected int row;
 	protected int col;
-
-	boolean zombieSpawn = false;
+  protected TileType tile_type;
+  boolean zombieSpawn = false;
 	boolean partOfRoom = false;
 	boolean partOfStartRoom=false;
 	boolean partOfEndRoom=false;
@@ -31,47 +28,49 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	boolean wall = false;
 	boolean hall =false;
 	boolean doorways = false;
-
 	char type;
 	int x;
 	int y;
+//  private BufferedImage floorTile = loadTile("floor");
+//  private BufferedImage wallTile = loadTile("wall");
+//  private BufferedImage grassTile = loadTile("grass");
 
-
-	protected TileType tile_type;
+  /*
+   * Tile constructor
+   * @param row
+   * @param col
+   */
+  //row is y
+  //col is x
+  public Tile(int row, int col)
+  {
+    this.row = row;
+    this.col = col;
+  }
 
 	/*
-	 * Tile constructor
+   * Tile constructor
 	 * @param row
 	 * @param col
+	 * @param tile_type TileType object
 	 */
-	//row is y
-	//col is x
-	public Tile(int row, int col) {
-		this.row = row;
-		this.col = col;
-	}
+  public Tile(int row, int col, TileType tile_type)
+  {
+    this(row, col);
+    this.tile_type = tile_type;
+  }
 	
 	/*
-	 * Tile constructor
-	 * @param row
-	 * @param col
-	 * @param tile_type TileType object 
-	 */
-	public Tile(int row, int col, TileType tile_type) {
-		this(row, col);
-		this.tile_type = tile_type;
-	}
-	
-	/*
-	 * Tile constructor
+   * Tile constructor
 	 * @param row
 	 * @param col
 	 * @param tile_val Char that corresponds to a TileType
 	 */
-	public Tile(int row, int col, char tile_val) {
-		this(row, col);
+  public Tile(int row, int col, char tile_val)
+  {
+    this(row, col);
     this.tile_type = TileType.fromGridChar(tile_val);
-	}
+  }
 	
 	/*
 	 * Tile constructor. Creates a new Tile based off the passed in tile.
@@ -79,24 +78,60 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	 */
 	public Tile(Tile tile) {
 		this(tile.row, tile.col, tile.tile_type);
-	}
-	
+  }
 
-	/**
-	 * get X coordinate
-	 * @return int - X coordinate
-	 */
-	public int getRow() {
-		return row;
+  public static void main(String[] args)
+  {
+//    Tile grass = new Tile(0,0, TileType.GRASS);
+//    Tile forest = new Tile(0, 0, TileType.FOREST);
+//    Tile hill = new Tile(0, 0, TileType.HILL);
+//    Tile water = new Tile(0, 0, TileType.WATER);
+//    Tile wall = new Tile(0, 0, TileType.WALL);
+
+//    System.out.println("grass value is " + grass.tile_type.value
+//    									 + " and the movement cost is " + grass.tile_type
+// .movement_cost);
+//    System.out.println("forest value is " + forest.tile_type.value
+//    									 + " and the movement cost is " + forest.tile_type
+// .movement_cost);
+//    System.out.println("hill value is " + hill.tile_type.value
+//    									 + " and the movement cost is " + hill.tile_type
+// .movement_cost);
+//    System.out.println("water value is " + water.tile_type.value
+//    									 + " and the movement cost is " + water.tile_type
+// .movement_cost);
+//    System.out.println("wall value is " + wall.tile_type.value
+//    									 + " and the movement cost is " + wall.tile_type
+// .movement_cost);
+
 	}
-	
-	/**
-	 * get Y coordinate
-	 * @return int - Y coordinate
-	 */
-	public int getCol() {
-		return col;
-	}
+
+//  public BufferedImage loadTile(String file)
+//  {
+//
+//    BufferedImage tile = null;
+//
+//    try
+//    {
+//      tile = ImageIO
+//          .read(Sprite.class.getResource("resources/" + file + ".jpg"));
+//    }
+//    catch (IOException e)
+//    {
+//      e.printStackTrace();
+//    }
+//
+//    return tile;
+//  }
+
+  /**
+   * get X coordinate
+   * @return int - X coordinate
+   */
+  public int getRow()
+  {
+    return row;
+  }
 
 	/**
 	 * Snap tile to grid and update the tile type based on whatever tile on the map
@@ -117,13 +152,23 @@ public class Tile extends GameObject implements Comparable<Tile> {
 //			}
 //		}
 //	}
-	
+
+  /**
+   * get Y coordinate
+   *
+   * @return int - Y coordinate
+   */
+  public int getCol()
+  {
+    return col;
+  }
+
   /**
    * Paint the tile on the panel
    * @param g Graphics object
    */
   public void paint(Graphics g) {
-    g.setColor(tile_type.color);
+    // g.setColor(tile_type.);
     g.fillRect(row, col, WIDTH, HEIGHT);
     g.setColor(Color.WHITE);
     g.drawRect(row, col, WIDTH, HEIGHT);
@@ -153,7 +198,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	public boolean intersects(Object2D other) {
 		return false;
 	}
-
+  
 	/* (non-Javadoc)
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
@@ -166,8 +211,8 @@ public class Tile extends GameObject implements Comparable<Tile> {
    */
   public String toString() {
   	return String.format("%s: [row=%d, col=%d]", tile_type, row, col);
-  } 
-  
+  }
+
   /* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -203,26 +248,6 @@ public class Tile extends GameObject implements Comparable<Tile> {
 		if (col != other.col)
 			return false;
 		return true;
-	}
-
-	public static void main(String[] args) {  
-//    Tile grass = new Tile(0,0, TileType.GRASS);
-//    Tile forest = new Tile(0, 0, TileType.FOREST);
-//    Tile hill = new Tile(0, 0, TileType.HILL);
-//    Tile water = new Tile(0, 0, TileType.WATER);
-//    Tile wall = new Tile(0, 0, TileType.WALL);
-    
-//    System.out.println("grass value is " + grass.tile_type.value
-//    									 + " and the movement cost is " + grass.tile_type.movement_cost);
-//    System.out.println("forest value is " + forest.tile_type.value
-//    									 + " and the movement cost is " + forest.tile_type.movement_cost);
-//    System.out.println("hill value is " + hill.tile_type.value
-//    									 + " and the movement cost is " + hill.tile_type.movement_cost);
-//    System.out.println("water value is " + water.tile_type.value
-//    									 + " and the movement cost is " + water.tile_type.movement_cost);
-//    System.out.println("wall value is " + wall.tile_type.value
-//    									 + " and the movement cost is " + wall.tile_type.movement_cost);
-
 	}
 
 }

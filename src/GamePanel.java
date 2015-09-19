@@ -6,10 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Having this larger class that extends JPanel will allow easier access to
@@ -29,7 +28,10 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
+  private final ArrayList KEY_PICKUP = new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
+
   public GameMap map;
+  public GameMap procedureGenMap;
   Timer frame_timer;
   int xScale;
   JViewport vp;
@@ -49,26 +51,28 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
+    map = parent.map;
 
-    setBackground(Color.white);
+    setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
 
 
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(getClass().getResource("resources/level1.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
+//    File map_file = null;
+//    try
+//    {
+//      map_file =
+//          new File(getClass().getResource("resources/level1.map").toURI());
+//    }
+//    catch (URISyntaxException e)
+//    {
+//      e.printStackTrace();
+//    }
 
-    map = new GameMap(map_file);
+
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
+    //System.out.println("reached this point");
 
     for(Zombie zombie : map.zombies) {
       zombie.loadNoises();
@@ -143,10 +147,33 @@ public class GamePanel extends JPanel implements KeyListener
       zombie.update(map, player);
     }
 
-    for (FireTrap traps : map.traps)
+    for (FireTrap trap : map.traps)
     {
-      traps.update(map.zombies);
+      trap.update(map, player);
     }
+
+    Iterator<Zombie> zombieIter = map.zombies.iterator();
+    Zombie zombie;
+    while (zombieIter.hasNext())
+    {
+      zombie = zombieIter.next();
+
+      zombie.update(map, player);
+
+      if (zombie.zombieDied) zombieIter.remove();
+
+      if (zombie.bitPlayer)
+      {
+        System.out.println("zombie bit player");
+        parent.running = false;
+        parent.pauseGame();
+        stopAllSounds();
+        GUI.showDeathDialog(parent);
+      }
+    }
+
+
+
     parent.updatePlayerLabels();
     parent.updateZombieLabels();
 
@@ -192,19 +219,24 @@ public class GamePanel extends JPanel implements KeyListener
 
     for (FireTrap trap : map.traps)
     {
-      if (!trap.exploding)
+      if (!player.is_picking_up || player.is_putting_down)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);
       }
-      else
+
+      if (trap.exploding)
       {
         g2.drawImage(trap.fireAnimation.getSprite(),
             trap.location.getX(), trap.location.getY(), null);
       }
     }
     for(Zombie zombie : map.zombies) {
-      g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(), zombie.location.getY(), null);
+      if (!zombie.zombieDied)
+      {
+        g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(),
+            zombie.location.getY(), null);
+      }
     }
 
     g2.drawImage(player.animation.getSprite(), player.location.getX(),
@@ -282,6 +314,22 @@ public class GamePanel extends JPanel implements KeyListener
       player.isRunning = false;
       player.isWalking = true;
     }
+    if (KEY_PICKUP.contains(code))
+    {
+      for (FireTrap trap : map.traps)
+      {
+        if (player.intersects(trap))
+        {
+          player.pickupFireTrap(trap);
+        }
+
+        if (player.getFire_traps() > 0 && player.getFootTile(map).equals(TileType.BRICK))
+        {
+          player.is_putting_down = true;
+        }
+
+      }
+    }
 
 
   }
@@ -319,6 +367,19 @@ public class GamePanel extends JPanel implements KeyListener
   public void stopMusic()
   {
     loadAmbience.stop();
+  }
+
+  public void stopAllSounds()
+  {
+    for (Zombie zombie : map.zombies)
+    {
+      zombie.sound.stop();
+    }
+    for (FireTrap trap : map.traps)
+    {
+      trap.sound.stop();
+    }
+    player.stopSound();
   }
 
   public void loadMusic()

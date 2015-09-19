@@ -36,8 +36,8 @@ public class GameMapWithBlocks
   private static final char OBSTICLE = 'O';
   private static final char INSIDE_WALL = 'I';
 
-  private static final int X_SIZE = 75; // used to set size of grid
-  private static final int Y_SIZE = 75; // used to set size of grid
+  public static final int X_SIZE = 75; // used to set size of grid
+  public static final int Y_SIZE = 75; // used to set size of grid
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
   private static final int END_ROOM_SIZE = 4;
@@ -70,11 +70,16 @@ public class GameMapWithBlocks
 
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
+  Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
 
+    public GameMapWithBlocks()
+    {
+
+    }
   /**
    * generates the map through many many methods
    */
-  private static void generateMap()
+  public static void generateMap()
   {
     for (int x = 0; x < X_SIZE; x++)
     {
@@ -104,7 +109,8 @@ public class GameMapWithBlocks
     }
 
     chizelWalls(); // makes protruding halls shaven off so map has even halls
- //   breakTouchingWalls(); // if two rooms are touching it will break the walls
+    //   breakTouchingWalls(); // if two rooms are touching it will break the
+    // walls
     /**
      * Need adjustment to make larger obsitcles and such
      */
@@ -133,14 +139,17 @@ public class GameMapWithBlocks
     //makeInteriorWalls();
 
     //makes the tile map
+    System.out.println("help");
     Tile tileGrid[][] = new Tile[Y_SIZE][X_SIZE];
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
       {
+   //     System.out.println(x);
         tileGrid[y][x] = getBlock(x, y).toTile();
       }
     }
+    System.out.println("help1");
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
@@ -251,6 +260,9 @@ public class GameMapWithBlocks
   /**
    * if it is able to place place the end peices horozantily
    * it will make a 2x2 end room
+   * I wanted to do this another way, but honestly coding it in this way was
+   * the easiest
+   * thing i could think of
    *
    * @param x
    * @param y
@@ -1018,7 +1030,7 @@ public class GameMapWithBlocks
     {
       if (cycleSpotsForObsticles(xCord, yCord))
       {
-        setBlockType(xCord, yCord, OBSTICLE);
+        setBlockType(xCord, yCord, ROOM_WALL);
         validSpot = true;
       }
       else
@@ -1124,7 +1136,7 @@ public class GameMapWithBlocks
         {
           hallTouched = true;
         }
-        if (placeRoom(x,y))
+        if (placeRoom(x, y))
         {
           hallTouched = false;
           resetRoomDimentions();

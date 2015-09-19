@@ -13,14 +13,16 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
+  public boolean is_putting_down = false;
   protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
   double regen = .2;
+  boolean is_picking_up = false;
   private int sight = 5;
   private int hearing = 10;
   private int fire_traps = 0;
-  private boolean is_picking_up = false;
+  private FireTrap pickup_trap;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
@@ -165,6 +167,17 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps++;
         frame = 0;
         is_picking_up = false;
+        map.traps.remove(pickup_trap);
+      }
+    }
+    else if (is_putting_down)
+    {
+      frame++;
+      if (frame >= PICKUP_FRAMES)
+      {
+        fire_traps--;
+        frame = 0;
+        is_putting_down = false;
       }
     }
     else
@@ -194,7 +207,7 @@ public class Player extends Humanoid implements HumanoidObject
       {
         regenerate();
         animation = walk;
-        current_speed = 1.0;
+        current_speed = defined_speed;
       }
 
       // Decides which sound to play based on state of player
@@ -202,12 +215,12 @@ public class Player extends Humanoid implements HumanoidObject
       {
         stopSound();
       }
-      if (!isWalking && isRunning)
+      else if (isRunning)
       {
         sound = runSound;
         playSound();
       }
-      else if (!isRunning && isWalking)
+      else if (isWalking)
       {
         sound = walkSound;
         playSound();
@@ -256,13 +269,21 @@ public class Player extends Humanoid implements HumanoidObject
     sound.stop();
   }
 
-  public void pickupFireTrap()
+  public void pickupFireTrap(FireTrap trap)
   {
-
+    is_picking_up = true;
+    pickup_trap = trap;
+    frame = 0;
   }
 
   public double getRegenRate()
   {
     return regen;
+  }
+
+  public Tile getFootTile(GameMap map) {
+    int row = (int)(location.y + GUI.tile_size) / GUI.tile_size;
+    int col = (int)(location.x + (width / 2)) / GUI.tile_size;
+    return map.getTile(row, col);
   }
 }

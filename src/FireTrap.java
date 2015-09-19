@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * Allows us to create firetraps and load images for the explosion
@@ -7,6 +6,7 @@ import java.util.List;
 public class FireTrap extends GameObject
 {
   public boolean exploding = false;
+  public SoundLoader sound;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
@@ -14,13 +14,17 @@ public class FireTrap extends GameObject
   Animation fireAnimation = explode;
   private SoundLoader combust;
   private GamePanel gamePanel;
-  private SoundLoader sound;
 
   public FireTrap(Location location)
   {
     this.location = location;
   }
 
+  public FireTrap(int width, int height, Location location) {
+    this(location);
+    this.width = width;
+    this.height = height;
+  }
   private BufferedImage[] initExplosion()
   {
     Sprite sprite = new Sprite("explode");
@@ -53,20 +57,32 @@ public class FireTrap extends GameObject
   }
 
 
-  public void update(List<Zombie> zombies)
+  public void update(GameMap map, Player player)
   {
-    for (Zombie zombie : zombies)
+    for (Zombie zombie : map.zombies)
     {
-      if (intersects(zombie))
+      if (getDistance(zombie) < GUI.tile_size)
       {
-        System.out.println("Zombie touched trap");
-        exploding = true;
-        sound.play();
-        fireAnimation.update();
-        fireAnimation.start();
+        if (getCenteredBoundingRectangle()
+            .intersects(zombie.getCenteredBoundingRectangle()))
+        {
+          //System.out.println("Zombie touched trap");
+          exploding = true;
+          zombie.zombieDied = true;
+          sound.play();
+          fireAnimation.start();
+          fireAnimation.update();
+        }
+
+
       }
-      exploding = false;
     }
+
+//    if (getCenteredBoundingRectangle().intersects(player
+// .getBoundingRectangle()))
+//    {
+//     // System.out.println("player on trap");
+//    }
 
   }
 
@@ -74,5 +90,20 @@ public class FireTrap extends GameObject
   {
     combust = new SoundLoader("explosion.wav");
     sound = combust;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    FireTrap fireTrap = (FireTrap) o;
+
+    return !(location != null ? !location.equals(fireTrap.location) : fireTrap.location != null);
+  }
+
+  @Override
+  public int hashCode() {
+    return location != null ? location.hashCode() : 0;
   }
 }

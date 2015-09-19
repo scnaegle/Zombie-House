@@ -11,6 +11,9 @@ public class Zombie extends Humanoid implements HumanoidObject
   public static double smell;
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
+  public boolean bitPlayer = false;
+  public SoundLoader sound;
+  public boolean zombieDied = false;
   protected int frame = 0;
   protected Sprite sprite = new Sprite("ZombieSheet");
   Animation moveDown;
@@ -21,7 +24,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   private SoundLoader zWalk;
   private SoundLoader bite;
   private SoundLoader hitObst;
-  private SoundLoader sound;
+  private FireTrap trap;
 
 
   public Zombie(Location location) {
@@ -88,6 +91,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     {
       setBite();
       sound.play();
+      bitPlayer = true;
     }
 
     //Sees if zombie is in player hearing's range
@@ -96,7 +100,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     {
       //System.out.println(Math.round(getDistance((Object2D) player)));
       sound = zWalk;
-      playSound();
+      sound.playLooped();
     }
 //    else
 //    {
@@ -115,7 +119,6 @@ public class Zombie extends Humanoid implements HumanoidObject
       sound.play();
     }
 
-
     determineAnimation();
     animation.start();
     animation.update();
@@ -129,16 +132,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     hitObst = new SoundLoader("zHitObst.wav");
     sound = zWalk;
 
-  }
-
-  public void playSound()
-  {
-    sound.playLooped();
-  }
-
-  public void stopSound()
-  {
-    sound.stop();
   }
 
   public boolean bitesPlayer(HumanoidObject player)
