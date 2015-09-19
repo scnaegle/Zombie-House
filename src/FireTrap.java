@@ -61,23 +61,29 @@ public class FireTrap extends GameObject
   {
     for (Zombie zombie : map.zombies)
     {
-      if (getDistance(zombie) < GUI.tile_size) {
-        if (getCenteredBoundingRectangle().intersects(zombie.getCenteredBoundingRectangle())) {
-          System.out.println("Zombie touched trap");
+      if (getDistance(zombie) < GUI.tile_size)
+      {
+        if (getCenteredBoundingRectangle()
+            .intersects(zombie.getCenteredBoundingRectangle()))
+        {
+          //System.out.println("Zombie touched trap");
           exploding = true;
           zombie.zombieDied = true;
           sound.play();
           fireAnimation.start();
           fireAnimation.update();
         }
-        //exploding = false;
-      }
-      if (getCenteredBoundingRectangle()
-          .intersects(player.getBoundingRectangle()))
-      {
-        System.out.println("player on trap");
+
+
       }
     }
+
+//    if (getCenteredBoundingRectangle().intersects(player
+// .getBoundingRectangle()))
+//    {
+//     // System.out.println("player on trap");
+//    }
+
   }
 
   public void loadExplosion()

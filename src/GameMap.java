@@ -197,7 +197,7 @@ public class GameMap
      * these next couple of methods cause it to be used for basic testing until
      * I implement it to be more verssitle
      */
-    //turnHallsToFloors(); // this will change the halls to the floors
+    turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
     makeEndRoom(); // makes an end room
     turnDoorToFloor(); // makes door to floor

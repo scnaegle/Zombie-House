@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Having this larger class that extends JPanel will allow easier access to
@@ -90,10 +91,15 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
-          for(Zombie zombie : map.zombies)
+          Iterator<Zombie> zombieIter = map.zombies.iterator();
+          Zombie zombie;
+          while (zombieIter.hasNext())
           {
+            zombie = zombieIter.next();
+
             zombie.update(map, player);
 
+            if (zombie.zombieDied) zombieIter.remove();
 
             if (zombie.bitPlayer)
             {
