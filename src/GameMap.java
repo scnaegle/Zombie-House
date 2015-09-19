@@ -80,10 +80,13 @@ public class GameMap
       {
         Tile new_tile = new Tile(block.y, block.x, block.type);
         grid[r][c] = new_tile;
-        if (new_tile.tile_type == TileType.START) {
-          start_location = new Location(new_tile.col * GUI.tile_size, new_tile.row * GUI.tile_size);
+        if (new_tile.tile_type == TileType.START)
+        {
+          start_location = new Location(new_tile.col * GUI.tile_size,
+              new_tile.row * GUI.tile_size);
         }
-        if (new_tile.tile_type == TileType.WALL ||  new_tile.tile_type == TileType.INSIDEWALL)
+        if (new_tile.tile_type == TileType.WALL ||
+            new_tile.tile_type == TileType.INSIDEWALL)
         {
           walls.add(new_tile);
         }
@@ -232,7 +235,7 @@ public class GameMap
    */
   private static void makeEndRoom()
   {
-    roomSize = 4;
+    roomSize = 3;
 
     for (int x = random.nextInt(X_SIZE - 6) + 3; x < X_SIZE - 3; x++)
     {
@@ -272,37 +275,25 @@ public class GameMap
     if (isEmpty(x + 1, y + 1))
     {
       setBlockType(x + 1, y + 1, END_ROOM);
-      setBlockType(x + 2, y + 1, END_ROOM);
-      setBlockType(x + 1, y + 2, END_ROOM);
-      setBlockType(x + 2, y + 2, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
-      setBlockType(x, y + 2, BASIC_TILE);
       setBlockType(x + 1, y, ROOM_WALL);
       setBlockType(x + 2, y, ROOM_WALL);
-      setBlockType(x + 3, y, ROOM_WALL);
-      setBlockType(x + 3, y + 1, ROOM_WALL);
-      setBlockType(x + 3, y + 2, ROOM_WALL);
-      setBlockType(x + 3, y + 3, ROOM_WALL);
-      setBlockType(x + 2, y + 3, ROOM_WALL);
-      setBlockType(x + 1, y + 3, ROOM_WALL);
+      setBlockType(x + 2, y + 1, ROOM_WALL);
+      setBlockType(x + 2, y + 2, ROOM_WALL);
+      setBlockType(x + 2, y + 1, ROOM_WALL);
+
 
     }
     else if (isEmpty(x - 1, y + 1))
     {
+
       setBlockType(x - 1, y + 1, END_ROOM);
-      setBlockType(x - 2, y + 1, END_ROOM);
-      setBlockType(x - 1, y + 2, END_ROOM);
-      setBlockType(x - 2, y + 2, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
-      setBlockType(x, y + 2, BASIC_TILE);
       setBlockType(x - 1, y, ROOM_WALL);
       setBlockType(x - 2, y, ROOM_WALL);
-      setBlockType(x - 3, y, ROOM_WALL);
-      setBlockType(x - 3, y + 1, ROOM_WALL);
-      setBlockType(x - 3, y + 2, ROOM_WALL);
-      setBlockType(x - 3, y + 3, ROOM_WALL);
-      setBlockType(x - 2, y + 3, ROOM_WALL);
-      setBlockType(x - 1, y + 3, ROOM_WALL);
+      setBlockType(x - 2, y + 1, ROOM_WALL);
+      setBlockType(x - 2, y + 2, ROOM_WALL);
+      setBlockType(x - 1, y + 2, ROOM_WALL);
     }
 
   }
@@ -323,38 +314,23 @@ public class GameMap
     if (isEmpty(x + 1, y + 1))
     {
       setBlockType(x + 1, y + 1, END_ROOM);
-      setBlockType(x + 1, y + 2, END_ROOM);
-      setBlockType(x + 2, y + 1, END_ROOM);
-      setBlockType(x + 2, y + 2, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
-      setBlockType(x + 2, y, BASIC_TILE);
       setBlockType(x, y + 1, ROOM_WALL);
       setBlockType(x, y + 2, ROOM_WALL);
-      setBlockType(x, y + 3, ROOM_WALL);
-      setBlockType(x + 1, y + 3, ROOM_WALL);
-      setBlockType(x + 2, y + 3, ROOM_WALL);
-      setBlockType(x + 3, y + 3, ROOM_WALL);
-      setBlockType(x + 3, y + 2, ROOM_WALL);
-      setBlockType(x + 3, y + 1, ROOM_WALL);
-
+      setBlockType(x + 1, y + 2, ROOM_WALL);
+      setBlockType(x + 2, y + 2, ROOM_WALL);
+      setBlockType(x + 2, y + 1, ROOM_WALL);
 
     }
     else if (isEmpty(x + 1, y - 1))
     {
       setBlockType(x + 1, y - 1, END_ROOM);
-      setBlockType(x + 1, y - 2, END_ROOM);
-      setBlockType(x + 2, y - 1, END_ROOM);
-      setBlockType(x + 2, y - 2, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
-      setBlockType(x + 2, y, BASIC_TILE);
       setBlockType(x, y - 1, ROOM_WALL);
       setBlockType(x, y - 2, ROOM_WALL);
-      setBlockType(x, y - 3, ROOM_WALL);
-      setBlockType(x + 1, y - 3, ROOM_WALL);
-      setBlockType(x + 2, y - 3, ROOM_WALL);
-      setBlockType(x + 3, y - 3, ROOM_WALL);
-      setBlockType(x + 3, y - 2, ROOM_WALL);
-      setBlockType(x + 3, y - 1, ROOM_WALL);
+      setBlockType(x + 1, y - 2, ROOM_WALL);
+      setBlockType(x + 2, y - 2, ROOM_WALL);
+      setBlockType(x + 2, y - 1, ROOM_WALL);
 
     }
   }
@@ -369,8 +345,8 @@ public class GameMap
   private static boolean validEndLocationHorozantal(int x, int y)
   {
     return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
-        isWall(x + 3, y)) && inBoundsWithBorder(x + 3, y) &&
-        (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1)));
+        inBoundsWithBorder(x + 3, y) &&
+        (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
   }
 
 
@@ -384,7 +360,7 @@ public class GameMap
   private static boolean validEndLocationVerticle(int x, int y)
   {
     return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
-        isWall(x, y + 3) && inBoundsWithBorder(x, y + 3) &&
+        inBoundsWithBorder(x, y + 3) &&
         (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
   }
 
@@ -456,7 +432,7 @@ public class GameMap
       {
         if (isWall(x, y))
         {
-         // System.out.println(getBlock(x, y).corner);
+          // System.out.println(getBlock(x, y).corner);
           if (surroundingSpotEmpty(x, y))
           {
 
@@ -1113,7 +1089,7 @@ public class GameMap
     //if start start ot end room rooms size'll be 4
     if (type == END_ROOM || type == START_ROOM)
     {
-      roomSize = 3;
+      roomSize = 5;
     }
     //this will keep reseting the dimetions till it is valid
     alreadyBuilt(type);
@@ -1189,7 +1165,7 @@ public class GameMap
           resetRoomDimentions();
           if (type == START_ROOM || type == END_ROOM)
           {
-            roomSize = 3;
+            roomSize = 5;
           }
           x = buildRoomX;
           y = buildRoomY;
@@ -1201,7 +1177,7 @@ public class GameMap
       resetRoomDimentions();
       if (type == START_ROOM || type == END_ROOM)
       {
-        roomSize = 3;
+        roomSize = 5;
       }
       alreadyBuilt(type);
     }
@@ -1433,7 +1409,8 @@ public class GameMap
             {
               walls.add(new_tile);
             }
-            if (new_tile.tile_type == TileType.BRICK) {
+            if (new_tile.tile_type == TileType.BRICK)
+            {
               if (rand.nextDouble() < GUI.zspawn)
               {
                 Zombie zombie;
