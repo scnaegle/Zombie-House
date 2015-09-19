@@ -58,32 +58,29 @@ public class Location
   }
 
   @Override
-  public boolean equals(Object o)
-  {
-    if (this == o)
-    {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass())
-    {
-      return false;
-    }
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
     Location location = (Location) o;
 
-    if (row != location.row)
-    {
-      return false;
-    }
-    return col == location.col;
+    if (row != location.row) return false;
+    if (col != location.col) return false;
+    if (Double.compare(location.x, x) != 0) return false;
+    return Double.compare(location.y, y) == 0;
 
   }
 
   @Override
-  public int hashCode()
-  {
-    int result = row;
+  public int hashCode() {
+    int result;
+    long temp;
+    result = row;
     result = 31 * result + col;
+    temp = Double.doubleToLongBits(x);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(y);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
     return result;
   }
 }

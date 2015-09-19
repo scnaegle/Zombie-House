@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
   private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
   private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
+  private final ArrayList KEY_PICKUP = new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
 
   public GameMap map;
   public GameMap procedureGenMap;
@@ -269,18 +270,16 @@ public class GamePanel extends JPanel implements KeyListener
       player.isRunning = false;
       player.isWalking = true;
     }
-    if (code == KeyEvent.VK_P)
+    if (KEY_PICKUP.contains(code))
     {
       for (FireTrap trap : map.traps)
       {
         if (player.intersects(trap))
         {
-          player.is_picking_up = true;
+          player.pickupFireTrap(trap);
         }
 
-        if (player.getFire_traps() > 0 && map.getTile
-            (player.location.getRow(GUI.tile_size), player.location.getCol
-                (GUI.tile_size)).equals(TileType.BRICK))
+        if (player.getFire_traps() > 0 && player.getFootTile(map).equals(TileType.BRICK))
         {
           player.is_putting_down = true;
         }

@@ -22,6 +22,7 @@ public class Player extends Humanoid implements HumanoidObject
   private int sight = 5;
   private int hearing = 10;
   private int fire_traps = 0;
+  private FireTrap pickup_trap;
   private Sprite stand_sprite = new Sprite("pStand");
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
@@ -166,6 +167,7 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps++;
         frame = 0;
         is_picking_up = false;
+        map.traps.remove(pickup_trap);
       }
     }
     else if (is_putting_down)
@@ -267,13 +269,21 @@ public class Player extends Humanoid implements HumanoidObject
     sound.stop();
   }
 
-  public void pickupFireTrap()
+  public void pickupFireTrap(FireTrap trap)
   {
-
+    is_picking_up = true;
+    pickup_trap = trap;
+    frame = 0;
   }
 
   public double getRegenRate()
   {
     return regen;
+  }
+
+  public Tile getFootTile(GameMap map) {
+    int row = (int)(location.y + GUI.tile_size) / GUI.tile_size;
+    int col = (int)(location.x + (width / 2)) / GUI.tile_size;
+    return map.getTile(row, col);
   }
 }
