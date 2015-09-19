@@ -46,7 +46,6 @@ public class GUI
   public static void showDeathDialog(GUI parent)
   {
 
-
     Object[] options = {"Restart", "Exit"};
 
     int option = JOptionPane
@@ -55,16 +54,16 @@ public class GUI
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
 
-    if (option == 1)
-    {
-      System.out.println("exiting");
-      System.exit(0);
-    }
-    else if (option == 0)
+    if (option == 0)
     {
       parent.whichLevel = 1;
       parent.window.dispose();
       parent.getSettings();
+    }
+    else if (option == 1)
+    {
+      System.out.println("exiting");
+      System.exit(0);
     }
   }
 
@@ -300,13 +299,11 @@ public class GUI
       {
         if (pause)
         {
-          startPause.setText("Pause");
           startGame();
           gamePanel.requestFocusInWindow();
         }
         else
         {
-          startPause.setText("Start");
           pauseGame();
         }
 
@@ -340,6 +337,7 @@ public class GUI
 
   private void startGame()
   {
+    startPause.setText("Pause");
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
@@ -349,6 +347,7 @@ public class GUI
 
   public void pauseGame()
   {
+    startPause.setText("Start");
     pause = true;
     running = false;
     gamePanel.frame_timer.stop();
