@@ -98,9 +98,10 @@ public class GamePanel extends JPanel implements KeyListener
             if (zombie.bitPlayer)
             {
               System.out.println("zombie bit player");
-              zombie.sound.stop();
-              GUI.running = false;
+              parent.running = false;
               parent.pauseGame();
+//              stopAllSounds();
+//              stopMusic();
               GUI.showDeathDialog(parent);
             }
 

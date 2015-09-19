@@ -203,7 +203,7 @@ public class GameMap
     turnDoorToFloor(); // makes door to floor
     makeInteriorWalls();
 
-    System.out.println("help1");
+    //System.out.println("help1");
     for (int y = 0; y < Y_SIZE; y++)
     {
       for (int x = 0; x < X_SIZE; x++)
@@ -714,7 +714,7 @@ public class GameMap
         if (emptyBlock(x + 1, y)/*inbounds and empty type*/)
         {
           setVisitedTrue(x, y);
-          System.out.println("Right");
+          //System.out.println("Right");
           algorithm(x + 1, y, END_ROOM);
         }
         else if (getBlock(x + 1, y).partOfRoom == true)
@@ -729,7 +729,7 @@ public class GameMap
         if (emptyBlock(x, y - 1))
         {
           setVisitedTrue(x, y);
-          System.out.println("UP");
+          //System.out.println("UP");
           algorithm(x, y - 1, END_ROOM);
         }
         else if (getBlock(x, y - 1).partOfRoom == true)
@@ -744,7 +744,7 @@ public class GameMap
         if (emptyBlock(x - 1, y))
         {
           setVisitedTrue(x, y);
-          System.out.println("Left");
+          //System.out.println("Left");
           algorithm(x - 1, y, END_ROOM);
         }
         else if (getBlock(x - 1, y).partOfRoom == true)
@@ -759,7 +759,7 @@ public class GameMap
         if (emptyBlock(x, y + 1))
         {
           setVisitedTrue(x, y);
-          System.out.println("down");
+          //System.out.println("down");
           algorithm(x, y + 1, END_ROOM);
         }
         else if (getBlock(x + 1, y).partOfRoom == true)
@@ -883,7 +883,7 @@ public class GameMap
         }
         else
         {
-          System.out.println("making hall up, ended at a=" + a);
+          //System.out.println("making hall up, ended at a=" + a);
           break;
         }
       }
@@ -901,7 +901,7 @@ public class GameMap
         }
         else
         {
-          System.out.println("making hall down, ended at a=" + a);
+          //System.out.println("making hall down, ended at a=" + a);
           break;
         }
       }
@@ -917,7 +917,7 @@ public class GameMap
         }
         else
         {
-          System.out.println("making hall right, ended at a=" + a);
+          //System.out.println("making hall right, ended at a=" + a);
           break;
         }
       }
@@ -934,7 +934,7 @@ public class GameMap
         }
         else
         {
-          System.out.println("making hall left, ended at a=" + a);
+          //System.out.println("making hall left, ended at a=" + a);
           break;
         }
       }
@@ -1062,7 +1062,7 @@ public class GameMap
         yCord = random.nextInt(Y_SIZE - 2) + 1;
       }
     }
-    System.out.println("Obsticle");
+    //System.out.println("Obsticle");
   }
 
   private static boolean cycleSpotsForObsticles(int s, int t)
@@ -1137,7 +1137,7 @@ public class GameMap
         }
       }
     }
-    System.out.println("finish room");
+    //System.out.println("finish room");
   }
 
   /**
