@@ -21,7 +21,7 @@ public enum TileType {
 	//BURNTWALL(3, '3',1, new Color(230, 9, 13)), // only used for outside walls
 	//BURNTFLOOR(4, '4',1, new Color(22, 22, 22)),
 	START(5, 'S', 1, "floor"),
-	EXIT(6, 'E', 9999, "floor"),
+	EXIT(6, 'E', 9999, "exit"),
 	WALL(7, 'B', 9999, "wall"),
 	INSIDEWALL(8,'I',9999,"wall"),
 	HALL(9,'H',9999,"floor")
