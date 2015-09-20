@@ -92,6 +92,7 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
+
           //Deletes a zombie from list once it explodes in fire trap.
           //Just removing it from a list won't work.
           Iterator<Zombie> zombieIter = map.zombies.iterator();
@@ -132,6 +133,12 @@ public class GamePanel extends JPanel implements KeyListener
             GUI.showDeathDialog(parent);
           }
 
+//          if(player.getFootTile(map).tile_type == TileType.EXIT)
+//          {
+//            parent.whichLevel++;
+//            parent.newGame();
+//
+//          }
           repaint();
 
         }
@@ -197,7 +204,7 @@ public class GamePanel extends JPanel implements KeyListener
             null);
       }
 
-      if (trap.exploding)
+      if (trap.exploding && onScreen(trap))
       {
 
         g2.drawImage(trap.fireAnimation.getSprite(),

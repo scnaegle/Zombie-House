@@ -60,6 +60,7 @@ public class GameMap
   public Location end_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
+  Zombie master;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
@@ -118,7 +119,10 @@ public class GameMap
               zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                   location);
             }
+            //master = new MasterZombie(location);
+
             zombies.add(zombie);
+            //zombies.add(master);
             //System.out.println(zombies);
           }
 
