@@ -69,10 +69,10 @@ public class FireTrap extends GameObject
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
           //System.out.println(frame);
-          fireAnimation.start();
 
           //frame = fireAnimation.getFrameCount();
           exploding = true;
+          fireAnimation.start();
           zombie.zombieDied = true;
           frame++;
           //System.out.println(fireAnimation.getFrameCount());
@@ -80,7 +80,6 @@ public class FireTrap extends GameObject
           System.out.println("exploding!");
           if (frame >= EXPLODE_TIME)
           {
-            System.out.println("frame = explode time");
             frame = 0;
             exploding = false;
             fireAnimation.stop();

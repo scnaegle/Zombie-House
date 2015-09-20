@@ -90,8 +90,10 @@ public class GamePanel extends JPanel implements KeyListener
           {
             trap.update(map, player);
 
+
             if (trap.exploding)
             {
+              System.out.println("trap exploded");
               Tile test_tile;
               int trap_row = trap.location.getRow(GUI.tile_size);
               int trap_col = trap.location.getCol(GUI.tile_size);
@@ -100,11 +102,13 @@ public class GamePanel extends JPanel implements KeyListener
                 for (int col = trap_col - 1; col <= trap_col + 1; col++)
                 {
                   test_tile = map.getTile(row, col);
-                  if (test_tile.tile_type.equals(TileType.BRICK) ||
-                      test_tile.tile_type.equals(TileType.WALL))
+                  if (test_tile.tile_type.equals(TileType.BRICK)
+                      || test_tile.tile_type.equals(TileType.WALL))
                   {
                     test_tile.tile_type.equals(TileType.BURNTFLOOR);
                   }
+
+
                 }
               }
             }

@@ -64,12 +64,11 @@ public class GameMap
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   Zombie master;
+  BufferedImage map_image;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
-
-  BufferedImage map_image;
 
 
   public GameMap()
@@ -143,8 +142,9 @@ public class GameMap
             //master = new MasterZombie(location);
 
             zombies.add(zombie);
+
             //zombies.add(master);
-            //System.out.println(zombies);
+            System.out.println(zombies.size());
           }
 
           if (rand.nextDouble() < GUI.fspawn)
@@ -1312,6 +1312,42 @@ public class GameMap
     }
   }
 
+  public static void main(String[] args)
+  {
+    GameMap map = new GameMap();
+    BufferedImage map_image = map.convertMapToImage(80);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel
+        .setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    scroll_pane.setVerticalScrollBarPolicy(
+//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//    scroll_pane.setHorizontalScrollBarPolicy(
+//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
+  }
 
   public int getWidth(int tile_size)
   {
@@ -1387,7 +1423,6 @@ public class GameMap
     return new_image;
   }
 
-
   public void paintSection(Graphics g, Rectangle rect, int tile_size) {
     Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
     Location end = new Location(0, 0, (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
@@ -1397,19 +1432,6 @@ public class GameMap
     end.x = Math.min(end.x, num_rows - 1);
     end.y = Math.min(end.y, num_cols - 1);
     paintSection(g, start, end, tile_size);
-  }
-
-  /**
-   * This paints the entire grid from start to finish
-   *
-   * @param g
-   * @param tile_size
-   */
-  public void paint(Graphics g, int tile_size)
-  {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
   }
 
 
@@ -1438,6 +1460,18 @@ public class GameMap
 //    generateMap();
 //
 
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
 
   /**
    * Creates map from a file
@@ -1547,37 +1581,5 @@ public class GameMap
       ret += "\n";
     }
     return ret;
-  }
-
-  public static void main(String[] args)
-  {
-    GameMap map = new GameMap();
-    BufferedImage map_image = map.convertMapToImage(80);
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    JPanel map_panel = new JPanel() {
-      public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D)g;
-        g2.drawImage(map_image, 0, 0, null);
-      }
-    };
-    map_panel.setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//    scroll_pane.setVerticalScrollBarPolicy(
-//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//    scroll_pane.setHorizontalScrollBarPolicy(
-//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
   }
 }
