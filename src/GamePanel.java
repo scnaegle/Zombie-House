@@ -116,6 +116,7 @@ public class GamePanel extends JPanel implements KeyListener
 
           }
 
+
           for (FireTrap trap : map.traps)
           {
             trap.update(map, player);
@@ -123,6 +124,13 @@ public class GamePanel extends JPanel implements KeyListener
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
 
+          if (player.playerDied)
+          {
+            parent.running = false;
+            parent.pauseGame();
+            stopAllSounds();
+            GUI.showDeathDialog(parent);
+          }
 
           repaint();
 

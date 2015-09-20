@@ -78,11 +78,17 @@ public class FireTrap extends GameObject
       }
     }
 
-//    if (getCenteredBoundingRectangle().intersects(player
-// .getBoundingRectangle()))
-//    {
-//     // System.out.println("player on trap");
-//    }
+
+    if (getCenteredBoundingRectangle().intersects(player
+        .getBoundingRectangle()) && player.isRunning)
+    {
+      exploding = true;
+      player.playerDied = true;
+      sound.play();
+      fireAnimation.start();
+      fireAnimation.update();
+      // System.out.println("player on trap");
+    }
 
   }
 

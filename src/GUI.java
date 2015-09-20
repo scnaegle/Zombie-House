@@ -50,7 +50,7 @@ public class GUI
 
     int option = JOptionPane
         .showOptionDialog(parent.window, "Aw, you died! Try again?",
-            "YOU WERE BITEN",
+            "YOU DIED",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
 

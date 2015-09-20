@@ -15,6 +15,7 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isWalking = false;
   public boolean isStill = true;
   public boolean is_putting_down = false;
+  public boolean playerDied = false;
   protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
