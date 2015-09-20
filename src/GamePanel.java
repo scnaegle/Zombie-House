@@ -92,6 +92,8 @@ public class GamePanel extends JPanel implements KeyListener
           player.update(map);
           snapViewPortToPlayer();
 
+          //Deletes a zombie from list once it explodes in fire trap.
+          //Just removing it from a list won't work.
           Iterator<Zombie> zombieIter = map.zombies.iterator();
           Zombie zombie;
           while (zombieIter.hasNext())
@@ -272,22 +274,25 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_PICKUP.contains(code))
     {
-      for (FireTrap trap : map.traps)
+      FireTrap t = map.traps.stream()
+                            .filter(player::intersects)
+                            .findFirst()
+                            .orElse(null);
+
+      if (t != null)
       {
-        if (player.intersects(trap))
-        {
-          player.pickupFireTrap(trap);
-        }
-
-        if (player.getFire_traps() > 0 && player.getFootTile(map).equals(TileType.BRICK))
-        {
-          player.is_putting_down = true;
-        }
-
+        player.pickupFireTrap(t);
+      }
+      else if (player.getFire_traps() > 0)
+      {
+        player.is_putting_down = true;
+        System.out.println("player put down trap");
+      }
+      else
+      {
+        System.out.println(player.getFire_traps());
       }
     }
-
-
   }
 
 

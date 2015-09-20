@@ -106,4 +106,10 @@ public class FireTrap extends GameObject
   public int hashCode() {
     return location != null ? location.hashCode() : 0;
   }
+
+  public void setNewLocation(Location newLocation)
+  {
+    location.x = newLocation.x;
+    location.y = newLocation.y;
+  }
 }

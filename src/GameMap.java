@@ -57,6 +57,7 @@ public class GameMap
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
   public Location start_location;
+  public Location end_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
@@ -83,6 +84,11 @@ public class GameMap
         if (new_tile.tile_type == TileType.START)
         {
           start_location = new Location(new_tile.col * GUI.tile_size,
+              new_tile.row * GUI.tile_size);
+        }
+        if (new_tile.tile_type == TileType.EXIT)
+        {
+          end_location = new Location(new_tile.col * GUI.tile_size,
               new_tile.row * GUI.tile_size);
         }
         if (new_tile.tile_type == TileType.WALL ||

@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * Player class sets up the player, loads the walking/ running sprites and
@@ -35,6 +36,7 @@ public class Player extends Humanoid implements HumanoidObject
   private SoundLoader runSound;
   private SoundLoader sound;
   private SoundLoader scream;
+  private ArrayList<FireTrap> traps = new ArrayList<>();
 
 
   public Player(Location location) {
@@ -168,6 +170,7 @@ public class Player extends Humanoid implements HumanoidObject
         frame = 0;
         is_picking_up = false;
         map.traps.remove(pickup_trap);
+        traps.add(pickup_trap); //Adds trap to player's list of held traps
       }
     }
     else if (is_putting_down)
@@ -178,6 +181,9 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps--;
         frame = 0;
         is_putting_down = false;
+        FireTrap t = traps.remove(0);
+        t.setNewLocation(location);
+        map.traps.add(t);
       }
     }
     else
@@ -286,4 +292,6 @@ public class Player extends Humanoid implements HumanoidObject
     int col = (int)(location.x + (width / 2)) / GUI.tile_size;
     return map.getTile(row, col);
   }
+
+
 }
