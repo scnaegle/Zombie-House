@@ -142,9 +142,8 @@ public class GameMap
             //master = new MasterZombie(location);
 
             zombies.add(zombie);
-
             //zombies.add(master);
-            System.out.println(zombies.size());
+            //System.out.println(zombies);
           }
 
           if (rand.nextDouble() < GUI.fspawn)
@@ -1405,7 +1404,7 @@ public class GameMap
     }
   }
 
-  public BufferedImage convertMapToImage(int tile_size) {
+  private BufferedImage convertMapToImage(int tile_size) {
     BufferedImage new_image = new BufferedImage(num_cols * tile_size, num_rows * tile_size, BufferedImage.TYPE_INT_RGB);
     Graphics2D g = new_image.createGraphics();
     for(int row = 0; row < num_rows; row++) {
@@ -1421,6 +1420,10 @@ public class GameMap
       }
     }
     return new_image;
+  }
+
+  public void updateBufferedImage(int tile_size) {
+    this.map_image = convertMapToImage(tile_size);
   }
 
   public void paintSection(Graphics g, Rectangle rect, int tile_size) {
