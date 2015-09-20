@@ -92,5 +92,56 @@ public class MasterZombie extends Zombie
       heading.setDegrees(angle);
     } // else if hit hall then choose random direction
   }
+  @Override
+  public void update(GameMap map, HumanoidObject player)
+  {
+    frame++;
+    if (frame >= decision_rate * GamePanel.FPS) {
+      frame = 0;
+      chooseDirection(player);
+    }
+//    System.out.println("heading: " + heading);
+    if (!hitWallInXDirectionMaster(map)) {
+      moveX();
+    }
+    if (!hitWallInYDirectionMaster(map)) {
+      moveY();
+    }
+
+
+    if (bitesPlayer(player))
+    {
+      setBite();
+      bitPlayer = true;
+    }
+
+    //Sees if zombie is in player hearing's range
+    double range = ((Player) player).getHearing() * GUI.tile_size;
+    if (getDistance((Object2D) player) <= range)
+    {
+      //System.out.println(Math.round(getDistance((Object2D) player)));
+      SoundLoader.playZWalk();
+    }
+//    else
+//    {
+//      System.out.println("  Can't hear zombie anymore");
+//      stopSound();
+//    }
+
+
+    Location next_location = getNextLocation();
+    //Sees is zombie is in 2*hearing range and hits wall
+    if (getDistance((Object2D) player) <= 2 * range &&
+        hitWall(map, next_location))
+    {
+//      System.out.println("Zombie hit wall");
+      SoundLoader.playHitObst();
+    }
+
+    determineAnimation();
+    animation.start();
+    animation.update();
+  }
+
 
 }
