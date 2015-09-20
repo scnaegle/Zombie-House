@@ -17,6 +17,11 @@ import java.util.Iterator;
 public class GamePanel extends JPanel implements KeyListener
 {
 
+  final int TARGET_FPS = 60;
+  final long NANO_SECONDS = 1000000000;
+  final long MILLI_SECONDS = 1000000;
+  final long OPTIMAL_TIME = NANO_SECONDS / TARGET_FPS;
+
   // How fast the timer should tick. Ranges from 35ish to 50ish.
   static final int FPS = 30;
   static final int SKIP_TICKS = 1000 / FPS;
@@ -97,10 +102,6 @@ public class GamePanel extends JPanel implements KeyListener
 
   public void gameLoop() {
     long last_loop_time = System.nanoTime();
-    final int TARGET_FPS = 30;
-    final long NANO_SECONDS = 1000000000;
-    final long MILLI_SECONDS = 1000000;
-    final long OPTIMAL_TIME = NANO_SECONDS / TARGET_FPS;
 
     int last_fps_time = 0;
     int fps = 0;
@@ -123,8 +124,8 @@ public class GamePanel extends JPanel implements KeyListener
 
       doGameUpdates(delta);
 
-      repaint();
       snapViewPortToPlayer();
+      repaint();
 
       try {
         long sleep_time = (last_loop_time - System.nanoTime() + OPTIMAL_TIME) / MILLI_SECONDS;
@@ -139,12 +140,12 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
   public void doGameUpdates(double delta) {
-    player.update(map);
+    player.update(map, delta);
 //    snapViewPortToPlayer();
 
     for(Zombie zombie : map.zombies)
     {
-      zombie.update(map, player);
+      zombie.update(map, player, delta);
     }
 
     for (FireTrap trap : map.traps)
@@ -158,7 +159,7 @@ public class GamePanel extends JPanel implements KeyListener
     {
       zombie = zombieIter.next();
 
-      zombie.update(map, player);
+      zombie.update(map, player, delta);
 
       if (zombie.zombieDied) zombieIter.remove();
 

@@ -72,25 +72,25 @@ public class Zombie extends Humanoid implements HumanoidObject
     // This is a placeholder that should be overridden.
   }
 
-  public void update(GameMap map, HumanoidObject player) {
+  public void update(GameMap map, HumanoidObject player, double delta) {
     frame++;
     if (frame >= decision_rate * GamePanel.FPS) {
       frame = 0;
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
-    if (!hitWallInXDirection(map)) {
-      moveX();
+    if (!hitWallInXDirection(map, delta)) {
+      moveX(delta);
     }
-    if (!hitWallInYDirection(map)) {
-      moveY();
+    if (!hitWallInYDirection(map, delta)) {
+      moveY(delta);
     }
 
 
     if (bitesPlayer(player))
     {
       setBite();
-      sound.play();
+//      sound.play();
       bitPlayer = true;
     }
 
@@ -109,7 +109,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 //    }
 
 
-    Location next_location = getNextLocation();
+    Location next_location = getNextLocation(delta);
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))

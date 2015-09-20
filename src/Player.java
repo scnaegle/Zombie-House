@@ -157,7 +157,7 @@ public class Player extends Humanoid implements HumanoidObject
     location = next_location;
   }
 
-  public void update(GameMap map)
+  public void update(GameMap map, double delta)
   {
     if (is_picking_up)
     {
@@ -185,11 +185,11 @@ public class Player extends Humanoid implements HumanoidObject
 //      Location next_location = getNextLocation();
       if (!heading.equals(Heading.NONE))
       {
-        if (!hitWallInXDirection(map)) {
-          moveX();
+        if (!hitWallInXDirection(map, delta)) {
+          moveX(delta);
         }
-        if (!hitWallInYDirection(map)) {
-          moveY();
+        if (!hitWallInYDirection(map, delta)) {
+          moveY(delta);
         }
       }
       if (heading.equals(Heading.NONE))
