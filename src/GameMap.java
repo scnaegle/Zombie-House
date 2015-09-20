@@ -36,6 +36,7 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
+  private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
@@ -69,11 +70,28 @@ public class GameMap
   public GameMap()
   {
     generateMap();
+    int offset = 24;
     int r = 0;
     this.num_rows = Y_SIZE;
     this.num_cols = X_SIZE;
-    grid = new Tile[num_rows][num_cols];
+    grid = new Tile[num_rows + OFFSET][num_cols + OFFSET];
     Random rand = new Random();
+    int maxRow = num_rows + (OFFSET / 2);
+    int minRow = OFFSET/2;
+    int maxCol = num_cols + (OFFSET / 2);
+    int minCol = OFFSET/2;
+
+    for(int col = 0; col< num_cols + offset; col++)
+    {
+      for(int row=0; row<num_rows + offset; row++)
+      {
+        Tile empty_tile = new Tile(row,col,ROOM_WALL);
+        grid[row][col]=empty_tile;
+        System.out.print(grid[row][col].tile_type);
+      }
+      System.out.println();
+    }
+
     for (Block[] row : blockGrid)
     {
       int c = 0;
