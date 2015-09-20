@@ -193,7 +193,7 @@ public class GameMap
     // all connected
     for (int i = 0; i < numberOfInitalHalls; i++)
     {
-      makeInitalHalls();
+      makeInitialHalls();
     }
 
 
@@ -441,7 +441,7 @@ public class GameMap
    * makes inital halls that will help determine how rooms will be placed
    * halls will span entire grid
    */
-  private static void makeInitalHalls()
+  private static void makeInitialHalls()
   {
     int randomX = random.nextInt(X_SIZE - 2) + 1;
     int randomY = random.nextInt(Y_SIZE - 1) + 1;
