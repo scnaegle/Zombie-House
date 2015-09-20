@@ -70,6 +70,7 @@ public class FireTrap extends GameObject
         {
           //System.out.println(frame);
           fireAnimation.start();
+
           //frame = fireAnimation.getFrameCount();
           exploding = true;
           zombie.zombieDied = true;
