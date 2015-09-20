@@ -33,10 +33,8 @@ public class Player extends Humanoid implements HumanoidObject
   Animation animation = walk;
   private Animation run = new Animation(running, 2);
   private Animation stand = new Animation(still, 5);
-  private SoundLoader walkSound;
-  private SoundLoader runSound;
-  private SoundLoader sound;
-  private SoundLoader scream;
+
+
   private ArrayList<FireTrap> traps = new ArrayList<>();
 
 
@@ -220,17 +218,15 @@ public class Player extends Humanoid implements HumanoidObject
       // Decides which sound to play based on state of player
       if (isStill)
       {
-        stopSound();
+        SoundLoader.stopMoving();
       }
       else if (isRunning)
       {
-        sound = runSound;
-        playSound();
+        SoundLoader.playerRun();
       }
       else if (isWalking)
       {
-        sound = walkSound;
-        playSound();
+        SoundLoader.playerWalk();
       }
 
       animation.start();
@@ -258,23 +254,6 @@ public class Player extends Humanoid implements HumanoidObject
     return stamina;
   }
 
-  public void loadSounds()
-  {
-    runSound = new SoundLoader("pRunSound.wav");
-    walkSound = new SoundLoader("pWalkSound.wav");
-    scream = new SoundLoader("pScream.wav");
-    sound = walkSound;
-  }
-
-  public void playSound()
-  {
-    sound.playLooped();
-  }
-
-  public void stopSound()
-  {
-    sound.stop();
-  }
 
   public void pickupFireTrap(FireTrap trap)
   {

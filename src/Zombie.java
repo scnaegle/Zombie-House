@@ -12,7 +12,6 @@ public class Zombie extends Humanoid implements HumanoidObject
   private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   public boolean bitPlayer = false;
-  public SoundLoader sound;
   public boolean zombieDied = false;
   protected int frame = 0;
   protected Sprite sprite = new Sprite("ZombieSheet");
@@ -20,10 +19,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   Animation moveLeft;
   Animation moveRight;
   Animation moveUp;
-  private SoundLoader groan;
-  private SoundLoader zWalk;
-  private SoundLoader bite;
-  private SoundLoader hitObst;
+
   private FireTrap trap;
 
 
@@ -90,7 +86,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     if (bitesPlayer(player))
     {
       setBite();
-      sound.play();
       bitPlayer = true;
     }
 
@@ -99,8 +94,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     if (getDistance((Object2D) player) <= range)
     {
       //System.out.println(Math.round(getDistance((Object2D) player)));
-      sound = zWalk;
-      sound.playLooped();
+      SoundLoader.playZWalk();
     }
 //    else
 //    {
@@ -115,8 +109,7 @@ public class Zombie extends Humanoid implements HumanoidObject
         hitWall(map, next_location))
     {
 //      System.out.println("Zombie hit wall");
-      sound = hitObst;
-      sound.play();
+      SoundLoader.playHitObst();
     }
 
     determineAnimation();
@@ -124,15 +117,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     animation.update();
   }
 
-  public void loadNoises()
-  {
-    groan = new SoundLoader("zGroan.wav");
-    zWalk = new SoundLoader("zWalk.wav");
-    bite = new SoundLoader("zBite.wav");
-    hitObst = new SoundLoader("zHitObst.wav");
-    sound = zWalk;
 
-  }
 
   public boolean bitesPlayer(HumanoidObject player)
   {
@@ -142,7 +127,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 
   public void setBite()
   {
-    sound = bite;
+    SoundLoader.playBite();
   }
 
   public double getDecisionRate()

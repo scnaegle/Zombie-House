@@ -7,6 +7,7 @@ public class FireTrap extends GameObject
 {
   public boolean exploding = false;
   public SoundLoader sound;
+  public boolean trapIsGone = false;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
@@ -73,8 +74,11 @@ public class FireTrap extends GameObject
           fireAnimation.start();
 
         }
+        trapIsGone = true;
+        //exploding = false;
       }
     }
+    //fireAnimation.stop();
 
 
     if (getCenteredBoundingRectangle().intersects(player
@@ -84,10 +88,12 @@ public class FireTrap extends GameObject
       player.playerDied = true;
       SoundLoader.playExplosion();
       fireAnimation.start();
+      trapIsGone = true;
       // System.out.println("player on trap");
     }
-
+    //exploding = false;
     fireAnimation.update();
+    //exploding = false;
 
   }
 

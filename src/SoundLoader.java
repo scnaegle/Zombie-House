@@ -8,6 +8,13 @@ import java.io.InputStream;
 public class SoundLoader implements LineListener
 {
   private static SoundLoader combust;
+  private static SoundLoader groan;
+  private static SoundLoader zWalk;
+  private static SoundLoader bite;
+  private static SoundLoader hitObst;
+  private static SoundLoader walkSound;
+  private static SoundLoader runSound;
+  private static SoundLoader scream;
   boolean playFinished;
   //String audioFilePath;
   Thread thread;
@@ -51,7 +58,52 @@ public class SoundLoader implements LineListener
   public static void loadSounds()
   {
     combust = new SoundLoader("explosion.wav");
+    groan = new SoundLoader("zGroan.wav");
+    zWalk = new SoundLoader("zWalk.wav");
+    bite = new SoundLoader("zBite.wav");
+    hitObst = new SoundLoader("zHitObst.wav");
+    runSound = new SoundLoader("pRunSound.wav");
+    walkSound = new SoundLoader("pWalkSound.wav");
+    scream = new SoundLoader("pScream.wav");
 
+  }
+
+  public static void playBite()
+  {
+    bite.play();
+  }
+
+  public static void playHitObst()
+  {
+    hitObst.play();
+  }
+
+  public static void playZWalk()
+  {
+    zWalk.playLooped();
+  }
+
+  public static void stopSounds()
+  {
+    zWalk.stop();
+    hitObst.stop();
+    combust.stop();
+  }
+
+  public static void stopMoving()
+  {
+    runSound.stop();
+    walkSound.stop();
+  }
+
+  public static void playerRun()
+  {
+    runSound.playLooped();
+  }
+
+  public static void playerWalk()
+  {
+    walkSound.playLooped();
   }
 
   void play()

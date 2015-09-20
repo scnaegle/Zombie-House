@@ -353,7 +353,7 @@ public class GUI
     running = false;
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
-    //gamePanel.stopAllSounds();
+    gamePanel.stopAllSounds();
 
 
   }
@@ -392,7 +392,6 @@ public class GUI
   public void loadSounds()
   {
     gamePanel.loadMusic();
-    player.loadSounds();
     SoundLoader.loadSounds();
     //fireTrap.loadExplosion();
   }
