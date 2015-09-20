@@ -71,7 +71,7 @@ public class GameMap
   {
     generateMap();
     int offset = 24;
-    int r = 0;
+
     this.num_rows = Y_SIZE;
     this.num_cols = X_SIZE;
     grid = new Tile[num_rows + OFFSET][num_cols + OFFSET];
@@ -81,6 +81,7 @@ public class GameMap
     int maxCol = num_cols + (OFFSET / 2);
     int minCol = OFFSET/2;
 
+    int r = minRow;
     for(int col = 0; col< num_cols + offset; col++)
     {
       for(int row=0; row<num_rows + offset; row++)
@@ -94,10 +95,10 @@ public class GameMap
 
     for (Block[] row : blockGrid)
     {
-      int c = 0;
+      int c = minCol;
       for (Block block : row)
       {
-        Tile new_tile = new Tile(block.y, block.x, block.type);
+        Tile new_tile = new Tile(block.y+minRow, block.x+minCol, block.type);
         grid[r][c] = new_tile;
         if (new_tile.tile_type == TileType.START)
         {
