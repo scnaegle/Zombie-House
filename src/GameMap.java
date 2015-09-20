@@ -91,9 +91,9 @@ public class GameMap
       {
         Tile empty_tile = new Tile(row,col,TileType.WALL);
         grid[row][col]=empty_tile;
-        System.out.print(grid[row][col].tile_type);
+//        System.out.print(grid[row][col].tile_type);
       }
-      System.out.println();
+//      System.out.println();
     }
 
     for (Block[] row : blockGrid)
@@ -230,7 +230,7 @@ public class GameMap
      * these next couple of methods cause it to be used for basic testing until
      * I implement it to be more verssitle
      */
-    turnHallsToFloors(); // this will change the halls to the floors
+  //  turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
     makeEndRoom(); // makes an end room
     turnDoorToFloor(); // makes door to floor
@@ -313,7 +313,7 @@ public class GameMap
       setBlockType(x + 2, y, ROOM_WALL);
       setBlockType(x + 2, y + 1, ROOM_WALL);
       setBlockType(x + 2, y + 2, ROOM_WALL);
-      setBlockType(x + 2, y + 1, ROOM_WALL);
+      setBlockType(x + 1, y + 2, ROOM_WALL);
 
 
     }
