@@ -75,22 +75,22 @@ public class GameMap
   public GameMap()
   {
     generateMap();
-
+    
 
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
     grid = new Tile[num_rows][num_cols];
     Random rand = new Random();
-    int minRow = OFFSET / 2;
-    int minCol = OFFSET / 2;
+    int minRow = OFFSET/2;
+    int minCol = OFFSET/2;
 
     int r = minRow;
-    for (int row = 0; row < num_rows; row++)
+    for(int row=0; row<num_rows; row++)
     {
-      for (int col = 0; col < num_cols; col++)
+      for(int col = 0; col< num_cols; col++)
       {
-        Tile empty_tile = new Tile(row, col, TileType.WALL);
-        grid[row][col] = empty_tile;
+        Tile empty_tile = new Tile(row,col,TileType.WALL);
+        grid[row][col]=empty_tile;
 //        System.out.print(grid[row][col].tile_type);
       }
 //      System.out.println();
@@ -101,8 +101,7 @@ public class GameMap
       int c = minCol;
       for (Block block : row)
       {
-        Tile new_tile =
-            new Tile(block.y + minRow, block.x + minCol, block.type);
+        Tile new_tile = new Tile(block.y+minRow, block.x+minCol, block.type);
         grid[r][c] = new_tile;
         if (new_tile.tile_type == TileType.START)
         {
@@ -121,22 +120,13 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.BRICK)
         {
-          boolean masterZombieSpawn = false;
-
           if (rand.nextDouble() < GUI.zspawn)
           {
             //System.out.println("tile is a brick");
-
             Zombie zombie;
             Location location =
                 new Location(new_tile.col * GUI.tile_size,
                     new_tile.row * GUI.tile_size);
-            if (masterZombieSpawn == false)
-            {
-              zombie = new MasterZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                  location);
-              masterZombieSpawn = true;
-            }
             if (rand.nextBoolean())
             {
               //System.out.println("made random zombie");
@@ -240,7 +230,7 @@ public class GameMap
      * these next couple of methods cause it to be used for basic testing until
      * I implement it to be more verssitle
      */
-    //  turnHallsToFloors(); // this will change the halls to the floors
+  //  turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
     makeEndRoom(); // makes an end room
     turnDoorToFloor(); // makes door to floor
@@ -319,7 +309,6 @@ public class GameMap
     {
       setBlockType(x + 1, y + 1, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
-      setBlockType(x - 1, y + 1, BASIC_TILE);
       setBlockType(x + 1, y, ROOM_WALL);
       setBlockType(x + 2, y, ROOM_WALL);
       setBlockType(x + 2, y + 1, ROOM_WALL);
@@ -333,8 +322,6 @@ public class GameMap
 
       setBlockType(x - 1, y + 1, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
-      setBlockType(x + 1, y + 1, BASIC_TILE);
-
       setBlockType(x - 1, y, ROOM_WALL);
       setBlockType(x - 2, y, ROOM_WALL);
       setBlockType(x - 2, y + 1, ROOM_WALL);
@@ -361,8 +348,6 @@ public class GameMap
     {
       setBlockType(x + 1, y + 1, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
-      setBlockType(x + 1, y - 1, BASIC_TILE);
-
       setBlockType(x, y + 1, ROOM_WALL);
       setBlockType(x, y + 2, ROOM_WALL);
       setBlockType(x + 1, y + 2, ROOM_WALL);
@@ -374,8 +359,6 @@ public class GameMap
     {
       setBlockType(x + 1, y - 1, END_ROOM);
       setBlockType(x + 1, y, BASIC_TILE);
-      setBlockType(x + 1, y + 1, BASIC_TILE);
-
       setBlockType(x, y - 1, ROOM_WALL);
       setBlockType(x, y - 2, ROOM_WALL);
       setBlockType(x + 1, y - 2, ROOM_WALL);
@@ -1386,18 +1369,12 @@ public class GameMap
     }
   }
 
-  public BufferedImage convertMapToImage(int tile_size)
-  {
-    BufferedImage new_image =
-        new BufferedImage(num_cols * tile_size, num_rows * tile_size,
-            BufferedImage.TYPE_INT_RGB);
+  public BufferedImage convertMapToImage(int tile_size) {
+    BufferedImage new_image = new BufferedImage(num_cols * tile_size, num_rows * tile_size, BufferedImage.TYPE_INT_RGB);
     Graphics2D g = new_image.createGraphics();
-    for (int row = 0; row < num_rows; row++)
-    {
-      for (int col = 0; col < num_cols; col++)
-      {
-        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
-            row * GUI.tile_size, GUI.tile_size, GUI.tile_size, null);
+    for(int row = 0; row < num_rows; row++) {
+      for(int col = 0; col < num_cols; col++) {
+        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size, row * GUI.tile_size, GUI.tile_size, GUI.tile_size, null);
         if (SHOW_COORDS)
         {
           g.setColor(Color.WHITE);
@@ -1411,11 +1388,9 @@ public class GameMap
   }
 
 
-  public void paintSection(Graphics g, Rectangle rect, int tile_size)
-  {
+  public void paintSection(Graphics g, Rectangle rect, int tile_size) {
     Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
-    Location end = new Location(0, 0,
-        (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
+    Location end = new Location(0, 0, (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
         (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
     start.x = Math.max(start.x, 0);
     start.y = Math.max(start.y, 0);
@@ -1583,24 +1558,19 @@ public class GameMap
     frame.setLayout(new BorderLayout());
     frame.setExtendedState(frame.MAXIMIZED_BOTH);
 
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
+    JPanel map_panel = new JPanel() {
+      public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D)g;
         g2.drawImage(map_image, 0, 0, null);
       }
     };
-    map_panel
-        .setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
+    map_panel.setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
 
     JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //    scroll_pane.setVerticalScrollBarPolicy(
 //        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //    scroll_pane.setHorizontalScrollBarPolicy(
