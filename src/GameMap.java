@@ -386,9 +386,9 @@ public class GameMap
       }
     }
 
-    for (int y = Y_SIZE - 1; y > 0; y--)
+    for (int y = Y_SIZE - 1; y > 1; y--)
     {
-      for (int x = X_SIZE - 1; x > 0; x--)
+      for (int x = X_SIZE - 1; x > 1; x--)
       {
         if (isHall(x, y) && surroundedThreeSide(x, y))
         {
