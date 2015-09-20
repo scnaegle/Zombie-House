@@ -57,6 +57,7 @@ public class GameMap
   private static Random random = new Random();
   private static Block[][] blockGrid = new Block[Y_SIZE][X_SIZE];
   public Location start_location;
+  public Location end_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   private int num_rows;
@@ -83,6 +84,11 @@ public class GameMap
         if (new_tile.tile_type == TileType.START)
         {
           start_location = new Location(new_tile.col * GUI.tile_size,
+              new_tile.row * GUI.tile_size);
+        }
+        if (new_tile.tile_type == TileType.EXIT)
+        {
+          end_location = new Location(new_tile.col * GUI.tile_size,
               new_tile.row * GUI.tile_size);
         }
         if (new_tile.tile_type == TileType.WALL ||
@@ -380,9 +386,9 @@ public class GameMap
       }
     }
 
-    for (int y = Y_SIZE - 1; y > 0; y--)
+    for (int y = Y_SIZE - 1; y > 1; y--)
     {
-      for (int x = X_SIZE - 1; x > 0; x--)
+      for (int x = X_SIZE - 1; x > 1; x--)
       {
         if (isHall(x, y) && surroundedThreeSide(x, y))
         {
@@ -1334,6 +1340,17 @@ public class GameMap
         }
       }
     }
+  }
+
+  public void paintSection(Graphics g, Rectangle rect, int tile_size) {
+    Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
+    Location end = new Location(0, 0, (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
+        (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
+    start.x = Math.max(start.x, 0);
+    start.y = Math.max(start.y, 0);
+    end.x = Math.min(end.x, num_rows - 1);
+    end.y = Math.min(end.y, num_cols - 1);
+    paintSection(g, start, end, tile_size);
   }
 
   /**

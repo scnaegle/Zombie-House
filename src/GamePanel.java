@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements KeyListener
   final long OPTIMAL_TIME = NANO_SECONDS / TARGET_FPS;
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int FPS = 30;
+  static final int FPS = 40;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
   final static int DEFAULT_WIDTH = SHOWN_TILES * GUI.tile_size;
@@ -50,7 +50,6 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader sound;
 
   int shown_fps = 0;
-
 
   public GamePanel(GUI parent)
   {
@@ -79,14 +78,15 @@ public class GamePanel extends JPanel implements KeyListener
 
     //System.out.println("reached this point");
 
-    for(Zombie zombie : map.zombies) {
-      zombie.loadNoises();
-    }
+//    for(Zombie zombie : map.zombies) {
+//      zombie.loadNoises();
+//    }
 
-    for (FireTrap traps : map.traps)
-    {
-      traps.loadExplosion();
-    }
+
+//    for (FireTrap traps : map.traps)
+//    {
+//      traps.sound.loadExplosion();
+//    }
 
 
   }
@@ -139,6 +139,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
   }
 
+
   public void doGameUpdates(double delta) {
     player.update(map, delta);
 //    snapViewPortToPlayer();
@@ -166,19 +167,36 @@ public class GamePanel extends JPanel implements KeyListener
       if (zombie.bitPlayer)
       {
         System.out.println("zombie bit player");
-        parent.running = false;
+        //parent.running = false;
         parent.pauseGame();
-        stopAllSounds();
+        //stopAllSounds();
         GUI.showDeathDialog(parent);
       }
     }
 
+    for (FireTrap trap : map.traps)
+    {
+      trap.update(map, player);
+    }
 
+    if (player.playerDied)
+    {
+      //parent.running = false;
+      parent.pauseGame();
+      //stopAllSounds();
+      GUI.showDeathDialog(parent);
+    }
 
     parent.updatePlayerLabels();
     parent.updateZombieLabels();
 
 //    explodingTrap.move();
+  }
+
+  private boolean onScreen(Object2D object)
+  {
+    return object.getLocation().x < GUI.SCENE_WIDTH &&
+        object.getLocation().y < GUI.SCENE_HEIGHT;
   }
 
   /**
@@ -209,18 +227,20 @@ public class GamePanel extends JPanel implements KeyListener
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
     g2.scale(scale, scale);
 
+//    map.paintSection(g2, vp.getViewRect(), GUI.tile_size);
+    map.paint(g2, GUI.tile_size);
+//    System.out.println(vp.getWidth());
+//    System.out.println(DEFAULT_WIDTH);
+//    System.out.println(scale);
+
     // Math to make vignette move with viewport
     int width = vp.getWidth();
     int height = vp.getHeight();
-
-
-
-    map.paint(g2, GUI.tile_size);
-
+    boolean explodee = false;
 
     for (FireTrap trap : map.traps)
     {
-      if (!player.is_picking_up || player.is_putting_down)
+      if (!player.is_picking_up || player.is_putting_down || !trap.trapIsGone)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);
@@ -228,10 +248,23 @@ public class GamePanel extends JPanel implements KeyListener
 
       if (trap.exploding)
       {
+
         g2.drawImage(trap.fireAnimation.getSprite(),
             trap.location.getX(), trap.location.getY(), null);
+        explodee = true;
+
+
       }
+
+
     }
+
+
+//    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//        RenderingHints.VALUE_ANTIALIAS_ON);
+
+
+
     for(Zombie zombie : map.zombies) {
       if (!zombie.zombieDied)
       {
@@ -245,11 +278,21 @@ public class GamePanel extends JPanel implements KeyListener
 
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
-    ;
 
-    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+
+    if (!explodee)
+    {
+      g2.drawImage(vignetteCanvas, vcX, vcY, null);
+
+    }
+    else
+    {
+      System.out.println("butts");
+    }
+
 
   }
+
 
   private BufferedImage makeVignette(int sight)
   {
@@ -317,22 +360,25 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_PICKUP.contains(code))
     {
-      for (FireTrap trap : map.traps)
+      FireTrap t = map.traps.stream()
+                            .filter(player::intersects)
+                            .findFirst()
+                            .orElse(null);
+
+      if (t != null)
       {
-        if (player.intersects(trap))
-        {
-          player.pickupFireTrap(trap);
-        }
-
-        if (player.getFire_traps() > 0 && player.getFootTile(map).equals(TileType.BRICK))
-        {
-          player.is_putting_down = true;
-        }
-
+        player.pickupFireTrap(t);
+      }
+      else if (player.getFire_traps() > 0)
+      {
+        player.is_putting_down = true;
+        System.out.println("player put down trap");
+      }
+      else
+      {
+        System.out.println(player.getFire_traps());
       }
     }
-
-
   }
 
 
@@ -372,15 +418,7 @@ public class GamePanel extends JPanel implements KeyListener
 
   public void stopAllSounds()
   {
-    for (Zombie zombie : map.zombies)
-    {
-      zombie.sound.stop();
-    }
-    for (FireTrap trap : map.traps)
-    {
-      trap.sound.stop();
-    }
-    player.stopSound();
+    SoundLoader.stopSounds();
   }
 
   public void loadMusic()

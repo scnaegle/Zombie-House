@@ -7,6 +7,7 @@ public class FireTrap extends GameObject
 {
   public boolean exploding = false;
   public SoundLoader sound;
+  public boolean trapIsGone = false;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
@@ -69,28 +70,38 @@ public class FireTrap extends GameObject
           //System.out.println("Zombie touched trap");
           exploding = true;
           zombie.zombieDied = true;
-          sound.play();
+          SoundLoader.playExplosion();
           fireAnimation.start();
-          fireAnimation.update();
+
         }
-
-
+        trapIsGone = true;
+        //exploding = false;
       }
     }
+    //fireAnimation.stop();
 
-//    if (getCenteredBoundingRectangle().intersects(player
-// .getBoundingRectangle()))
-//    {
-//     // System.out.println("player on trap");
-//    }
+
+    if (getCenteredBoundingRectangle().intersects(player
+        .getBoundingRectangle()) && player.isRunning)
+    {
+      exploding = true;
+      player.playerDied = true;
+      SoundLoader.playExplosion();
+      fireAnimation.start();
+      trapIsGone = true;
+      // System.out.println("player on trap");
+    }
+    //exploding = false;
+    fireAnimation.update();
+    //exploding = false;
 
   }
 
-  public void loadExplosion()
-  {
-    combust = new SoundLoader("explosion.wav");
-    sound = combust;
-  }
+//  public void loadExplosion()
+//  {
+//    combust = new SoundLoader("explosion.wav");
+//    sound = combust;
+//  }
 
   @Override
   public boolean equals(Object o) {
@@ -105,5 +116,11 @@ public class FireTrap extends GameObject
   @Override
   public int hashCode() {
     return location != null ? location.hashCode() : 0;
+  }
+
+  public void setNewLocation(Location newLocation)
+  {
+    location.x = newLocation.x;
+    location.y = newLocation.y;
   }
 }

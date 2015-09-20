@@ -51,7 +51,7 @@ public class GUI
 
     int option = JOptionPane
         .showOptionDialog(parent.window, "Aw, you died! Try again?",
-            "YOU WERE BITEN",
+            "YOU DIED",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
 
@@ -194,6 +194,7 @@ public class GUI
         setUpGUI();
 
         loadSounds();
+
         popup.dispose();
       }
     });
@@ -394,7 +395,7 @@ public class GUI
   public void loadSounds()
   {
     gamePanel.loadMusic();
-    player.loadSounds();
+    SoundLoader.loadSounds();
     //fireTrap.loadExplosion();
   }
 
