@@ -120,6 +120,7 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.BRICK)
         {
+          boolean spawnMasterZombie = true;
           if (rand.nextDouble() < GUI.zspawn)
           {
             //System.out.println("tile is a brick");
@@ -127,6 +128,13 @@ public class GameMap
             Location location =
                 new Location(new_tile.col * GUI.tile_size,
                     new_tile.row * GUI.tile_size);
+            if(spawnMasterZombie)
+            {
+              zombie = new MasterZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                  location);
+              spawnMasterZombie=false;
+              System.out.println("spawwned that master zomebie, Yo!");
+            }
             if (rand.nextBoolean())
             {
               //System.out.println("made random zombie");
@@ -1566,7 +1574,8 @@ public class GameMap
         g2.drawImage(map_image, 0, 0, null);
       }
     };
-    map_panel.setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
+    map_panel.setPreferredSize(
+        new Dimension(map.num_cols * 80, map.num_rows * 80));
 
     JScrollPane scroll_pane = new JScrollPane(map_panel);
     scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);

@@ -80,4 +80,17 @@ public class MasterZombie extends Zombie
         sprite.getSprite(8, 6),};
     return up;
   }
+
+
+  @Override
+  protected void chooseDirection(HumanoidObject player) {
+//    System.out.println("Choosing Line Walk Zombie direction...");
+    if (smellPlayer(player)) {
+//      System.out.println("BRAAAAAIIINNNNNNZZZZ");
+      double angle = getDirectionTo((Object2D)player);
+//      System.out.println("new angle: " + angle);
+      heading.setDegrees(angle);
+    } // else if hit hall then choose random direction
+  }
+
 }
