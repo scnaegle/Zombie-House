@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  * Sets up line walk zombies and their sprites.
@@ -16,9 +17,22 @@ public class LineWalkZombie extends Zombie
     moveLeft = new Animation(left, 5);
     moveRight = new Animation(right, 5);
     moveUp = new Animation(up, 5);
-    this.heading = new Heading(Heading.NONE);
     animation = moveLeft;
     animation.start();
+    Random rand = new Random();
+    switch(rand.nextInt(4)) {
+      case 0:
+        this.heading = new Heading(Heading.NORTH);
+        break;
+      case 1:
+        this.heading = new Heading(Heading.WEST);
+        break;
+      case 2:
+        this.heading = new Heading(Heading.EAST);
+        break;
+      case 3:
+        this.heading = new Heading(Heading.SOUTH);
+    }
   }
 
   public LineWalkZombie(double speed, double smell, double decision_rate, Location location) {
