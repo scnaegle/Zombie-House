@@ -144,8 +144,9 @@ public class GamePanel extends JPanel implements KeyListener
 
   private boolean onScreen(Object2D object)
   {
-    return object.getLocation().x < GUI.SCENE_WIDTH &&
-        object.getLocation().y < GUI.SCENE_HEIGHT;
+    return object.getLocation().x < vp.getWidth() &&
+        object.getLocation().x > 0 &&
+        object.getLocation().y < vp.getHeight() && object.getLocation().y > 0;
   }
 
   /**
@@ -171,6 +172,8 @@ public class GamePanel extends JPanel implements KeyListener
   {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON);
     vp = (JViewport) getParent();
 
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
@@ -188,7 +191,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     for (FireTrap trap : map.traps)
     {
-      if (!player.is_picking_up || player.is_putting_down || !trap.trapIsGone)
+      if (!player.is_picking_up || player.is_putting_down || !trap.exploding)
       {
         g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
             null);
@@ -208,8 +211,6 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-//    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-//        RenderingHints.VALUE_ANTIALIAS_ON);
 
 
 
@@ -228,14 +229,10 @@ public class GamePanel extends JPanel implements KeyListener
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
 
-    if (!explodee)
+    if (!explodee) //draw if trap is not exploding
     {
       g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
-    }
-    else
-    {
-      System.out.println("butts");
     }
 
 

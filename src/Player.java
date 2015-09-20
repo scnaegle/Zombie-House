@@ -31,7 +31,7 @@ public class Player extends Humanoid implements HumanoidObject
   private BufferedImage[] running = initPlayerSpriteRun();
   private Animation walk = new Animation(walking, 2);
   Animation animation = walk;
-  private Animation run = new Animation(running, 2);
+  private Animation run = new Animation(running, 1);
   private Animation stand = new Animation(still, 5);
 
 
