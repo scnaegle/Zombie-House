@@ -5,9 +5,10 @@ import java.awt.image.BufferedImage;
  */
 public class FireTrap extends GameObject
 {
+  private final int EXPLODE_TIME = 5 * GamePanel.FPS;
   public boolean exploding = false;
-  public SoundLoader sound;
   public boolean trapIsGone = false;
+  protected int frame = 0;
   Sprite sprite = new Sprite("fireTrap");
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
@@ -67,41 +68,42 @@ public class FireTrap extends GameObject
         if (getCenteredBoundingRectangle()
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
-          //System.out.println("Zombie touched trap");
+          //System.out.println(frame);
+          fireAnimation.start();
+          frame = fireAnimation.getFrameCount();
           exploding = true;
           zombie.zombieDied = true;
+          frame++;
+          System.out.println(fireAnimation.getFrameCount());
           SoundLoader.playExplosion();
-          fireAnimation.start();
-
+          System.out.println("exploding!");
+          if (frame >= EXPLODE_TIME)
+          {
+            System.out.println("frame = explode time");
+            frame = 0;
+            exploding = false;
+            fireAnimation.stop();
+          }
         }
-        trapIsGone = true;
-        //exploding = false;
+
       }
     }
-    //fireAnimation.stop();
+
 
 
     if (getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) && player.isRunning)
     {
-      exploding = true;
-      player.playerDied = true;
+      //exploding = true;
       SoundLoader.playExplosion();
-      fireAnimation.start();
-      trapIsGone = true;
-      // System.out.println("player on trap");
+      player.playerDied = true;
+
     }
-    //exploding = false;
+
     fireAnimation.update();
-    //exploding = false;
 
   }
 
-//  public void loadExplosion()
-//  {
-//    combust = new SoundLoader("explosion.wav");
-//    sound = combust;
-//  }
 
   @Override
   public boolean equals(Object o) {
