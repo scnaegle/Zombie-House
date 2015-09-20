@@ -31,18 +31,11 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_PICKUP = new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
 
   public GameMap map;
-  public GameMap procedureGenMap;
   Timer frame_timer;
-  int xScale;
   JViewport vp;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-
-//  private Zombie zombie;
-//  private FireTrap fireTrap;
-
-  private SoundLoader sound;
 
   public GamePanel(GUI parent)
   {
@@ -54,32 +47,9 @@ public class GamePanel extends JPanel implements KeyListener
     vignetteCanvas = makeVignette(player.getSight());
 
 
-//    File map_file = null;
-//    try
-//    {
-//      map_file =
-//          new File(getClass().getResource("resources/level1.map").toURI());
-//    }
-//    catch (URISyntaxException e)
-//    {
-//      e.printStackTrace();
-//    }
-
 
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
-
-    //System.out.println("reached this point");
-
-//    for(Zombie zombie : map.zombies) {
-//      zombie.loadNoises();
-//    }
-
-
-//    for (FireTrap traps : map.traps)
-//    {
-//      traps.sound.loadExplosion();
-//    }
 
 
     frame_timer = new Timer(SKIP_TICKS, new ActionListener()
@@ -111,7 +81,7 @@ public class GamePanel extends JPanel implements KeyListener
               //parent.running = false;
               parent.pauseGame();
               //stopAllSounds();
-              GUI.showDeathDialog(parent);
+              GUI.showDeathDialog(parent, "Ye be bitten! Keep yer zombie erff yer tail by using yer fire traps!");
             }
 
 
@@ -149,7 +119,7 @@ public class GamePanel extends JPanel implements KeyListener
             //parent.running = false;
             parent.pauseGame();
             //stopAllSounds();
-            GUI.showDeathDialog(parent);
+            GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
           }
 
           Tile test_tile;

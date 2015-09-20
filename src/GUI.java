@@ -43,13 +43,13 @@ public class GUI
   private Zombie zombie;
   private JLabel playerRegen;
 
-  public static void showDeathDialog(GUI parent)
+  public static void showDeathDialog(GUI parent, String message)
   {
 
     Object[] options = {"Restart", "Exit"};
 
     int option = JOptionPane
-        .showOptionDialog(parent.window, "Aw, you died! Try again?",
+        .showOptionDialog(parent.window, "Aaargghh! " + message + " Try again matey?",
             "YOU DIED",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
