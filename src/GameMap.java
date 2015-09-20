@@ -75,7 +75,7 @@ public class GameMap
   public GameMap()
   {
     generateMap();
-    int offset = 24;
+    
 
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
