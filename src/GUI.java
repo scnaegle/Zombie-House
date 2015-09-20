@@ -193,6 +193,7 @@ public class GUI
         setUpGUI();
 
         loadSounds();
+
         popup.dispose();
       }
     });
@@ -352,7 +353,7 @@ public class GUI
     running = false;
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
-    gamePanel.stopAllSounds();
+    //gamePanel.stopAllSounds();
 
 
   }
@@ -392,6 +393,7 @@ public class GUI
   {
     gamePanel.loadMusic();
     player.loadSounds();
+    SoundLoader.loadSounds();
     //fireTrap.loadExplosion();
   }
 

@@ -7,6 +7,7 @@ import java.io.InputStream;
  */
 public class SoundLoader implements LineListener
 {
+  private static SoundLoader combust;
   boolean playFinished;
   //String audioFilePath;
   Thread thread;
@@ -42,6 +43,16 @@ public class SoundLoader implements LineListener
     }
   }
 
+  public static void playExplosion()
+  {
+    combust.play();
+  }
+
+  public static void loadSounds()
+  {
+    combust = new SoundLoader("explosion.wav");
+
+  }
 
   void play()
   {
@@ -56,7 +67,6 @@ public class SoundLoader implements LineListener
     });
     thread.start();
   }
-
 
   @Override
   public void update(LineEvent event)

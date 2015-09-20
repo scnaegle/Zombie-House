@@ -69,12 +69,10 @@ public class FireTrap extends GameObject
           //System.out.println("Zombie touched trap");
           exploding = true;
           zombie.zombieDied = true;
-          sound.play();
+          SoundLoader.playExplosion();
           fireAnimation.start();
-          fireAnimation.update();
+
         }
-
-
       }
     }
 
@@ -84,19 +82,20 @@ public class FireTrap extends GameObject
     {
       exploding = true;
       player.playerDied = true;
-      sound.play();
+      SoundLoader.playExplosion();
       fireAnimation.start();
-      fireAnimation.update();
       // System.out.println("player on trap");
     }
 
+    fireAnimation.update();
+
   }
 
-  public void loadExplosion()
-  {
-    combust = new SoundLoader("explosion.wav");
-    sound = combust;
-  }
+//  public void loadExplosion()
+//  {
+//    combust = new SoundLoader("explosion.wav");
+//    sound = combust;
+//  }
 
   @Override
   public boolean equals(Object o) {
