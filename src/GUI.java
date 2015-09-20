@@ -186,6 +186,8 @@ public class GUI
 
 
         newGame();
+        setUpGUI();
+        loadSounds();
         popup.dispose();
       }
     });
@@ -194,14 +196,15 @@ public class GUI
 
   public void newGame()
   {
+
     map = new GameMap();
     initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
         map.start_location);
 
 
-    setUpGUI();
+    //setUpGUI();
 
-    loadSounds();
+    //loadSounds();
   }
 
   public void setUpGUI()

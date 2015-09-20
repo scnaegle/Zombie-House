@@ -133,12 +133,27 @@ public class GamePanel extends JPanel implements KeyListener
             GUI.showDeathDialog(parent);
           }
 
-//          if(player.getFootTile(map).tile_type == TileType.EXIT)
-//          {
-//            parent.whichLevel++;
-//            parent.newGame();
-//
-//          }
+          Tile test_tile;
+          int player_row = player.location.getRow(GUI.tile_size);
+          int player_col = player.location.getCol(GUI.tile_size);
+          for (int row = player_row - 1; row <= player_row + 1; row++)
+          {
+            for (int col = player_col - 1; col <= player_col + 1; col++)
+            {
+              test_tile = map.getTile(row, col);
+              if (test_tile.tile_type.equals(TileType.EXIT) &&
+                  player.getCenteredBoundingRectangle()
+                        .intersects(test_tile.getBoundingRectangle()))
+              {
+                parent.whichLevel++;
+                System.out.println("Next level");
+                newMap();
+
+
+              }
+            }
+          }
+
           repaint();
 
         }
@@ -147,6 +162,14 @@ public class GamePanel extends JPanel implements KeyListener
       }
     });
 
+  }
+
+  private void newMap()
+  {
+    GameMap new_map = new GameMap();
+    parent.map = new_map;
+    map = new_map;
+    player.location = new_map.start_location;
   }
 
   private boolean onScreen(Object2D object)
