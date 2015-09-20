@@ -1,4 +1,6 @@
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class GameMap
   private static final int DOWN = 1;
   private static final int LEFT = 2;
   private static final int RIGHT = 3;
+  private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
@@ -66,21 +69,41 @@ public class GameMap
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
 
+  BufferedImage map_image;
+
 
   public GameMap()
   {
     generateMap();
-    int r = 0;
+    int offset = 24;
+
     this.num_rows = Y_SIZE;
     this.num_cols = X_SIZE;
-    grid = new Tile[num_rows][num_cols];
+    grid = new Tile[num_rows + OFFSET][num_cols + OFFSET];
     Random rand = new Random();
+    int maxRow = num_rows + (OFFSET / 2);
+    int minRow = OFFSET/2;
+    int maxCol = num_cols + (OFFSET / 2);
+    int minCol = OFFSET/2;
+
+    int r = minRow;
+    for(int col = 0; col< num_cols + offset; col++)
+    {
+      for(int row=0; row<num_rows + offset; row++)
+      {
+        Tile empty_tile = new Tile(row,col,ROOM_WALL);
+        grid[row][col]=empty_tile;
+        System.out.print(grid[row][col].tile_type);
+      }
+      System.out.println();
+    }
+
     for (Block[] row : blockGrid)
     {
-      int c = 0;
+      int c = minCol;
       for (Block block : row)
       {
-        Tile new_tile = new Tile(block.y, block.x, block.type);
+        Tile new_tile = new Tile(block.y+minRow, block.x+minCol, block.type);
         grid[r][c] = new_tile;
         if (new_tile.tile_type == TileType.START)
         {
@@ -143,11 +166,13 @@ public class GameMap
     }
     System.out.println("map: ");
     System.out.println(toString());
+    this.map_image = convertMapToImage(GUI.tile_size);
   }
 
   public GameMap(File file)
   {
     createFromFile(file);
+    this.map_image = convertMapToImage(GUI.tile_size);
   }
 
 
@@ -1346,6 +1371,36 @@ public class GameMap
     }
   }
 
+  public BufferedImage convertMapToImage(int tile_size) {
+    BufferedImage new_image = new BufferedImage(num_cols * tile_size, num_rows * tile_size, BufferedImage.TYPE_INT_RGB);
+    Graphics2D g = new_image.createGraphics();
+    for(int row = 0; row < num_rows; row++) {
+      for(int col = 0; col < num_cols; col++) {
+        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size, row * GUI.tile_size, GUI.tile_size, GUI.tile_size, null);
+        if (SHOW_COORDS)
+        {
+          g.setColor(Color.WHITE);
+          g.drawString(String.format("(%d, %d)", row, col).toString(),
+              col * tile_size + (tile_size / 4),
+              row * tile_size + (tile_size / 2));
+        }
+      }
+    }
+    return new_image;
+  }
+
+
+  public void paintSection(Graphics g, Rectangle rect, int tile_size) {
+    Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
+    Location end = new Location(0, 0, (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
+        (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
+    start.x = Math.max(start.x, 0);
+    start.y = Math.max(start.y, 0);
+    end.x = Math.min(end.x, num_rows - 1);
+    end.y = Math.min(end.y, num_cols - 1);
+    paintSection(g, start, end, tile_size);
+  }
+
   /**
    * This paints the entire grid from start to finish
    *
@@ -1496,8 +1551,35 @@ public class GameMap
     return ret;
   }
 
-//  public static void main(String[] args)
-//  {
-//   // generateMap();
-//  }
+  public static void main(String[] args)
+  {
+    GameMap map = new GameMap();
+    BufferedImage map_image = map.convertMapToImage(80);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    JPanel map_panel = new JPanel() {
+      public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D)g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel.setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    scroll_pane.setVerticalScrollBarPolicy(
+//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//    scroll_pane.setHorizontalScrollBarPolicy(
+//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
+  }
 }

@@ -186,7 +186,8 @@ public class GamePanel extends JPanel implements KeyListener
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
     g2.scale(scale, scale);
 
-    map.paint(g2, GUI.tile_size);
+//    map.paint(g2, GUI.tile_size);
+    g2.drawImage(map.map_image, 0, 0, null);
 //    System.out.println(vp.getWidth());
 //    System.out.println(DEFAULT_WIDTH);
 //    System.out.println(scale);
