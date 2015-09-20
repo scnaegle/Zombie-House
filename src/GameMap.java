@@ -64,11 +64,12 @@ public class GameMap
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   Zombie master;
-  BufferedImage map_image;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
+
+  BufferedImage map_image;
 
 
   public GameMap()
@@ -119,6 +120,7 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.BRICK)
         {
+          boolean spawnMasterZombie = true;
           if (rand.nextDouble() < GUI.zspawn)
           {
             //System.out.println("tile is a brick");
@@ -126,6 +128,13 @@ public class GameMap
             Location location =
                 new Location(new_tile.col * GUI.tile_size,
                     new_tile.row * GUI.tile_size);
+            if(spawnMasterZombie)
+            {
+              zombie = new MasterZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                  location);
+              spawnMasterZombie=false;
+              System.out.println("spawwned that master zomebie, Yo!");
+            }
             if (rand.nextBoolean())
             {
               //System.out.println("made random zombie");
@@ -192,7 +201,7 @@ public class GameMap
     // all connected
     for (int i = 0; i < numberOfInitalHalls; i++)
     {
-      makeInitalHalls();
+      makeInitialHalls();
     }
 
 
@@ -440,7 +449,7 @@ public class GameMap
    * makes inital halls that will help determine how rooms will be placed
    * halls will span entire grid
    */
-  private static void makeInitalHalls()
+  private static void makeInitialHalls()
   {
     int randomX = random.nextInt(X_SIZE - 2) + 1;
     int randomY = random.nextInt(Y_SIZE - 1) + 1;
@@ -1311,42 +1320,6 @@ public class GameMap
     }
   }
 
-  public static void main(String[] args)
-  {
-    GameMap map = new GameMap();
-    BufferedImage map_image = map.convertMapToImage(80);
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map_image, 0, 0, null);
-      }
-    };
-    map_panel
-        .setPreferredSize(new Dimension(map.num_cols * 80, map.num_rows * 80));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//    scroll_pane.setVerticalScrollBarPolicy(
-//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//    scroll_pane.setHorizontalScrollBarPolicy(
-//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
-  }
 
   public int getWidth(int tile_size)
   {
@@ -1437,6 +1410,19 @@ public class GameMap
     paintSection(g, start, end, tile_size);
   }
 
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
+
 
 //    GameMapWithBlocks gameMap = new GameMapWithBlocks();
 //    GameMap procedureGenerateMap = new GameMap(gameMap.generateMap());
@@ -1463,18 +1449,6 @@ public class GameMap
 //    generateMap();
 //
 
-  /**
-   * This paints the entire grid from start to finish
-   *
-   * @param g
-   * @param tile_size
-   */
-  public void paint(Graphics g, int tile_size)
-  {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
-  }
 
   /**
    * Creates map from a file
@@ -1584,5 +1558,38 @@ public class GameMap
       ret += "\n";
     }
     return ret;
+  }
+
+  public static void main(String[] args)
+  {
+    GameMap map = new GameMap();
+    BufferedImage map_image = map.convertMapToImage(80);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    JPanel map_panel = new JPanel() {
+      public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D)g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel.setPreferredSize(
+        new Dimension(map.num_cols * 80, map.num_rows * 80));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    scroll_pane.setVerticalScrollBarPolicy(
+//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//    scroll_pane.setHorizontalScrollBarPolicy(
+//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
   }
 }
