@@ -27,12 +27,12 @@ public class Location
 
   public int getRow(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
-    return (int)(center.y / tile_size);
+    return (center.y / tile_size);
   }
 
   public int getCol(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
-    return (int)(center.x / tile_size);
+    return (center.x / tile_size);
   }
 
   public int getX() {
