@@ -77,21 +77,19 @@ public class GameMap
     generateMap();
     int offset = 24;
 
-    this.num_rows = Y_SIZE;
-    this.num_cols = X_SIZE;
-    grid = new Tile[num_rows + OFFSET][num_cols + OFFSET];
+    this.num_rows = Y_SIZE + OFFSET;
+    this.num_cols = X_SIZE + OFFSET;
+    grid = new Tile[num_rows][num_cols];
     Random rand = new Random();
-    int maxRow = num_rows + (OFFSET / 2);
     int minRow = OFFSET/2;
-    int maxCol = num_cols + (OFFSET / 2);
     int minCol = OFFSET/2;
 
     int r = minRow;
-    for(int col = 0; col< num_cols + offset; col++)
+    for(int row=0; row<num_rows; row++)
     {
-      for(int row=0; row<num_rows + offset; row++)
+      for(int col = 0; col< num_cols; col++)
       {
-        Tile empty_tile = new Tile(row,col,ROOM_WALL);
+        Tile empty_tile = new Tile(row,col,TileType.WALL);
         grid[row][col]=empty_tile;
         System.out.print(grid[row][col].tile_type);
       }
