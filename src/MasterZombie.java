@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  * Sets up the master zombie since his sprite is different, as well as
@@ -21,6 +22,31 @@ public class MasterZombie extends Zombie
     moveUp = new Animation(up, 5);
     animation = moveLeft;
     animation.start();
+    Random rand = new Random();
+    switch(rand.nextInt(4)) {
+      case 0:
+        this.heading = new Heading(Heading.NORTH);
+        break;
+      case 1:
+        this.heading = new Heading(Heading.WEST);
+        break;
+      case 2:
+        this.heading = new Heading(Heading.EAST);
+        break;
+      case 3:
+        this.heading = new Heading(Heading.SOUTH);
+    }
+  }
+
+
+  public MasterZombie(double speed, double smell, double decision_rate,
+                      Location location)
+  {
+    this(location);
+    this.defined_speed = speed;
+    this.current_speed = speed;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
   }
 
   private BufferedImage[] initDown()
