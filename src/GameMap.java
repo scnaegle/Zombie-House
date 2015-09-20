@@ -40,14 +40,13 @@ public class GameMap
   private static final int RIGHT = 3;
   private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
-
   private static int numberOfInitalHalls = 2;
   private static int numberOfRandomHalls = 2;
   private static int numberOfRooms = 10;
 
   // we are going to need to find a way to change this number when
   // starting a new level and such
-  private static int numberOfObsicles = 8;
+  private static int numberOfObsicles = 3;
   private static int roomSize;
   private static int buildRoomX;
   private static int buildRoomY;
@@ -76,38 +75,33 @@ public class GameMap
   public GameMap()
   {
     generateMap();
-
+    
 
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
     grid = new Tile[num_rows][num_cols];
     Random rand = new Random();
-    int minRow = OFFSET / 2;
-    int minCol = OFFSET / 2;
+    int minRow = OFFSET/2;
+    int minCol = OFFSET/2;
 
     int r = minRow;
-    for (int row = 0; row < num_rows; row++)
+    for(int row=0; row<num_rows; row++)
     {
-      for (int col = 0; col < num_cols; col++)
+      for(int col = 0; col< num_cols; col++)
       {
-        Tile empty_tile = new Tile(row, col, TileType.WALL);
-        grid[row][col] = empty_tile;
+        Tile empty_tile = new Tile(row,col,TileType.WALL);
+        grid[row][col]=empty_tile;
 //        System.out.print(grid[row][col].tile_type);
       }
 //      System.out.println();
     }
 
-
-    boolean spawnMasterZombie = true; // this boolean makes so the master zombie
-                                      // will only be spawned once
     for (Block[] row : blockGrid)
     {
-
       int c = minCol;
       for (Block block : row)
       {
-        Tile new_tile =
-            new Tile(block.y + minRow, block.x + minCol, block.type);
+        Tile new_tile = new Tile(block.y+minRow, block.x+minCol, block.type);
         grid[r][c] = new_tile;
         if (new_tile.tile_type == TileType.START)
         {
@@ -126,6 +120,7 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.BRICK)
         {
+          boolean spawnMasterZombie = true;
           if (rand.nextDouble() < GUI.zspawn)
           {
             //System.out.println("tile is a brick");
@@ -133,30 +128,28 @@ public class GameMap
             Location location =
                 new Location(new_tile.col * GUI.tile_size,
                     new_tile.row * GUI.tile_size);
-            if (spawnMasterZombie)
+            if(spawnMasterZombie)
             {
-              zombie = new MasterZombie(GUI.zspeed*1.5, GUI.zsmell*2, GUI.drate,
+              zombie = new MasterZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                   location);
-              spawnMasterZombie = false;
+              spawnMasterZombie=false;
               System.out.println("spawwned that master zomebie, Yo!");
+            }
+            if (rand.nextBoolean())
+            {
+              //System.out.println("made random zombie");
+              zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                  location);
             }
             else
             {
-              if (rand.nextBoolean())
-              {
-                //System.out.println("made random zombie");
-                zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                    location);
-              }
-              else
-              {
-                //System.out.println("made line zombie");
+              //System.out.println("made line zombie");
 
-                zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                    location);
-              }
-              //master = new MasterZombie(location);
+              zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                  location);
             }
+            //master = new MasterZombie(location);
+
             zombies.add(zombie);
             //zombies.add(master);
             //System.out.println(zombies);
@@ -227,7 +220,6 @@ public class GameMap
     /**
      * Need adjustment to make larger obsitcles and such
      */
-    for(int i = 0; i<numberOfObsicles;i++)
     buildObsticales(); // makes obsticles inside rooms
 
     for (int i = 0; i < numberOfRandomHalls; i++)
@@ -246,7 +238,7 @@ public class GameMap
      * these next couple of methods cause it to be used for basic testing until
      * I implement it to be more verssitle
      */
-    //  turnHallsToFloors(); // this will change the halls to the floors
+  //  turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
     makeEndRoom(); // makes an end room
     turnDoorToFloor(); // makes door to floor
@@ -416,9 +408,9 @@ public class GameMap
 
   private static void chizelWalls()
   {
-    for (int y = 2; y < Y_SIZE - 2; y++)
+    for (int y = 1; y < Y_SIZE - 1; y++)
     {
-      for (int x = 2; x < X_SIZE - 2; x++)
+      for (int x = 1; x < X_SIZE - 1; x++)
       {
         if (isHall(x, y) && surroundedThreeSide(x, y))
         {
@@ -429,9 +421,9 @@ public class GameMap
       }
     }
 
-    for (int y = Y_SIZE - 2; y > 2; y--)
+    for (int y = Y_SIZE - 1; y > 1; y--)
     {
-      for (int x = X_SIZE - 2; x > 2; x--)
+      for (int x = X_SIZE - 1; x > 1; x--)
       {
         if (isHall(x, y) && surroundedThreeSide(x, y))
         {
@@ -1385,18 +1377,12 @@ public class GameMap
     }
   }
 
-  public BufferedImage convertMapToImage(int tile_size)
-  {
-    BufferedImage new_image =
-        new BufferedImage(num_cols * tile_size, num_rows * tile_size,
-            BufferedImage.TYPE_INT_RGB);
+  private BufferedImage convertMapToImage(int tile_size) {
+    BufferedImage new_image = new BufferedImage(num_cols * tile_size, num_rows * tile_size, BufferedImage.TYPE_INT_RGB);
     Graphics2D g = new_image.createGraphics();
-    for (int row = 0; row < num_rows; row++)
-    {
-      for (int col = 0; col < num_cols; col++)
-      {
-        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
-            row * GUI.tile_size, GUI.tile_size, GUI.tile_size, null);
+    for(int row = 0; row < num_rows; row++) {
+      for(int col = 0; col < num_cols; col++) {
+        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size, row * GUI.tile_size, GUI.tile_size, GUI.tile_size, null);
         if (SHOW_COORDS)
         {
           g.setColor(Color.WHITE);
@@ -1409,12 +1395,13 @@ public class GameMap
     return new_image;
   }
 
+  public void updateBufferedImage(int tile_size) {
+    this.map_image = convertMapToImage(tile_size);
+  }
 
-  public void paintSection(Graphics g, Rectangle rect, int tile_size)
-  {
+  public void paintSection(Graphics g, Rectangle rect, int tile_size) {
     Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
-    Location end = new Location(0, 0,
-        (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
+    Location end = new Location(0, 0, (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
         (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
     start.x = Math.max(start.x, 0);
     start.y = Math.max(start.y, 0);
@@ -1582,13 +1569,11 @@ public class GameMap
     frame.setLayout(new BorderLayout());
     frame.setExtendedState(frame.MAXIMIZED_BOTH);
 
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
+    JPanel map_panel = new JPanel() {
+      public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D)g;
         g2.drawImage(map_image, 0, 0, null);
       }
     };
@@ -1596,10 +1581,8 @@ public class GameMap
         new Dimension(map.num_cols * 80, map.num_rows * 80));
 
     JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //    scroll_pane.setVerticalScrollBarPolicy(
 //        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //    scroll_pane.setHorizontalScrollBarPolicy(

@@ -196,7 +196,6 @@ public class GUI
 
   public void newGame()
   {
-
     map = new GameMap();
     initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
         map.start_location);
