@@ -18,22 +18,8 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	protected int row;
 	protected int col;
   protected TileType tile_type;
-  boolean zombieSpawn = false;
-	boolean partOfRoom = false;
-	boolean partOfStartRoom=false;
-	boolean partOfEndRoom=false;
-	boolean visited =false;
-	boolean goal = false;
-	boolean corner = false;
-	boolean wall = false;
-	boolean hall =false;
-	boolean doorways = false;
-	char type;
 	int x;
 	int y;
-//  private BufferedImage floorTile = loadTile("floor");
-//  private BufferedImage wallTile = loadTile("wall");
-//  private BufferedImage grassTile = loadTile("grass");
 
   /*
    * Tile constructor
