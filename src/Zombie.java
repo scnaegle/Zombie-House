@@ -14,7 +14,7 @@ public class Zombie extends Humanoid implements HumanoidObject
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
   protected int frame = 0;
-  protected Sprite sprite = new Sprite("ZombieSheet");
+  protected Sprite sprite = new Sprite("ZombieSheet", GUI.tile_size);
   Animation moveDown;
   Animation moveLeft;
   Animation moveRight;

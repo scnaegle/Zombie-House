@@ -9,11 +9,13 @@ public class FireTrap extends GameObject
   public boolean exploding = false;
   public boolean trapIsGone = false;
   protected int frame = 0;
-  Sprite sprite = new Sprite("fireTrap");
+  Sprite sprite = new Sprite("fireTrap", GUI.tile_size);
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
   Animation explode = new Animation(explosion, 4);
   Animation fireAnimation = explode;
+  boolean remove_me = false;
+  private int explosionSize = 240;
   private SoundLoader combust;
   private GamePanel gamePanel;
 
@@ -29,7 +31,7 @@ public class FireTrap extends GameObject
   }
   private BufferedImage[] initExplosion()
   {
-    Sprite sprite = new Sprite("explode");
+    Sprite sprite = new Sprite("explode", 240);
 
     BufferedImage explode[] = {sprite.getSprite(1, 1),
         sprite.getSprite(1, 2),
@@ -61,6 +63,8 @@ public class FireTrap extends GameObject
 
   public void update(GameMap map, Player player)
   {
+    frame++;
+
     for (Zombie zombie : map.zombies)
     {
       if (getDistance(zombie) < GUI.tile_size)
@@ -71,39 +75,73 @@ public class FireTrap extends GameObject
           //System.out.println(frame);
 
           //frame = fireAnimation.getFrameCount();
-          exploding = true;
-          fireAnimation.start();
+          System.out.println("We should probably explode now....");
+          startExploding();
           zombie.zombieDied = true;
-          frame++;
-          //System.out.println(fireAnimation.getFrameCount());
-          SoundLoader.playExplosion();
-          System.out.println("exploding!");
-          if (frame >= EXPLODE_TIME)
-          {
-            frame = 0;
-            exploding = false;
-            fireAnimation.stop();
-          }
         }
-
       }
     }
 
-
+    //System.out.println("frame: " + frame);
+    if (exploding && frame >= EXPLODE_TIME)
+    {
+      stopExploding(map);
+    }
 
     if (getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) && player.isRunning)
     {
       //exploding = true;
-      SoundLoader.playExplosion();
+      startExploding();
       player.playerDied = true;
 
     }
 
     fireAnimation.update();
-
   }
 
+
+  public void startExploding()
+  {
+//    System.out.println("exploding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//    System.out.println("location: " + location);
+    exploding = true;
+    fireAnimation.start();
+    frame = 0;
+    SoundLoader.playExplosion();
+  }
+
+  public void stopExploding(GameMap map)
+  {
+//    System.out.println("We are no longer exploding!!!");
+//    System.out.println("location: " + location);
+    frame = 0;
+    exploding = false;
+    fireAnimation.stop();
+
+    Tile test_tile;
+    int trap_row = location.getRow(GUI.tile_size);
+    int trap_col = location.getCol(GUI.tile_size);
+    for (int row = trap_row - 1; row <= trap_row + 1; row++)
+    {
+      for (int col = trap_col - 1; col <= trap_col + 1; col++)
+      {
+        test_tile = map.getTile(row, col);
+        if (test_tile.tile_type.equals(TileType.BRICK)
+            || test_tile.tile_type.equals(TileType.INSIDEWALL))
+        {
+          test_tile.tile_type = TileType.BURNTFLOOR;
+        }
+
+
+      }
+    }
+    //map.traps.remove(this);
+
+    remove_me = true;
+
+    map.updateBufferedImage(GUI.tile_size);
+  }
 
   @Override
   public boolean equals(Object o) {

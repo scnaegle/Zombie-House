@@ -8,15 +8,16 @@ import java.io.IOException;
 public class Sprite
 {
   private BufferedImage sprite_sheet;
-  private final int TILE_SIZE = 80;
+  private int tile_size = 80;
 
-  public Sprite(String sprite) {
+  public Sprite(String sprite, int tile_size)
+  {
     sprite_sheet = loadSprite(sprite);
+    this.tile_size = tile_size;
   }
 
   public BufferedImage loadSprite(String file)
   {
-
     BufferedImage sprite = null;
 
     try
@@ -35,7 +36,8 @@ public class Sprite
     // Set back the row and col so that the index starts at 1
     col--;
     row--;
-    return sprite_sheet.getSubimage(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    return sprite_sheet.getSubimage(col * tile_size, row * tile_size, tile_size,
+        tile_size);
   }
 
 }

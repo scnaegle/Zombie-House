@@ -71,6 +71,7 @@ public class SoundLoader implements LineListener
   public static void playBite()
   {
     bite.play();
+    scream.play();
   }
 
   public static void playHitObst()

@@ -25,7 +25,7 @@ public class Player extends Humanoid implements HumanoidObject
   private int hearing = 10;
   private int fire_traps = 0;
   private FireTrap pickup_trap;
-  private Sprite stand_sprite = new Sprite("pStand");
+  private Sprite stand_sprite = new Sprite("pStand", GUI.tile_size);
   private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
   private BufferedImage[] walking = initPlayerSpriteWalk();
   private BufferedImage[] running = initPlayerSpriteRun();
@@ -100,7 +100,7 @@ public class Player extends Humanoid implements HumanoidObject
   public BufferedImage[] initPlayerSpriteWalk()
   {
 
-    Sprite sprite = new Sprite("pWalk");
+    Sprite sprite = new Sprite("pWalk", 80);
 
     BufferedImage walking[] = {sprite.getSprite(1, 2),
         sprite.getSprite(1, 3),
@@ -114,7 +114,7 @@ public class Player extends Humanoid implements HumanoidObject
   public BufferedImage[] initPlayerSpriteRun()
   {
 
-    Sprite sprite = new Sprite("pRun");
+    Sprite sprite = new Sprite("pRun", 80);
     BufferedImage running[] = {sprite.getSprite(1, 1),
         sprite.getSprite(1, 2),
         sprite.getSprite(1, 3),
