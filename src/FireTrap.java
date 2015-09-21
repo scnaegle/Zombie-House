@@ -115,6 +115,7 @@ public class FireTrap extends GameObject
   {
 //    System.out.println("We are no longer exploding!!!");
 //    System.out.println("location: " + location);
+    long time1 = System.currentTimeMillis();
     frame = 0;
     exploding = false;
     fireAnimation.stop();
@@ -131,16 +132,19 @@ public class FireTrap extends GameObject
             || test_tile.tile_type.equals(TileType.INSIDEWALL))
         {
           test_tile.tile_type = TileType.BURNTFLOOR;
+          map.updateTileOnImage(row, col, GUI.tile_size);
         }
-
-
       }
     }
+    long time2 = System.currentTimeMillis();
+
+
+    System.out.println("Time to update all tiles: " + (time2 - time1));
     //map.traps.remove(this);
 
     remove_me = true;
 
-    map.updateBufferedImage(GUI.tile_size);
+//    map.updateBufferedImage(GUI.tile_size);
   }
 
   @Override
