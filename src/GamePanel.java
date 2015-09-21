@@ -126,7 +126,7 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 parent.whichLevel++;
                 System.out.println("Next level");
-//                newMap();
+                newMap();
 
 
               }
