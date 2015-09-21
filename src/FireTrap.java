@@ -140,7 +140,7 @@ public class FireTrap extends GameObject
 
     remove_me = true;
 
-    map.updateBufferedImage(GUI.tile_size);
+  //  map.updateBufferedImage(GUI.tile_size);
   }
 
   @Override

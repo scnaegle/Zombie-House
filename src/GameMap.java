@@ -303,7 +303,7 @@ public class GameMap
         }
         //if it is able to run through location completly reset varibles and
         //try again
-        if (x == X_SIZE - 2 && y == Y_SIZE - 2)
+        if (x == X_SIZE - 1 && y == Y_SIZE - 1)
         {
           x = random.nextInt(X_SIZE - 2) + 1;
           y = random.nextInt(Y_SIZE - 2) + 1;

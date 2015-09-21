@@ -108,6 +108,8 @@ public class GamePanel extends JPanel implements KeyListener
             parent.pauseGame();
             //stopAllSounds();
             GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
+            newMap();
+
           }
 
           Tile test_tile;
@@ -124,7 +126,7 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 parent.whichLevel++;
                 System.out.println("Next level");
-                newMap();
+//                newMap();
 
 
               }
