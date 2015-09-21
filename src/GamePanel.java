@@ -89,8 +89,6 @@ public class GamePanel extends JPanel implements KeyListener
           for (FireTrap trap : map.traps)
           {
             trap.update(map, player);
-
-
             if (trap.exploding)
             {
               System.out.println("trap exploded");
@@ -140,8 +138,8 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 parent.whichLevel++;
                 System.out.println("Next level");
-                newMap();
 
+                newMap();
 
               }
             }
@@ -163,6 +161,7 @@ public class GamePanel extends JPanel implements KeyListener
     parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
+
   }
 
   private boolean onScreen(Object2D object)
