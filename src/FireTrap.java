@@ -140,6 +140,10 @@ public class FireTrap extends GameObject
           test_tile.tile_type = TileType.BURNTFLOOR;
 
         }
+        if (test_tile.tile_type.equals(TileType.WALL))
+        {
+          test_tile.tile_type.equals(TileType.BURNTWALL);
+        }
 
 
       }

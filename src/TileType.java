@@ -18,7 +18,7 @@ public enum TileType {
 
 	GRASS(1, '.', 1, "grass"),
 	BRICK(2, '*', 1, "floor"),
-	BURNTWALL(3, '3', 9999, "burntFloor"), // only used for outside walls
+	BURNTWALL(3, '3', 9999, "burntWall2"), // only used for outside walls
 	BURNTFLOOR(4, '4',1, "burntFloor"),
 	START(5, 'S', 1, "floor"),
 	EXIT(6, 'E', 1, "exit"),
