@@ -65,12 +65,11 @@ public class GameMap
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   Zombie master;
+  BufferedImage map_image;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
-
-  BufferedImage map_image;
 
 
   public GameMap()
@@ -278,7 +277,6 @@ public class GameMap
     }
   }
 
-
   /**
    *
    */
@@ -347,7 +345,6 @@ public class GameMap
 
   }
 
-
   /**
    * if it is able to place place the end peices horozantily
    * it will make a 2x2 end room
@@ -398,7 +395,6 @@ public class GameMap
         (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
   }
 
-
   /**
    * if 4 wall peices in a row horozantally return true
    *
@@ -412,7 +408,6 @@ public class GameMap
         inBoundsWithBorder(x, y + 3) &&
         (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
   }
-
 
   private static void chizelWalls()
   {
@@ -442,7 +437,6 @@ public class GameMap
       }
     }
   }
-
 
   private static boolean surroundedThreeSide(int x, int y)
   {
@@ -839,7 +833,6 @@ public class GameMap
     return getBlock(x, y).type == EMPTY && inBoundsWithBorder(x, y);
   }
 
-
   private static void shuffleArray(int[] pickRandomDirection)
   {
     for (int i = 0; i < pickRandomDirection.length; i++)
@@ -1091,7 +1084,6 @@ public class GameMap
     return (getBlock(x, y).type == EMPTY || getBlock(x, y).type == HALL);
   }
 
-
   private static void buildObsticales()
   {
     boolean validSpot = false;
@@ -1129,7 +1121,6 @@ public class GameMap
     }
     return valid;
   }
-
 
   private static void buildRoom(char type, boolean firstRoom)
   {
@@ -1263,7 +1254,6 @@ public class GameMap
     return getBlock(x, y).type == BASIC_TILE;
   }
 
-
   private static boolean wallTile(int x, int y, int xSmallBoundry,
                                   int ySmallBoundry, int xLargeBoundry,
                                   int yLargeBoundry)
@@ -1294,7 +1284,6 @@ public class GameMap
   {
     return (x < X_SIZE - 1 && x > 0 && y < Y_SIZE - 1 && y > 0);
   }
-
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
@@ -1328,6 +1317,47 @@ public class GameMap
     }
   }
 
+  public static void main(String[] args)
+  {
+    GameMap map = new GameMap();
+    BufferedImage map_image = map.convertMapToImage(80);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel.setPreferredSize(
+        new Dimension(map.num_cols * 80, map.num_rows * 80));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    scroll_pane.setVerticalScrollBarPolicy(
+//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//    scroll_pane.setHorizontalScrollBarPolicy(
+//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
+  }
+
+  public void updateBufferedImage(int tile_size)
+  {
+    this.map_image = convertMapToImage(tile_size);
+  }
 
   public int getWidth(int tile_size)
   {
@@ -1409,7 +1439,6 @@ public class GameMap
     return new_image;
   }
 
-
   public void paintSection(Graphics g, Rectangle rect, int tile_size)
   {
     Location start = new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
@@ -1421,19 +1450,6 @@ public class GameMap
     end.x = Math.min(end.x, num_rows - 1);
     end.y = Math.min(end.y, num_cols - 1);
     paintSection(g, start, end, tile_size);
-  }
-
-  /**
-   * This paints the entire grid from start to finish
-   *
-   * @param g
-   * @param tile_size
-   */
-  public void paint(Graphics g, int tile_size)
-  {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
   }
 
 
@@ -1462,6 +1478,18 @@ public class GameMap
 //    generateMap();
 //
 
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
 
   /**
    * Creates map from a file
@@ -1571,42 +1599,5 @@ public class GameMap
       ret += "\n";
     }
     return ret;
-  }
-
-  public static void main(String[] args)
-  {
-    GameMap map = new GameMap();
-    BufferedImage map_image = map.convertMapToImage(80);
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map_image, 0, 0, null);
-      }
-    };
-    map_panel.setPreferredSize(
-        new Dimension(map.num_cols * 80, map.num_rows * 80));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//    scroll_pane.setVerticalScrollBarPolicy(
-//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//    scroll_pane.setHorizontalScrollBarPolicy(
-//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
   }
 }
