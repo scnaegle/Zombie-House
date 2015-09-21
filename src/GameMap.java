@@ -1440,6 +1440,20 @@ public class GameMap
     paintSection(g, start, end, tile_size);
   }
 
+  public void burnTile(int row, int col) {
+
+    if (grid[row][col].tile_type.equals(TileType.BRICK)
+        || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
+    {
+      grid[row][col].tile_type = TileType.BURNTFLOOR;
+    }
+    if (grid[row][col].tile_type.equals(TileType.WALL))
+    {
+      grid[row][col].tile_type.equals(TileType.BURNTWALL);
+    }
+    updateTileOnImage(row, col, GUI.tile_size);
+  }
+
 
 //    GameMapWithBlocks gameMap = new GameMapWithBlocks();
 //    GameMap procedureGenerateMap = new GameMap(gameMap.generateMap());
