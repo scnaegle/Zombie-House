@@ -119,26 +119,6 @@ public class Tile extends GameObject implements Comparable<Tile> {
     return row;
   }
 
-	/**
-	 * Snap tile to grid and update the tile type based on whatever tile on the map
-	 * matches the corresponding point. 
-	 * @param p Point to match against
-	 * @param map Current map being used
-	 */
-//	public void snapToTileAndUpdate(Point p, MapGrid map) {
-//		this.row = (int)(p.y / HEIGHT);
-//		this.col = (int)(p.x / WIDTH);
-//		if (row < map.getNumRows() && row >= 0 &&
-//				col < map.getNumCols() && col >= 0) {
-//			this.x = col * WIDTH;
-//			this.y = row * HEIGHT;
-//			Tile tile = map.getTileFromCoords(row, col);
-//			if (tile != null) {
-//				this.tile_type = tile.tile_type;
-//			}
-//		}
-//	}
-
   /**
    * get Y coordinate
    *

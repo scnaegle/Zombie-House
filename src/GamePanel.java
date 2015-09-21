@@ -216,16 +216,8 @@ public class GamePanel extends JPanel implements KeyListener
             trap.location.getX() - GUI.tile_size,
             trap.location.getY() - GUI.tile_size, null);
         explodee = true;
-
-
       }
-
-
     }
-
-
-
-
 
     for(Zombie zombie : map.zombies) {
       if (!zombie.zombieDied)
