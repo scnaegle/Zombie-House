@@ -118,6 +118,10 @@ public class Zombie extends Humanoid implements HumanoidObject
   }
 
 
+  public boolean touchingZombie(HumanoidObject zombie)
+  {
+    return (intersects((Object2D) zombie));
+  }
 
   public boolean bitesPlayer(HumanoidObject player)
   {

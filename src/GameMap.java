@@ -65,12 +65,11 @@ public class GameMap
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
   Zombie master;
+  BufferedImage map_image;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
-
-  BufferedImage map_image;
 
 
   public GameMap()
@@ -278,7 +277,6 @@ public class GameMap
     }
   }
 
-
   /**
    *
    */
@@ -303,7 +301,7 @@ public class GameMap
         }
         //if it is able to run through location completly reset varibles and
         //try again
-        if (x == X_SIZE - 2 && y == Y_SIZE - 2)
+        if (x == X_SIZE - 1 && y == Y_SIZE - 1)
         {
           x = random.nextInt(X_SIZE - 2) + 1;
           y = random.nextInt(Y_SIZE - 2) + 1;
@@ -346,7 +344,6 @@ public class GameMap
     }
 
   }
-
 
   /**
    * if it is able to place place the end peices horozantily
@@ -398,7 +395,6 @@ public class GameMap
         (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
   }
 
-
   /**
    * if 4 wall peices in a row horozantally return true
    *
@@ -412,7 +408,6 @@ public class GameMap
         inBoundsWithBorder(x, y + 3) &&
         (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
   }
-
 
   private static void chizelWalls()
   {
@@ -442,7 +437,6 @@ public class GameMap
       }
     }
   }
-
 
   private static boolean surroundedThreeSide(int x, int y)
   {
@@ -839,7 +833,6 @@ public class GameMap
     return getBlock(x, y).type == EMPTY && inBoundsWithBorder(x, y);
   }
 
-
   private static void shuffleArray(int[] pickRandomDirection)
   {
     for (int i = 0; i < pickRandomDirection.length; i++)
@@ -1091,7 +1084,6 @@ public class GameMap
     return (getBlock(x, y).type == EMPTY || getBlock(x, y).type == HALL);
   }
 
-
   private static void buildObsticales()
   {
     boolean validSpot = false;
@@ -1129,7 +1121,6 @@ public class GameMap
     }
     return valid;
   }
-
 
   private static void buildRoom(char type, boolean firstRoom)
   {
@@ -1263,7 +1254,6 @@ public class GameMap
     return getBlock(x, y).type == BASIC_TILE;
   }
 
-
   private static boolean wallTile(int x, int y, int xSmallBoundry,
                                   int ySmallBoundry, int xLargeBoundry,
                                   int yLargeBoundry)
@@ -1294,7 +1284,6 @@ public class GameMap
   {
     return (x < X_SIZE - 1 && x > 0 && y < Y_SIZE - 1 && y > 0);
   }
-
 
   private static boolean touchingAnotherRoom(int x, int y)
   {
@@ -1327,7 +1316,6 @@ public class GameMap
       }
     }
   }
-
 
   public int getWidth(int tile_size)
   {
@@ -1452,19 +1440,6 @@ public class GameMap
     paintSection(g, start, end, tile_size);
   }
 
-  /**
-   * This paints the entire grid from start to finish
-   *
-   * @param g
-   * @param tile_size
-   */
-  public void paint(Graphics g, int tile_size)
-  {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
-  }
-
 
 //    GameMapWithBlocks gameMap = new GameMapWithBlocks();
 //    GameMap procedureGenerateMap = new GameMap(gameMap.generateMap());
@@ -1491,6 +1466,18 @@ public class GameMap
 //    generateMap();
 //
 
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
 
   /**
    * Creates map from a file
@@ -1638,4 +1625,5 @@ public class GameMap
     frame.pack();
     frame.setVisible(true);
   }
+
 }

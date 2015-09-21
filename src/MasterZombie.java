@@ -108,7 +108,10 @@ public class MasterZombie extends Zombie
       moveY();
     }
 
+ //   if(touchingZombie(zombie))
+    {
 
+    }
     if (bitesPlayer(player))
     {
       setBite();

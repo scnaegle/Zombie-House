@@ -1,5 +1,4 @@
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,10 +18,10 @@ public enum TileType {
 
 	GRASS(1, '.', 1, "grass"),
 	BRICK(2, '*', 1, "floor"),
-	BURNTWALL(3, '3',1, "burntFloor"), // only used for outside walls
+	BURNTWALL(3, '3', 9999, "burntWall2"), // only used for outside walls
 	BURNTFLOOR(4, '4',1, "burntFloor"),
 	START(5, 'S', 1, "floor"),
-	EXIT(6, 'E', 9999, "exit"),
+	EXIT(6, 'E', 1, "exit"),
 	WALL(7, 'B', 9999, "wall"),
 	INSIDEWALL(8,'I',9999,"wall"),
 	HALL(9,'H',9999,"floor")

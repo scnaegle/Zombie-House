@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
  */
 public class FireTrap extends GameObject
 {
-  private final int EXPLODE_TIME = 5 * GamePanel.FPS;
+  private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
   public boolean trapIsGone = false;
   protected int frame = 0;
@@ -75,9 +75,14 @@ public class FireTrap extends GameObject
           //System.out.println(frame);
 
           //frame = fireAnimation.getFrameCount();
-          System.out.println("We should probably explode now....");
+          //System.out.println("We should probably explode now....");
           startExploding();
           zombie.zombieDied = true;
+
+          if (getBoundingRectangle().intersects(player.getBoundingRectangle()))
+          {
+            player.playerDied = true;
+          }
         }
       }
     }
@@ -107,8 +112,9 @@ public class FireTrap extends GameObject
 //    System.out.println("location: " + location);
     exploding = true;
     fireAnimation.start();
-    frame = 0;
     SoundLoader.playExplosion();
+    frame = 0;
+
   }
 
   public void stopExploding(GameMap map)
@@ -128,12 +134,17 @@ public class FireTrap extends GameObject
       for (int col = trap_col - 1; col <= trap_col + 1; col++)
       {
         test_tile = map.getTile(row, col);
+
         if (test_tile.tile_type.equals(TileType.BRICK)
             || test_tile.tile_type.equals(TileType.INSIDEWALL))
         {
           test_tile.tile_type = TileType.BURNTFLOOR;
-          map.updateTileOnImage(row, col, GUI.tile_size);
         }
+        if (test_tile.tile_type.equals(TileType.WALL))
+        {
+          test_tile.tile_type.equals(TileType.BURNTWALL);
+        }
+        map.updateTileOnImage(row, col, GUI.tile_size);
       }
     }
     long time2 = System.currentTimeMillis();
