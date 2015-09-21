@@ -86,29 +86,15 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           }
-          for (FireTrap trap : map.traps)
+          Iterator<FireTrap> trapIter = map.traps.iterator();
+          FireTrap trap;
+          while (trapIter.hasNext())
           {
+            trap = trapIter.next();
             trap.update(map, player);
-            if (trap.exploding)
+            if (trap.remove_me)
             {
-              System.out.println("trap exploded");
-              Tile test_tile;
-              int trap_row = trap.location.getRow(GUI.tile_size);
-              int trap_col = trap.location.getCol(GUI.tile_size);
-              for (int row = trap_row - 1; row <= trap_row + 1; row++)
-              {
-                for (int col = trap_col - 1; col <= trap_col + 1; col++)
-                {
-                  test_tile = map.getTile(row, col);
-                  if (test_tile.tile_type.equals(TileType.BRICK)
-                      || test_tile.tile_type.equals(TileType.WALL))
-                  {
-                    test_tile.tile_type.equals(TileType.BURNTFLOOR);
-                  }
-
-
-                }
-              }
+              trapIter.remove();
             }
           }
 
@@ -138,8 +124,8 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 parent.whichLevel++;
                 System.out.println("Next level");
-
                 newMap();
+
 
               }
             }
@@ -161,14 +147,15 @@ public class GamePanel extends JPanel implements KeyListener
     parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
-
   }
 
-  private boolean onScreen(Object2D object)
+  private boolean onScreen(GameObject object)
   {
-    return object.getLocation().x < vp.getWidth() &&
-        object.getLocation().x > 0 &&
-        object.getLocation().y < vp.getHeight() && object.getLocation().y > 0;
+    Point vp_point = vp.getViewPosition();
+    return object.location.x < vp_point.x + vp.getWidth() &&
+        object.location.x > vp_point.x &&
+        object.location.y < vp_point.y + vp.getHeight() &&
+        object.location.y > vp_point.y;
   }
 
   /**
@@ -220,11 +207,12 @@ public class GamePanel extends JPanel implements KeyListener
             null);
       }
 
-      if (trap.exploding && onScreen(trap))
+      if (trap.exploding) // && onScreen(trap))
       {
 
         g2.drawImage(trap.fireAnimation.getSprite(),
-            trap.location.getX(), trap.location.getY(), null);
+            trap.location.getX() - GUI.tile_size,
+            trap.location.getY() - GUI.tile_size, null);
         explodee = true;
 
 
