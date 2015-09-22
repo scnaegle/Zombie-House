@@ -57,6 +57,7 @@ public class GUI
     if (option == 0)
     {
       parent.whichLevel = 1;
+      SoundLoader.killSounds();
       parent.window.dispose();
       parent.getSettings();
     }
