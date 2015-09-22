@@ -83,6 +83,7 @@ public class GamePanel extends JPanel implements KeyListener
               //parent.running = false;
               parent.pauseGame();
               //stopAllSounds();
+
               GUI.showDeathDialog(parent,
                   "Ye be bitten! Keep yer zombie erff yer tail by using yer " +
                       "fire traps!");
@@ -118,6 +119,7 @@ public class GamePanel extends JPanel implements KeyListener
             //parent.running = false;
             parent.pauseGame();
             //stopAllSounds();
+
             GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
             newMap();
           }

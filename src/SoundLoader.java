@@ -15,10 +15,13 @@ public class SoundLoader implements LineListener
   private static SoundLoader walkSound;
   private static SoundLoader runSound;
   private static SoundLoader scream;
+
   boolean playFinished;
   //String audioFilePath;
   Thread thread;
   Clip audioClip;
+  FloatControl balanceCtrl;
+
 
   public SoundLoader(String path)
   {
@@ -32,8 +35,15 @@ public class SoundLoader implements LineListener
       AudioFormat format = audioStream.getFormat();
       DataLine.Info info = new DataLine.Info(Clip.class, format);
       audioClip = (Clip) AudioSystem.getLine(info);
+
       audioClip.addLineListener(SoundLoader.this);
+
       audioClip.open(audioStream);
+
+//      System.out.println(
+//          audioClip.isControlSupported(FloatControl.Type.BALANCE));
+
+      //makeBalanceControlled();
 
     }
     catch (UnsupportedAudioFileException e)
@@ -76,12 +86,30 @@ public class SoundLoader implements LineListener
 
   public static void playHitObst()
   {
+    hitObst.makeBalanceControlled();
+    decideBalance();
     hitObst.play();
   }
 
   public static void playZWalk()
   {
+    zWalk.makeBalanceControlled();
+
+    decideBalance();
+
     zWalk.playLooped();
+  }
+
+  private static void decideBalance()
+  {
+    if (Zombie.toTheLeftOfPlayer)
+    {
+      zWalk.setBalance(-1f);
+    }
+    else if (Zombie.toTheRightOfPlayer)
+    {
+      zWalk.setBalance(1f);
+    }
   }
 
   public static void stopSounds()
@@ -107,6 +135,17 @@ public class SoundLoader implements LineListener
     walkSound.playLooped();
   }
 
+  void makeBalanceControlled()
+  {
+    balanceCtrl =
+        (FloatControl) audioClip.getControl(FloatControl.Type.BALANCE);
+  }
+
+  public void setBalance(float value)
+  {
+    balanceCtrl.setValue(value);
+  }
+
   void play()
   {
     thread = new Thread(new Runnable()
@@ -115,7 +154,6 @@ public class SoundLoader implements LineListener
       public void run()
       {
         audioClip.start();
-
       }
     });
     thread.start();
@@ -155,4 +193,16 @@ public class SoundLoader implements LineListener
   {
     audioClip.stop();
   }
+
+//  public static void main(String[] args)
+//  {
+//
+//    loadSounds();
+//    zWalk.makeBalanceControlled();
+//    zWalk.setBalance(1f);
+//    playZWalk();
+//    while(true);
+//
+//
+//  }
 }

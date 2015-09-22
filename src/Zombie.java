@@ -9,6 +9,8 @@ public class Zombie extends Humanoid implements HumanoidObject
 {
   public static double decision_rate;
   public static double smell;
+  public static boolean toTheLeftOfPlayer = false;
+  public static boolean toTheRightOfPlayer = false;
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
   protected int frame = 0;
@@ -93,6 +95,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
     {
+      checkZombieDirection(player);
       SoundLoader.playZWalk();
     }
 
@@ -102,6 +105,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
+      checkZombieDirection(player);
       SoundLoader.playHitObst();
     }
 
@@ -110,6 +114,33 @@ public class Zombie extends Humanoid implements HumanoidObject
     animation.update();
   }
 
+  private boolean toTheRight(HumanoidObject player)
+  {
+    return location.getX() > player.getLocation().getX();
+  }
+
+  private boolean toTheLeft(HumanoidObject player)
+  {
+    return location.getX() < player.getLocation().getX();
+
+  }
+
+  public void checkZombieDirection(HumanoidObject player)
+  {
+    if (toTheLeft(player))
+    {
+      toTheLeftOfPlayer = true;
+    }
+    else if (toTheRight(player))
+    {
+      toTheRightOfPlayer = true;
+    }
+    else
+    {
+      toTheLeftOfPlayer = false;
+      toTheRightOfPlayer = false;
+    }
+  }
 
   public boolean touchingZombie(HumanoidObject zombie)
   {
