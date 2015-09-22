@@ -98,7 +98,7 @@ public class GameMap
 
 
     boolean spawnMasterZombie = true; // this boolean makes so the master zombie
-                                      // will only be spawned once
+    // will only be spawned once
     for (Block[] row : blockGrid)
     {
 
@@ -134,8 +134,9 @@ public class GameMap
                     new_tile.row * GUI.tile_size);
             if (spawnMasterZombie)
             {
-              zombie = new MasterZombie(GUI.zspeed*1.5, GUI.zsmell*2, GUI.drate,
-                  location);
+              zombie =
+                  new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
+                      location);
               spawnMasterZombie = false;
               System.out.println("spawwned that master zomebie, Yo!");
             }
@@ -226,8 +227,10 @@ public class GameMap
     /**
      * Need adjustment to make larger obsitcles and such
      */
-    for(int i = 0; i<numberOfObsicles;i++)
-    buildObsticales(); // makes obsticles inside rooms
+    for (int i = 0; i < numberOfObsicles; i++)
+    {
+      buildObsticales(); // makes obsticles inside rooms
+    }
 
     for (int i = 0; i < numberOfRandomHalls; i++)
     {
@@ -247,7 +250,9 @@ public class GameMap
      */
     //  turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
+    System.out.println("stuff");
     makeEndRoom(); // makes an end room
+    System.out.println("stuff");
     turnDoorToFloor(); // makes door to floor
     makeInteriorWalls();
 
@@ -284,30 +289,76 @@ public class GameMap
   {
     roomSize = 3;
 
-    for (int x = random.nextInt(X_SIZE - 6) + 3; x < X_SIZE - 3; x++)
+
+    int validX = resetValidSpots(X_SIZE);
+    int validY = resetValidSpots(Y_SIZE);
+
+    for (int x = validX - 20; x < validX + 10; x++)
     {
-      for (int y = random.nextInt(Y_SIZE - 6) + 3; y < Y_SIZE - 3; y++)
+      for (int y = validY - 20; y < validY + 10; y++)
       {
-        //goes through map to see if it can be a valid location
-        if (validEndLocationHorozantal(x, y))
+        if (inBoundsWithBorder(x, y))
         {
-          placeEndPeicesHorzantal(x, y);
-          return;
-        }
-        else if (validEndLocationVerticle(x, y))
-        {
-          placeEndPeicesVerticle(x, y);
-          return;
-        }
-        //if it is able to run through location completly reset varibles and
-        //try again
-        if (x == X_SIZE - 1 && y == Y_SIZE - 1)
-        {
-          x = random.nextInt(X_SIZE - 2) + 1;
-          y = random.nextInt(Y_SIZE - 2) + 1;
+          if(isStart(x,y))
+          {
+            validX = resetValidSpots(X_SIZE);
+            validY = resetValidSpots(Y_SIZE);
+            x=validX;
+            y=validY;
+          }
         }
       }
     }
+
+    for (int x = validX; x < X_SIZE - 3; x++)
+    {
+      for (int y = validY; y < Y_SIZE - 3; y++)
+      {
+        //goes through map to see if it can be a valid location
+        if (validEndLocationHorozantal(x, y)&&checkForStart(x, y))
+        {
+
+          placeEndPeicesHorzantal(x, y);
+          System.out.println("poo");
+          return;
+        }
+        else if (validEndLocationVerticle(x, y) && checkForStart(x,y))
+        {
+          placeEndPeicesVerticle(x, y);
+          System.out.println("poopoo");
+          return;
+        }
+      }
+    }
+
+    //if it is able to run through location completly reset varibles and
+    //try again
+    makeEndRoom();
+    return;
+  }
+
+  private static boolean checkForStart(int x, int y)
+  {
+    for (int t = x - 20; t < x + 10; t++)
+    {
+      for (int l = y - 20; l < y + 10; l++)
+      {
+        if (inBoundsWithBorder(t, l))
+        {
+          if(isStart(x,y))
+          {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  private static int resetValidSpots(int size)
+  {
+    return random.nextInt(size - 6) + 3;
+
   }
 
   /**
@@ -393,6 +444,11 @@ public class GameMap
     return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
         inBoundsWithBorder(x + 3, y) &&
         (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
+  }
+
+  private static boolean isStart(int x, int y)
+  {
+    return getBlock(x, y).type == START_ROOM;
   }
 
   /**

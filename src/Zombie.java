@@ -9,7 +9,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 {
   public static double decision_rate;
   public static double smell;
-  private final double MOVE_MULTIPLIER = (double)GUI.tile_size / GamePanel.FPS;
+  private final double MOVE_MULTIPLIER = (double) GUI.tile_size / GamePanel.FPS;
   public boolean inRange = false;
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
@@ -23,13 +23,15 @@ public class Zombie extends Humanoid implements HumanoidObject
   private FireTrap trap;
 
 
-  public Zombie(Location location) {
+  public Zombie(Location location)
+  {
     this.location = location;
     this.width = GUI.tile_size - 10;
     this.height = GUI.tile_size - 10;
   }
 
-  public Zombie(double speed, double smell, double decision_rate, Location location)
+  public Zombie(double speed, double smell, double decision_rate,
+                Location location)
   {
     this(location);
     this.current_speed = speed;
@@ -42,43 +44,60 @@ public class Zombie extends Humanoid implements HumanoidObject
   {
     return current_speed;
   }
-  protected void determineAnimation() {
+
+  protected void determineAnimation()
+  {
     double x_move = heading.getXMovement();
     double y_move = heading.getYMovement();
-    if(x_move > y_move) {
-      if (x_move > 0) {
+    if (x_move > y_move)
+    {
+      if (x_move > 0)
+      {
         animation = moveRight;
-      } else if (x_move < 0){
+      }
+      else if (x_move < 0)
+      {
         animation = moveLeft;
       }
-    } else {
-      if (y_move > 0) {
+    }
+    else
+    {
+      if (y_move > 0)
+      {
         animation = moveDown;
-      } else if (y_move < 0) {
+      }
+      else if (y_move < 0)
+      {
         animation = moveUp;
       }
     }
   }
 
-  protected boolean smellPlayer(HumanoidObject player) {
+  protected boolean smellPlayer(HumanoidObject player)
+  {
     return getDistance((Object2D) player) <= smell * GUI.tile_size;
   }
 
-  protected void chooseDirection(HumanoidObject player) {
+  protected void chooseDirection(HumanoidObject player)
+  {
     // This is a placeholder that should be overridden.
   }
 
-  public void update(GameMap map, HumanoidObject player) {
+  public void update(GameMap map, HumanoidObject player)
+  {
     frame++;
-    if (frame >= decision_rate * GamePanel.FPS) {
+    if (frame >= decision_rate * GamePanel.FPS)
+    {
       frame = 0;
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
-    if (!hitWallInXDirection(map)) {
+    if (!hitWallInXDirection(map))
+    {
       moveX();
     }
-    if (!hitWallInYDirection(map)) {
+    if (!hitWallInYDirection(map))
+    {
       moveY();
     }
 
@@ -117,8 +136,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     animation.update();
   }
 
-
-  public boolean touchingZombie(HumanoidObject zombie)
+  public boolean touchAnotherZombie(HumanoidObject zombie)
   {
     return (intersects((Object2D) zombie));
   }
