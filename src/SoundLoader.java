@@ -1,10 +1,11 @@
+
+/**
+ * This class loads in audio in the form of .wav files and makes them playable.
+ * Also decides which speaker to play sounds from.
+ */
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
-
-/**
- * This class loads in audio in the form of .wav files and makes them playable
- */
 public class SoundLoader implements LineListener
 {
   private static SoundLoader combust;
@@ -87,7 +88,7 @@ public class SoundLoader implements LineListener
   public static void playHitObst()
   {
     hitObst.makeBalanceControlled();
-    decideBalance();
+    decideBalance(hitObst);
     hitObst.play();
   }
 
@@ -95,20 +96,20 @@ public class SoundLoader implements LineListener
   {
     zWalk.makeBalanceControlled();
 
-    decideBalance();
+    decideBalance(zWalk);
 
     zWalk.playLooped();
   }
 
-  private static void decideBalance()
+  private static void decideBalance(SoundLoader sound)
   {
     if (Zombie.toTheLeftOfPlayer)
     {
-      zWalk.setBalance(-1f);
+      sound.setBalance(-1f);
     }
     else if (Zombie.toTheRightOfPlayer)
     {
-      zWalk.setBalance(1f);
+      sound.setBalance(1f);
     }
   }
 
