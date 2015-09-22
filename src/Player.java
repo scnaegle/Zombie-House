@@ -1,10 +1,11 @@
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  * Player class sets up the player, loads the walking/ running sprites and
- * sets up the animation depending on the speed of the player.
+ * sets up the animation depending on the speed of the player. Also checks
+ * for picking up and putting down firetraps.
  */
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
@@ -16,6 +17,7 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean isStill = true;
   public boolean is_putting_down = false;
   public boolean playerDied = false;
+  public boolean playerExploded = false;
   protected int frame = 0;
   double max_stamina = 5;
   double stamina = 5;
@@ -33,8 +35,6 @@ public class Player extends Humanoid implements HumanoidObject
   Animation animation = walk;
   private Animation run = new Animation(running, 1);
   private Animation stand = new Animation(still, 5);
-
-
   private ArrayList<FireTrap> traps = new ArrayList<>();
 
 
@@ -97,6 +97,8 @@ public class Player extends Humanoid implements HumanoidObject
   {
     return fire_traps;
   }
+
+  //Loads sprites for walking animation
   public BufferedImage[] initPlayerSpriteWalk()
   {
 
@@ -111,6 +113,7 @@ public class Player extends Humanoid implements HumanoidObject
     return walking;
   }
 
+  //Loads sprites for running animation
   public BufferedImage[] initPlayerSpriteRun()
   {
 
@@ -146,7 +149,7 @@ public class Player extends Humanoid implements HumanoidObject
   playerStamina attribute for the level.*/
   private void regenerate()
   {
-    stamina += STAMINA_STEP;
+    stamina += STAMINA_STEP * regen;
     stamina = Math.min(stamina, max_stamina);
   }
 
@@ -158,6 +161,13 @@ public class Player extends Humanoid implements HumanoidObject
     location = next_location;
   }
 
+  /**
+   * Updates player every timer tick. Takes in a map object in order to
+   * get a hold of the list of randomly generated fire traps. Checks for
+   * actions such as running, walking, picking up and putting down traps.
+   *
+   * @param map
+   */
   public void update(GameMap map)
   {
     if (is_picking_up)
@@ -262,10 +272,6 @@ public class Player extends Humanoid implements HumanoidObject
     frame = 0;
   }
 
-  public double getRegenRate()
-  {
-    return regen;
-  }
 
   public Tile getFootTile(GameMap map) {
     int row = (int)(location.y + GUI.tile_size) / GUI.tile_size;

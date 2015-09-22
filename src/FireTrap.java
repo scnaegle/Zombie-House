@@ -1,23 +1,25 @@
+/**
+ * Allows us to create firetraps and load images for the explosion.
+ * Keeps track of zombies in list to see if they have touched a trap.
+ * If they do set one off, it plays the animation, sound, and changes the
+ * surrounding tiles to burnt.
+ */
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * Allows us to create firetraps and load images for the explosion
- */
 public class FireTrap extends GameObject
 {
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
-  public boolean trapIsGone = false;
   protected int frame = 0;
   Sprite sprite = new Sprite("fireTrap", GUI.tile_size);
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
-  Animation explode = new Animation(explosion, 4);
+  Animation explode = new Animation(explosion, 5);
   Animation fireAnimation = explode;
   boolean remove_me = false;
-  private int explosionSize = 240;
-  private SoundLoader combust;
-  private GamePanel gamePanel;
+  Rectangle explosionObj;
 
   public FireTrap(Location location)
   {
@@ -28,7 +30,11 @@ public class FireTrap extends GameObject
     this(location);
     this.width = width;
     this.height = height;
+    explosionObj = new Rectangle(location.getX() - GUI.tile_size,
+        location.getY() - GUI.tile_size, 3 * GUI.tile_size, 3 * GUI.tile_size);
   }
+
+  //Gets sprite images for explosion
   private BufferedImage[] initExplosion()
   {
     Sprite sprite = new Sprite("explode", 240);
@@ -61,6 +67,9 @@ public class FireTrap extends GameObject
   }
 
 
+  //Updates each fire trap every timer tick.
+  //Checks for zombie and player intersections.
+  //Reacts appropriately.
   public void update(GameMap map, Player player)
   {
     frame++;
@@ -75,9 +84,12 @@ public class FireTrap extends GameObject
           startExploding();
           zombie.zombieDied = true;
 
-          if (getBoundingRectangle().intersects(player.getBoundingRectangle()))
+          //If player is too close to explosion, player dies.
+          if (explosionObj.intersects(player.getBoundingRectangle()))
           {
-            player.playerDied = true;
+
+            player.playerExploded = true;
+
           }
         }
       }
@@ -146,5 +158,6 @@ public class FireTrap extends GameObject
   {
     location.x = newLocation.x;
     location.y = newLocation.y;
+    explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
   }
 }

@@ -1317,6 +1317,43 @@ public class GameMap
     }
   }
 
+  public static void main(String[] args)
+  {
+    GameMap map = new GameMap();
+    BufferedImage map_image = map.convertMapToImage(80);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel.setPreferredSize(
+        new Dimension(map.num_cols * 80, map.num_rows * 80));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    scroll_pane.setVerticalScrollBarPolicy(
+//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+//    scroll_pane.setHorizontalScrollBarPolicy(
+//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
+  }
+
   public int getWidth(int tile_size)
   {
     return num_cols * tile_size;
@@ -1383,7 +1420,8 @@ public class GameMap
     {
       for (int col = 0; col < num_cols; col++)
       {
-        g.drawImage(grid[row][col].tile_type.image, col * tile_size, row * tile_size, tile_size, tile_size, null);
+        g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+            row * tile_size, tile_size, tile_size, null);
         if (SHOW_COORDS)
         {
           g.setColor(Color.WHITE);
@@ -1396,26 +1434,34 @@ public class GameMap
     return new_image;
   }
 
-  public void updateBufferedImage(int tile_size) {
+  public void updateBufferedImage(int tile_size)
+  {
     this.map_image = convertMapToImage(tile_size);
   }
 
-  public void updateBufferedImage(int start_row, int start_col, int end_row, int end_col, int tile_size) {
+  public void updateBufferedImage(int start_row, int start_col, int end_row,
+                                  int end_col, int tile_size)
+  {
     long t1 = System.currentTimeMillis();
-    Graphics2D g = (Graphics2D)map_image.getGraphics();
-    for(int row = start_row; row <= end_row; row++) {
-      for(int col = start_col; col <= end_col; col++) {
-        g.drawImage(grid[row][col].tile_type.image, col * tile_size, row * tile_size, tile_size, tile_size, null);
+    Graphics2D g = (Graphics2D) map_image.getGraphics();
+    for (int row = start_row; row <= end_row; row++)
+    {
+      for (int col = start_col; col <= end_col; col++)
+      {
+        g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+            row * tile_size, tile_size, tile_size, null);
       }
     }
     long t2 = System.currentTimeMillis();
     System.out.println("update all tiles in grid: " + (t2 - t1));
   }
 
-  public void updateTileOnImage(int row, int col, int tile_size) {
+  public void updateTileOnImage(int row, int col, int tile_size)
+  {
     long t1 = System.currentTimeMillis();
-    Graphics2D g = (Graphics2D)map_image.getGraphics();
-    g.drawImage(grid[row][col].tile_type.image, col * tile_size, row * tile_size, tile_size, tile_size, null);
+    Graphics2D g = (Graphics2D) map_image.getGraphics();
+    g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+        row * tile_size, tile_size, tile_size, null);
     if (SHOW_COORDS)
     {
       g.setColor(Color.WHITE);
@@ -1438,20 +1484,6 @@ public class GameMap
     end.x = Math.min(end.x, num_rows - 1);
     end.y = Math.min(end.y, num_cols - 1);
     paintSection(g, start, end, tile_size);
-  }
-
-  public void burnTile(int row, int col) {
-
-    if (grid[row][col].tile_type.equals(TileType.BRICK)
-        || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
-    {
-      grid[row][col].tile_type = TileType.BURNTFLOOR;
-    }
-    if (grid[row][col].tile_type.equals(TileType.WALL))
-    {
-      grid[row][col].tile_type.equals(TileType.BURNTWALL);
-    }
-    updateTileOnImage(row, col, GUI.tile_size);
   }
 
 
@@ -1479,6 +1511,21 @@ public class GameMap
 
 //    generateMap();
 //
+
+  public void burnTile(int row, int col)
+  {
+
+    if (grid[row][col].tile_type.equals(TileType.BRICK)
+        || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
+    {
+      grid[row][col].tile_type = TileType.BURNTFLOOR;
+    }
+    if (grid[row][col].tile_type.equals(TileType.WALL))
+    {
+      grid[row][col].tile_type.equals(TileType.BURNTWALL);
+    }
+    updateTileOnImage(row, col, GUI.tile_size);
+  }
 
   /**
    * This paints the entire grid from start to finish
@@ -1601,43 +1648,6 @@ public class GameMap
       ret += "\n";
     }
     return ret;
-  }
-
-  public static void main(String[] args)
-  {
-    GameMap map = new GameMap();
-    BufferedImage map_image = map.convertMapToImage(80);
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map_image, 0, 0, null);
-      }
-    };
-    map_panel.setPreferredSize(
-        new Dimension(map.num_cols * 80, map.num_rows * 80));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//    scroll_pane.setVerticalScrollBarPolicy(
-//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//    scroll_pane.setHorizontalScrollBarPolicy(
-//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
   }
 
 }

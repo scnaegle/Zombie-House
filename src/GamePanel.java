@@ -106,6 +106,11 @@ public class GamePanel extends JPanel implements KeyListener
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
 
+          if (player.playerExploded)
+          {
+            //player.playerDied = true;
+          }
+
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -114,8 +119,8 @@ public class GamePanel extends JPanel implements KeyListener
             //stopAllSounds();
             GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
             newMap();
-
           }
+
 
           // Checks if player made it to the exit tile
           Tile test_tile;
@@ -234,8 +239,11 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
     //Draws player
-    g2.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
+    if (!player.playerExploded)
+    {
+      g2.drawImage(player.animation.getSprite(), player.location.getX(),
+          player.location.getY(), null);
+    }
 
     //Draws vignette with player at center. Does not draw if trap explodes
     //on screen. 

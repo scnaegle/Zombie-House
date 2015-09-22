@@ -56,6 +56,7 @@ public class GameObject implements Object2D {
     return new Rectangle(location.getX(), location.getY(), width, height);
   }
 
+
   public Rectangle getCenteredBoundingRectangle() {
     Rectangle rect = getBoundingRectangle();
 //    System.out.println("GETTING IN BOUNDING RECT!!");
