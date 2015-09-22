@@ -406,23 +406,6 @@ public class GameMap
     int validX = resetValidSpots(X_SIZE);
     int validY = resetValidSpots(Y_SIZE);
 
-    for (int x = validX - 20; x < validX + 10; x++)
-    {
-      for (int y = validY - 20; y < validY + 10; y++)
-      {
-        if (inBoundsWithBorder(x, y))
-        {
-          if(isStart(x,y))
-          {
-            validX = resetValidSpots(X_SIZE);
-            validY = resetValidSpots(Y_SIZE);
-            x=validX;
-            y=validY;
-          }
-        }
-      }
-    }
-
     for (int x = validX; x < X_SIZE - 3; x++)
     {
       for (int y = validY; y < Y_SIZE - 3; y++)
@@ -430,7 +413,6 @@ public class GameMap
         //goes through map to see if it can be a valid location
         if (validEndLocationHorozantal(x, y)&&checkForStart(x, y))
         {
-
           placeEndPeicesHorzantal(x, y);
           System.out.println("poo");
           return;
@@ -452,13 +434,13 @@ public class GameMap
 
   private static boolean checkForStart(int x, int y)
   {
-    for (int t = x - 20; t < x + 10; t++)
+    for (int t = x - 20; t < x + 20; t++)
     {
-      for (int l = y - 20; l < y + 10; l++)
+      for (int l = y - 20; l < y + 20; l++)
       {
         if (inBoundsWithBorder(t, l))
         {
-          if(isStart(x,y))
+          if(isStart(t,l))
           {
             return false;
           }
