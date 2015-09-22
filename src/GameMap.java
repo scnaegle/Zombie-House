@@ -1522,7 +1522,7 @@ public class GameMap
     }
     if (grid[row][col].tile_type.equals(TileType.WALL))
     {
-      grid[row][col].tile_type.equals(TileType.BURNTWALL);
+      grid[row][col].tile_type = TileType.BURNTWALL;
     }
     updateTileOnImage(row, col, GUI.tile_size);
   }

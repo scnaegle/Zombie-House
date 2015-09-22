@@ -106,9 +106,10 @@ public class GamePanel extends JPanel implements KeyListener
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
 
+          int seconds;
           if (player.playerExploded)
           {
-            //player.playerDied = true;
+            player.playerDied = true;
           }
 
           //Shows dialog if player died at any time
