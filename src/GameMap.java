@@ -179,6 +179,122 @@ public class GameMap
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
+  public GameMap(int level)
+  {
+    generateMap();
+
+
+    System.out.println(level);
+    this.num_rows = Y_SIZE + OFFSET;
+    this.num_cols = X_SIZE + OFFSET;
+    grid = new Tile[num_rows][num_cols];
+    Random rand = new Random();
+    int minRow = OFFSET / 2;
+    int minCol = OFFSET / 2;
+
+    int r = minRow;
+    for (int row = 0; row < num_rows; row++)
+    {
+      for (int col = 0; col < num_cols; col++)
+      {
+        Tile empty_tile = new Tile(row, col, TileType.WALL);
+        grid[row][col] = empty_tile;
+//        System.out.print(grid[row][col].tile_type);
+      }
+//      System.out.println();
+    }
+
+
+    boolean spawnMasterZombie = true; // this boolean makes so the master zombie
+    // will only be spawned once
+    for (Block[] row : blockGrid)
+    {
+
+      int c = minCol;
+      for (Block block : row)
+      {
+        Tile new_tile =
+            new Tile(block.y + minRow, block.x + minCol, block.type);
+        grid[r][c] = new_tile;
+        if (new_tile.tile_type == TileType.START)
+        {
+          start_location = new Location(new_tile.col * GUI.tile_size,
+              new_tile.row * GUI.tile_size);
+        }
+        if (new_tile.tile_type == TileType.EXIT)
+        {
+          end_location = new Location(new_tile.col * GUI.tile_size,
+              new_tile.row * GUI.tile_size);
+        }
+        if (new_tile.tile_type == TileType.WALL ||
+            new_tile.tile_type == TileType.INSIDEWALL)
+        {
+          walls.add(new_tile);
+        }
+        if (new_tile.tile_type == TileType.BRICK)
+        {
+          if (rand.nextDouble() < GUI.zspawn +(.01*(level -1)))
+          {
+            //System.out.println("tile is a brick");
+            Zombie zombie;
+            Location location =
+                new Location(new_tile.col * GUI.tile_size,
+                    new_tile.row * GUI.tile_size);
+            if (spawnMasterZombie)
+            {
+              zombie =
+                  new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
+                      location);
+              spawnMasterZombie = false;
+              System.out.println("spawwned that master zomebie, Yo!");
+            }
+            else
+            {
+              if (rand.nextBoolean())
+              {
+                //System.out.println("made random zombie");
+                zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                    location);
+              }
+              else
+              {
+                //System.out.println("made line zombie");
+
+                zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                    location);
+              }
+              //master = new MasterZombie(location);
+            }
+            zombies.add(zombie);
+            //zombies.add(master);
+            //System.out.println(zombies);
+          }
+
+          if (rand.nextDouble() < GUI.fspawn)
+          {
+            FireTrap fireTrap;
+            Location location =
+                new Location(c * GUI.tile_size, r * GUI.tile_size);
+
+            fireTrap = new FireTrap(50, 50, location);
+            traps.add(fireTrap);
+
+          }
+        }
+        c++;
+      }
+      r++;
+    }
+    System.out.println("map: ");
+    System.out.println(toString());
+    this.map_image = convertMapToImage(GUI.tile_size);
+  }
+
+  public GameMap(File file)
+  {
+    createFromFile(file);
+    this.map_image = convertMapToImage(GUI.tile_size);
+  }
 
   /**
    * generates the map through many many methods
@@ -241,9 +357,9 @@ public class GameMap
      */
     //  turnHallsToFloors(); // this will change the halls to the floors
     turnCornersToWalls(); // turns corners to walls
-    System.out.println("stuff");
+    //System.out.println("stuff");
     makeEndRoom(); // makes an end room
-    System.out.println("stuff");
+    //System.out.println("stuff");
     turnDoorToFloor(); // makes door to floor
     makeInteriorWalls();
 
@@ -284,23 +400,6 @@ public class GameMap
     int validX = resetValidSpots(X_SIZE);
     int validY = resetValidSpots(Y_SIZE);
 
-    for (int x = validX - 20; x < validX + 10; x++)
-    {
-      for (int y = validY - 20; y < validY + 10; y++)
-      {
-        if (inBoundsWithBorder(x, y))
-        {
-          if(isStart(x,y))
-          {
-            validX = resetValidSpots(X_SIZE);
-            validY = resetValidSpots(Y_SIZE);
-            x=validX;
-            y=validY;
-          }
-        }
-      }
-    }
-
     for (int x = validX; x < X_SIZE - 3; x++)
     {
       for (int y = validY; y < Y_SIZE - 3; y++)
@@ -308,7 +407,6 @@ public class GameMap
         //goes through map to see if it can be a valid location
         if (validEndLocationHorozantal(x, y)&&checkForStart(x, y))
         {
-
           placeEndPeicesHorzantal(x, y);
           //System.out.println("poo");
           return;
@@ -330,13 +428,13 @@ public class GameMap
 
   private static boolean checkForStart(int x, int y)
   {
-    for (int t = x - 20; t < x + 10; t++)
+    for (int t = x - 20; t < x + 20; t++)
     {
-      for (int l = y - 20; l < y + 10; l++)
+      for (int l = y - 20; l < y + 20; l++)
       {
         if (inBoundsWithBorder(t, l))
         {
-          if(isStart(x,y))
+          if(isStart(t,l))
           {
             return false;
           }
@@ -1587,7 +1685,98 @@ public class GameMap
         tile_size);
   }
 
+  /**
+   * Creates map from a file
+   *
+   * @param file
+   */
+  private void createFromFile(File file)
+  {
+    Scanner sc;
+    ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
+    Random rand = new Random();
+    int row = 0;
+    int col = 0;
 
+    try
+    {
+      sc = new Scanner(file);
+      while (sc.hasNextLine())
+      {
+        ArrayList<Tile> row_array = new ArrayList<Tile>();
+        String row_string = sc.nextLine();
+        if (!row_string.startsWith("!"))
+        {
+          char[] row_types = row_string.toCharArray();
+          col = 0;
+
+          for (char type : row_types)
+          {
+            Tile new_tile = new Tile(row, col, type);
+            row_array.add(new_tile);
+            if (new_tile.tile_type == TileType.WALL)
+            {
+              walls.add(new_tile);
+            }
+            if (new_tile.tile_type == TileType.BRICK)
+            {
+              if (rand.nextDouble() < GUI.zspawn)
+              {
+                Zombie zombie;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+                if (rand.nextBoolean())
+                {
+                  System.out.println("made random zombie");
+                  zombie =
+                      new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                          location);
+                }
+                else
+                {
+                  System.out.println("made line zombie");
+
+                  zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                      location);
+                }
+                zombies.add(zombie);
+                System.out.println(zombies);
+              }
+
+              if (rand.nextDouble() < GUI.fspawn)
+              {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(50, 50, location);
+                traps.add(fireTrap);
+
+              }
+            }
+            col++;
+          }
+          grid.add(row_array);
+          row++;
+        }
+      }
+
+      this.num_rows = grid.size();
+      this.num_cols = grid.get(0).size();
+      this.grid = new Tile[num_rows][num_cols];
+      for (int i = 0; i < grid.size(); i++)
+      {
+        Tile[] row_array = new Tile[grid.get(i).size()];
+        row_array = grid.get(i).toArray(row_array);
+        this.grid[i] = row_array;
+      }
+    }
+    catch (IOException e)
+    {
+      System.err.println("Can't find file: " + file.getName());
+      System.exit(1);
+    }
+  }
 
   @Override
   public String toString()
