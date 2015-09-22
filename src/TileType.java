@@ -4,13 +4,10 @@ import java.io.IOException;
 
 
 /**
- * 
+ * An enum that specifies exactly what kind of tiles are used in the map. Allows
+ * for conversion from characters to actual loaded in images.
  */
 
-/**
- * @author sean
- *
- */
 
 
 public enum TileType {
@@ -42,7 +39,7 @@ public enum TileType {
 
 		}
 
-	public static TileType fromGridChar(char value)
+	public static TileType fromGridChar(char value) //Converts chars to type
 			throws IllegalArgumentException
 	{
 			try{
@@ -58,7 +55,7 @@ public enum TileType {
       }
 		}
 
-	public BufferedImage loadTile(String file)
+	public BufferedImage loadTile(String file)  //Loads in jpg from resources
 	{
 
 		BufferedImage tile = null;
