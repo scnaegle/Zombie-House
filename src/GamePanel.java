@@ -139,7 +139,7 @@ public class GamePanel extends JPanel implements KeyListener
                 //If yes, then go to next level.
                 parent.whichLevel++;
                 System.out.println("Next level");
-                newMap();
+                newMapByExit();
 
 
               }
@@ -155,6 +155,14 @@ public class GamePanel extends JPanel implements KeyListener
     });
   }
 
+
+  private void newMapByExit() //Starts a new game with a new map
+  {
+    GameMap new_map = new GameMap(parent.whichLevel);
+    parent.map = new_map;
+    map = new_map;
+    player.location = new_map.start_location;
+  }
 
   private void newMap() //Starts a new game with a new map
   {
