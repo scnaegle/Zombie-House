@@ -1,5 +1,3 @@
-import java.awt.*;
-
 /**
  * Created by sean on 9/13/15.
  */
@@ -94,28 +92,12 @@ public class Humanoid extends GameObject implements HumanoidObject
     int col = next_location.getCol(GUI.tile_size);
     GameObject new_location_object = new GameObject(next_location, width, height);
 
-//    Tile tile_check = map.getTile(row + (int)Math.ceil(heading.getYMovement()), col);
-//    if (tile_check.tile_type.equals(TileType.WALL) &&
-//        new_location_object.intersects(tile_check)) {
-//      return true;
-//    }
-//    tile_check = map.getTile(row, col + (int)Math.ceil(heading.getXMovement()));
-//    if (tile_check.tile_type.equals(TileType.WALL) &&
-//        new_location_object.intersects(tile_check)) {
-//      return true;
-//    }
-
-//    System.out.println("***************************************************");
-//    System.out.println("new location: " + new_location_object.location);
-//    System.out.format("current: [row=%d, col=%d]\n", row, col);
     Tile tile_check;
     for(int r = row - 1; r <= row + 1; r++) {
       for(int c = col - 1; c <= col + 1; c++) {
         tile_check = map.getTile(r, c);
-//        System.out.println("tile_check: " + tile_check);
         if (tile_check.tile_type.equals(TileType.WALL) &&
             new_location_object.intersects(tile_check)) {
-//          System.out.println("Hit wall...");
           return true;
         }
       }
@@ -185,13 +167,18 @@ public class Humanoid extends GameObject implements HumanoidObject
     Tile tile_check;
     for(int r = row - 1; r <= row + 1; r++) {
       tile_check = map.getTile(r, col);
-      if ((tile_check.tile_type.equals(TileType.WALL) || tile_check.tile_type.equals(TileType.INSIDEWALL)) &&
-          new_location_object.getCenteredBoundingRectangle().intersects(tile_check.getBoundingRectangle())) {
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.INSIDEWALL)
+          || tile_check.tile_type.equals(TileType.BURNTWALL)) &&
+          new_location_object.getCenteredBoundingRectangle().
+              intersects(tile_check.getBoundingRectangle()))
+      {
         return true;
       }
     }
     return false;
   }
+
   protected boolean hitZombie(GameMap map, Location next_location) {
     GameObject new_location_object = new GameObject(next_location, width, height);
     for(Zombie zombie : map.zombies) {

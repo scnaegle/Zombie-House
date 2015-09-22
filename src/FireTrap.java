@@ -1,23 +1,25 @@
+/**
+ * Allows us to create firetraps and load images for the explosion.
+ * Keeps track of zombies in list to see if they have touched a trap.
+ * If they do set one off, it plays the animation, sound, and changes the
+ * surrounding tiles to burnt.
+ */
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * Allows us to create firetraps and load images for the explosion
- */
 public class FireTrap extends GameObject
 {
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
-  public boolean trapIsGone = false;
   protected int frame = 0;
   Sprite sprite = new Sprite("fireTrap", GUI.tile_size);
   BufferedImage trap = sprite.getSprite(1, 1);
   BufferedImage[] explosion = initExplosion();
-  Animation explode = new Animation(explosion, 4);
+  Animation explode = new Animation(explosion, 5);
   Animation fireAnimation = explode;
   boolean remove_me = false;
-  private int explosionSize = 240;
-  private SoundLoader combust;
-  private GamePanel gamePanel;
+  Rectangle explosionObj;
 
   public FireTrap(Location location)
   {
@@ -28,7 +30,11 @@ public class FireTrap extends GameObject
     this(location);
     this.width = width;
     this.height = height;
+    explosionObj = new Rectangle(location.getX() - GUI.tile_size,
+        location.getY() - GUI.tile_size, 3 * GUI.tile_size, 3 * GUI.tile_size);
   }
+
+  //Gets sprite images for explosion
   private BufferedImage[] initExplosion()
   {
     Sprite sprite = new Sprite("explode", 240);
@@ -61,6 +67,9 @@ public class FireTrap extends GameObject
   }
 
 
+  //Updates each fire trap every timer tick.
+  //Checks for zombie and player intersections.
+  //Reacts appropriately.
   public void update(GameMap map, Player player)
   {
     frame++;
@@ -72,22 +81,20 @@ public class FireTrap extends GameObject
         if (getCenteredBoundingRectangle()
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
-          //System.out.println(frame);
-
-          //frame = fireAnimation.getFrameCount();
-          //System.out.println("We should probably explode now....");
           startExploding();
           zombie.zombieDied = true;
 
-          if (getBoundingRectangle().intersects(player.getBoundingRectangle()))
+          //If player is too close to explosion, player dies.
+          if (explosionObj.intersects(player.getBoundingRectangle()))
           {
-            player.playerDied = true;
+
+            player.playerExploded = true;
+
           }
         }
       }
     }
 
-    //System.out.println("frame: " + frame);
     if (exploding && frame >= EXPLODE_TIME)
     {
       stopExploding(map);
@@ -96,7 +103,6 @@ public class FireTrap extends GameObject
     if (getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) && player.isRunning)
     {
-      //exploding = true;
       startExploding();
       player.playerDied = true;
 
@@ -108,8 +114,6 @@ public class FireTrap extends GameObject
 
   public void startExploding()
   {
-//    System.out.println("exploding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//    System.out.println("location: " + location);
     exploding = true;
     fireAnimation.start();
     SoundLoader.playExplosion();
@@ -119,39 +123,20 @@ public class FireTrap extends GameObject
 
   public void stopExploding(GameMap map)
   {
-//    System.out.println("We are no longer exploding!!!");
-//    System.out.println("location: " + location);
     frame = 0;
     exploding = false;
     fireAnimation.stop();
 
-    Tile test_tile;
     int trap_row = location.getRow(GUI.tile_size);
     int trap_col = location.getCol(GUI.tile_size);
     for (int row = trap_row - 1; row <= trap_row + 1; row++)
     {
       for (int col = trap_col - 1; col <= trap_col + 1; col++)
       {
-        test_tile = map.getTile(row, col);
-
-        if (test_tile.tile_type.equals(TileType.BRICK)
-            || test_tile.tile_type.equals(TileType.INSIDEWALL))
-        {
-          test_tile.tile_type = TileType.BURNTFLOOR;
-
-        }
-        if (test_tile.tile_type.equals(TileType.WALL))
-        {
-          test_tile.tile_type.equals(TileType.BURNTWALL);
-        }
-
-
+        map.burnTile(row, col);
       }
     }
-
     remove_me = true;
-
-  //  map.updateBufferedImage(GUI.tile_size);
   }
 
   @Override
@@ -173,5 +158,6 @@ public class FireTrap extends GameObject
   {
     location.x = newLocation.x;
     location.y = newLocation.y;
+    explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
   }
 }

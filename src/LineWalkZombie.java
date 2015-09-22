@@ -1,11 +1,14 @@
+/**
+ * Sets up line walk zombies and their sprites.
+ * Line walk zombies extend the Zombie class since they do not need
+ * their own copy of the information.
+ */
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-/**
- * Sets up line walk zombies and their sprites.
- */
 public class LineWalkZombie extends Zombie
 {
+  //Arrays that hold images for animations
   BufferedImage[] down = initDown();
   BufferedImage[] left = initLeft();
   BufferedImage[] right = initRight();
@@ -20,7 +23,8 @@ public class LineWalkZombie extends Zombie
     animation = moveLeft;
     animation.start();
     Random rand = new Random();
-    switch(rand.nextInt(4)) {
+    switch (rand.nextInt(4))
+    {  //Randomly sets zombie heading to start
       case 0:
         this.heading = new Heading(Heading.NORTH);
         break;
@@ -45,13 +49,10 @@ public class LineWalkZombie extends Zombie
 
   @Override
   protected void chooseDirection(HumanoidObject player) {
-//    System.out.println("Choosing Line Walk Zombie direction...");
     if (smellPlayer(player)) {
-//      System.out.println("BRAAAAAIIINNNNNNZZZZ");
       double angle = getDirectionTo((Object2D)player);
-//      System.out.println("new angle: " + angle);
       heading.setDegrees(angle);
-    } // else if hit hall then choose random direction
+    }
   }
 
   private BufferedImage[] initDown()

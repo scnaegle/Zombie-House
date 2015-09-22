@@ -11,8 +11,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
- * Having this larger class that extends JPanel will allow easier access to
- * drawing, moving, sizing, and will make things neater.
+ * GamePanel holds the game, along with the Keyevents to make the player move,
+ * and uses it's parent, GUI, to keep track of variables.
+ * Having this larger class that extends JPanel allows easier access to
+ * drawing, moving, and sizing.
  */
 public class GamePanel extends JPanel implements KeyListener
 {
@@ -37,7 +39,7 @@ public class GamePanel extends JPanel implements KeyListener
   private GUI parent;
   private Player player;
 
-  public GamePanel(GUI parent)
+  public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
     player = parent.player;
@@ -59,8 +61,8 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (GUI.running) {
 
-          player.update(map);
-          snapViewPortToPlayer();
+          player.update(map); //Asks player for animations, sounds, movement
+          snapViewPortToPlayer();  //Makes viewport follow player
 
 
           //Deletes a zombie from list once it explodes in fire trap.
@@ -75,13 +77,15 @@ public class GamePanel extends JPanel implements KeyListener
 
             if (zombie.zombieDied) zombieIter.remove();
 
-            if (zombie.bitPlayer)
+            if (zombie.bitPlayer)  //Game over
             {
               System.out.println("zombie bit player");
               //parent.running = false;
               parent.pauseGame();
               //stopAllSounds();
-              GUI.showDeathDialog(parent, "Ye be bitten! Keep yer zombie erff yer tail by using yer fire traps!");
+              GUI.showDeathDialog(parent,
+                  "Ye be bitten! Keep yer zombie erff yer tail by using yer " +
+                      "fire traps!");
             }
 
 
@@ -98,10 +102,17 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-
+          //Updates game labels
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
 
+          int seconds;
+          if (player.playerExploded)
+          {
+            player.playerDied = true;
+          }
+
+          //Shows dialog if player died at any time
           if (player.playerDied)
           {
             //parent.running = false;
@@ -109,9 +120,10 @@ public class GamePanel extends JPanel implements KeyListener
             //stopAllSounds();
             GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
             newMap();
-
           }
 
+
+          // Checks if player made it to the exit tile
           Tile test_tile;
           int player_row = player.location.getRow(GUI.tile_size);
           int player_col = player.location.getCol(GUI.tile_size);
@@ -124,6 +136,7 @@ public class GamePanel extends JPanel implements KeyListener
                   player.getCenteredBoundingRectangle()
                         .intersects(test_tile.getBoundingRectangle()))
               {
+                //If yes, then go to next level.
                 parent.whichLevel++;
                 System.out.println("Next level");
                 newMap();
@@ -143,7 +156,7 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
 
-  private void newMap()
+  private void newMap() //Starts a new game with a new map
   {
     GameMap new_map = new GameMap();
     parent.map = new_map;
@@ -166,7 +179,7 @@ public class GamePanel extends JPanel implements KeyListener
    */
   public void snapViewPortToPlayer()
   {
-    JViewport parent_viewport = (JViewport) getParent();
+    JViewport parent_viewport = (JViewport) getParent(); //From scrollpane
     Rectangle viewport_rect = parent_viewport.getViewRect();
     double scale = ((double) parent_viewport.getWidth()) / DEFAULT_WIDTH;
 
@@ -187,20 +200,18 @@ public class GamePanel extends JPanel implements KeyListener
         RenderingHints.VALUE_ANTIALIAS_ON);
     vp = (JViewport) getParent();
 
+    //For resizing purposes
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
     g2.scale(scale, scale);
 
-//    map.paint(g2, GUI.tile_size);
     g2.drawImage(map.map_image, 0, 0, null);
-//    System.out.println(vp.getWidth());
-//    System.out.println(DEFAULT_WIDTH);
-//    System.out.println(scale);
 
     // Math to make vignette move with viewport
     int width = vp.getWidth();
     int height = vp.getHeight();
     boolean explodee = false;
 
+    //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
       if (!player.is_picking_up || player.is_putting_down || !trap.exploding)
@@ -216,17 +227,10 @@ public class GamePanel extends JPanel implements KeyListener
             trap.location.getX() - GUI.tile_size,
             trap.location.getY() - GUI.tile_size, null);
         explodee = true;
-
-
       }
-
-
     }
 
-
-
-
-
+    //Draws zombies
     for(Zombie zombie : map.zombies) {
       if (!zombie.zombieDied)
       {
@@ -235,9 +239,15 @@ public class GamePanel extends JPanel implements KeyListener
       }
     }
 
-    g2.drawImage(player.animation.getSprite(), player.location.getX(),
-        player.location.getY(), null);
+    //Draws player
+    if (!player.playerExploded)
+    {
+      g2.drawImage(player.animation.getSprite(), player.location.getX(),
+          player.location.getY(), null);
+    }
 
+    //Draws vignette with player at center. Does not draw if trap explodes
+    //on screen. 
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
