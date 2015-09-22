@@ -108,7 +108,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
-//      System.out.println("Zombie hit wall");
       SoundLoader.playHitObst();
     }
 
@@ -118,6 +117,10 @@ public class Zombie extends Humanoid implements HumanoidObject
   }
 
 
+  public boolean touchingZombie(HumanoidObject zombie)
+  {
+    return (intersects((Object2D) zombie));
+  }
 
   public boolean bitesPlayer(HumanoidObject player)
   {

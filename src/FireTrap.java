@@ -72,10 +72,6 @@ public class FireTrap extends GameObject
         if (getCenteredBoundingRectangle()
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
-          //System.out.println(frame);
-
-          //frame = fireAnimation.getFrameCount();
-          //System.out.println("We should probably explode now....");
           startExploding();
           zombie.zombieDied = true;
 
@@ -87,7 +83,6 @@ public class FireTrap extends GameObject
       }
     }
 
-    //System.out.println("frame: " + frame);
     if (exploding && frame >= EXPLODE_TIME)
     {
       stopExploding(map);
@@ -96,7 +91,6 @@ public class FireTrap extends GameObject
     if (getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) && player.isRunning)
     {
-      //exploding = true;
       startExploding();
       player.playerDied = true;
 
@@ -108,8 +102,6 @@ public class FireTrap extends GameObject
 
   public void startExploding()
   {
-//    System.out.println("exploding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//    System.out.println("location: " + location);
     exploding = true;
     fireAnimation.start();
     SoundLoader.playExplosion();
@@ -119,39 +111,20 @@ public class FireTrap extends GameObject
 
   public void stopExploding(GameMap map)
   {
-//    System.out.println("We are no longer exploding!!!");
-//    System.out.println("location: " + location);
     frame = 0;
     exploding = false;
     fireAnimation.stop();
 
-    Tile test_tile;
     int trap_row = location.getRow(GUI.tile_size);
     int trap_col = location.getCol(GUI.tile_size);
     for (int row = trap_row - 1; row <= trap_row + 1; row++)
     {
       for (int col = trap_col - 1; col <= trap_col + 1; col++)
       {
-        test_tile = map.getTile(row, col);
-
-        if (test_tile.tile_type.equals(TileType.BRICK)
-            || test_tile.tile_type.equals(TileType.INSIDEWALL))
-        {
-          test_tile.tile_type = TileType.BURNTFLOOR;
-
-        }
-        if (test_tile.tile_type.equals(TileType.WALL))
-        {
-          test_tile.tile_type.equals(TileType.BURNTWALL);
-        }
-
-
+        map.burnTile(row, col);
       }
     }
-
     remove_me = true;
-
-    map.updateBufferedImage(GUI.tile_size);
   }
 
   @Override

@@ -90,7 +90,6 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           }
-          //Loops through all firetraps and deletes one if it explodes
           Iterator<FireTrap> trapIter = map.traps.iterator();
           FireTrap trap;
           while (trapIter.hasNext())
@@ -114,6 +113,8 @@ public class GamePanel extends JPanel implements KeyListener
             parent.pauseGame();
             //stopAllSounds();
             GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
+            newMap();
+
           }
 
           // Checks if player made it to the exit tile
@@ -197,11 +198,7 @@ public class GamePanel extends JPanel implements KeyListener
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
     g2.scale(scale, scale);
 
-//    map.paint(g2, GUI.tile_size);
     g2.drawImage(map.map_image, 0, 0, null);
-//    System.out.println(vp.getWidth());
-//    System.out.println(DEFAULT_WIDTH);
-//    System.out.println(scale);
 
     // Math to make vignette move with viewport
     int width = vp.getWidth();
@@ -224,11 +221,7 @@ public class GamePanel extends JPanel implements KeyListener
             trap.location.getX() - GUI.tile_size,
             trap.location.getY() - GUI.tile_size, null);
         explodee = true;
-
-
       }
-
-
     }
 
     //Draws zombies
