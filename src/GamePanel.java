@@ -160,6 +160,7 @@ public class GamePanel extends JPanel implements KeyListener
 
   private void newMapByExit() //Starts a new game with a new map
   {
+    SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
     parent.map = new_map;
     map = new_map;

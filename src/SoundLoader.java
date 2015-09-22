@@ -77,6 +77,9 @@ public class SoundLoader implements LineListener
     walkSound = new SoundLoader("pWalkSound.wav");
     scream = new SoundLoader("pScream.wav");
 
+    zWalk.makeBalanceControlled();
+    hitObst.makeBalanceControlled();
+
   }
 
   public static void playBite()
@@ -85,39 +88,37 @@ public class SoundLoader implements LineListener
     scream.play();
   }
 
+  public static void playHitObst(float balance)
+  {
+    hitObst.setBalance(balance);
+    hitObst.play();
+  }
+
   public static void playHitObst()
   {
-    hitObst.makeBalanceControlled();
-    decideBalance(hitObst);
-    hitObst.play();
+
+    playHitObst(0);
+  }
+
+  public static void playZWalk(float balance)
+  {
+    zWalk.setBalance(balance);
+    zWalk.playLooped();
   }
 
   public static void playZWalk()
   {
-    zWalk.makeBalanceControlled();
-
-    decideBalance(zWalk);
-
-    zWalk.playLooped();
+    playZWalk(0);
   }
 
-  private static void decideBalance(SoundLoader sound)
-  {
-    if (Zombie.toTheLeftOfPlayer)
-    {
-      sound.setBalance(-1f);
-    }
-    else if (Zombie.toTheRightOfPlayer)
-    {
-      sound.setBalance(1f);
-    }
-  }
 
   public static void stopSounds()
   {
     zWalk.stop();
     hitObst.stop();
     combust.stop();
+    walkSound.stop();
+    runSound.stop();
   }
 
   public static void stopMoving()
@@ -194,6 +195,7 @@ public class SoundLoader implements LineListener
   {
     audioClip.stop();
   }
+
 
 //  public static void main(String[] args)
 //  {
