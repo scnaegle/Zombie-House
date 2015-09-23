@@ -57,7 +57,7 @@ public class GUI
     if (option == 0)
     {
       parent.whichLevel = 1;
-      SoundLoader.killSounds();
+      //SoundLoader.killSounds();
       parent.window.dispose();
       parent.getSettings();
     }
@@ -222,7 +222,8 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
-        System.out.format("SCENE SIZE: (%d, %d)\n", SCENE_WIDTH, SCENE_HEIGHT);
+        //System.out.format("SCENE SIZE: (%d, %d)\n", SCENE_WIDTH,
+        // SCENE_HEIGHT);
       }
 
       @Override

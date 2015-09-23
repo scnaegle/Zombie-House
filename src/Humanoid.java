@@ -132,7 +132,9 @@ public class Humanoid extends GameObject implements HumanoidObject
     Tile tile_check;
     for(int r = row - 1; r <= row + 1; r++) {
       tile_check = map.getTile(r, col);
-      if ((tile_check.tile_type.equals(TileType.WALL)) &&
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.BURNTWALL)
+          || tile_check.tile_type.equals(TileType.INSIDEWALL)) &&
           new_location_object.getCenteredBoundingRectangle().intersects(tile_check.getBoundingRectangle())) {
         return true;
       }
@@ -150,7 +152,10 @@ public class Humanoid extends GameObject implements HumanoidObject
     Tile tile_check;
     for(int c = col - 1; c <= col + 1; c++) {
       tile_check = map.getTile(row, c);
-      if ((tile_check.tile_type.equals(TileType.WALL) || tile_check.tile_type.equals(TileType.INSIDEWALL)) &&
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.INSIDEWALL)
+          || tile_check.tile_type.equals(
+          TileType.BURNTWALL)) &&
           new_location_object.getCenteredBoundingRectangle().intersects(tile_check.getBoundingRectangle())) {
         return true;
       }

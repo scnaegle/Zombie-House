@@ -1,6 +1,7 @@
 
 /**
- * Player class sets up the player, loads the walking/ running sprites and
+ * Player class sets up the player, loads the walkingRight/ runningRight
+ * sprites and
  * sets up the animation depending on the speed of the player. Also checks
  * for picking up and putting down firetraps.
  */
@@ -19,22 +20,31 @@ public class Player extends Humanoid implements HumanoidObject
   public boolean playerDied = false;
   public boolean playerExploded = false;
   protected int frame = 0;
-  double max_stamina = 5;
-  double stamina = 5;
-  double regen = .2;
+  double max_stamina;
+  double stamina;
+  double regen;
   boolean is_picking_up = false;
-  private int sight = 5;
-  private int hearing = 10;
+  private int sight;
+  private int hearing;
   private int fire_traps = 0;
   private FireTrap pickup_trap;
-  private Sprite stand_sprite = new Sprite("pStand", GUI.tile_size);
-  private BufferedImage[] still = {stand_sprite.getSprite(1, 1)};
-  private BufferedImage[] walking = initPlayerSpriteWalk();
-  private BufferedImage[] running = initPlayerSpriteRun();
-  private Animation walk = new Animation(walking, 2);
-  Animation animation = walk;
-  private Animation run = new Animation(running, 1);
-  private Animation stand = new Animation(still, 5);
+  private Sprite stand_sprite = new Sprite("pStandRight", GUI.tile_size);
+  private Sprite standL_sprite = new Sprite("pStandLeft", GUI.tile_size);
+  private BufferedImage[] stillRight = {stand_sprite.getSprite(1, 1)};
+  private BufferedImage[] stillLeft = {stand_sprite.getSprite(1, 1)};
+  private BufferedImage[] walkingRight = initPlayerSpriteWalkRight();
+  private BufferedImage[] walkingLeft = initPlayerSpriteWalkLeft();
+  private BufferedImage[] runningRight = initPlayerSpriteRunRight();
+  private BufferedImage[] runningLeft = initPlayerSpriteRunLeft();
+
+
+  private Animation walkRight = new Animation(walkingRight, 2);
+  Animation animation = walkRight;
+  private Animation walkLeft = new Animation(walkingLeft, 2);
+  private Animation runRight = new Animation(runningRight, 1);
+  private Animation runLeft = new Animation(runningLeft, 1);
+  private Animation standRight = new Animation(stillRight, 5);
+  private Animation standLeft = new Animation(stillLeft, 5);
   private ArrayList<FireTrap> traps = new ArrayList<>();
 
 
@@ -98,27 +108,69 @@ public class Player extends Humanoid implements HumanoidObject
     return fire_traps;
   }
 
-  //Loads sprites for walking animation
-  public BufferedImage[] initPlayerSpriteWalk()
+  //Loads sprites for walkingRight animation
+  public BufferedImage[] initPlayerSpriteWalkRight()
   {
 
     Sprite sprite = new Sprite("pWalk", 80);
 
-    BufferedImage walking[] = {sprite.getSprite(1, 2),
+    BufferedImage walkingRight[] = {sprite.getSprite(1, 2),
         sprite.getSprite(1, 3),
         sprite.getSprite(1, 4),
         sprite.getSprite(1, 5),
         sprite.getSprite(1, 6),
         sprite.getSprite(1, 7)};
-    return walking;
+    return walkingRight;
   }
 
-  //Loads sprites for running animation
-  public BufferedImage[] initPlayerSpriteRun()
+  private BufferedImage[] initPlayerSpriteWalkLeft()
+  {
+    Sprite sprite = new Sprite("pWalkLeft", 80);
+
+    BufferedImage walkingLeft[] = {sprite.getSprite(1, 6),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 2),
+        sprite.getSprite(1, 1)};
+    return walkingLeft;
+  }
+
+  //Loads sprites for runningRight animation
+  public BufferedImage[] initPlayerSpriteRunRight()
   {
 
     Sprite sprite = new Sprite("pRun", 80);
-    BufferedImage running[] = {sprite.getSprite(1, 1),
+    BufferedImage runningRight[] = {sprite.getSprite(1, 10),
+        sprite.getSprite(1, 9),
+        sprite.getSprite(1, 8),
+        sprite.getSprite(1, 7),
+        sprite.getSprite(1, 6),
+        sprite.getSprite(1, 5),
+        sprite.getSprite(1, 4),
+        sprite.getSprite(1, 3),
+        sprite.getSprite(1, 2),
+        sprite.getSprite(1, 1),
+        sprite.getSprite(2, 10),
+        sprite.getSprite(2, 9),
+        sprite.getSprite(2, 8),
+        sprite.getSprite(2, 7),
+        sprite.getSprite(2, 6),
+        sprite.getSprite(2, 5),
+        sprite.getSprite(2, 4),
+        sprite.getSprite(2, 3),
+        sprite.getSprite(2, 2),
+        sprite.getSprite(2, 1),
+        sprite.getSprite(3, 2),
+        sprite.getSprite(3, 1)};
+
+    return runningRight;
+  }
+
+  private BufferedImage[] initPlayerSpriteRunLeft()
+  {
+    Sprite sprite = new Sprite("pRunLeft", 80);
+    BufferedImage runningLeft[] = {sprite.getSprite(1, 1),
         sprite.getSprite(1, 2),
         sprite.getSprite(1, 3),
         sprite.getSprite(1, 4),
@@ -141,10 +193,11 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(3, 1),
         sprite.getSprite(3, 2)};
 
-    return running;
+    return runningLeft;
   }
 
-  /*When not running, playerRegen  deltaTime is added
+
+  /*When not runningRight, playerRegen  deltaTime is added
   to playerStamina up to a maximum of the original
   playerStamina attribute for the level.*/
   private void regenerate()
@@ -164,7 +217,7 @@ public class Player extends Humanoid implements HumanoidObject
   /**
    * Updates player every timer tick. Takes in a map object in order to
    * get a hold of the list of randomly generated fire traps. Checks for
-   * actions such as running, walking, picking up and putting down traps.
+   * actions such as runningRight, walkingRight, picking up and putting down traps.
    *
    * @param map
    */
@@ -211,17 +264,17 @@ public class Player extends Humanoid implements HumanoidObject
       {
         regenerate();
         current_speed = 0;
-        animation = stand;
+        //isStill = true;
       }
       else if (current_speed > defined_speed && stamina > 0)
       {
-        animation = run;
+        //isRunning = true;
         stamina -= STAMINA_STEP;
       }
       else
       {
         regenerate();
-        animation = walk;
+        //isWalking = true;
         current_speed = defined_speed;
       }
 
@@ -239,6 +292,7 @@ public class Player extends Humanoid implements HumanoidObject
         SoundLoader.playerWalk();
       }
 
+      determineAnimation();
       animation.start();
       animation.update();
 
@@ -277,6 +331,69 @@ public class Player extends Humanoid implements HumanoidObject
     int row = (int)(location.y + GUI.tile_size) / GUI.tile_size;
     int col = (int)(location.x + (width / 2)) / GUI.tile_size;
     return map.getTile(row, col);
+  }
+
+  protected void determineAnimation()
+  {
+    double x_move = heading.getXMovement();
+    double y_move = heading.getYMovement();
+    if (isStill)
+    {
+      if (animation == walkRight || animation == runRight)
+      {
+        animation = standRight;
+      }
+      else if (animation == walkLeft || animation == runLeft)
+      {
+        animation = standLeft;
+      }
+
+    }
+    if (isWalking)
+    {
+      if (x_move > 0)
+      {
+        animation = walkRight;
+      }
+      else if (x_move < 0)
+      {
+        animation = walkLeft;
+      }
+      else
+      {
+        if (animation == standRight)
+        {
+          animation = walkRight;
+        }
+        else if (animation == standLeft)
+        {
+          animation = walkLeft;
+        }
+      }
+    }
+    if (isRunning)
+    {
+      if (x_move > 0)
+      {
+        animation = runRight;
+      }
+      else if (x_move < 0)
+      {
+        animation = runLeft;
+      }
+      else
+      {
+        if (animation == walkRight)
+        {
+          animation = runRight;
+        }
+        else if (animation == walkLeft)
+        {
+          animation = runLeft;
+        }
+      }
+    }
+
   }
 
 

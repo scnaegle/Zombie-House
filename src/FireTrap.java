@@ -95,6 +95,11 @@ public class FireTrap extends GameObject
       }
     }
 
+    //If firetrap is next to exploding trap, that trap should explode too
+    if (getDistance(this) <= 0 && exploding)
+    {
+      startExploding();
+    }
     if (exploding && frame >= EXPLODE_TIME)
     {
       stopExploding(map);

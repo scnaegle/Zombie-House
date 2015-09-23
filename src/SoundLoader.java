@@ -137,24 +137,24 @@ public class SoundLoader implements LineListener
     walkSound.playLooped();
   }
 
-  public static void killSounds()
-  {
-
-    //Need to be able to reset all the sound threads, or kill them,
-    // but if they arent used then you get null pointer exception.
-
-    //Need a way to see which threads were created and then kill those
-
-    zWalk.thread.interrupt();
-    walkSound.thread.interrupt();
-    //runSound.thread.interrupt();
-    hitObst.thread.interrupt();
-    combust.thread.interrupt();
-    //groan.thread.interrupt();
-    //scream.thread.interrupt();
-    //bite.thread.interrupt();
-
-  }
+//  public static void killSounds()
+//  {
+//
+//    //Need to be able to reset all the sound threads, or kill them,
+//    // but if they arent used then you get null pointer exception.
+//
+//    //Need a way to see which threads were created and then kill those
+//
+//    zWalk.thread.interrupt();
+//    walkSound.thread.interrupt();
+//    //runSound.thread.interrupt();
+//    hitObst.thread.interrupt();
+//    combust.thread.interrupt();
+//    //groan.thread.interrupt();
+//    //scream.thread.interrupt();
+//    //bite.thread.interrupt();
+//
+//  }
 
   void makeBalanceControlled()
   {

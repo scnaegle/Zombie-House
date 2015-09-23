@@ -140,7 +140,7 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 //If yes, then go to next level.
                 parent.whichLevel++;
-                SoundLoader.killSounds();
+                //SoundLoader.killSounds();
                 System.out.println("Next level");
                 newMapByExit();
 
@@ -166,7 +166,7 @@ public class GamePanel extends JPanel implements KeyListener
     parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
-    parent.loadSounds();
+    //parent.loadSounds();
   }
 
   private void newMap() //Starts a new game with a new map
@@ -265,11 +265,11 @@ public class GamePanel extends JPanel implements KeyListener
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
 
-    if (!explodee) //draw if trap is not exploding
-    {
-      g2.drawImage(vignetteCanvas, vcX, vcY, null);
-
-    }
+//    if (!explodee) //draw if trap is not exploding
+//    {
+//      g2.drawImage(vignetteCanvas, vcX, vcY, null);
+//
+//    }
 
 
   }
@@ -310,7 +310,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       player.setRunning();
-//      player.isRunning = true;
+      player.isRunning = true;
       player.isWalking = false;
 
     }
