@@ -25,12 +25,18 @@ public class GamePanel extends JPanel implements KeyListener
   final static int SHOWN_TILES = 24;
   final static int DEFAULT_WIDTH = SHOWN_TILES * GUI.tile_size;
   final BufferedImage vignetteCanvas;
-  private final ArrayList KEY_UP = new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
-  private final ArrayList KEY_DOWN = new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
-  private final ArrayList KEY_LEFT = new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
-  private final ArrayList KEY_RIGHT = new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
-  private final ArrayList KEY_RUN = new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
-  private final ArrayList KEY_PICKUP = new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
+  private final ArrayList KEY_UP =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_UP, KeyEvent.VK_W));
+  private final ArrayList KEY_DOWN =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_DOWN, KeyEvent.VK_S));
+  private final ArrayList KEY_LEFT =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_LEFT, KeyEvent.VK_A));
+  private final ArrayList KEY_RIGHT =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_RIGHT, KeyEvent.VK_D));
+  private final ArrayList KEY_RUN =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
+  private final ArrayList KEY_PICKUP =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
 
   public GameMap map;
   Timer frame_timer;
@@ -49,7 +55,6 @@ public class GamePanel extends JPanel implements KeyListener
     vignetteCanvas = makeVignette(player.getSight());
 
 
-
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
 
@@ -59,8 +64,9 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (GUI.running) {
-
+        if (GUI.running)
+        {
+          System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
           snapViewPortToPlayer();  //Makes viewport follow player
 
@@ -213,6 +219,7 @@ public class GamePanel extends JPanel implements KeyListener
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON);
     vp = (JViewport) getParent();
+    BufferedImage light;
 
     //For resizing purposes
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
@@ -225,6 +232,7 @@ public class GamePanel extends JPanel implements KeyListener
     int height = vp.getHeight();
     boolean explodee = false;
 
+    FireTrap activeTrap = null;
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
@@ -240,12 +248,17 @@ public class GamePanel extends JPanel implements KeyListener
         g2.drawImage(trap.fireAnimation.getSprite(),
             trap.location.getX() - GUI.tile_size,
             trap.location.getY() - GUI.tile_size, null);
+
         explodee = true;
+        activeTrap = trap;
+
+
       }
     }
 
     //Draws zombies
-    for(Zombie zombie : map.zombies) {
+    for (Zombie zombie : map.zombies)
+    {
       if (!zombie.zombieDied)
       {
         g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(),
@@ -265,10 +278,44 @@ public class GamePanel extends JPanel implements KeyListener
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
+//    BufferedImage lightLayer = new BufferedImage(vignetteCanvas.getWidth(),
+//        vignetteCanvas.getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+//    Graphics2D lightGraphics = (Graphics2D) lightLayer.getGraphics();
+//    lightGraphics.drawImage(vignetteCanvas, 0, 0, null);
+//    lightGraphics.setComposite(
+//        AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
+//
+//    if(explodee)
+//    {
+//      light = drawFireLight(activeTrap);
+//      lightGraphics.drawImage(light, (int) activeTrap.explosionObj.getX(),
+//          (int) activeTrap.explosionObj.getY(), null);
+//    }
 
+    //g2.drawImage(lightLayer, vcX, vcY, null);
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
+  }
 
+  private BufferedImage drawFireLight(FireTrap trap)
+  {
+    BufferedImage img = new BufferedImage((int) trap.explosionObj.getWidth()
+        , (int) trap.explosionObj.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+
+    Graphics2D g = (Graphics2D) img.getGraphics();
+    float radius = (float) trap.explosionObj.getWidth() * GUI.tile_size;
+    Point2D center = new Point2D.Float((float) trap.explosionObj.getWidth() / 2,
+        (float) trap.explosionObj.getHeight() / 2);
+    Color[] colors = {new Color(1f, 1f, 1f, 0f), Color.black};
+    float[] dist = {0.0f, 1f};
+    RadialGradientPaint p =
+        new RadialGradientPaint(center, radius, dist, colors);
+
+    g.setPaint(p);
+    g.fillRect(0, 0, (int) trap.explosionObj.getWidth(),
+        (int) trap.explosionObj.getHeight());
+
+    return img;
   }
 
 
@@ -307,6 +354,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
+      System.out.println("R");
       player.setRunning();
       player.isRunning = true;
       player.isWalking = false;
@@ -314,6 +362,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
+      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
       player.isRunning = false;
       player.isWalking = true;
@@ -321,24 +370,28 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_DOWN.contains(code))
     {
+      System.out.println("down");
       player.heading.setYMovement(Heading.SOUTH_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_RIGHT.contains(code))
     {
+      System.out.println("right");
       player.heading.setXMovement(Heading.EAST_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_LEFT.contains(code))
     {
+      System.out.println("left");
       player.heading.setXMovement(Heading.WEST_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_PICKUP.contains(code))
     {
+      System.out.println("p");
       FireTrap t = map.traps.stream()
                             .filter(player::intersects)
                             .findFirst()
@@ -365,6 +418,7 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
+    System.out.println("released");
     player.isStill = true;
     player.isRunning = false;
     player.isWalking = false;
