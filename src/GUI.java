@@ -43,6 +43,7 @@ public class GUI
   private Zombie zombie;
   private JLabel playerRegen;
   private boolean newGame = true;
+  private boolean gameStarted = false;
 
   public static void showDeathDialog(GUI parent, String message)
   {
@@ -70,6 +71,7 @@ public class GUI
 
   public void getSettings()
   {
+
     //this.map = map;
     JFrame popup = new JFrame("Settings");
     popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,6 +165,11 @@ public class GUI
       @Override
       public void actionPerformed(ActionEvent e)
       {
+        if (gameStarted)
+        {
+          return;
+        }
+        gameStarted = true;
         String one = pSpeed.getText();
         String two = pHearing.getText();
         String three = pSight.getText();
@@ -186,25 +193,15 @@ public class GUI
         fspawn = Double.parseDouble(ten);
 
 
-        newGame();
+        map = new GameMap();
+        initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
+            map.start_location);
         setUpGUI();
         loadSounds();
         popup.dispose();
       }
     });
 
-  }
-
-  public void newGame()
-  {
-    map = new GameMap();
-    initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
-        map.start_location);
-
-
-    //setUpGUI();
-
-    //loadSounds();
   }
 
 

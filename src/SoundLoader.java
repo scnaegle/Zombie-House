@@ -215,16 +215,4 @@ public class SoundLoader implements LineListener
     audioClip.stop();
   }
 
-
-//  public static void main(String[] args)
-//  {
-//
-//    loadSounds();
-//    zWalk.makeBalanceControlled();
-//    zWalk.setBalance(1f);
-//    playZWalk();
-//    while(true);
-//
-//
-//  }
 }

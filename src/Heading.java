@@ -42,6 +42,43 @@ public class Heading
     this(heading.x_movement, heading.y_movement);
   }
 
+  public static Heading getOppositeHeading(Heading current)
+  {
+    if (current == Heading.NORTH)
+    {
+      return Heading.SOUTH;
+    }
+    if (current == Heading.SOUTH)
+    {
+      return Heading.NORTH;
+    }
+    if (current == Heading.EAST)
+    {
+      return Heading.WEST;
+    }
+    if (current == Heading.WEST)
+    {
+      return Heading.EAST;
+    }
+    if (current == Heading.NE)
+    {
+      return Heading.SW;
+    }
+    if (current == Heading.NW)
+    {
+      return Heading.SE;
+    }
+    if (current == Heading.SE)
+    {
+      return Heading.NW;
+    }
+    if (current == Heading.SW)
+    {
+      return Heading.NE;
+    }
+    return Heading.NONE;
+  }
+
   public double getXMovement()
   {
     return x_movement;
@@ -131,42 +168,6 @@ public class Heading
     temp = Double.doubleToLongBits(degrees);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
     return result;
-  }
-
-  public Heading getOppositeHeading(Heading current)
-  {
-    if (current == Heading.NORTH)
-    {
-      return Heading.SOUTH;
-    }
-    else if (current == Heading.SOUTH)
-    {
-      return Heading.NORTH;
-    }
-    else if (current == Heading.EAST)
-    {
-      return Heading.WEST;
-    }
-    else if (current == Heading.WEST)
-    {
-      return Heading.EAST;
-    }
-    else if (current == Heading.NE)
-    {
-      return Heading.SW;
-    }
-    else if (current == Heading.NW)
-    {
-      return Heading.SE;
-    }
-    else if (current == Heading.SE)
-    {
-      return Heading.NW;
-    }
-    else
-    {
-      return Heading.NE;
-    }
   }
 
   @Override

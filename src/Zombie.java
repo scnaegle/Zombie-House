@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Sets up everything that a zombie has, such as smell, speed, decision rate
  * and how the sprite will move. Each zombie is an object so it extends
@@ -86,6 +84,7 @@ public class Zombie extends Humanoid implements HumanoidObject
       moveY();
     }
 
+
     if (bitesPlayer(player))
     {
       setBite();
@@ -115,7 +114,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     animation.start();
     animation.update();
   }
-
 
   private boolean toTheRight(HumanoidObject player)
   {
