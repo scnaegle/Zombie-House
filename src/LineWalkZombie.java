@@ -47,6 +47,8 @@ public class LineWalkZombie extends Zombie
     this.decision_rate = decision_rate;
   }
 
+
+
   @Override
   protected void chooseDirection(HumanoidObject player) {
     if (smellPlayer(player)) {

@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -9,12 +10,20 @@ import java.util.Random;
 public class MasterZombie extends Zombie
 {
 
+  static ArrayList<Zombie> minons = new ArrayList<Zombie>();
+
+  public static void addZombie(Zombie zombie)
+  {
+    minons.add(zombie);
+  }
+
   BufferedImage[] down = initDown();
   BufferedImage[] left = initLeft();
   BufferedImage[] right = initRight();
   BufferedImage[] up = initUp();
 
-  public MasterZombie(Location location) {
+  public MasterZombie(Location location)
+  {
     super(location);
     moveDown = new Animation(down, 5);
     moveLeft = new Animation(left, 5);
@@ -23,7 +32,8 @@ public class MasterZombie extends Zombie
     animation = moveLeft;
     animation.start();
     Random rand = new Random();
-    switch(rand.nextInt(4)) {
+    switch (rand.nextInt(4))
+    {
       case 0:
         this.heading = new Heading(Heading.NORTH);
         break;
@@ -83,32 +93,38 @@ public class MasterZombie extends Zombie
 
 
   @Override
-  protected void chooseDirection(HumanoidObject player) {
+  protected void chooseDirection(HumanoidObject player)
+  {
 //    System.out.println("Choosing Line Walk Zombie direction...");
-    if (smellPlayer(player)) {
+    if (smellPlayer(player))
+    {
 //      System.out.println("BRAAAAAIIINNNNNNZZZZ");
-      double angle = getDirectionTo((Object2D)player);
+      double angle = getDirectionTo((Object2D) player);
 //      System.out.println("new angle: " + angle);
       heading.setDegrees(angle);
     } // else if hit hall then choose random direction
   }
+
   @Override
   public void update(GameMap map, HumanoidObject player)
   {
     frame++;
-    if (frame >= decision_rate * GamePanel.FPS) {
+    if (frame >= decision_rate * GamePanel.FPS)
+    {
       frame = 0;
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
-    if (!hitWallInXDirectionMaster(map)) {
+    if (!hitWallInXDirectionMaster(map))
+    {
       moveX();
     }
-    if (!hitWallInYDirectionMaster(map)) {
+    if (!hitWallInYDirectionMaster(map))
+    {
       moveY();
     }
 
- ///   if(touchingZombie(zombie))
+    ///   if(touchingZombie(zombie))
     {
 
     }

@@ -32,6 +32,7 @@ public class RandomWalkZombie extends Zombie
     this.decision_rate = decision_rate;
   }
 
+
   @Override
   protected void chooseDirection(HumanoidObject player) {
 //    System.out.println("Choosing new direction");
@@ -46,6 +47,7 @@ public class RandomWalkZombie extends Zombie
 //    System.out.println("new heading: " + heading.toString());
     }
   }
+
 
   private BufferedImage[] initDown()
   {

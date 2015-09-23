@@ -154,6 +154,7 @@ public class GameMap
               }
               //master = new MasterZombie(location);
             }
+            zombies.add(master);
             zombies.add(zombie);
             //zombies.add(master);
             //System.out.println(zombies);
@@ -290,7 +291,7 @@ public class GameMap
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
-  
+
   /**
    * generates the map through many many methods
    */
