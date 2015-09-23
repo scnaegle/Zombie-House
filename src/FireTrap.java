@@ -90,7 +90,7 @@ public class FireTrap extends GameObject
           {
             for (int col = trap_col - 1; col <= trap_col + 1; col++)
             {
-              if (trap_row)
+      //        if (trap_row)
             }
           }
 

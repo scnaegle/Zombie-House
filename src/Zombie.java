@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Sets up everything that a zombie has, such as smell, speed, decision rate
  * and how the sprite will move. Each zombie is an object so it extends
@@ -77,13 +79,12 @@ public class Zombie extends Humanoid implements HumanoidObject
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
-    if (!hitWallInXDirection(map)) {
+    if (!hitWallInXDirection(map) && !hitAnotherZombieInX(map.zombies)) {
       moveX();
     }
-    if (!hitWallInYDirection(map)) {
+    if (!hitWallInYDirection(map) && !hitAnotherZombieInY(map.zombies)) {
       moveY();
     }
-
 
     if (bitesPlayer(player))
     {
@@ -95,6 +96,8 @@ public class Zombie extends Humanoid implements HumanoidObject
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
     {
+      System.out.println(getDistance((Object2D) player));
+
       //System.out.println("can hear zombie");
       SoundLoader.playZWalk(checkZombieDirection(player));
     }
@@ -105,7 +108,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
-
       SoundLoader.playHitObst(checkZombieDirection(player));
     }
 
@@ -113,6 +115,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     animation.start();
     animation.update();
   }
+
 
   private boolean toTheRight(HumanoidObject player)
   {
@@ -141,7 +144,8 @@ public class Zombie extends Humanoid implements HumanoidObject
     }
   }
 
-  public boolean touchingZombie(HumanoidObject zombie)
+
+  public boolean touchingZombie(Zombie zombie)
   {
     return (intersects((Object2D) zombie));
   }
