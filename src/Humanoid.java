@@ -183,6 +183,10 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
+      if(zombie instanceof MasterZombie)
+      {
+        return false;
+      }
       if (this != zombie && new_location_object.intersects(zombie))
       {
         return true;
