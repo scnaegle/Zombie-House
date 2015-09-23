@@ -277,6 +277,7 @@ public class GamePanel extends JPanel implements KeyListener
 
   private BufferedImage makeVignette(int sight)
   {
+    System.out.println(GUI.SCENE_WIDTH + " " + GUI.SCENE_HEIGHT);
     BufferedImage img = new BufferedImage(GUI.SCENE_WIDTH,GUI.SCENE_HEIGHT,
                                           BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = (Graphics2D) img.getGraphics();
