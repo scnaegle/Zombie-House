@@ -339,11 +339,11 @@ public class Player extends Humanoid implements HumanoidObject
     double y_move = heading.getYMovement();
     if (isStill)
     {
-      if (animation == walkRight || animation == runRight)
+      if (animation == walkRight)
       {
         animation = standRight;
       }
-      else if (animation == walkLeft || animation == runLeft)
+      else if (animation == walkLeft)
       {
         animation = standLeft;
       }

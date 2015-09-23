@@ -120,8 +120,9 @@ public class GamePanel extends JPanel implements KeyListener
             parent.pauseGame();
             //stopAllSounds();
 
-            GUI.showDeathDialog(parent, "Ye ran into a fire trap! Feast your eyes and pay attention!");
-            newMap();
+            GUI.showDeathDialog(parent,
+                "Ye ran into a fire trap! Feast your eyes and pay attention!");
+
           }
 
 
@@ -169,7 +170,7 @@ public class GamePanel extends JPanel implements KeyListener
     //parent.loadSounds();
   }
 
-  private void newMap() //Starts a new game with a new map
+  public void newMap() //Starts a new game with a new map
   {
     GameMap new_map = new GameMap();
     parent.map = new_map;
@@ -260,16 +261,12 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
     //Draws vignette with player at center. Does not draw if trap explodes
-    //on screen. 
+    //off screen.
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
 
-//    if (!explodee) //draw if trap is not exploding
-//    {
-//      g2.drawImage(vignetteCanvas, vcX, vcY, null);
-//
-//    }
+    g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
   }
@@ -277,20 +274,20 @@ public class GamePanel extends JPanel implements KeyListener
 
   private BufferedImage makeVignette(int sight)
   {
-    System.out.println(GUI.SCENE_WIDTH + " " + GUI.SCENE_HEIGHT);
-    BufferedImage img = new BufferedImage(GUI.SCENE_WIDTH,GUI.SCENE_HEIGHT,
-                                          BufferedImage.TYPE_INT_ARGB);
+    BufferedImage img = new BufferedImage(map.getWidth(GUI.tile_size),
+        map.getHeight(GUI.tile_size), BufferedImage.TYPE_4BYTE_ABGR);
     Graphics2D g = (Graphics2D) img.getGraphics();
 
     float sight_pixels = (float)sight*GUI.tile_size;
-    Point2D center = new Point2D.Float(GUI.SCENE_WIDTH/2, GUI.SCENE_HEIGHT/2);
+    Point2D center = new Point2D.Float(map.getWidth(GUI.tile_size) / 2,
+        map.getHeight(GUI.tile_size) / 2);
     Color[] colors = {new Color(1f,1f,1f,0f),  Color.black};
     float[] dist = {0.0f, 1f};
     RadialGradientPaint p = new RadialGradientPaint(center,sight_pixels,dist,colors);
 
 
     g.setPaint(p);
-    g.fillRect(0, 0, GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT);
+    g.fillRect(0, 0, map.getWidth(GUI.tile_size), map.getHeight(GUI.tile_size));
 
     return img;
   }

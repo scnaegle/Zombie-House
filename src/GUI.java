@@ -42,6 +42,7 @@ public class GUI
   private JLabel traps;
   private Zombie zombie;
   private JLabel playerRegen;
+  private boolean newGame = true;
 
   public static void showDeathDialog(GUI parent, String message)
   {
@@ -57,7 +58,6 @@ public class GUI
     if (option == 0)
     {
       parent.whichLevel = 1;
-      //SoundLoader.killSounds();
       parent.window.dispose();
       parent.getSettings();
     }
@@ -207,6 +207,7 @@ public class GUI
     //loadSounds();
   }
 
+
   public void setUpGUI()
   {
 
@@ -220,10 +221,9 @@ public class GUI
       @Override
       public void componentResized(ComponentEvent e)
       {
-        SCENE_WIDTH = window.getWidth()+160;
-        SCENE_HEIGHT = window.getHeight()+360;
-        //System.out.format("SCENE SIZE: (%d, %d)\n", SCENE_WIDTH,
-        // SCENE_HEIGHT);
+        SCENE_WIDTH = window.getWidth();
+        SCENE_HEIGHT = window.getHeight();
+
       }
 
       @Override
