@@ -176,7 +176,7 @@ public class GameMap
       r++;
     }
     //System.out.println("map: ");
-    System.out.println(toString());
+    //System.out.println(toString());
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
@@ -185,7 +185,7 @@ public class GameMap
     generateMap();
 
 
-    System.out.println(level);
+    //System.out.println(level);
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
     grid = new Tile[num_rows][num_cols];
@@ -247,7 +247,7 @@ public class GameMap
                   new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
                       location);
               spawnMasterZombie = false;
-              System.out.println("spawwned that master zomebie, Yo!");
+              //System.out.println("spawwned that master zomebie, Yo!");
             }
             else
             {
@@ -286,8 +286,8 @@ public class GameMap
       }
       r++;
     }
-    System.out.println("map: ");
-    System.out.println(toString());
+    //System.out.println("map: ");
+    //System.out.println(toString());
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
@@ -360,14 +360,14 @@ public class GameMap
     makeInteriorWalls();
 
     //System.out.println("help1");
-    for (int y = 0; y < Y_SIZE; y++)
-    {
-      for (int x = 0; x < X_SIZE; x++)
-      {
-        System.out.print(getBlock(x, y).type);
-      }
-      System.out.println("");
-    }
+//    for (int y = 0; y < Y_SIZE; y++)
+//    {
+//      for (int x = 0; x < X_SIZE; x++)
+//      {
+//        System.out.print(getBlock(x, y).type);
+//      }
+//      System.out.println("");
+//    }
   }
 
   private static void turnDoorToFloor()
@@ -889,8 +889,8 @@ public class GameMap
     getBlock(x, y).visited = true;
     int[] pickRandomDirection = {UP, DOWN, LEFT, RIGHT};
     shuffleArray(pickRandomDirection);
-    System.out.println(x);
-    System.out.println(y);
+    //System.out.println(x);
+    //System.out.println(y);
     for (int i = 0; i < 4; i++)
     {
       if (pickRandomDirection[i] == RIGHT)
@@ -953,7 +953,7 @@ public class GameMap
           return;
         }
       }
-      System.out.println();
+      //System.out.println();
     }
     if (getBlock(x, y).visited == true)
     {
@@ -1599,7 +1599,7 @@ public class GameMap
       }
     }
     long t2 = System.currentTimeMillis();
-    System.out.println("update all tiles in grid: " + (t2 - t1));
+    //System.out.println("update all tiles in grid: " + (t2 - t1));
   }
 
   public void updateTileOnImage(int row, int col, int tile_size)
@@ -1616,7 +1616,7 @@ public class GameMap
           row * tile_size + (tile_size / 2));
     }
     long t2 = System.currentTimeMillis();
-    System.out.println("update tile: " + (t2 - t1));
+    //System.out.println("update tile: " + (t2 - t1));
   }
 
   public void paintSection(Graphics g, Rectangle rect, int tile_size)

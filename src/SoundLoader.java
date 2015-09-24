@@ -22,12 +22,12 @@ public class SoundLoader implements LineListener
   Thread thread;
   Clip audioClip;
   FloatControl balanceCtrl;
-
+  InputStream inputStream;
 
 
   public SoundLoader(String path)
   {
-    InputStream inputStream =
+    inputStream =
         ClassLoader.getSystemResourceAsStream("resources/" + path);
 
     try
@@ -41,11 +41,6 @@ public class SoundLoader implements LineListener
       audioClip.addLineListener(SoundLoader.this);
 
       audioClip.open(audioStream);
-
-//      System.out.println(
-//          audioClip.isControlSupported(FloatControl.Type.BALANCE));
-
-      //makeBalanceControlled();
 
     }
     catch (UnsupportedAudioFileException e)
@@ -64,8 +59,9 @@ public class SoundLoader implements LineListener
 
   public static void playExplosion()
   {
-    combust.play();
 
+    combust.play();
+    //audioClip.open("explosion.wav");
   }
 
   public static void stopExplosion()

@@ -5,6 +5,8 @@
  * sets up the animation depending on the speed of the player. Also checks
  * for picking up and putting down firetraps.
  */
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 public class Player extends Humanoid implements HumanoidObject
@@ -307,6 +309,17 @@ public class Player extends Humanoid implements HumanoidObject
     }
   }
 
+
+  public void paintPlayer(Graphics g)
+  {
+    Graphics2D g2 = (Graphics2D) g;
+    //Draws player
+    if (!playerExploded)
+    {
+      g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
+          null);
+    }
+  }
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
   // instead of updating when r is held down.
   public void setRunning()
@@ -412,4 +425,5 @@ public class Player extends Humanoid implements HumanoidObject
     SoundLoader.playScream();
 
   }
+
 }
