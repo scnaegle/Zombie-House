@@ -103,10 +103,17 @@ public class FireTrap extends GameObject
       }
     }
 
-    if (exploding && frame >= EXPLODE_TIME)
+//    if(exploding)
+//    {
+//      startExploding();
+//    }
+
+    System.out.println(frame);
+    if (frame >= EXPLODE_TIME && exploding)
     {
       stopExploding(map);
     }
+
 
     if (exploding && getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) ||
@@ -170,5 +177,23 @@ public class FireTrap extends GameObject
     location.x = newLocation.x;
     location.y = newLocation.y;
     explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
+  }
+
+  public void paintTraps(Graphics2D g2, Player player)
+  {
+    if (!player.is_picking_up || player.is_putting_down || !exploding)
+    {
+      g2.drawImage(trap, location.getX(), location.getY(),
+          null);
+    }
+
+    if (exploding) // && onScreen(trap))
+    {
+
+      g2.drawImage(fireAnimation.getSprite(),
+          location.getX() - GUI.tile_size,
+          location.getY() - GUI.tile_size, null);
+
+    }
   }
 }

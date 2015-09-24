@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Sets up everything that a zombie has, such as smell, speed, decision rate
  * and how the sprite will move. Each zombie is an object so it extends
@@ -157,6 +159,16 @@ public class Zombie extends Humanoid implements HumanoidObject
   public void setBite()
   {
     SoundLoader.playBite();
+  }
+
+  public void paintZombies(Graphics2D g2)
+  {
+    if (!zombieDied)
+    {
+      g2.drawImage(animation.getSprite(), location.getX(),
+          location.getY(), null);
+    }
+
   }
 
 
