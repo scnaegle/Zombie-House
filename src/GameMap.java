@@ -518,8 +518,8 @@ public class GameMap
   }
 
   /**
-   * if 4 wall peices in a row horozantally return true
-   *
+   * if 3 outside wall peices in a row horozantally
+   * and is  connected to a outside peice return true
    * @param x
    * @param y
    * @return

@@ -38,6 +38,12 @@ public class Heading
     this(heading.x_movement, heading.y_movement);
   }
 
+  /**
+   * supposed to used to turn zombies around if they touch eachother
+   * DOn't know if it will be used.
+   * @param current
+   * @return
+   */
   public static Heading getOppositeHeading(Heading current)
   {
     if (current == Heading.NORTH)
@@ -75,27 +81,44 @@ public class Heading
     return Heading.NONE;
   }
 
+  /**
+   * gets the x_movement of the sprite
+   * @return
+   */
   public double getXMovement()
   {
     return x_movement;
   }
 
+  /**
+   * sets the x plane movement of the sprite
+   * @param x_movement
+   */
   public void setXMovement(double x_movement)
   {
     this.x_movement = x_movement;
     this.degrees = calculateDegrees();
   }
 
+  /**
+   * gets the y plane movement
+   * @return
+   */
   public double getYMovement()
   {
     return y_movement;
   }
 
+  /**
+   * sets the y plane movement
+   * @param y_movement
+   */
   public void setYMovement(double y_movement)
   {
     this.y_movement = y_movement;
     this.degrees = calculateDegrees();
   }
+
 
   public int getColMovement()
   {
@@ -121,7 +144,10 @@ public class Heading
     }
   }
 
-  //Used for zombies when setting random walk and line walk
+  /**
+   *Used for zombies when setting random walk and line walk
+   * @param degrees
+   */
   public void setDegrees(double degrees)
   {
     this.degrees = degrees;
@@ -134,6 +160,13 @@ public class Heading
     return Math.atan(y_movement / x_movement);
   }
 
+  /**
+   * used to see if one Object is directly equal to another this is important
+   * becuse we often tiimes have to see if is a sprite is moving over a certain
+   * tile type, and need to see the entire object not just a peice of it
+   * @param o
+   * @return
+   */
   @Override
   public boolean equals(Object o)
   {
@@ -148,6 +181,20 @@ public class Heading
 
   }
 
+  /**
+   * I have no idea, somebody else comment this part
+   *
+   *
+   *
+   *
+   * <--
+   *
+   * <--
+   *
+   *
+   *
+   * @return
+   */
   @Override
   public int hashCode()
   {
