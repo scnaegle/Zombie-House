@@ -176,7 +176,7 @@ public class GameMap
       r++;
     }
     //System.out.println("map: ");
-    System.out.println(toString());
+   // System.out.println(toString());
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
@@ -279,7 +279,6 @@ public class GameMap
 
             fireTrap = new FireTrap(50, 50, location);
             traps.add(fireTrap);
-
           }
         }
         c++;
