@@ -142,10 +142,13 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 //If yes, then go to next level.
                 parent.whichLevel++;
+                if (parent.whichLevel == 6)
+                {
+                  parent.showWinningDialog(parent, " You won the game!");
+                }
                 //SoundLoader.killSounds();
                 System.out.println("Next level");
                 newMapByExit();
-
 
               }
             }

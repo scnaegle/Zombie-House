@@ -71,7 +71,26 @@ public class GUI
     }
     else if (option == 1) //Exit
     {
-      System.out.println("exiting");
+      System.exit(0);
+    }
+  }
+
+  public static void showWinningDialog(GUI parent, String message)
+  {
+    Object[] options = {"Play again", "Exit"};
+    int option = JOptionPane.showOptionDialog(parent.window, "Yay!" + message +
+            " What would you like to do now?", "YOU MADE IT",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+    if (option == 0)
+    {
+      parent.whichLevel = 1;
+      parent.window.dispose();
+      parent.getSettings();
+    }
+    else if (option == 1)
+    {
       System.exit(0);
     }
   }
