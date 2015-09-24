@@ -6,6 +6,16 @@
  */
 
 import java.util.ArrayList;
+
+
+/**
+ * This class makes makes the basic layout for the player class, the zombie
+ * class
+ * these methods use things that they all will have in common such as a
+ * heading movement
+ * speed, a location and a width and height of the humanoid object, AKA a
+ * sprite, or sprite object.
+ */
 public class Humanoid extends GameObject implements HumanoidObject
 {
   protected final double MOVE_MULTIPLIER =
@@ -20,11 +30,23 @@ public class Humanoid extends GameObject implements HumanoidObject
     super();
   }
 
+  /**
+   * This places the location, and the width and height of a sprite.
+   *
+   * @param location
+   * @param width
+   * @param height
+   */
   public Humanoid(Location location, int width, int height)
   {
     super(location, width, height);
   }
 
+  /**
+   * gets the speed of sprite.
+   *
+   * @return
+   */
   @Override
   public double getSpeed()
   {
@@ -32,23 +54,43 @@ public class Humanoid extends GameObject implements HumanoidObject
   }
 
 
+  /**
+   * gets the heading of a sprite.
+   *
+   * @return
+   */
   @Override
   public Heading getHeading()
   {
     return heading;
   }
 
+  /**
+   * sets the heading of a sprite.
+   *
+   * @param heading
+   */
   public void setHeading(Heading heading)
   {
     this.heading = heading;
   }
 
+  /**
+   * gets the location of a sprite.
+   *
+   * @return
+   */
   @Override
   public Location getLocation()
   {
     return location;
   }
 
+  /**
+   * sets location of sprite
+   *
+   * @param new_location New location object
+   */
   @Override
   public void setLocation(Location new_location)
   {
@@ -64,11 +106,17 @@ public class Humanoid extends GameObject implements HumanoidObject
     this.location = next_location;
   }
 
+  /**
+   * tells the sprite to move to right or left on map
+   */
   public void moveX()
   {
     this.location.x += getXMovement();
   }
 
+  /**
+   * tells the sprite to move up or down on the map
+   */
   public void moveY()
   {
     this.location.y += getYMovement();
@@ -86,44 +134,50 @@ public class Humanoid extends GameObject implements HumanoidObject
     return new Location(new_x, new_y);
   }
 
+  /**
+   * gets the up and down spreed movement of a sprite to tell it to move at
+   * a certain speed
+   *
+   * @return
+   */
   public double getYMovement() //In tiles per frame
   {
     return getSpeedMultiplier() * heading.getYMovement() * MOVE_MULTIPLIER;
   }
 
+
+  /**
+   * gets the right and left spreed movement of a sprite to tell it to move at
+   * a certain speed
+   *
+   * @return
+   */
   public double getXMovement() //In tiles per frame
   {
     return getSpeedMultiplier() * heading.getXMovement() * MOVE_MULTIPLIER;
   }
 
+  /**
+   * makes so the sprite moves at certain speed across the map, depending on
+   * what the movement
+   * player sets it to in the first part of the game.
+   *
+   * @return
+   */
   public double getSpeedMultiplier()
   {
     return (current_speed * GUI.tile_size / (double) GamePanel.FPS);
   }
 
-  protected boolean hitWall(GameMap map, Location next_location)
-  {
-    int row = next_location.getRow(GUI.tile_size);
-    int col = next_location.getCol(GUI.tile_size);
-    GameObject new_location_object =
-        new GameObject(next_location, width, height);
 
-    Tile tile_check;
-    for (int r = row - 1; r <= row + 1; r++)
-    {
-      for (int c = col - 1; c <= col + 1; c++)
-      {
-        tile_check = map.getTile(r, c);
-        if (tile_check.tile_type.equals(TileType.WALL) &&
-            new_location_object.intersects(tile_check))
-        {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
+  /**
+   * this is the method that gives the master zombie his speical powers to go
+   * through inside wall. It makes so it ignores the inside walls. It is the
+   * same as the other hit wall in xdirction,but doesnt include one check
+   *
+   * @param map
+   * @return
+   */
   protected boolean hitWallInYDirectionMaster(GameMap map)
   {
     Location next_location =
@@ -137,7 +191,8 @@ public class Humanoid extends GameObject implements HumanoidObject
     for (int c = col - 1; c <= col + 1; c++)
     {
       tile_check = map.getTile(row, c);
-      if ((tile_check.tile_type.equals(TileType.WALL)) &&
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
           new_location_object.getCenteredBoundingRectangle()
                              .intersects(tile_check.getBoundingRectangle()))
       {
@@ -147,7 +202,14 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
-
+  /**
+   * this is the method that gives the master zombie his speical powers to go
+   * through inside wall. It makes so it ignores the inside walls. It is the
+   * same as the other hit wall in xdirction,but doesnt include one check
+   *
+   * @param map
+   * @return
+   */
   protected boolean hitWallInXDirectionMaster(GameMap map)
   {
     Location next_location =
@@ -162,8 +224,7 @@ public class Humanoid extends GameObject implements HumanoidObject
     {
       tile_check = map.getTile(r, col);
       if ((tile_check.tile_type.equals(TileType.WALL) ||
-          tile_check.tile_type.equals(TileType.BURNTWALL)
-          || tile_check.tile_type.equals(TileType.INSIDEWALL)) &&
+          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
           new_location_object.getCenteredBoundingRectangle()
                              .intersects(tile_check.getBoundingRectangle()))
       {
@@ -173,7 +234,14 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
-  //Zombie collision detection
+
+  /**
+   * This used to make sure the zombie sprites do not overlap in the X plane
+   * essentally making walls around them
+   *
+   * @param zombies
+   * @return
+   */
   protected boolean hitAnotherZombieInX(ArrayList<Zombie> zombies)
   {
     Location next_location =
@@ -183,10 +251,10 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-  //    if(zombie instanceof MasterZombie)
-  //    {
-  //      return false;
-  //    }
+      //    if(zombie instanceof MasterZombie)
+      //    {
+      //      return false;
+      //    }
       if (this != zombie && new_location_object.intersects(zombie))
       {
         return true;
@@ -195,7 +263,14 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
-  //Zombie collision detection
+  /**
+   * This used to make sure the zombie sprites do not overlap in the up down
+   * plane
+   * essentally making walls around them
+   *
+   * @param zombies
+   * @return
+   */
   protected boolean hitAnotherZombieInY(ArrayList<Zombie> zombies)
   {
     Location next_location =
@@ -213,8 +288,45 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
+  /**
+   * listens to see if humanoid hits a wall, that way it can make a sound que
+   * the sprite to make a noise
+   *
+   * @param map
+   * @param next_location
+   * @return
+   */
+  protected boolean hitWall(GameMap map, Location next_location)
+  {
+    int row = next_location.getRow(GUI.tile_size);
+    int col = next_location.getCol(GUI.tile_size);
+    GameObject new_location_object =
+        new GameObject(next_location, width, height);
 
+    Tile tile_check;
+    for (int r = row - 1; r <= row + 1; r++)
+    {
+      for (int c = col - 1; c <= col + 1; c++)
+      {
+        tile_check = map.getTile(r, c);
+        if (tile_check.tile_type.equals(TileType.WALL) ||
+            (tile_check.tile_type.equals(TileType.BURNTWALL)) &&
+                new_location_object.intersects(tile_check))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
+  /**
+   * This is used to see if a zombie, or player sprite hits a wall. in the Y
+   * plane
+   *
+   * @param map
+   * @return
+   */
   protected boolean hitWallInYDirection(GameMap map)
   {
     Location next_location =
@@ -241,6 +353,13 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
+  /**
+   * This is used to see if a zombie, or player sprite hits a wall. in the Y
+   * plane
+   *
+   * @param map
+   * @return
+   */
   protected boolean hitWallInXDirection(GameMap map)
   {
     Location next_location =
@@ -266,19 +385,6 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
-  protected boolean hitZombie(GameMap map, Location next_location)
-  {
-    GameObject new_location_object =
-        new GameObject(next_location, width, height);
-    for (Zombie zombie : map.zombies)
-    {
-      if (new_location_object.intersects(zombie))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
 
   @Override
   public String toString()
