@@ -32,6 +32,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
   {
     this.row = row;
     this.col = col;
+    this.location = new Location(col / GUI.tile_size, row / GUI.tile_size, row, col);
   }
 
 	/*
