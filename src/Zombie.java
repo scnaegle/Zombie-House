@@ -48,52 +48,39 @@ public class Zombie extends Humanoid implements HumanoidObject
     if(x_move > y_move) {
       if (x_move > 0) {
         animation = moveRight;
-      }
-      else if (x_move < 0)
-      {
+      } else if (x_move < 0){
         animation = moveLeft;
       }
-    }
-    else
-    {
-      if (y_move > 0)
-      {
+    } else {
+      if (y_move > 0) {
         animation = moveDown;
-      }
-      else if (y_move < 0)
-      {
+      } else if (y_move < 0) {
         animation = moveUp;
       }
     }
   }
 
-  protected boolean smellPlayer(HumanoidObject player)
-  {
+  protected boolean smellPlayer(HumanoidObject player) {
     return getDistance((Object2D) player) <= smell * GUI.tile_size;
   }
 
-  protected void chooseDirection(HumanoidObject player)
-  {
+  protected void chooseDirection(HumanoidObject player) {
     // This is a placeholder that should be overridden.
   }
 
   //Updates each zombie in list every timer tick.
   //Checks for movement, if player gets biten, and sounds.
-  public void update(GameMap map, HumanoidObject player)
-  {
+  public void update(GameMap map, HumanoidObject player) {
     frame++;
-    if (frame >= decision_rate * GamePanel.FPS)
-    {
+    if (frame >= decision_rate * GamePanel.FPS) {
       frame = 0;
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
-    if (!hitWallInXDirection(map) && !hitAnotherZombieInX(map.zombies))
-    {
+    if (!hitWallInXDirection(map) && !hitAnotherZombieInX(map.zombies)) {
       moveX();
     }
-    if (!hitWallInYDirection(map) && !hitAnotherZombieInY(map.zombies))
-    {
+    if (!hitWallInYDirection(map) && !hitAnotherZombieInY(map.zombies)) {
       moveY();
     }
 
@@ -108,7 +95,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
     {
-      //   System.out.println(getDistance((Object2D) player));
+     // System.out.println(getDistance((Object2D) player));
 
       //System.out.println("can hear zombie");
       SoundLoader.playZWalk(checkZombieDirection(player));

@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (GUI.running)
         {
-          System.out.println("timer going off");
+          //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
           snapViewPortToPlayer();  //Makes viewport follow player
 
@@ -113,11 +113,6 @@ public class GamePanel extends JPanel implements KeyListener
           parent.updatePlayerLabels();
           parent.updateZombieLabels();
 
-          int seconds;
-          if (player.playerExploded)
-          {
-            player.playerDied = true;
-          }
 
           //Shows dialog if player died at any time
           if (player.playerDied)
@@ -147,10 +142,13 @@ public class GamePanel extends JPanel implements KeyListener
               {
                 //If yes, then go to next level.
                 parent.whichLevel++;
+                if (parent.whichLevel == 6)
+                {
+                  parent.showWinningDialog(parent, " You won the game!");
+                }
                 //SoundLoader.killSounds();
                 System.out.println("Next level");
                 newMapByExit();
-
 
               }
             }

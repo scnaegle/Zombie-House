@@ -1,5 +1,7 @@
 /**
- * Created by sean on 9/8/15.
+ * Heading class is used by both player and zombies to determine which way
+ * they are facing, both currently and next. Headings go in all directions
+ * and are based on the x and y movement/coordinates.
  */
 public class Heading
 {
@@ -23,18 +25,12 @@ public class Heading
   private double y_movement;
   private double degrees;
 
+  //Creates new headings, such as NORTH, SOUTH, etc.
   public Heading(double x_movement, double y_movement)
   {
     this.x_movement = x_movement;
     this.y_movement = y_movement;
     this.degrees = calculateDegrees();
-  }
-
-  public Heading(double degrees)
-  {
-    this.degrees = degrees;
-    this.x_movement = Math.cos(degrees);
-    this.y_movement = Math.sin(degrees);
   }
 
   public Heading(Heading heading)
@@ -125,11 +121,7 @@ public class Heading
     }
   }
 
-  public double getDegrees()
-  {
-    return degrees;
-  }
-
+  //Used for zombies when setting random walk and line walk
   public void setDegrees(double degrees)
   {
     this.degrees = degrees;

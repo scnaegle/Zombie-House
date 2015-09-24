@@ -1,8 +1,11 @@
-import java.util.ArrayList;
-
 /**
- * Created by sean on 9/13/15.
+ * This class defines the player's speed, movement, ability to not walk through
+ * walls, and keeps objects from intersecting other objects. Extends GameObject
+ * and HumanoidObject since it needs to define the player as an object and allow
+ * the zombies and other objects to get the player's info.
  */
+
+import java.util.ArrayList;
 public class Humanoid extends GameObject implements HumanoidObject
 {
   protected final double MOVE_MULTIPLIER =
@@ -28,10 +31,6 @@ public class Humanoid extends GameObject implements HumanoidObject
     return current_speed;
   }
 
-  public void setSpeed(double speed)
-  {
-    this.current_speed = speed;
-  }
 
   @Override
   public Heading getHeading()
@@ -75,24 +74,24 @@ public class Humanoid extends GameObject implements HumanoidObject
     this.location.y += getYMovement();
   }
 
+  /**
+   * Calculates the nextLocation of object (mainly zombies) based on heading
+   *
+   * @return next location (x,y)
+   */
   public Location getNextLocation()
   {
-//    System.out.println("moving...");
-//    location.x += (current_speed * Math.cos(heading.getDegrees())) *
-// MOVE_MULTIPLIER;
-//    location.y -= (current_speed * Math.sin(heading.getDegrees())) *
-// MOVE_MULTIPLIER;
     double new_x = location.x + getXMovement();
     double new_y = location.y + getYMovement();
     return new Location(new_x, new_y);
   }
 
-  public double getYMovement()
+  public double getYMovement() //In tiles per frame
   {
     return getSpeedMultiplier() * heading.getYMovement() * MOVE_MULTIPLIER;
   }
 
-  public double getXMovement()
+  public double getXMovement() //In tiles per frame
   {
     return getSpeedMultiplier() * heading.getXMovement() * MOVE_MULTIPLIER;
   }
@@ -174,6 +173,7 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
+  //Zombie collision detection
   protected boolean hitAnotherZombieInX(ArrayList<Zombie> zombies)
   {
     Location next_location =
@@ -195,6 +195,7 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
+  //Zombie collision detection
   protected boolean hitAnotherZombieInY(ArrayList<Zombie> zombies)
   {
     Location next_location =

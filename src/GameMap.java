@@ -61,6 +61,7 @@ public class GameMap
   public Location end_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
+  public int trapSize = traps.size();
   Zombie master;
   BufferedImage map_image;
   private int num_rows;
@@ -154,7 +155,6 @@ public class GameMap
               }
               //master = new MasterZombie(location);
             }
-            zombies.add(master);
             zombies.add(zombie);
             //zombies.add(master);
             //System.out.println(zombies);
@@ -291,7 +291,7 @@ public class GameMap
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
-
+  
   /**
    * generates the map through many many methods
    */
@@ -1495,6 +1495,11 @@ public class GameMap
     frame.setVisible(true);
   }
 
+  public int getTrapSize()
+  {
+    return trapSize;
+  }
+  
   public int getWidth(int tile_size)
   {
     return num_cols * tile_size;

@@ -1,3 +1,9 @@
+/**
+ * GUI class creates the settings window, initializes map, player, and sounds,
+ * creates actual game window, and creates scrollpane which lets us follow the
+ * player around.
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,8 +11,6 @@ import java.awt.event.*;
 
 public class GUI
 {
-
-
   final static int tile_size = 80;
   //Making attributes static so every class can use them
   public static double speed;
@@ -21,30 +25,33 @@ public class GUI
   public static double fspawn;
   static int SCENE_WIDTH = 1920;
   static int SCENE_HEIGHT = 1080;
-  static JPanel viewPanel; //Will probably need to make another class,
+  static JPanel viewPanel;
   static boolean running = false;
   static JScrollPane scrollPane;
   public int whichLevel = 1;
   public GameMap map;
+  public Player player;
   JFrame window = new JFrame("Zombie House");
   GamePanel gamePanel;
-  JLabel level;
-  JLabel playerSight;
-  JLabel playerHearing;
-  JLabel playerSpeed;
-  JLabel playerStamina;
-  JLabel zombieSpeed;
-  JLabel zombieSmell;
-  JButton startPause;
-  boolean pause = true;
-  Player player;
-  FireTrap fireTrap;
+  private JLabel level;
+  private JLabel playerSight;
+  private JLabel playerHearing;
+  private JLabel playerSpeed;
+  private JLabel playerStamina;
+  private JLabel zombieSpeed;
+  private JLabel zombieSmell;
+  private JButton startPause;
+  private boolean pause = true;
+  private FireTrap fireTrap;
   private JLabel traps;
-  private Zombie zombie;
-  private JLabel playerRegen;
-  private boolean newGame = true;
   private boolean gameStarted = false;
 
+  /**
+   * Window that pops up once player is bitten or explodes.
+   *
+   * @param parent  Takes in the gui as a parent
+   * @param message Takes a message
+   */
   public static void showDeathDialog(GUI parent, String message)
   {
 
@@ -56,6 +63,26 @@ public class GUI
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
 
+    if (option == 0) //Restart
+    {
+      parent.whichLevel = 1;
+      parent.window.dispose();
+      parent.getSettings();
+    }
+    else if (option == 1) //Exit
+    {
+      System.exit(0);
+    }
+  }
+
+  public static void showWinningDialog(GUI parent, String message)
+  {
+    Object[] options = {"Play again", "Exit"};
+    int option = JOptionPane.showOptionDialog(parent.window, "Yay!" + message +
+            " What would you like to do now?", "YOU MADE IT",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
     if (option == 0)
     {
       parent.whichLevel = 1;
@@ -64,11 +91,14 @@ public class GUI
     }
     else if (option == 1)
     {
-      System.out.println("exiting");
       System.exit(0);
     }
   }
 
+  /**
+   * Window that pops up once the game has started. Allows user to change
+   * any settings.
+   */
   public void getSettings()
   {
 
@@ -165,7 +195,7 @@ public class GUI
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (gameStarted)
+        if (gameStarted) //If not a completely new game
         {
           return;
         }
@@ -193,18 +223,23 @@ public class GUI
         fspawn = Double.parseDouble(ten);
 
 
+        //initializes everything
         map = new GameMap();
         initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
             map.start_location);
         setUpGUI();
         loadSounds();
+        gameStarted = false;
         popup.dispose();
       }
     });
 
   }
 
-
+  /**
+   * Creates actual game window with a new GamePanel panel to display game.
+   * Sets up start/pause button and displays labels with settings.
+   */
   public void setUpGUI()
   {
 
@@ -290,8 +325,6 @@ public class GUI
     playerSpeed = new JLabel("Speed: ");
     playerStamina = new JLabel("Stamina: ");
     zombieSmell = new JLabel("Z-Smell: ");
-
-
     zombieSpeed = new JLabel("Z-Speed: ");
     traps = new JLabel("Fire traps: ");
 
@@ -316,7 +349,7 @@ public class GUI
       }
     });
 
-
+    //Shows all game labels
     viewPanel = new JPanel();
     viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
     viewPanel.add(level);
@@ -331,7 +364,6 @@ public class GUI
     viewPanel.add(zombieSmell);
 
 
-    //window.getContentPane().add(gamePanel, BorderLayout.CENTER);
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.pack();
     window.setVisible(true);
@@ -384,6 +416,18 @@ public class GUI
 
   }
 
+  /**
+   * Takes in all numbers the player inputed during settings and creates a
+   * new player with them.
+   * @param sight
+   * @param hearing
+   * @param speed
+   * @param stamina
+   * @param regen
+   * @param width
+   * @param height
+   * @param location
+   */
   public void initPlayer(int sight, int hearing, double speed, double stamina,
                          double regen, int width, int height, Location location)
   {
@@ -394,6 +438,9 @@ public class GUI
 
   }
 
+  /**
+   * loads in all sounds once.
+   */
   public void loadSounds()
   {
     gamePanel.loadMusic();
@@ -401,12 +448,5 @@ public class GUI
     //fireTrap.loadExplosion();
   }
 
-  public void createMap()
-  {
-    this.map = new GameMap();
-    //map = new GameMap(procedureGenerateMap);
-
-
-  }
 
 }
