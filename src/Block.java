@@ -10,16 +10,16 @@
  */
 public class Block
 {
-  boolean zombieSpawn = false;
+//  boolean zombieSpawn = false;
   boolean partOfRoom = false;
-  boolean partOfStartRoom = false;
-  boolean partOfEndRoom = false;
-  boolean visited = false;
-  boolean goal = false;
-  boolean corner = false;
-  boolean wall = false;
-  boolean hall = false;
-  boolean doorways = false;
+//  boolean partOfStartRoom = false;
+//  boolean partOfEndRoom = false;
+//  boolean visited = false;
+//  boolean goal = false;
+//  boolean corner = false;
+//  boolean wall = false;
+//  boolean hall = false;
+//  boolean doorways = false;
 
   char type;
   int x;
@@ -65,13 +65,4 @@ public class Block
     return type;
   }
 
-  private boolean isVisited()
-  {
-    return visited;
-  }
-
-  private boolean isGoal()
-  {
-    return goal;
-  }
 }

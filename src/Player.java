@@ -1,4 +1,3 @@
-
 /**
  * Player class sets up the player, loads the walkingRight/ runningRight
  * sprites and
@@ -9,6 +8,11 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+/**
+ * now this the player. Lets call him bob the zombie runner.
+ * He is the sprite that you follow throughout the game and have control over
+ */
 public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
@@ -51,13 +55,22 @@ public class Player extends Humanoid implements HumanoidObject
   private int diedFrame = 0;
 
 
-  public Player(Location location) {
+  public Player(Location location)
+  {
     this.location = location;
     this.width = GUI.tile_size;
     this.height = GUI.tile_size;
   }
 
-  public Player(int width, int height, Location location) {
+  /**
+   * gets the sprites location on the map
+   *
+   * @param width
+   * @param height
+   * @param location
+   */
+  public Player(int width, int height, Location location)
+  {
     this(location);
     this.width = width;
     this.height = height;
@@ -65,27 +78,40 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * The player needs sight, hearing, speed, and stamina to start out with
+   * This is where all of it gets set, You have control over it from the
+   * initlization
+   * GUI
    *
    * @param player_sight
    * @param player_hearing
    * @param player_speed
    * @param player_stamina
    */
-  public Player(int player_sight, int player_hearing, double player_speed, double player_stamina)
+  public Player(int player_sight, int player_hearing, double player_speed,
+                double player_stamina)
   {
-    this.sight = player_sight;       // perhaps we can make upgrades that can be picked
-    // up for
-    this.hearing = player_hearing;   // these things later, like flash light, and hearing
-    // aids
+    this.sight = player_sight;
+    this.hearing = player_hearing;
     this.defined_speed = player_speed;
-    this.current_speed = player_speed;       // I imaginge it would be similar to the traps we
-    // have to
+    this.current_speed = player_speed;
     this.max_stamina = player_stamina;
-    this.stamina = player_stamina;   // make
+    this.stamina = player_stamina;
     this.width = GUI.tile_size;
     this.height = GUI.tile_size;
   }
 
+  /**
+   * pretty much does the same thing as the last method
+   *
+   * @param sight
+   * @param hearing
+   * @param speed
+   * @param stamina
+   * @param regen
+   * @param width
+   * @param height
+   * @param location
+   */
   public Player(int sight, int hearing, double speed, double stamina,
                 double regen, int width, int height, Location location)
   {
@@ -213,14 +239,16 @@ public class Player extends Humanoid implements HumanoidObject
    * Tells the sprite how to move based on the heading we give it.
    * Heading is controlled by keyboard arrows.
    */
-  public void move(Location next_location) {
+  public void move(Location next_location)
+  {
     location = next_location;
   }
 
   /**
    * Updates player every timer tick. Takes in a map object in order to
    * get a hold of the list of randomly generated fire traps. Checks for
-   * actions such as runningRight, walkingRight, picking up and putting down traps.
+   * actions such as runningRight, walkingRight, picking up and putting down
+   * traps.
    *
    * @param map
    */
@@ -257,10 +285,12 @@ public class Player extends Humanoid implements HumanoidObject
 //      Location next_location = getNextLocation();
       if (!heading.equals(Heading.NONE))
       {
-        if (!hitWallInXDirection(map)) {
+        if (!hitWallInXDirection(map))
+        {
           moveX();
         }
-        if (!hitWallInYDirection(map)) {
+        if (!hitWallInYDirection(map))
+        {
           moveY();
         }
       }
@@ -309,7 +339,10 @@ public class Player extends Humanoid implements HumanoidObject
     }
   }
 
-
+  /**
+   * draw the sprite "Bob" on the map
+   * @param g
+   */
   public void paintPlayer(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
@@ -320,6 +353,7 @@ public class Player extends Humanoid implements HumanoidObject
           null);
     }
   }
+
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
   // instead of updating when r is held down.
   public void setRunning()
@@ -328,7 +362,11 @@ public class Player extends Humanoid implements HumanoidObject
     isRunning = true;
   }
 
-  public void setWalking() {
+  /**
+   * if sprite (Bob) is walking then he will move at walking speeds
+   */
+  public void setWalking()
+  {
     this.current_speed = defined_speed;
     isWalking = true;
   }
@@ -338,7 +376,10 @@ public class Player extends Humanoid implements HumanoidObject
     return stamina;
   }
 
-
+  /**
+   * picks up the fire trap
+   * @param trap
+   */
   public void pickupFireTrap(FireTrap trap)
   {
     is_picking_up = true;
@@ -346,10 +387,15 @@ public class Player extends Humanoid implements HumanoidObject
     frame = 0;
   }
 
-
-  public Tile getFootTile(GameMap map) {
-    int row = (int)(location.y + GUI.tile_size) / GUI.tile_size;
-    int col = (int)(location.x + (width / 2)) / GUI.tile_size;
+  /**
+   * gets the tile that the player sprite is standing on
+   * @param map
+   * @return
+   */
+  public Tile getFootTile(GameMap map)
+  {
+    int row = (int) (location.y + GUI.tile_size) / GUI.tile_size;
+    int col = (int) (location.x + (width / 2)) / GUI.tile_size;
     return map.getTile(row, col);
   }
 

@@ -1,5 +1,8 @@
 import java.awt.image.BufferedImage;
 
+/**
+ * makes the frame to hold everything
+ */
 public class Frame
 {
 

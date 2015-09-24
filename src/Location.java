@@ -3,6 +3,10 @@ import java.awt.*;
 /**
  * Created by scnaegl on 9/8/15.
  */
+
+/**
+ * has to do with bookkeeping and maintaing location
+ */
 public class Location
 {
   int row;
@@ -14,22 +18,45 @@ public class Location
 
   }
 
+  /**
+   * sets a location of an object generally
+   * @param x
+   * @param y
+   */
   public Location(double x, double y) {
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * sets a location of a object, but mainly used for tiles
+   * @param x
+   * @param y
+   * @param row
+   * @param col
+   */
   public Location(double x, double y, int row, int col) {
     this(x, y);
     this.row = row;
     this.col = col;
   }
 
+  /**
+   * gets the row for a 2d grid an object is on
+   * @param tile_size
+   * @return
+   */
   public int getRow(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
     return (center.y / tile_size);
   }
 
+
+  /**
+   * gets the column for a 2d grid an object is on
+   * @param tile_size
+   * @return
+   */
   public int getCol(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
     return (center.x / tile_size);
@@ -43,6 +70,12 @@ public class Location
     return (int)y;
   }
 
+  /**
+   * gets the center point of an object
+   * @param width
+   * @param height
+   * @return
+   */
   public Point getCenterPoint(int width, int height) {
     return new Point((int)x + width / 2, (int)y + height / 2);
   }
