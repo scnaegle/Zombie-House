@@ -95,7 +95,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
     {
-      System.out.println(getDistance((Object2D) player));
+      //System.out.println(getDistance((Object2D) player));
 
       //System.out.println("can hear zombie");
       SoundLoader.playZWalk(checkZombieDirection(player));

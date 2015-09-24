@@ -84,44 +84,33 @@ public class FireTrap extends GameObject
           startExploding();
           zombie.zombieDied = true;
 
-//          int trap_row = location.getRow(GUI.tile_size);
-//          int trap_col = location.getCol(GUI.tile_size);
-//          for (int row = trap_row - 1; row <= trap_row + 1; row++)
-//          {
-//            for (int col = trap_col - 1; col <= trap_col + 1; col++)
-//            {
-//              if (this.location.x == trap_row && this.location.y == trap_col)
-//              {
-//                startExploding();
-//              }
-//            }
-//          }
-
           //If player is too close to explosion, player dies.
           if (explosionObj.intersects(player.getBoundingRectangle()))
           {
-
-            player.playerExploded = true;
-
+            player.playerDied();
           }
+
         }
       }
     }
 
     //If firetrap is next to exploding trap, that trap should explode too
-//    for(FireTrap trap : map.traps)
-//    {
-//      if(getCenteredBoundingRectangle().intersects(trap.explosionObj))
-//      {
-//        startExploding();
-//      }
-//    }
+    for (FireTrap trap : map.traps)
+    {
+      if (trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
+      {
+        startExploding();
+      }
+    }
+
     if (exploding && frame >= EXPLODE_TIME)
     {
       stopExploding(map);
     }
 
-    if (getCenteredBoundingRectangle().intersects(player
+    if (exploding && getCenteredBoundingRectangle().intersects(player
+        .getBoundingRectangle()) ||
+        getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) && player.isRunning)
     {
       startExploding();
@@ -147,6 +136,7 @@ public class FireTrap extends GameObject
     frame = 0;
     exploding = false;
     fireAnimation.stop();
+
 
     int trap_row = location.getRow(GUI.tile_size);
     int trap_col = location.getCol(GUI.tile_size);

@@ -46,6 +46,7 @@ public class Player extends Humanoid implements HumanoidObject
   private Animation standRight = new Animation(stillRight, 5);
   private Animation standLeft = new Animation(stillLeft, 5);
   private ArrayList<FireTrap> traps = new ArrayList<>();
+  private int diedFrame = 0;
 
 
   public Player(Location location) {
@@ -223,6 +224,7 @@ public class Player extends Humanoid implements HumanoidObject
    */
   public void update(GameMap map)
   {
+    diedFrame++;
     if (is_picking_up)
     {
       frame++;
@@ -243,9 +245,9 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps--;
         frame = 0;
         is_putting_down = false;
-        FireTrap t = traps.remove(0);
+        FireTrap t = traps.remove(0); //Remove local copy.
         t.setNewLocation(location);
-        map.traps.add(t);
+        map.traps.add(t); //Add back to map copy of traps.
       }
     }
     else
@@ -296,6 +298,11 @@ public class Player extends Humanoid implements HumanoidObject
       animation.start();
       animation.update();
 
+      if (playerExploded && diedFrame >= GamePanel.FPS)
+      {
+        playerDied = true;
+      }
+
 
     }
   }
@@ -333,6 +340,7 @@ public class Player extends Humanoid implements HumanoidObject
     return map.getTile(row, col);
   }
 
+  //Decides which bufferedImages to play and when
   protected void determineAnimation()
   {
     double x_move = heading.getXMovement();
@@ -397,4 +405,11 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
 
+  public void playerDied()
+  {
+    diedFrame = 0;
+    playerExploded = true;
+    SoundLoader.playScream();
+
+  }
 }

@@ -61,13 +61,13 @@ public class GameMap
   public Location end_location;
   ArrayList<Zombie> zombies = new ArrayList<>();
   ArrayList<FireTrap> traps = new ArrayList<>();
+  public int trapSize = traps.size();
   Zombie master;
   BufferedImage map_image;
   private int num_rows;
   private int num_cols;
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
-
 
   public GameMap()
   {
@@ -233,7 +233,7 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.BRICK)
         {
-          if (rand.nextDouble() < GUI.zspawn +(.01*(level -1)))
+          if (rand.nextDouble() < GUI.zspawn + (.01 * (level - 1)))
           {
             //System.out.println("tile is a brick");
             Zombie zombie;
@@ -290,7 +290,6 @@ public class GameMap
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
-  
   /**
    * generates the map through many many methods
    */
@@ -400,13 +399,13 @@ public class GameMap
       for (int y = validY; y < Y_SIZE - 3; y++)
       {
         //goes through map to see if it can be a valid location
-        if (validEndLocationHorozantal(x, y)&&checkForStart(x, y))
+        if (validEndLocationHorozantal(x, y) && checkForStart(x, y))
         {
           placeEndPeicesHorzantal(x, y);
           //System.out.println("poo");
           return;
         }
-        else if (validEndLocationVerticle(x, y) && checkForStart(x,y))
+        else if (validEndLocationVerticle(x, y) && checkForStart(x, y))
         {
           placeEndPeicesVerticle(x, y);
           //System.out.println("poopoo");
@@ -429,7 +428,7 @@ public class GameMap
       {
         if (inBoundsWithBorder(t, l))
         {
-          if(isStart(t,l))
+          if (isStart(t, l))
           {
             return false;
           }
@@ -1492,6 +1491,11 @@ public class GameMap
     frame.add(scroll_pane);
     frame.pack();
     frame.setVisible(true);
+  }
+
+  public int getTrapSize()
+  {
+    return trapSize;
   }
 
   public int getWidth(int tile_size)

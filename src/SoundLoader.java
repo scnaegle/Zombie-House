@@ -24,6 +24,7 @@ public class SoundLoader implements LineListener
   FloatControl balanceCtrl;
 
 
+
   public SoundLoader(String path)
   {
     InputStream inputStream =
@@ -64,6 +65,13 @@ public class SoundLoader implements LineListener
   public static void playExplosion()
   {
     combust.play();
+
+  }
+
+  public static void stopExplosion()
+  {
+    combust.stop();
+
   }
 
   public static void loadSounds()
@@ -85,6 +93,11 @@ public class SoundLoader implements LineListener
   public static void playBite()
   {
     bite.play();
+    scream.play();
+  }
+
+  public static void playScream()
+  {
     scream.play();
   }
 
