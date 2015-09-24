@@ -234,42 +234,17 @@ public class GamePanel extends JPanel implements KeyListener
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
-      if (!player.is_picking_up || player.is_putting_down || !trap.exploding)
-      {
-        g2.drawImage(trap.trap, trap.location.getX(), trap.location.getY(),
-            null);
-      }
-
-      if (trap.exploding) // && onScreen(trap))
-      {
-
-        g2.drawImage(trap.fireAnimation.getSprite(),
-            trap.location.getX() - GUI.tile_size,
-            trap.location.getY() - GUI.tile_size, null);
-
-        explodee = true;
+      trap.paintTraps(g2, player);
         activeTrap = trap;
-
-
-      }
     }
 
     //Draws zombies
     for (Zombie zombie : map.zombies)
     {
-      if (!zombie.zombieDied)
-      {
-        g2.drawImage(zombie.animation.getSprite(), zombie.location.getX(),
-            zombie.location.getY(), null);
-      }
+      zombie.paintZombies(g2);
     }
 
-    //Draws player
-    if (!player.playerExploded)
-    {
-      g2.drawImage(player.animation.getSprite(), player.location.getX(),
-          player.location.getY(), null);
-    }
+    player.paintPlayer(g2);
 
     //Draws vignette with player at center. Does not draw if trap explodes
     //off screen.
@@ -352,7 +327,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
-      System.out.println("R");
+      // System.out.println("R");
       player.setRunning();
       player.isRunning = true;
       player.isWalking = false;
@@ -360,7 +335,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
-      System.out.println("up");
+      //System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
       player.isRunning = false;
       player.isWalking = true;
@@ -368,28 +343,28 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_DOWN.contains(code))
     {
-      System.out.println("down");
+      //System.out.println("down");
       player.heading.setYMovement(Heading.SOUTH_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_RIGHT.contains(code))
     {
-      System.out.println("right");
+      //System.out.println("right");
       player.heading.setXMovement(Heading.EAST_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_LEFT.contains(code))
     {
-      System.out.println("left");
+      //System.out.println("left");
       player.heading.setXMovement(Heading.WEST_STEP);
       player.isRunning = false;
       player.isWalking = true;
     }
     if (KEY_PICKUP.contains(code))
     {
-      System.out.println("p");
+      //System.out.println("p");
       FireTrap t = map.traps.stream()
                             .filter(player::intersects)
                             .findFirst()
@@ -402,7 +377,7 @@ public class GamePanel extends JPanel implements KeyListener
       else if (player.getFire_traps() > 0)
       {
         player.is_putting_down = true;
-        System.out.println("player put down trap");
+        //System.out.println("player put down trap");
       }
       else
       {
@@ -416,7 +391,7 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
-    System.out.println("released");
+    //System.out.println("released");
     player.isStill = true;
     player.isRunning = false;
     player.isWalking = false;
