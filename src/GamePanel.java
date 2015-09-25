@@ -266,7 +266,7 @@ public class GamePanel extends JPanel implements KeyListener
 //    }
 
     //g2.drawImage(lightLayer, vcX, vcY, null);
-//    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+    g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
   }
 

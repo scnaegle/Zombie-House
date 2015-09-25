@@ -72,7 +72,7 @@ public class FireTrap extends GameObject
   //Reacts appropriately.
   public void update(GameMap map, Player player)
   {
-    frame++;
+    //frame++;
 
     for (Zombie zombie : map.zombies)
     {
@@ -82,6 +82,7 @@ public class FireTrap extends GameObject
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
           startExploding();
+
           zombie.zombieDied = true;
 
           //If player is too close to explosion, player dies.
@@ -100,6 +101,7 @@ public class FireTrap extends GameObject
       if (trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
       {
         startExploding();
+
       }
     }
 
@@ -108,7 +110,8 @@ public class FireTrap extends GameObject
 //      startExploding();
 //    }
 
-    // System.out.println(frame);
+
+    System.out.println(frame);
     if (frame >= EXPLODE_TIME && exploding)
     {
       stopExploding(map);
@@ -134,7 +137,7 @@ public class FireTrap extends GameObject
     exploding = true;
     fireAnimation.start();
     SoundLoader.playExplosion();
-    frame = 0;
+    frame++;
 
   }
 

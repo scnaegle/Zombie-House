@@ -63,15 +63,13 @@ public class SoundLoader implements LineListener
 
   public static void playExplosion()
   {
-
     combust.play();
-    //audioClip.open("explosion.wav");
-  }
-
-  public static void stopExplosion()
-  {
-    combust.stop();
-
+    if (combust.audioClip.getFramePosition() ==
+        combust.audioClip.getFrameLength())
+    {
+      combust.audioClip.setFramePosition(0);
+      combust.audioClip.stop();
+    }
   }
 
   /**
@@ -108,6 +106,12 @@ public class SoundLoader implements LineListener
   {
     hitObst.setBalance(balance);
     hitObst.play();
+    if (hitObst.audioClip.getFramePosition() ==
+        hitObst.audioClip.getFrameLength())
+    {
+      hitObst.audioClip.setFramePosition(0);
+      hitObst.audioClip.stop();
+    }
   }
 
   public static void playHitObst()
@@ -144,11 +148,6 @@ public class SoundLoader implements LineListener
     walkSound.stop();
   }
 
-  public static void cantHearZombie()
-  {
-    zWalk.stop();
-    hitObst.stop();
-  }
 
   public static void playerRun()
   {

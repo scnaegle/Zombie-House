@@ -255,7 +255,8 @@ public class Humanoid extends GameObject implements HumanoidObject
       //    {
       //      return false;
       //    }
-      if (this != zombie && new_location_object.intersects(zombie))
+      if (this != zombie && new_location_object.getDistance(zombie) <
+          GUI.tile_size)
       {
         return true;
       }
@@ -280,7 +281,8 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-      if (this != zombie && new_location_object.intersects(zombie))
+      if (this != zombie && new_location_object.getDistance(zombie) <
+          GUI.tile_size)
       {
         return true;
       }
