@@ -7,9 +7,6 @@ import java.io.IOException;
  * An enum that specifies exactly what kind of tiles are used in the map. Allows
  * for conversion from characters to actual loaded in images.
  */
-
-
-
 public enum TileType {
 
 
@@ -29,6 +26,13 @@ public enum TileType {
 		Integer movement_cost;
 	BufferedImage image;
 
+	/**
+	 * makes the Tile type and sets what it should be.
+	 * @param value
+	 * @param grid_char
+	 * @param movement_cost
+	 * @param image
+	 */
 	TileType(int value, char grid_char, int movement_cost, String image)
 	{
 			this.value = value;

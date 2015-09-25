@@ -518,8 +518,8 @@ public class GameMap
   }
 
   /**
-   * if 4 wall peices in a row horozantally return true
-   *
+   * if 3 outside wall peices in a row horozantally
+   * and is  connected to a outside peice return true
    * @param x
    * @param y
    * @return
@@ -820,7 +820,7 @@ public class GameMap
         if (getBlock(x, y).type == ROOM_WALL &&
             getBlock(x, y + 1).type == END_ROOM)
         {
-          algorithm(x, y, END_ROOM);
+      //    algorithm(x, y, END_ROOM);
           didAlg = true;
         }
 
@@ -876,98 +876,98 @@ public class GameMap
     }
 
   }
-
-  /**
-   * unworking algorithm
-   *
-   * @param x
-   * @param y
-   * @param type
-   */
-  private static void algorithm(int x, int y, char type)
-  {
-    getBlock(x, y).visited = true;
-    int[] pickRandomDirection = {UP, DOWN, LEFT, RIGHT};
-    shuffleArray(pickRandomDirection);
-    //System.out.println(x);
-    //System.out.println(y);
-    for (int i = 0; i < 4; i++)
-    {
-      if (pickRandomDirection[i] == RIGHT)
-      {
-        if (emptyBlock(x + 1, y)/*inbounds and empty type*/)
-        {
-          setVisitedTrue(x, y);
-          //System.out.println("Right");
-          algorithm(x + 1, y, END_ROOM);
-        }
-        else if (getBlock(x + 1, y).partOfRoom == true)
-        {
-          getBlock(x, y).hall = true;
-          setBlockType(x, y, HALL);
-          return;
-        }
-      }
-      if (pickRandomDirection[i] == UP)
-      {
-        if (emptyBlock(x, y - 1))
-        {
-          setVisitedTrue(x, y);
-          //System.out.println("UP");
-          algorithm(x, y - 1, END_ROOM);
-        }
-        else if (getBlock(x, y - 1).partOfRoom == true)
-        {
-          getBlock(x, y).hall = true;
-          setBlockType(x, y, HALL);
-          return;
-        }
-      }
-      if (pickRandomDirection[i] == LEFT)
-      {
-        if (emptyBlock(x - 1, y))
-        {
-          setVisitedTrue(x, y);
-          //System.out.println("Left");
-          algorithm(x - 1, y, END_ROOM);
-        }
-        else if (getBlock(x - 1, y).partOfRoom == true)
-        {
-          getBlock(x, y).hall = true;
-          setBlockType(x, y, HALL);
-          return;
-        }
-      }
-      if (pickRandomDirection[i] == RIGHT)
-      {
-        if (emptyBlock(x, y + 1))
-        {
-          setVisitedTrue(x, y);
-          //System.out.println("down");
-          algorithm(x, y + 1, END_ROOM);
-        }
-        else if (getBlock(x + 1, y).partOfRoom == true)
-        {
-          getBlock(x, y).hall = true;
-          setBlockType(x, y, HALL);
-          return;
-        }
-      }
-      //System.out.println();
-    }
-    if (getBlock(x, y).visited == true)
-    {
-      setBlockType(x, y, HALL);
-      getBlock(x, y).hall = true;
-      return;
-    }
-
-  }
-
-  private static void setVisitedTrue(int x, int y)
-  {
-    getBlock(x, y).visited = true;
-  }
+//
+//  /**
+//   * unworking algorithm
+//   *
+//   * @param x
+//   * @param y
+//   * @param type
+//   */
+//  private static void algorithm(int x, int y, char type)
+//  {
+//    getBlock(x, y).visited = true;
+//    int[] pickRandomDirection = {UP, DOWN, LEFT, RIGHT};
+//    shuffleArray(pickRandomDirection);
+//    //System.out.println(x);
+//    //System.out.println(y);
+//    for (int i = 0; i < 4; i++)
+//    {
+//      if (pickRandomDirection[i] == RIGHT)
+//      {
+//        if (emptyBlock(x + 1, y)/*inbounds and empty type*/)
+//        {
+//          setVisitedTrue(x, y);
+//          //System.out.println("Right");
+//          algorithm(x + 1, y, END_ROOM);
+//        }
+//        else if (getBlock(x + 1, y).partOfRoom == true)
+//        {
+//          getBlock(x, y).hall = true;
+//          setBlockType(x, y, HALL);
+//          return;
+//        }
+//      }
+//      if (pickRandomDirection[i] == UP)
+//      {
+//        if (emptyBlock(x, y - 1))
+//        {
+//          setVisitedTrue(x, y);
+//          //System.out.println("UP");
+//          algorithm(x, y - 1, END_ROOM);
+//        }
+//        else if (getBlock(x, y - 1).partOfRoom == true)
+//        {
+//          getBlock(x, y).hall = true;
+//          setBlockType(x, y, HALL);
+//          return;
+//        }
+//      }
+//      if (pickRandomDirection[i] == LEFT)
+//      {
+//        if (emptyBlock(x - 1, y))
+//        {
+//          setVisitedTrue(x, y);
+//          //System.out.println("Left");
+//          algorithm(x - 1, y, END_ROOM);
+//        }
+//        else if (getBlock(x - 1, y).partOfRoom == true)
+//        {
+//          getBlock(x, y).hall = true;
+//          setBlockType(x, y, HALL);
+//          return;
+//        }
+//      }
+//      if (pickRandomDirection[i] == RIGHT)
+//      {
+//        if (emptyBlock(x, y + 1))
+//        {
+//          setVisitedTrue(x, y);
+//          //System.out.println("down");
+//          algorithm(x, y + 1, END_ROOM);
+//        }
+//        else if (getBlock(x + 1, y).partOfRoom == true)
+//        {
+//          getBlock(x, y).hall = true;
+//          setBlockType(x, y, HALL);
+//          return;
+//        }
+//      }
+//      //System.out.println();
+//    }
+//    if (getBlock(x, y).visited == true)
+//    {
+//      setBlockType(x, y, HALL);
+//      getBlock(x, y).hall = true;
+//      return;
+//    }
+//
+//  }
+//
+//  private static void setVisitedTrue(int x, int y)
+//  {
+//    getBlock(x, y).visited = true;
+//  }
 
   private static boolean emptyBlock(int x, int y)
   {
@@ -997,7 +997,7 @@ public class GameMap
           randomNumber = random.nextInt(99);
           if (randomNumber == 0)
           {
-            getBlock(x, y).zombieSpawn = true;
+           // getBlock(x, y).zombieSpawn = true;
           }
         }
       }
@@ -1062,7 +1062,7 @@ public class GameMap
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
-          getBlock(a, hallY).hall = true;
+      //    getBlock(a, hallY).hall = true;
         }
         else
         {
@@ -1080,7 +1080,7 @@ public class GameMap
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
-          getBlock(a, hallY).hall = true;
+      //    getBlock(a, hallY).hall = true;
         }
         else
         {
@@ -1286,7 +1286,7 @@ public class GameMap
                 (buildRoomY + roomSize - 1)))
         {
           setBlockType(x, y, ROOM_CORNER);
-          getBlock(x, y).corner = true;
+       //   getBlock(x, y).corner = true;
           getBlock(x, y).partOfRoom = true;
         }
         //checks to see if Wall and sets wall
@@ -1296,7 +1296,7 @@ public class GameMap
                 (buildRoomY + roomSize - 1)))
         {
           setBlockType(x, y, ROOM_WALL);
-          getBlock(x, y).wall = true;
+//          getBlock(x, y).wall = true;
           getBlock(x, y).partOfRoom = true;
         }
         else if (inBoundsWithBorder(x, y) && type == BASIC_TILE)
@@ -1307,13 +1307,13 @@ public class GameMap
         else if (inBoundsWithBorder(x, y) && type == END_ROOM)
         {
           setBlockType(x, y, END_ROOM);
-          getBlock(x, y).partOfEndRoom = true;
+//          getBlock(x, y).partOfEndRoom = true;
           getBlock(x, y).partOfRoom = true;
         }
         else
         {
           setBlockType(x, y, START_ROOM);
-          getBlock(x, y).partOfStartRoom = true;
+  //        getBlock(x, y).partOfStartRoom = true;
           getBlock(x, y).partOfRoom = true;
         }
       }

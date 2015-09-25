@@ -6,12 +6,28 @@ import java.util.Random;
  * Sets up the master zombie since his sprite is different, as well as
  * gives him a "special power". He extends the zombie class since he
  * must know everything the other zombie's do.
+ *
+ * This homies speical power is that he can walk through walls like a complete...
+ * awesome zombie.
  */
 public class MasterZombie extends Zombie
 {
 
+  /**
+   * this array list will help him determine where a player is by using the
+   * zombies that are around the player to know where the player is.
+   * words and explaing are hard
+   *
+   * the master zombie can move faster and smell better than the other zombies
+   * as well, but that is set up in the GameMap class, because it was easier
+   * and made more sense to put it there
+   */
   static ArrayList<Zombie> minons = new ArrayList<Zombie>();
 
+  /**
+   * add those zombies to the list
+   * @param zombie
+   */
   public static void addZombie(Zombie zombie)
   {
     minons.add(zombie);
@@ -115,6 +131,10 @@ public class MasterZombie extends Zombie
       chooseDirection(player);
     }
 //    System.out.println("heading: " + heading);
+    /**
+     * like we say he can go thorugh walls and getting this
+     * method allows for it
+     */
     if (!hitWallInXDirectionMaster(map))
     {
       moveX();
@@ -128,6 +148,10 @@ public class MasterZombie extends Zombie
     {
 
     }
+    /**
+     * biting the player
+     * well thats a game over
+     */
     if (bitesPlayer(player))
     {
       setBite();
