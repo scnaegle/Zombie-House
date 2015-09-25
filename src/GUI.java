@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
+/**
+ * makes the GUI and all the things that go along with it
+ */
 public class GUI
 {
   final static int tile_size = 80;
@@ -75,6 +77,11 @@ public class GUI
     }
   }
 
+  /**
+   * come up if you win the game by completing 5 levels or something like that
+   * @param parent
+   * @param message
+   */
   public static void showWinningDialog(GUI parent, String message)
   {
     Object[] options = {"Play again", "Exit"};
@@ -97,7 +104,7 @@ public class GUI
 
   /**
    * Window that pops up once the game has started. Allows user to change
-   * any settings.
+   * any settings. THis is cool and has allowed for a much quicker debugging process
    */
   public void getSettings()
   {
@@ -319,6 +326,9 @@ public class GUI
     am.put("Arrow.left", doNothing);
 
 
+    /**
+     * sets the labels at the top of the map
+     */
     level = new JLabel("Level: ");
     playerSight = new JLabel("Sight: ");
     playerHearing = new JLabel("Hearing: ");
@@ -351,18 +361,31 @@ public class GUI
 
     //Shows all game labels
     viewPanel = new JPanel();
-    viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
+    viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.LINE_AXIS));
+    //viewPanel.add(Box.createHorizontalGlue());
+    viewPanel.setPreferredSize(new Dimension(window.getWidth(), 25));
+
+    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
     viewPanel.add(level);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerSight);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerHearing);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerSpeed);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerStamina);
-    viewPanel.add(traps);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(startPause);
-
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
+    viewPanel.add(traps);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(zombieSpeed);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(zombieSmell);
+    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
 
+    //viewPanel.add(Box.createGlue());
 
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.pack();
@@ -373,6 +396,7 @@ public class GUI
 
   }
 
+  //start and pause game methods
   private void startGame()
   {
     startPause.setText("Pause");
@@ -395,6 +419,10 @@ public class GUI
 
   }
 
+  /**
+   * updates the stats about the player, probably the most important thing is
+   * the stanima
+   */
   public void updatePlayerLabels()
   {
     level.setText("Level: " + whichLevel);
@@ -407,6 +435,10 @@ public class GUI
 
   }
 
+  /**
+   * updates the zombie related things like speed and smell, but also the number
+   * of firetraps that the player has
+   */
   public void updateZombieLabels()
   {
     zombieSpeed.setText("Z-Speed: " + zspeed);

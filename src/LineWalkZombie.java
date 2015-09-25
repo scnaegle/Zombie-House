@@ -39,6 +39,7 @@ public class LineWalkZombie extends Zombie
     }
   }
 
+
   public LineWalkZombie(double speed, double smell, double decision_rate, Location location) {
     this(location);
     this.defined_speed = speed;
@@ -48,7 +49,7 @@ public class LineWalkZombie extends Zombie
   }
 
 
-
+  //sets the direction towards the player
   @Override
   protected void chooseDirection(HumanoidObject player) {
     if (smellPlayer(player)) {
@@ -57,6 +58,7 @@ public class LineWalkZombie extends Zombie
     }
   }
 
+  //sprite looks down
   private BufferedImage[] initDown()
   {
     BufferedImage down[] = {sprite.getSprite(1, 7),
@@ -65,6 +67,7 @@ public class LineWalkZombie extends Zombie
     return down;
   }
 
+  //sprite looks left
   private BufferedImage[] initLeft()
   {
     BufferedImage left[] = {sprite.getSprite(2, 7),
@@ -73,6 +76,7 @@ public class LineWalkZombie extends Zombie
     return left;
   }
 
+  //sprite looks right
   private BufferedImage[] initRight()
   {
     BufferedImage right[] = {sprite.getSprite(3, 7),
@@ -81,6 +85,7 @@ public class LineWalkZombie extends Zombie
     return right;
   }
 
+  //sprite looks up
   private BufferedImage[] initUp()
   {
     BufferedImage up[] = {sprite.getSprite(4, 7),

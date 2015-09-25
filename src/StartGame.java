@@ -1,4 +1,7 @@
 
+/**
+ * starts the game and gets everygoing
+ */
 public class StartGame
 {
   public static void main(String[] args)

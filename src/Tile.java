@@ -48,7 +48,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
   }
 	
 	/*
-   * Tile constructor
+   * Tile constructor from blocks
 	 * @param row
 	 * @param col
 	 * @param tile_val Char that corresponds to a TileType

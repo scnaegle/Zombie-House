@@ -3,7 +3,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- *
+ * used to make the different sprites that the game uses like the zombies and bob
+ * We used sprite sheets to make what we needed
  */
 public class Sprite
 {
@@ -32,6 +33,14 @@ public class Sprite
     return sprite;
   }
 
+  /**
+   * this is pretty cool because we use peices of a picture depending on what
+   * sprite it is to set pictures that should be moving essentally putting many
+   * pictures together to make it look like the sprites are moving.
+   * @param row
+   * @param col
+   * @return
+   */
   public BufferedImage getSprite(int row, int col) {
     // Set back the row and col so that the index starts at 1
     col--;

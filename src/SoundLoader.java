@@ -6,6 +6,10 @@
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
+
+/**
+ * loads the sounds to be played from the zombies and player sprites
+ */
 public class SoundLoader implements LineListener
 {
   private static SoundLoader combust;
@@ -70,6 +74,9 @@ public class SoundLoader implements LineListener
 
   }
 
+  /**
+   * loads the sounds from specific files in are repository
+   */
   public static void loadSounds()
   {
     combust = new SoundLoader("explosion.wav");
@@ -132,8 +139,15 @@ public class SoundLoader implements LineListener
 
   public static void stopMoving()
   {
+    //System.out.println("player stopped moving");
     runSound.stop();
     walkSound.stop();
+  }
+
+  public static void cantHearZombie()
+  {
+    zWalk.stop();
+    hitObst.stop();
   }
 
   public static void playerRun()
