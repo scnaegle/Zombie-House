@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int FPS = 40;
+  static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
   final static int DEFAULT_WIDTH = SHOWN_TILES * GUI.tile_size;
