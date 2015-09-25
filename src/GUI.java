@@ -351,18 +351,31 @@ public class GUI
 
     //Shows all game labels
     viewPanel = new JPanel();
-    viewPanel.setPreferredSize(new Dimension(SCENE_WIDTH, 25));
+    viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.LINE_AXIS));
+    //viewPanel.add(Box.createHorizontalGlue());
+    viewPanel.setPreferredSize(new Dimension(window.getWidth(), 25));
+
+    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
     viewPanel.add(level);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerSight);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerHearing);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerSpeed);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(playerStamina);
-    viewPanel.add(traps);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(startPause);
-
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
+    viewPanel.add(traps);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(zombieSpeed);
+    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
     viewPanel.add(zombieSmell);
+    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
 
+    //viewPanel.add(Box.createGlue());
 
     window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.pack();

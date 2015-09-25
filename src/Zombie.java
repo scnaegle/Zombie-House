@@ -21,6 +21,8 @@ public class Zombie extends Humanoid implements HumanoidObject
   Animation moveLeft;
   Animation moveRight;
   Animation moveUp;
+  private boolean canHearZombieWalk = false;
+  private boolean canHearHitObst = false;
 
 
   public Zombie(Location location) {
@@ -95,20 +97,37 @@ public class Zombie extends Humanoid implements HumanoidObject
 
     //Sees if zombie is in player hearing's range
     double range = ((Player) player).getHearing() * GUI.tile_size;
+    Location next_location = getNextLocation();
     if (getDistance((Object2D) player) <= range)
     {
-     // System.out.println(getDistance((Object2D) player));
-
-      //System.out.println("can hear zombie");
-      SoundLoader.playZWalk(checkZombieDirection(player));
+      System.out.println("yes walk");
+      canHearZombieWalk = true;
+    }
+    else
+    {
+      System.out.println("no more walk");
+      canHearZombieWalk = false;
     }
 
-
-    Location next_location = getNextLocation();
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
+      canHearHitObst = true;
+    }
+    else
+    {
+      canHearHitObst = false;
+    }
+
+    if (canHearZombieWalk)
+    {
+      System.out.println("hear zombie");
+      SoundLoader.playZWalk(checkZombieDirection(player));
+    }
+    if (canHearHitObst)
+    {
+      System.out.println("hear hit");
       SoundLoader.playHitObst(checkZombieDirection(player));
     }
 

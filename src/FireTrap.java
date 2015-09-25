@@ -108,7 +108,7 @@ public class FireTrap extends GameObject
 //      startExploding();
 //    }
 
-    System.out.println(frame);
+    // System.out.println(frame);
     if (frame >= EXPLODE_TIME && exploding)
     {
       stopExploding(map);

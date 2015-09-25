@@ -132,8 +132,15 @@ public class SoundLoader implements LineListener
 
   public static void stopMoving()
   {
+    //System.out.println("player stopped moving");
     runSound.stop();
     walkSound.stop();
+  }
+
+  public static void cantHearZombie()
+  {
+    zWalk.stop();
+    hitObst.stop();
   }
 
   public static void playerRun()
