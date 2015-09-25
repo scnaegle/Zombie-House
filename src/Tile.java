@@ -32,7 +32,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
   {
     this.row = row;
     this.col = col;
-    this.location = new Location(col / GUI.tile_size, row / GUI.tile_size, row, col);
+    this.location = new Location(col * GUI.tile_size, row * GUI.tile_size, row, col);
   }
 
 	/*
@@ -172,17 +172,19 @@ public class Tile extends GameObject implements Comparable<Tile> {
 	public int compareTo(Tile other) {
 		return tile_type.movement_cost.compareTo(other.tile_type.movement_cost);
 	}
-  
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
+
+  @Override
   public String toString() {
-  	return String.format("%s: [row=%d, col=%d]", tile_type, row, col);
+    return "Tile{" +
+        "row=" + row +
+        ", col=" + col +
+        ", Location=" + location +
+        '}';
   }
 
   /* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+     * @see java.lang.Object#hashCode()
+     */
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
