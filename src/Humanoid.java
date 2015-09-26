@@ -6,6 +6,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -320,6 +321,11 @@ public class Humanoid extends GameObject implements HumanoidObject
       }
     }
     return false;
+  }
+
+  protected void setRandomHeading() {
+    Random rand = new Random();
+    heading.setDegrees(rand.nextInt(360));
   }
 
 
