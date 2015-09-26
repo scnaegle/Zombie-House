@@ -229,7 +229,7 @@ public class Humanoid extends GameObject implements HumanoidObject
    *
    * @param map
    * @param next_location
-   * @return
+   * @return true if wall has been hit
    */
   protected boolean hitWall(GameMap map, Location next_location)
   {
