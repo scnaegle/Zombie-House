@@ -19,8 +19,7 @@ import java.util.Random;
  */
 public class Humanoid extends GameObject implements HumanoidObject
 {
-  protected final double MOVE_MULTIPLIER =
-      (double) (GUI.tile_size / GamePanel.FPS);
+  protected final double MOVE_MULTIPLIER = (GUI.tile_size / (double)GamePanel.FPS);
   protected double defined_speed = 1.0;
   protected double current_speed = 1.0;
   Heading heading;
@@ -187,12 +186,9 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-      //    if(zombie instanceof MasterZombie)
-      //    {
-      //      return false;
-      //    }
-      if (this != zombie && new_location_object.getDistance(zombie) <
-          GUI.tile_size)
+      if (!this.equals(zombie) &&
+          new_location_object.getDistance(zombie) < GUI.tile_size &&
+          new_location_object.intersects(zombie))
       {
         return true;
       }
@@ -217,8 +213,9 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-      if (this != zombie && new_location_object.getDistance(zombie) <
-          GUI.tile_size)
+      if (!this.equals(zombie) &&
+          new_location_object.getDistance(zombie) < GUI.tile_size &&
+          new_location_object.intersects(zombie))
       {
         return true;
       }
