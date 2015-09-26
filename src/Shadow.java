@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 /**
  * Created by scnaegl on 9/20/15.
@@ -32,37 +33,12 @@ public class Shadow {
     loadMap(map);
   }
 
-  public Shadow(ArrayList<Tile> tiles) {
-    endpoints.clear();
-    segments.clear();
-    setEndPoints(tiles);
-    setSegments(tiles);
-  }
-
   public void loadMap(GameMap map) {
     endpoints.clear();
     segments.clear();
-    setEndPoints(map.getWalls());
-    setSegments(map.getWalls());
-  }
-
-  private void setEndPoints(ArrayList<Tile> walls) {
+//    setEndPoints(map.getWalls());
     int x, y, w, h;
-    for(Tile wall : walls) {
-      x = wall.location.getX();
-      y = wall.location.getY();
-      w = wall.width;
-      h = wall.height;
-      addEndPoint(x, y); // top left
-      addEndPoint(x + w, y); // top right
-      addEndPoint(x, y + h); // bottom left
-      addEndPoint(x + w, y + h); // bottom right
-    }
-  }
-
-  private void setSegments(ArrayList<Tile> walls) {
-    int x, y, w, h;
-    for(Tile wall : walls) {
+    for(Tile wall : map.getWalls()) {
       x = wall.location.getX();
       y = wall.location.getY();
       w = wall.width;
@@ -74,8 +50,45 @@ public class Shadow {
     }
   }
 
-  private void addSegment(int x, int y, int x2, int y2) {
-    segments.add(new Segment(x, y, x2, y2));
+  private void setEndPoints(ArrayList<Tile> walls) {
+    int x, y, w, h;
+    for(Tile wall : walls) {
+      System.out.println("wall: " + wall);
+      x = wall.location.getX();
+      y = wall.location.getY();
+      w = wall.width;
+      h = wall.height;
+//      System.out.format("x=%d, y=%, w=%w, h=%h\n", x, y, w, h);
+      addEndPoint(x, y); // top left
+      addEndPoint(x + w, y); // top right
+      addEndPoint(x, y + h); // bottom left
+      addEndPoint(x + w, y + h); // bottom right
+    }
+  }
+
+  private void addSegment(int x1, int y1, int x2, int y2) {
+//    segments.add(new Segment(x, y, x2, y2));
+    Segment segment = null;
+    EndPoint p1 = new EndPoint(0, 0);
+    p1.segment = segment;
+    p1.visualize = true;
+    EndPoint p2 = new EndPoint(0, 0);
+    p2.segment = segment;
+    p2.visualize = false;
+    segment = new Segment();
+    p1.x = x1; p1.y = y1;
+    p2.x = x2; p2.y = y2;
+    p1.segment = segment;
+    p2.segment = segment;
+    segment.p1 = p1;
+    segment.p2 = p2;
+    segment.d = 0.0;
+
+//    if (!segments.contains(segment)) {
+      segments.add(segment);
+      endpoints.add(p1);
+      endpoints.add(p2);
+//    }
   }
 
   private void addEndPoint(int x, int y) {
@@ -180,15 +193,24 @@ public class Shadow {
     p2.y = (int)(center.y + Math.sin(angle2));
     Point pEnd = lineIntersection(p3, p4, p1, p2);
 
-    output.add(pBegin);
-    output.add(pEnd);
+    if (pBegin != null) {
+      output.add(pBegin);
+    }
+    if (pEnd != null) {
+      output.add(pEnd);
+    }
   }
 
   public Point lineIntersection(Point p1, Point p2, Point p3, Point p4) {
     // From http://paulbourke.net/geometry/lineline2d/
-    int s = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x))
-        / ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y));
-    return new Point(p1.x + s * (p2.x - p1.x), p1.y + s * (p2.y - p1.y));
+    System.out.format("p1=%s, p2=%s, p3=%s, p4=%s\n", p1, p2, p3, p4);
+    try {
+      int s = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x))
+          / ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y));
+      return new Point(p1.x + s * (p2.x - p1.x), p1.y + s * (p2.y - p1.y));
+    } catch (ArithmeticException e) {
+      return null;
+    }
   }
 
   // Run the algorithm, sweeping over all or part of the circle to find
@@ -197,6 +219,9 @@ public class Shadow {
     output.clear();  // output set of triangles
     demo_intersectionsDetected.clear();
 //    endpoints.sort(endpointCompare, true);
+    for (EndPoint ep : endpoints) {
+      System.out.println("endpoints: " + ep);
+    }
     Collections.sort(endpoints);
 
     open.clear();
@@ -210,7 +235,9 @@ public class Shadow {
     // ones intersect the initial sweep line, and then sort them.
 //    for (pass in 0...2) {
     for(int pass = 0; pass <= 2; pass++) {
+      System.out.println("pass: " + pass);
       for (EndPoint p : endpoints) {
+        System.out.println("EndPoint: " + p);
         if (pass == 1 && p.angle > maxAngle) {
           // Early exit for the visualization to show the sweep process
           break;
@@ -218,11 +245,15 @@ public class Shadow {
 
         Segment current_old = open.isEmpty()? null : open.get(0);
 
+        System.out.println("p begin: " + p.begin);
         if (p.begin) {
           // Insert into the right place in the list
           Iterator<Segment> open_iter = open.iterator();
-          Segment node;
-          while ((node = open_iter.next()) != null && segmentInFrontOf(p.segment, node, center)) {
+          Segment node = null;
+          if(open_iter.hasNext()) {
+            node = open_iter.next();
+          }
+          while (node != null && open_iter.hasNext() && segmentInFrontOf(p.segment, node, center)) {
             node = open_iter.next();
           }
           if (open.isEmpty()) {
@@ -238,6 +269,7 @@ public class Shadow {
         Segment current_new = open.isEmpty()? null : open.get(0);
         if (current_old != current_new) {
           if (pass == 1) {
+            System.out.println("Gonna create a triangle");
             addTriangle(beginAngle, p.angle, current_old);
           }
           beginAngle = p.angle;
@@ -279,9 +311,32 @@ public class Shadow {
     double d;
     double angle;
 
+    public Segment() {
+
+    }
+
     public Segment(int x, int y, int x2, int y2) {
       p1 = new EndPoint(x, y);
       p2 = new EndPoint(x2, y2);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Segment segment = (Segment) o;
+
+      if (p1 != null ? !p1.equals(segment.p1) : segment.p1 != null) return false;
+      return !(p2 != null ? !p2.equals(segment.p2) : segment.p2 != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+      int result = p1 != null ? p1.hashCode() : 0;
+      result = 31 * result + (p2 != null ? p2.hashCode() : 0);
+      return result;
     }
   }
 
@@ -320,6 +375,20 @@ public class Shadow {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(map.map_image, 0, 0, null);
 
+        g.setColor(Color.YELLOW);
+        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
+        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
+//        ArrayList<Integer> xs = CollectionUtils.collect(list, TransformerUtils.invokerTransformer("getName")
+        //g.fillPolygon(xs, ys, shadow.output.size());
+        int[] test_xs = new int[3];
+        test_xs[0] = shadow.output.get(0).x;
+        test_xs[1] = shadow.output.get(1).x;
+        test_xs[2] = shadow.center.x;
+        int[] test_ys = new int[3];
+        test_ys[0] = shadow.output.get(0).y;
+        test_ys[1] = shadow.output.get(1).y;
+        test_ys[2] = shadow.center.y;
+        g.fillPolygon(test_xs, test_ys, 3);
       }
     };
     map_panel.setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
