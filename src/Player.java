@@ -236,15 +236,6 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * Tells the sprite how to move based on the heading we give it.
-   * Heading is controlled by keyboard arrows.
-   */
-  public void move(Location next_location)
-  {
-    location = next_location;
-  }
-
-  /**
    * Updates player every timer tick. Takes in a map object in order to
    * get a hold of the list of randomly generated fire traps. Checks for
    * actions such as runningRight, walkingRight, picking up and putting down
@@ -285,11 +276,11 @@ public class Player extends Humanoid implements HumanoidObject
 //      Location next_location = getNextLocation();
       if (!heading.equals(Heading.NONE))
       {
-        if (!hitWallInXDirection(map))
+        if (heading.getXMovement() != 0 && !hitWallInXDirection(map))
         {
           moveX();
         }
-        if (!hitWallInYDirection(map))
+        if (heading.getYMovement() != 0 && !hitWallInYDirection(map))
         {
           moveY();
         }
@@ -334,9 +325,11 @@ public class Player extends Humanoid implements HumanoidObject
       {
         playerDied = true;
       }
-
-
     }
+  }
+
+  public boolean reachedExit(Location exit_location) {
+    return getCenteredBoundingRectangle().contains(exit_location.x, exit_location.y);
   }
 
   /**

@@ -126,30 +126,16 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           // Checks if player made it to the exit tile
-          Tile test_tile;
-          int player_row = player.location.getRow(GUI.tile_size);
-          int player_col = player.location.getCol(GUI.tile_size);
-          for (int row = player_row - 1; row <= player_row + 1; row++)
-          {
-            for (int col = player_col - 1; col <= player_col + 1; col++)
+          if (player.reachedExit(map.end_location)) {
+            //If yes, then go to next level.
+            parent.whichLevel++;
+            if (parent.whichLevel == 6)
             {
-              test_tile = map.getTile(row, col);
-              if (test_tile.tile_type.equals(TileType.EXIT) &&
-                  player.getCenteredBoundingRectangle()
-                        .intersects(test_tile.getBoundingRectangle()))
-              {
-                //If yes, then go to next level.
-                parent.whichLevel++;
-                if (parent.whichLevel == 6)
-                {
-                  parent.showWinningDialog(parent, " You won the game!");
-                }
-                //SoundLoader.killSounds();
-                System.out.println("Next level");
-                newMapByExit();
-
-              }
+              parent.showWinningDialog(parent, " You won the game!");
             }
+            //SoundLoader.killSounds();
+            System.out.println("Next level");
+            newMapByExit();
           }
 
           repaint();
@@ -166,7 +152,7 @@ public class GamePanel extends JPanel implements KeyListener
   {
     //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-    parent.map = new_map;
+//    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
     //parent.loadSounds();
