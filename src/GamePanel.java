@@ -44,12 +44,14 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
+  private StaminaBar bar;
 
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
     player = parent.player;
     map = parent.map;
+    bar = new StaminaBar(player, GUI.stamina);
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
@@ -64,7 +66,7 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (GUI.running)
+        if (parent.running)
         {
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
@@ -109,11 +111,7 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-          //Updates game labels
-          parent.updatePlayerLabels();
-          parent.updateZombieLabels();
-
-
+         
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -225,17 +223,11 @@ public class GamePanel extends JPanel implements KeyListener
 
     g2.drawImage(map.map_image, 0, 0, null);
 
-    // Math to make vignette move with viewport
-    int width = vp.getWidth();
-    int height = vp.getHeight();
-    boolean explodee = false;
 
-    FireTrap activeTrap = null;
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
       trap.paintTraps(g2, player);
-        activeTrap = trap;
     }
 
     //Draws zombies
@@ -245,9 +237,10 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
     player.paintPlayer(g2);
+    bar.paintBar(g2);
 
-    //Draws vignette with player at center. Does not draw if trap explodes
-    //off screen.
+
+    //Draws vignette with player at center.
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
@@ -268,6 +261,23 @@ public class GamePanel extends JPanel implements KeyListener
     //g2.drawImage(lightLayer, vcX, vcY, null);
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
+    int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
+    int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
+
+    g2.setColor(Color.white);
+    Font font = new Font("Courier", Font.BOLD, 35);
+    g2.setFont(font);
+    g2.drawString("Level: " + parent.whichLevel, new_x - 200,
+        new_y - 100);
+    g2.drawString("Fire traps: " + player.getFire_traps(), new_x - 200,
+        new_y - 50);
+
+    if (!parent.running)
+    {
+      g2.drawString("Press SPACE", new_x - 200, new_y + 800);
+    }
+    //player.getLocation().getX()-900
+    //player.getLocation().getY()-450
   }
 
   private BufferedImage drawFireLight(FireTrap trap)
@@ -325,6 +335,18 @@ public class GamePanel extends JPanel implements KeyListener
     player.isStill = false;
     int code = e.getKeyCode();
 
+    if (code == KeyEvent.VK_SPACE)
+    {
+      if (!parent.running)
+      {
+        parent.startGame();
+        requestFocusInWindow();
+      }
+      else
+      {
+        parent.pauseGame();
+      }
+    }
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       // System.out.println("R");

@@ -60,7 +60,8 @@ public class GUI
     Object[] options = {"Restart", "Exit"};
 
     int option = JOptionPane
-        .showOptionDialog(parent.window, "Aaargghh! " + message + " Try again matey?",
+        .showOptionDialog(parent.window,
+            "Aaargghh! " + message + " Try again matey?",
             "YOU DIED",
             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
             options, options[0]);
@@ -326,68 +327,6 @@ public class GUI
     am.put("Arrow.left", doNothing);
 
 
-    /**
-     * sets the labels at the top of the map
-     */
-    level = new JLabel("Level: ");
-    playerSight = new JLabel("Sight: ");
-    playerHearing = new JLabel("Hearing: ");
-    playerSpeed = new JLabel("Speed: ");
-    playerStamina = new JLabel("Stamina: ");
-    zombieSmell = new JLabel("Z-Smell: ");
-    zombieSpeed = new JLabel("Z-Speed: ");
-    traps = new JLabel("Fire traps: ");
-
-
-    startPause = new JButton("Start");
-    startPause.setPreferredSize(new Dimension(80, 23));
-    startPause.addActionListener(new ActionListener()
-    {
-      @Override
-      public void actionPerformed(ActionEvent e)
-      {
-        if (pause)
-        {
-          startGame();
-          gamePanel.requestFocusInWindow();
-        }
-        else
-        {
-          pauseGame();
-        }
-
-      }
-    });
-
-    //Shows all game labels
-    viewPanel = new JPanel();
-    viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.LINE_AXIS));
-    //viewPanel.add(Box.createHorizontalGlue());
-    viewPanel.setPreferredSize(new Dimension(window.getWidth(), 25));
-
-    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
-    viewPanel.add(level);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(playerSight);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(playerHearing);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(playerSpeed);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(playerStamina);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(startPause);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(traps);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(zombieSpeed);
-    viewPanel.add(Box.createRigidArea(new Dimension(20, 25)));
-    viewPanel.add(zombieSmell);
-    viewPanel.add(Box.createRigidArea(new Dimension(50, 25)));
-
-    //viewPanel.add(Box.createGlue());
-
-    window.getContentPane().add(viewPanel, BorderLayout.NORTH);
     window.pack();
     window.setVisible(true);
     window.setResizable(true);
@@ -397,9 +336,9 @@ public class GUI
   }
 
   //start and pause game methods
-  private void startGame()
+  public void startGame()
   {
-    startPause.setText("Pause");
+
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
@@ -409,7 +348,6 @@ public class GUI
 
   public void pauseGame()
   {
-    startPause.setText("Start");
     pause = true;
     running = false;
     gamePanel.frame_timer.stop();
@@ -419,34 +357,7 @@ public class GUI
 
   }
 
-  /**
-   * updates the stats about the player, probably the most important thing is
-   * the stanima
-   */
-  public void updatePlayerLabels()
-  {
-    level.setText("Level: " + whichLevel);
-    playerSight.setText("Sight: " + player.getSight());
-    playerHearing.setText("Hearing: " + player.getHearing());
-    playerSpeed.setText("Speed: " + player.getSpeed());
-    playerStamina
-        .setText("Stamina: " + Math.round(player.getStamina() * 100.0) / 100.0);
 
-
-  }
-
-  /**
-   * updates the zombie related things like speed and smell, but also the number
-   * of firetraps that the player has
-   */
-  public void updateZombieLabels()
-  {
-    zombieSpeed.setText("Z-Speed: " + zspeed);
-
-    zombieSmell.setText("Z-Smell: " + zsmell);
-    traps.setText("Fire traps: " + player.getFire_traps());
-
-  }
 
   /**
    * Takes in all numbers the player inputed during settings and creates a
@@ -465,7 +376,6 @@ public class GUI
   {
     player = new Player(sight, hearing, speed, stamina, regen, width, height,
         location);
-//    player.setLocation(new Location(800, 1120));
     player.setHeading(new Heading(Heading.NONE));
 
   }
@@ -477,7 +387,7 @@ public class GUI
   {
     gamePanel.loadMusic();
     SoundLoader.loadSounds();
-    //fireTrap.loadExplosion();
+
   }
 
 

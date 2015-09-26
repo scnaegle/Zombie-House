@@ -77,7 +77,7 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * The player needs sight, hearing, speed, and stamina to start out with
+   * The player needs sight, hearing, speed, and maxStamina to start out with
    * This is where all of it gets set, You have control over it from the
    * initlization
    * GUI
@@ -341,6 +341,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * draw the sprite "Bob" on the map
+   *
    * @param g
    */
   public void paintPlayer(Graphics g)
@@ -378,6 +379,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * picks up the fire trap
+   *
    * @param trap
    */
   public void pickupFireTrap(FireTrap trap)
@@ -389,6 +391,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * gets the tile that the player sprite is standing on
+   *
    * @param map
    * @return
    */
@@ -471,5 +474,6 @@ public class Player extends Humanoid implements HumanoidObject
     SoundLoader.playScream();
 
   }
+
 
 }
