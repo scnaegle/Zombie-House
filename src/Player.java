@@ -54,6 +54,8 @@ public class Player extends Humanoid implements HumanoidObject
   private ArrayList<FireTrap> traps = new ArrayList<>();
   private int diedFrame = 0;
 
+  private StaminaBar bar;
+
 
   public Player(Location location)
   {
@@ -98,6 +100,7 @@ public class Player extends Humanoid implements HumanoidObject
     this.stamina = player_stamina;
     this.width = GUI.tile_size;
     this.height = GUI.tile_size;
+    bar = new StaminaBar(GUI.stamina);
   }
 
   /**
@@ -337,7 +340,7 @@ public class Player extends Humanoid implements HumanoidObject
    *
    * @param g
    */
-  public void paintPlayer(Graphics g)
+  public void paint(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
     //Draws player
@@ -345,6 +348,7 @@ public class Player extends Humanoid implements HumanoidObject
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
+      bar.paint(g2);
     }
   }
 
@@ -468,5 +472,29 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
+  private class StaminaBar {
 
+    public final Color TIRED = new Color(249, 44, 25);
+    public final Color ENERGY = new Color(108, 246, 16);
+    double maxStamina;
+
+    public StaminaBar(double maxStamina) {
+      this.maxStamina = maxStamina;
+    }
+
+    public void paint(Graphics2D g2) {
+      int x = getLocation().getX();
+      int y = getLocation().getY();
+
+      g2.setColor(TIRED);
+      g2.fillRect(x, y - 20, GUI.tile_size, 8);
+
+      g2.setColor(ENERGY);
+      g2.fillRect(x, y - 20, (int) getStamAmount(), 8);
+    }
+
+    public double getStamAmount() {
+      return (stamina / maxStamina) * GUI.tile_size;
+    }
+  }
 }

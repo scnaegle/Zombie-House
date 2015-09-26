@@ -175,7 +175,7 @@ public class FireTrap extends GameObject
     explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
   }
 
-  public void paintTraps(Graphics2D g2, Player player)
+  public void paint(Graphics2D g2, Player player)
   {
     if (!player.is_picking_up || player.is_putting_down || !exploding)
     {

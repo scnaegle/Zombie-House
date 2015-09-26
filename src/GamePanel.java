@@ -44,14 +44,12 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-  private StaminaBar bar;
 
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
     player = parent.player;
     map = parent.map;
-    bar = new StaminaBar(player, GUI.stamina);
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
@@ -213,17 +211,16 @@ public class GamePanel extends JPanel implements KeyListener
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
-      trap.paintTraps(g2, player);
+      trap.paint(g2, player);
     }
 
     //Draws zombies
     for (Zombie zombie : map.zombies)
     {
-      zombie.paintZombies(g2);
+      zombie.paint(g2);
     }
 
-    player.paintPlayer(g2);
-    bar.paintBar(g2);
+    player.paint(g2);
 
 
     //Draws vignette with player at center.
