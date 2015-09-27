@@ -232,9 +232,10 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
+    vp = parent.scrollPane.getViewport();
     Rectangle vp_rect = vp.getViewRect();
-    int new_x = ((int)vp.getViewPosition().getX());
-    int new_y = ((int)vp.getViewPosition().getY());
+    int new_x = ((int)vp_rect.getX());
+    int new_y = ((int)vp_rect.getY());
     int width = vp_rect.width;
     int height = vp_rect.height;
     System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
