@@ -54,6 +54,8 @@ public class Player extends Humanoid implements HumanoidObject
   private ArrayList<FireTrap> traps = new ArrayList<>();
   private int diedFrame = 0;
 
+  private StaminaBar bar;
+
 
   public Player(Location location)
   {
@@ -77,7 +79,7 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * The player needs sight, hearing, speed, and stamina to start out with
+   * The player needs sight, hearing, speed, and maxStamina to start out with
    * This is where all of it gets set, You have control over it from the
    * initlization
    * GUI
@@ -98,6 +100,7 @@ public class Player extends Humanoid implements HumanoidObject
     this.stamina = player_stamina;
     this.width = GUI.tile_size;
     this.height = GUI.tile_size;
+    bar = new StaminaBar(GUI.stamina);
   }
 
   /**
@@ -236,15 +239,6 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * Tells the sprite how to move based on the heading we give it.
-   * Heading is controlled by keyboard arrows.
-   */
-  public void move(Location next_location)
-  {
-    location = next_location;
-  }
-
-  /**
    * Updates player every timer tick. Takes in a map object in order to
    * get a hold of the list of randomly generated fire traps. Checks for
    * actions such as runningRight, walkingRight, picking up and putting down
@@ -285,11 +279,11 @@ public class Player extends Humanoid implements HumanoidObject
 //      Location next_location = getNextLocation();
       if (!heading.equals(Heading.NONE))
       {
-        if (!hitWallInXDirection(map))
+        if (heading.getXMovement() != 0 && !hitWallInXDirection(map))
         {
           moveX();
         }
-        if (!hitWallInYDirection(map))
+        if (heading.getYMovement() != 0 && !hitWallInYDirection(map))
         {
           moveY();
         }
@@ -334,16 +328,19 @@ public class Player extends Humanoid implements HumanoidObject
       {
         playerDied = true;
       }
-
-
     }
+  }
+
+  public boolean reachedExit(Location exit_location) {
+    return getCenteredBoundingRectangle().contains(exit_location.x, exit_location.y);
   }
 
   /**
    * draw the sprite "Bob" on the map
+   *
    * @param g
    */
-  public void paintPlayer(Graphics g)
+  public void paint(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
     //Draws player
@@ -351,6 +348,7 @@ public class Player extends Humanoid implements HumanoidObject
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
+      bar.paint(g2);
     }
   }
 
@@ -378,6 +376,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * picks up the fire trap
+   *
    * @param trap
    */
   public void pickupFireTrap(FireTrap trap)
@@ -389,6 +388,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * gets the tile that the player sprite is standing on
+   *
    * @param map
    * @return
    */
@@ -472,4 +472,29 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
+  private class StaminaBar {
+
+    public final Color TIRED = new Color(249, 44, 25);
+    public final Color ENERGY = new Color(108, 246, 16);
+    double maxStamina;
+
+    public StaminaBar(double maxStamina) {
+      this.maxStamina = maxStamina;
+    }
+
+    public void paint(Graphics2D g2) {
+      int x = getLocation().getX();
+      int y = getLocation().getY();
+
+      g2.setColor(TIRED);
+      g2.fillRect(x, y - 20, GUI.tile_size, 8);
+
+      g2.setColor(ENERGY);
+      g2.fillRect(x, y - 20, (int) getStamAmount(), 8);
+    }
+
+    public double getStamAmount() {
+      return (stamina / maxStamina) * GUI.tile_size;
+    }
+  }
 }

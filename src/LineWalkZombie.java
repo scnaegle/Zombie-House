@@ -22,21 +22,8 @@ public class LineWalkZombie extends Zombie
     moveUp = new Animation(up, 5);
     animation = moveLeft;
     animation.start();
-    Random rand = new Random();
-    switch (rand.nextInt(4))
-    {  //Randomly sets zombie heading to start
-      case 0:
-        this.heading = new Heading(Heading.NORTH);
-        break;
-      case 1:
-        this.heading = new Heading(Heading.WEST);
-        break;
-      case 2:
-        this.heading = new Heading(Heading.EAST);
-        break;
-      case 3:
-        this.heading = new Heading(Heading.SOUTH);
-    }
+    this.heading = new Heading(Heading.NORTH);
+    setRandomHeading();
   }
 
 

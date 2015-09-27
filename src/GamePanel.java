@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int FPS = 40;
+  static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
   final static int DEFAULT_WIDTH = SHOWN_TILES * GUI.tile_size;
@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (GUI.running)
+        if (parent.running)
         {
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
@@ -109,11 +109,7 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-          //Updates game labels
-          parent.updatePlayerLabels();
-          parent.updateZombieLabels();
-
-
+         
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -128,30 +124,16 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           // Checks if player made it to the exit tile
-          Tile test_tile;
-          int player_row = player.location.getRow(GUI.tile_size);
-          int player_col = player.location.getCol(GUI.tile_size);
-          for (int row = player_row - 1; row <= player_row + 1; row++)
-          {
-            for (int col = player_col - 1; col <= player_col + 1; col++)
+          if (player.reachedExit(map.end_location)) {
+            //If yes, then go to next level.
+            parent.whichLevel++;
+            if (parent.whichLevel == 6)
             {
-              test_tile = map.getTile(row, col);
-              if (test_tile.tile_type.equals(TileType.EXIT) &&
-                  player.getCenteredBoundingRectangle()
-                        .intersects(test_tile.getBoundingRectangle()))
-              {
-                //If yes, then go to next level.
-                parent.whichLevel++;
-                if (parent.whichLevel == 6)
-                {
-                  parent.showWinningDialog(parent, " You won the game!");
-                }
-                //SoundLoader.killSounds();
-                System.out.println("Next level");
-                newMapByExit();
-
-              }
+              parent.showWinningDialog(parent, " You won the game!");
             }
+            //SoundLoader.killSounds();
+            System.out.println("Next level");
+            newMapByExit();
           }
 
           repaint();
@@ -168,7 +150,7 @@ public class GamePanel extends JPanel implements KeyListener
   {
     //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-    parent.map = new_map;
+//    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
     //parent.loadSounds();
@@ -225,29 +207,23 @@ public class GamePanel extends JPanel implements KeyListener
 
     g2.drawImage(map.map_image, 0, 0, null);
 
-    // Math to make vignette move with viewport
-    int width = vp.getWidth();
-    int height = vp.getHeight();
-    boolean explodee = false;
 
-    FireTrap activeTrap = null;
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
-      trap.paintTraps(g2, player);
-        activeTrap = trap;
+      trap.paint(g2, player);
     }
 
     //Draws zombies
     for (Zombie zombie : map.zombies)
     {
-      zombie.paintZombies(g2);
+      zombie.paint(g2);
     }
 
-    player.paintPlayer(g2);
+    player.paint(g2);
 
-    //Draws vignette with player at center. Does not draw if trap explodes
-    //off screen.
+
+    //Draws vignette with player at center.
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
@@ -266,8 +242,25 @@ public class GamePanel extends JPanel implements KeyListener
 //    }
 
     //g2.drawImage(lightLayer, vcX, vcY, null);
-//    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+    g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
+    int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
+    int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
+
+    g2.setColor(Color.white);
+    Font font = new Font("Courier", Font.BOLD, 35);
+    g2.setFont(font);
+    g2.drawString("Level: " + parent.whichLevel, new_x - 200,
+        new_y - 100);
+    g2.drawString("Fire traps: " + player.getFire_traps(), new_x - 200,
+        new_y - 50);
+
+    if (!parent.running)
+    {
+      g2.drawString("Press SPACE", new_x - 200, new_y + 800);
+    }
+    //player.getLocation().getX()-900
+    //player.getLocation().getY()-450
   }
 
   private BufferedImage drawFireLight(FireTrap trap)
@@ -325,6 +318,18 @@ public class GamePanel extends JPanel implements KeyListener
     player.isStill = false;
     int code = e.getKeyCode();
 
+    if (code == KeyEvent.VK_SPACE)
+    {
+      if (!parent.running)
+      {
+        parent.startGame();
+        requestFocusInWindow();
+      }
+      else
+      {
+        parent.pauseGame();
+      }
+    }
     if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
     {
       // System.out.println("R");

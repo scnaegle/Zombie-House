@@ -11,8 +11,6 @@ public class Zombie extends Humanoid implements HumanoidObject
 {
   public static double decision_rate;
   public static double smell;
-  public boolean toTheLeftOfPlayer = false;
-  public boolean toTheRightOfPlayer = false;
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
   protected int frame = 0;
@@ -78,14 +76,13 @@ public class Zombie extends Humanoid implements HumanoidObject
       frame = 0;
       chooseDirection(player);
     }
-//    System.out.println("heading: " + heading);
+
     if (!hitWallInXDirection(map) && !hitAnotherZombieInX(map.zombies)) {
       moveX();
     }
     if (!hitWallInYDirection(map) && !hitAnotherZombieInY(map.zombies)) {
       moveY();
     }
-
 
     if (bitesPlayer(player))
     {
@@ -95,22 +92,20 @@ public class Zombie extends Humanoid implements HumanoidObject
 
     //Sees if zombie is in player hearing's range
     double range = ((Player) player).getHearing() * GUI.tile_size;
+    Location next_location = getNextLocation();
     if (getDistance((Object2D) player) <= range)
     {
-     // System.out.println(getDistance((Object2D) player));
-
-      //System.out.println("can hear zombie");
       SoundLoader.playZWalk(checkZombieDirection(player));
     }
 
 
-    Location next_location = getNextLocation();
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
       SoundLoader.playHitObst(checkZombieDirection(player));
     }
+
 
     determineAnimation();
     animation.start();
@@ -161,7 +156,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     SoundLoader.playBite();
   }
 
-  public void paintZombies(Graphics2D g2)
+  public void paint(Graphics2D g2)
   {
     if (!zombieDied)
     {

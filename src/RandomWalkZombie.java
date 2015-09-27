@@ -35,16 +35,11 @@ public class RandomWalkZombie extends Zombie
 
   @Override
   protected void chooseDirection(HumanoidObject player) {
-//    System.out.println("Choosing new direction");
     if (smellPlayer(player)) {
       double angle = getDirectionTo((Object2D)player);
       heading.setDegrees(angle);
     } else {
-//    System.out.println("old heading: " + heading.toString());
-      // Unless there is a wall in that direction
-      Random rand = new Random();
-      heading.setDegrees(rand.nextInt(360));
-//    System.out.println("new heading: " + heading.toString());
+      setRandomHeading();
     }
   }
 

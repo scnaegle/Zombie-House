@@ -72,12 +72,11 @@ public class FireTrap extends GameObject
   //Reacts appropriately.
   public void update(GameMap map, Player player)
   {
-    frame++;
-
     for (Zombie zombie : map.zombies)
     {
       if (getDistance(zombie) < GUI.tile_size)
       {
+        //If zombie touches trap, it explodes
         if (getCenteredBoundingRectangle()
             .intersects(zombie.getCenteredBoundingRectangle()))
         {
@@ -100,21 +99,17 @@ public class FireTrap extends GameObject
       if (trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
       {
         startExploding();
+
       }
     }
 
-//    if(exploding)
-//    {
-//      startExploding();
-//    }
-
-    System.out.println(frame);
+    //Waits 15 seconds before stopping explosion
     if (frame >= EXPLODE_TIME && exploding)
     {
       stopExploding(map);
     }
 
-
+    //If player runs over trap or walks over trap while exploding
     if (exploding && getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) ||
         getCenteredBoundingRectangle().intersects(player
@@ -134,7 +129,7 @@ public class FireTrap extends GameObject
     exploding = true;
     fireAnimation.start();
     SoundLoader.playExplosion();
-    frame = 0;
+    frame++;
 
   }
 
@@ -145,6 +140,7 @@ public class FireTrap extends GameObject
     fireAnimation.stop();
 
 
+    //Checks surrounding tiles and blackens them
     int trap_row = location.getRow(GUI.tile_size);
     int trap_col = location.getCol(GUI.tile_size);
     for (int row = trap_row - 1; row <= trap_row + 1; row++)
@@ -179,7 +175,7 @@ public class FireTrap extends GameObject
     explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
   }
 
-  public void paintTraps(Graphics2D g2, Player player)
+  public void paint(Graphics2D g2, Player player)
   {
     if (!player.is_picking_up || player.is_putting_down || !exploding)
     {
@@ -187,7 +183,7 @@ public class FireTrap extends GameObject
           null);
     }
 
-    if (exploding) // && onScreen(trap))
+    if (exploding)
     {
 
       g2.drawImage(fireAnimation.getSprite(),
