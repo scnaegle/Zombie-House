@@ -33,8 +33,8 @@ public class Zombie extends Humanoid implements HumanoidObject
     this(location);
     this.current_speed = speed;
     this.defined_speed = speed;
-    Zombie.smell = smell;
-    Zombie.decision_rate = decision_rate;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
   }
 
   public double getSpeed()

@@ -27,8 +27,8 @@ public class RandomWalkZombie extends Zombie
     this(location);
     this.defined_speed = speed;
     this.current_speed = speed;
-    Zombie.smell = smell;
-    Zombie.decision_rate = decision_rate;
+    this.smell = smell;
+    this.decision_rate = decision_rate;
   }
 
 

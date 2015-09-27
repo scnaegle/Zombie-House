@@ -243,7 +243,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     paintTextOverlay(g2);
 
-    player.paint(g2,vp);
+    player.paint(g2);
     g2.setColor(Color.BLUE);
     //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 
@@ -285,11 +285,6 @@ public class GamePanel extends JPanel implements KeyListener
       g.setColor(Color.RED);
       g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
     }
-
-
-    player.paint(g2,vp);
-    g2.setColor(Color.BLUE);
-    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 
   }
 

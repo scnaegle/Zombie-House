@@ -467,7 +467,7 @@ public class Player extends Humanoid implements HumanoidObject
    *
    * @param g Graphics object to draw with
    */
-  public void paint(Graphics g, JViewport viewport)
+  public void paint(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
     //Draws player
