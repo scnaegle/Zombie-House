@@ -112,7 +112,7 @@ public class FireTrap extends GameObject
     if (exploding && getCenteredBoundingRectangle().intersects(player
         .getBoundingRectangle()) ||
         getCenteredBoundingRectangle().intersects(player
-        .getBoundingRectangle()) && player.isRunning)
+        .getBoundingRectangle()) && player.isRunning())
     {
       startExploding();
       player.playerDied = true;

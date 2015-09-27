@@ -327,9 +327,6 @@ public class GamePanel extends JPanel implements KeyListener
         parent.pauseGame();
       }
     }
-    if (!player.isRunning) {
-      player.setWalking();
-    }
     if (KEY_RUN.contains(code))
     {
       player.setRunning();
