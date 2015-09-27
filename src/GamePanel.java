@@ -266,7 +266,7 @@ public class GamePanel extends JPanel implements KeyListener
         new_y);
     g.drawString("Fire traps: " + player.getFire_traps(), new_x,
         new_y + 50);
-    g.drawString("Stamina", new_x + width - 200, new_y);
+//    g.drawString("Stamina", new_x + width - 200, new_y);
 
     if (!GUI.running)
     {

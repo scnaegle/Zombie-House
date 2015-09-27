@@ -486,15 +486,15 @@ public class Player extends Humanoid implements HumanoidObject
   private class StaminaBar
   {
 
-    public final Color TIRED = Color.BLACK;
+    public final Color TIRED = new Color(93, 93, 93);
     public final Color ENERGY = new Color(14, 15, 246);
     public final Color BORDER = new Color(93, 93, 93);
     private double maxStamina;
 
-    private int width = 20;
-    private int height = 200;
-    private int xOffset = GUI.SCENE_WIDTH / 2 - 80;
-    private int yOffset = -GUI.SCENE_HEIGHT / 2 + 110;
+    private int width = 5;
+    private int height = 70;
+    private int xOffset = -10;
+    private int yOffset = 5;
 
     public StaminaBar(double maxStamina)
     {
@@ -503,8 +503,6 @@ public class Player extends Humanoid implements HumanoidObject
 
     public void paint(Graphics2D g2)
     {
-//      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
-//      int y = (int)viewport.getViewPosition().getY() + yOffset;
       int x = (int)location.x + xOffset;
       int y = (int)location.y + yOffset;
 
