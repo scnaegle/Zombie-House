@@ -95,8 +95,6 @@ public class GamePanel extends JPanel implements KeyListener
                   "Ye be bitten! Keep yer zombie erff yer tail by using yer " +
                       "fire traps!");
             }
-
-
           }
 
           //Checks all traps for collisions
@@ -231,8 +229,8 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
-    int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
-    int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
+    int new_x = ((int)vp.getViewPosition().getX() + 50);
+    int new_y = ((int)vp.getViewPosition().getY() + 50);
 
     g2.setColor(Color.white);
     Font font = new Font("Courier", Font.BOLD, 35);
@@ -241,14 +239,14 @@ public class GamePanel extends JPanel implements KeyListener
         new_y + 50);
     g2.drawString("Fire traps: " + player.getFire_traps(), new_x,
         new_y);
-    g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
+    g2.drawString("Stamina", (int)vp.getViewPosition().getX() + vp.getWidth() - 200, new_y);
 
     if (!parent.running)
     {
       g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
     }
 
-    player.paint(g2);
+    player.paint(g2, vp);
     g2.setColor(Color.BLUE);
     //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 
@@ -302,7 +300,6 @@ public class GamePanel extends JPanel implements KeyListener
 
     return img;
   }
-
 
 
   @Override
