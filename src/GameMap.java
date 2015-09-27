@@ -1268,8 +1268,7 @@ public class GameMap
         {
           if(numberOfRecursion>100)
           {
-            generateMap();
-            return;
+
           }
 
           if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
