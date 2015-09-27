@@ -236,8 +236,8 @@ public class GamePanel extends JPanel implements KeyListener
     Rectangle vp_rect = vp.getViewRect();
     int new_x = ((int)vp_rect.getX());
     int new_y = ((int)vp_rect.getY());
-    int width = vp_rect.width;
-    int height = vp_rect.height;
+    int width = GUI.SCENE_WIDTH;
+    int height = GUI.SCENE_HEIGHT;
     System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
     System.out.format("Viewport width: %d, height: %d\n", width, height);
     System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
