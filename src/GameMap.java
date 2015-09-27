@@ -430,6 +430,13 @@ public class GameMap
     return;
   }
 
+  /**
+   * checks to see if this is could be a valid spot to place the exit piece
+   * by looking for the start spot
+   * @param x
+   * @param y
+   * @return
+   */
   private static boolean checkForStart(int x, int y)
   {
     for (int t = x - 20; t < x + 20; t++)
@@ -472,12 +479,9 @@ public class GameMap
       setBlockType(x + 2, y + 1, ROOM_WALL);
       setBlockType(x + 2, y + 2, ROOM_WALL);
       setBlockType(x + 1, y + 2, ROOM_WALL);
-
-
     }
     else if (isEmpty(x - 1, y + 1))
     {
-
       setBlockType(x - 1, y + 1, END_ROOM);
       setBlockType(x, y + 1, BASIC_TILE);
       setBlockType(x - 1, y, ROOM_WALL);
@@ -486,7 +490,6 @@ public class GameMap
       setBlockType(x - 2, y + 2, ROOM_WALL);
       setBlockType(x - 1, y + 2, ROOM_WALL);
     }
-
   }
 
   /**
@@ -1281,7 +1284,8 @@ public class GameMap
       roomSize = 5;
     }
     //this will keep reseting the dimetions till it is valid
-    alreadyBuilt(type);
+    int timesCalled=0;
+    alreadyBuilt(type, timesCalled);
 
     for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
     {
@@ -1334,9 +1338,12 @@ public class GameMap
    *
    * @param type
    */
-  private static void alreadyBuilt(char type)
+  private static void alreadyBuilt(char type,int numberOfTimesCalled)
   {
-
+    if(numberOfTimesCalled == 1000)
+    {
+      generateMap();
+    }
     boolean hallTouched = false;
     for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
     {
@@ -1368,7 +1375,8 @@ public class GameMap
       {
         roomSize = 5;
       }
-      alreadyBuilt(type);
+      numberOfTimesCalled++;
+      alreadyBuilt(type,numberOfTimesCalled);
     }
   }
 

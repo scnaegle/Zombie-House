@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.parent = parent;
     player = parent.player;
-    map = new GameMap();
+    map =parent.map;
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
@@ -147,6 +147,7 @@ public class GamePanel extends JPanel implements KeyListener
   private void newMapByExit()
   {
     GameMap new_map = new GameMap(parent.whichLevel);
+    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
 
