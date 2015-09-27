@@ -430,6 +430,13 @@ public class GameMap
     return;
   }
 
+  /**
+   * checks to see if this is could be a valid spot to place the exit piece
+   * by looking for the start spot
+   * @param x
+   * @param y
+   * @return
+   */
   private static boolean checkForStart(int x, int y)
   {
     for (int t = x - 20; t < x + 20; t++)
