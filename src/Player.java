@@ -253,6 +253,7 @@ public class Player extends Humanoid implements HumanoidObject
     if (is_picking_up)
     {
       frame++;
+      regenerate();
       if (frame >= PICKUP_FRAMES)
       {
         fire_traps++;
@@ -265,6 +266,7 @@ public class Player extends Humanoid implements HumanoidObject
     else if (is_putting_down)
     {
       frame++;
+      regenerate();
       if (frame >= PICKUP_FRAMES)
       {
         fire_traps--;
