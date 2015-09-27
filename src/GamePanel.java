@@ -232,18 +232,21 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
+    Rectangle vp_rect = vp.getViewRect();
     int new_x = ((int)vp.getViewPosition().getX());
     int new_y = ((int)vp.getViewPosition().getY());
+    int width = vp_rect.width;
+    int height = vp_rect.height;
     System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
-    System.out.format("Viewport width: %d, height: %d\n", vp.getWidth(), vp.getHeight());
+    System.out.format("Viewport width: %d, height: %d\n", width, height);
     System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
-    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2);
+    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
 
     g2.setColor(Color.BLUE);
 //    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
     g2.draw(vp.getViewRect());
     g2.setColor(Color.RED);
-    g2.drawRect(player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2, vp.getWidth(), vp.getHeight());
+    g2.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
 
     new_x += 50;
     new_y += 50;
