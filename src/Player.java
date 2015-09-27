@@ -475,7 +475,7 @@ public class Player extends Humanoid implements HumanoidObject
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
-      stamina_bar.paint(g2, viewport);
+      stamina_bar.paint(g2);
       if (is_picking_up || is_putting_down)
       {
         pickup_bar.paint(g2);
@@ -493,18 +493,20 @@ public class Player extends Humanoid implements HumanoidObject
 
     private int width = 20;
     private int height = 200;
-    private int xOffset = -130;
-    private int yOffset = 60;
+    private int xOffset = GUI.SCENE_WIDTH / 2 - 80;
+    private int yOffset = -GUI.SCENE_HEIGHT / 2 + 110;
 
     public StaminaBar(double maxStamina)
     {
       this.maxStamina = maxStamina;
     }
 
-    public void paint(Graphics2D g2, JViewport viewport)
+    public void paint(Graphics2D g2)
     {
-      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
-      int y = (int)viewport.getViewPosition().getY() + yOffset;
+//      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
+//      int y = (int)viewport.getViewPosition().getY() + yOffset;
+      int x = (int)location.x + xOffset;
+      int y = (int)location.y + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);
