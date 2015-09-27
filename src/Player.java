@@ -5,6 +5,7 @@
  * for picking up and putting down firetraps.
  */
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -337,27 +338,6 @@ public class Player extends Humanoid implements HumanoidObject
         .contains(exit_location.x, exit_location.y);
   }
 
-  /**
-   * draw the sprite "Bob" on the map
-   *
-   * @param g
-   */
-  public void paint(Graphics g)
-  {
-    Graphics2D g2 = (Graphics2D) g;
-    //Draws player
-    if (!playerExploded)
-    {
-      g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
-          null);
-      stamina_bar.paint(g2);
-      if (is_picking_up || is_putting_down)
-      {
-        pickup_bar.paint(g2);
-      }
-    }
-  }
-
   // Called when 'r' is pressed so that the speed stays at 2 times what it was
   // instead of updating when r is held down.
   public void setRunning()
@@ -480,6 +460,27 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
+  /**
+   * draw the sprite "Bob" on the map
+   *
+   * @param g Graphics object to draw with
+   */
+  public void paint(Graphics g, JViewport viewport)
+  {
+    Graphics2D g2 = (Graphics2D) g;
+    //Draws player
+    if (!playerExploded)
+    {
+      g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
+          null);
+      stamina_bar.paint(g2, viewport);
+      if (is_picking_up || is_putting_down)
+      {
+        pickup_bar.paint(g2);
+      }
+    }
+  }
+
   private class StaminaBar
   {
 
@@ -490,18 +491,18 @@ public class Player extends Humanoid implements HumanoidObject
 
     private int width = 20;
     private int height = 200;
-    private int xOffset = 40;
-    private int yOffset = 700;
+    private int xOffset = -130;
+    private int yOffset = 60;
 
     public StaminaBar(double maxStamina)
     {
       this.maxStamina = maxStamina;
     }
 
-    public void paint(Graphics2D g2)
+    public void paint(Graphics2D g2, JViewport viewport)
     {
-      int x = (int) getLocation().x + GUI.SCENE_WIDTH / 2 + xOffset;
-      int y = (int) getLocation().y + GUI.SCENE_HEIGHT / 2 - yOffset;
+      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
+      int y = (int)viewport.getViewPosition().getY() + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);

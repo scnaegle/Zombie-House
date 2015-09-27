@@ -28,9 +28,9 @@ public class Block
   /**
    * takes a int x, and y to let you know where the tile is in general
    * takes a type to tell you what kind of block it is
-   * @param x
-   * @param y
-   * @param type
+   * @param x gets x cordonate
+   * @param y gets y cordonate
+   * @param type gets the char or type of block
    */
   public Block(int x, int y, char type)
   {
@@ -42,7 +42,7 @@ public class Block
   /**
    * we have this to tile method because it is needed because the rest of the
    * program is using it.
-   * @return
+   * @return returns the tile
    */
   public Tile toTile()
   {

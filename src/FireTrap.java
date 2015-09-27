@@ -96,7 +96,7 @@ public class FireTrap extends GameObject
     //If firetrap is next to exploding trap, that trap should explode too
     for (FireTrap trap : map.traps)
     {
-      if (trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
+      if (!equals(trap) && trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
       {
         startExploding();
       }

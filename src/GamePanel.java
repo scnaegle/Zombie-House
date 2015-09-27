@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
+  static final int START_GAME = 1;
   static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
@@ -231,9 +232,20 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
-    int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
-    int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
+    int new_x = ((int)vp.getViewPosition().getX());
+    int new_y = ((int)vp.getViewPosition().getY());
+    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
+    System.out.format("Viewport width: %d, height: %d\n", vp.getWidth(), vp.getHeight());
+    System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
+    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2);
 
+    g2.setColor(Color.BLUE);
+    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
+    g2.setColor(Color.RED);
+    g2.drawRect(player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2, vp.getWidth(), vp.getHeight());
+
+    new_x += 50;
+    new_y += 50;
     g2.setColor(Color.white);
     Font font = new Font("Courier", Font.BOLD, 35);
     g2.setFont(font);
@@ -248,7 +260,8 @@ public class GamePanel extends JPanel implements KeyListener
       g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
     }
 
-    player.paint(g2);
+
+    player.paint(g2,vp);
     g2.setColor(Color.BLUE);
     //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 

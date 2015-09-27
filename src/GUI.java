@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * makes the GUI and all the things that go along with it
+ * makes the GUI and all the objects that go along with it
  */
 public class GUI
 {
