@@ -13,8 +13,8 @@ public class GameMap
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
 
-  public static final int X_SIZE = 50; // used to set size of grid
-  public static final int Y_SIZE = 50; // used to set size of grid
+  public static final int X_SIZE = 40; // used to set size of grid
+  public static final int Y_SIZE = 40; // used to set size of grid
   /**
    * These are the "types" that we have to put into the Tile class
    * <p>
@@ -294,9 +294,23 @@ public class GameMap
        */
       //  turnHallsToFloors(); // this will change the halls to the floors
       turnCornersToWalls(); // turns corners to walls
-      //System.out.println("stuff");
-      makeEndRoom(); // makes an end room
-      //System.out.println("stuff");
+      //System.out.println("poo");
+      if (makeEndRoom(0)) // makes an end room
+      {
+        System.out.println("WHY?WHY?WHY?");
+        mapIsBad = false;
+      }
+      else
+      {
+        mapIsBad=true;
+      }
+      if (mapIsBad)
+      {
+        countNumberOftimes++;
+        continue;
+      }
+
+      System.out.println("stuff");
       turnDoorToFloor(); // makes door to floor
       makeInteriorWalls();
 
@@ -310,7 +324,7 @@ public class GameMap
 //      System.out.println("");
 //    }
     }
-    //System.out.println("I fucked up " +countNumberOftimes+ " times!!1");
+    System.out.println("I fucked up " + countNumberOftimes + " times!!1");
   }
 
   private static void turnDoorToFloor()
@@ -332,10 +346,9 @@ public class GameMap
   /**
    *
    */
-  private static void makeEndRoom()
+  private static boolean makeEndRoom(int inputNumber)
   {
     roomSize = 3;
-
 
     int validX = resetValidSpots(X_SIZE);
     int validY = resetValidSpots(Y_SIZE);
@@ -349,21 +362,23 @@ public class GameMap
         {
           placeEndPeicesHorzantal(x, y);
           //System.out.println("poo");
-          return;
+          return true;
         }
         else if (validEndLocationVerticle(x, y) && checkForStart(x, y))
         {
           placeEndPeicesVerticle(x, y);
           //System.out.println("poopoo");
-          return;
+          return true;
         }
       }
     }
-
-    //if it is able to run through location completly reset varibles and
-    //try again
-    makeEndRoom();
-    return;
+    inputNumber++;
+    System.out.println(inputNumber);
+    if (inputNumber > 5000)
+    {
+      return false;
+    }
+    return makeEndRoom(inputNumber);
   }
 
   /**
