@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements KeyListener
   private final ArrayList KEY_PICKUP =
       new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
 
-  public GameMap map;
+  GameMap map;
   Timer frame_timer;
   JViewport vp;
   private SoundLoader loadAmbience;
@@ -48,8 +48,9 @@ public class GamePanel extends JPanel implements KeyListener
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
-    player = parent.player;
-    map = parent.map;
+    map = new GameMap();
+    player = new Player(GUI.sight, GUI.hearing, GUI.speed, GUI.stamina, GUI.regen, 70, 70, map.start_location);
+    player.setHeading(new Heading(Heading.NONE));
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
@@ -160,7 +161,7 @@ public class GamePanel extends JPanel implements KeyListener
   public void newMap() //Starts a new game with a new map
   {
     GameMap new_map = new GameMap();
-    parent.map = new_map;
+//    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
   }

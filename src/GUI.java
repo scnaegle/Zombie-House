@@ -31,8 +31,6 @@ public class GUI
   static boolean running = false;
   static JScrollPane scrollPane;
   public int whichLevel = 1;
-  public GameMap map;
-  public Player player;
   JFrame window = new JFrame("Zombie House");
   GamePanel gamePanel;
   private JLabel level;
@@ -114,7 +112,6 @@ public class GUI
   public void getSettings()
   {
 
-    //this.map = map;
     JFrame popup = new JFrame("Settings");
     popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     popup.setLayout(new BorderLayout());
@@ -236,9 +233,6 @@ public class GUI
 
 
         //initializes everything
-        map = new GameMap();
-        initPlayer(sight, hearing, speed, stamina, regen, 70, 70,
-            map.start_location);
         setUpGUI();
         loadSounds();
         gameStarted = false;
@@ -358,29 +352,6 @@ public class GUI
     gamePanel.stopMusic();
     gamePanel.stopAllSounds();
 
-
-  }
-
-
-
-  /**
-   * Takes in all numbers the player inputed during settings and creates a
-   * new player with them.
-   * @param sight
-   * @param hearing
-   * @param speed
-   * @param stamina
-   * @param regen
-   * @param width
-   * @param height
-   * @param location
-   */
-  public void initPlayer(int sight, int hearing, double speed, double stamina,
-                         double regen, int width, int height, Location location)
-  {
-    player = new Player(sight, hearing, speed, stamina, regen, width, height,
-        location);
-    player.setHeading(new Heading(Heading.NONE));
 
   }
 
