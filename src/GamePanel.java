@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
-    map = new GameMap();
+    map = new GameMap(parent.whichLevel);
     player = new Player(GUI.sight, GUI.hearing, GUI.speed, GUI.stamina, GUI.regen, 70, 70, map.start_location);
     player.setHeading(new Heading(Heading.NONE));
 
@@ -238,7 +238,7 @@ public class GamePanel extends JPanel implements KeyListener
     Font font = new Font("Courier", Font.BOLD, 35);
     g2.setFont(font);
     g2.drawString("Level: " + parent.whichLevel, new_x,
-        new_y + 50);
+        new_y - 50);
     g2.drawString("Fire traps: " + player.getFire_traps(), new_x,
         new_y);
     g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
