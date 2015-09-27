@@ -1204,7 +1204,8 @@ public class GameMap
         roomSize = 5;
       }
       //this will keep reseting the dimetions till it is valid
-      alreadyBuilt(type);
+      int numberOfRecusion=0;
+      alreadyBuilt(type,numberOfRecusion);
 
       for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
       {
@@ -1257,13 +1258,22 @@ public class GameMap
      *
      * @param type
      */
-    private static void alreadyBuilt ( char type)
+    private static void alreadyBuilt ( char type,int numberOfRecursion)
     {
+      if(numberOfRecursion==1000)
+      {
+        generateMap();
+      }
       boolean hallTouched = false;
       for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
       {
         for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
         {
+          if(numberOfRecursion>100)
+          {
+            generateMap();
+          }
+
           if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
               (buildRoomX + roomSize - 1),
               (buildRoomY + roomSize - 1)))
@@ -1272,6 +1282,7 @@ public class GameMap
           }
           if (placeRoom(x, y))
           {
+            numberOfRecursion++;
             hallTouched = false;
             resetRoomDimentions();
             if (type == START_ROOM || type == END_ROOM)
@@ -1290,7 +1301,7 @@ public class GameMap
         {
           roomSize = 5;
         }
-        alreadyBuilt(type);
+        alreadyBuilt(type,numberOfRecursion);
       }
     }
 
