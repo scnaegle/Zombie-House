@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (GUI.running)
+        if (parent.running)
         {
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
@@ -130,7 +130,7 @@ public class GamePanel extends JPanel implements KeyListener
             parent.whichLevel++;
             if (parent.whichLevel == 6)
             {
-              GUI.showWinningDialog(parent, " You won the game!");
+              parent.showWinningDialog(parent, " You won the game!");
             }
             System.out.println("Next level");
             newMapByExit();
@@ -187,7 +187,7 @@ public class GamePanel extends JPanel implements KeyListener
     Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON);
-    vp = (JViewport) getParent();
+    vp = GUI.scrollPane.getViewport();
     BufferedImage light;
 
     //For resizing purposes
@@ -233,18 +233,27 @@ public class GamePanel extends JPanel implements KeyListener
 //    if(explodee)
 //    {
 //      light = drawFireLight(activeTrap);
-//      lightGraphics.drawImage(light, (int)activeTrap.explosionObj.getX(),
+//      lightGraphics.drawImage(light, (int) activeTrap.explosionObj.getX(),
 //          (int) activeTrap.explosionObj.getY(), null);
 //    }
-//
-//    g2.drawImage(lightLayer, vcX, vcY, null);
+
+    //g2.drawImage(lightLayer, vcX, vcY, null);
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
+    paintTextOverlay(g2);
+
+    player.paint(g2,vp);
+    g2.setColor(Color.BLUE);
+    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
+
+  }
+
+  private void paintTextOverlay(Graphics2D g) {
     vp = GUI.scrollPane.getViewport();
     Rectangle vp_rect = vp.getViewRect();
-    int new_x = ((int)vp_rect.getX());
-    int new_y = ((int)vp_rect.getY());
+    int new_x = ((int)player.location.x - GUI.SCENE_WIDTH / 2);
+    int new_y = ((int)player.location.y - GUI.SCENE_HEIGHT / 2);
     int width = GUI.SCENE_WIDTH;
     int height = GUI.SCENE_HEIGHT;
 //    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
@@ -254,26 +263,27 @@ public class GamePanel extends JPanel implements KeyListener
 //    System.out.format("Player top left: x=%d, y=%d\n", player
 // .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
 
-    g2.setColor(Color.BLUE);
+    g.setColor(Color.BLUE);
 //    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
-    g2.draw(vp.getViewRect());
-    g2.setColor(Color.RED);
-    g2.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
+    g.draw(vp.getViewRect());
+    g.setColor(Color.RED);
+    g.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
 
     new_x += 50;
-    new_y += 50;
-    g2.setColor(Color.white);
+    new_y += 100;
+    g.setColor(Color.white);
     Font font = new Font("Courier", Font.BOLD, 35);
-    g2.setFont(font);
-    g2.drawString("Level: " + parent.whichLevel, new_x,
-        new_y - 50);
-    g2.drawString("Fire traps: " + player.getFire_traps(), new_x,
+    g.setFont(font);
+    g.drawString("Level: " + parent.whichLevel, new_x,
         new_y);
-    g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
+    g.drawString("Fire traps: " + player.getFire_traps(), new_x,
+        new_y + 50);
+    g.drawString("Stamina", new_x + width - 200, new_y);
 
     if (!GUI.running)
     {
-      g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
+      g.setColor(Color.RED);
+      g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
     }
 
 
@@ -346,7 +356,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (code == KeyEvent.VK_SPACE)
     {
-      if (!GUI.running)
+      if (!parent.running)
       {
         parent.startGame();
         requestFocusInWindow();
