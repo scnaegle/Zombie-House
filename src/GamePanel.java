@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (GUI.running)
+        if (parent.running)
         {
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
@@ -130,7 +130,7 @@ public class GamePanel extends JPanel implements KeyListener
             parent.whichLevel++;
             if (parent.whichLevel == 6)
             {
-              GUI.showWinningDialog(parent, " You won the game!");
+              parent.showWinningDialog(parent, " You won the game!");
             }
             System.out.println("Next level");
             newMapByExit();
@@ -198,9 +198,18 @@ public class GamePanel extends JPanel implements KeyListener
 
 
     //When to draw traps and which sprite
+    boolean explodee = false;
+    FireTrap activeTrap = null;
     for (FireTrap trap : map.traps)
     {
       trap.paint(g2, player);
+      if (trap.exploding)
+      {
+        explodee = true;
+        activeTrap = trap;
+
+      }
+
     }
 
     //Draws zombies
@@ -241,15 +250,18 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
   private void paintTextOverlay(Graphics2D g) {
+    vp = GUI.scrollPane.getViewport();
     Rectangle vp_rect = vp.getViewRect();
     int new_x = ((int)player.location.x - GUI.SCENE_WIDTH / 2);
     int new_y = ((int)player.location.y - GUI.SCENE_HEIGHT / 2);
     int width = GUI.SCENE_WIDTH;
     int height = GUI.SCENE_HEIGHT;
-    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
-    System.out.format("Viewport width: %d, height: %d\n", width, height);
-    System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
-    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
+//    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
+//    System.out.format("Viewport width: %d, height: %d\n", width, height);
+//    System.out.format("Player location: x=%f, y=%f\n", player.location.x,
+// player.location.y);
+//    System.out.format("Player top left: x=%d, y=%d\n", player
+// .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
 
     g.setColor(Color.BLUE);
 //    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
@@ -273,6 +285,11 @@ public class GamePanel extends JPanel implements KeyListener
       g.setColor(Color.RED);
       g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
     }
+
+
+    player.paint(g2,vp);
+    g2.setColor(Color.BLUE);
+    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 
   }
 
@@ -339,7 +356,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (code == KeyEvent.VK_SPACE)
     {
-      if (!GUI.running)
+      if (!parent.running)
       {
         parent.startGame();
         requestFocusInWindow();
@@ -355,6 +372,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
+      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (KEY_DOWN.contains(code))

@@ -12,6 +12,8 @@ public class FireTrap extends GameObject
 {
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
+  public boolean explodee;
+  public FireTrap activeTrap;
   protected int frame = 0;
   Sprite sprite = new Sprite("fireTrap", GUI.tile_size);
   BufferedImage trap = sprite.getSprite(1, 1);
@@ -183,6 +185,9 @@ public class FireTrap extends GameObject
       g2.drawImage(fireAnimation.getSprite(),
           location.getX() - GUI.tile_size,
           location.getY() - GUI.tile_size, null);
+
+      activeTrap = this;
+      explodee = true;
 
     }
   }

@@ -214,9 +214,7 @@ public class Tile extends GameObject implements Comparable<Tile> {
 			return false;
 		if (row != other.row)
 			return false;
-		if (col != other.col)
-			return false;
-		return true;
+		return col == other.col;
 	}
 
 }
