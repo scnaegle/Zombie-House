@@ -19,9 +19,6 @@ public class Player extends Humanoid implements HumanoidObject
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
   private final int PICKUP_TIME = 5;
   private final int PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
-  public boolean isRunning = false;
-  public boolean isWalking = false;
-  public boolean isStill = true;
   public boolean is_putting_down = false;
   public boolean playerDied = false;
   public boolean playerExploded = false;
@@ -310,15 +307,15 @@ public class Player extends Humanoid implements HumanoidObject
       }
 
       // Decides which sound to play based on state of player
-      if (isStill)
+      if (isStill())
       {
         SoundLoader.stopMoving();
       }
-      else if (isRunning)
+      else if (isRunning())
       {
         SoundLoader.playerRun();
       }
-      else if (isWalking)
+      else if (isWalking())
       {
         SoundLoader.playerWalk();
       }
@@ -366,8 +363,6 @@ public class Player extends Humanoid implements HumanoidObject
   public void setRunning()
   {
     current_speed = 2 * defined_speed;
-    isRunning = true;
-    isWalking = false;
   }
 
   /**
@@ -376,8 +371,18 @@ public class Player extends Humanoid implements HumanoidObject
   public void setWalking()
   {
     this.current_speed = defined_speed;
-    isWalking = true;
-    isRunning = false;
+  }
+
+  public boolean isStill() {
+    return heading.getXMovement() == 0 && heading.getYMovement() == 0;
+  }
+
+  public boolean isWalking() {
+    return current_speed == defined_speed;
+  }
+
+  public boolean isRunning() {
+    return current_speed > defined_speed;
   }
 
   public double getStamina()
@@ -424,11 +429,7 @@ public class Player extends Humanoid implements HumanoidObject
     double x_move = heading.getXMovement();
     double y_move = heading.getYMovement();
 
-    isStill = x_move == 0 && y_move == 0;
-//    isWalking = current_speed == defined_speed;
-//    isRunning = current_speed > defined_speed;
-
-    if (isStill)
+    if (isStill())
     {
       if (animation == walkRight)
       {
@@ -440,7 +441,7 @@ public class Player extends Humanoid implements HumanoidObject
       }
 
     }
-    if (isWalking)
+    if (isWalking())
     {
       if (x_move > 0)
       {
@@ -453,19 +454,8 @@ public class Player extends Humanoid implements HumanoidObject
       else if (y_move != 0 && (animation != standLeft || animation != standRight)) {
         animation = walkRight;
       }
-//      else if (y_move == 0)
-//      {
-//        if (animation == walkRight)
-//        {
-//          animation = standRight;
-//        }
-//        else if (animation == walkLeft)
-//        {
-//          animation = standLeft;
-//        }
-//      }
     }
-    if (isRunning)
+    if (isRunning())
     {
       if (x_move > 0)
       {
@@ -478,19 +468,7 @@ public class Player extends Humanoid implements HumanoidObject
       else if (y_move != 0 && (animation != standLeft || animation != standRight)) {
         animation = runRight;
       }
-//      else
-//      {
-//        if (animation == walkRight)
-//        {
-//          animation = runRight;
-//        }
-//        else if (animation == walkLeft)
-//        {
-//          animation = runLeft;
-//        }
-//      }
     }
-
   }
 
 
