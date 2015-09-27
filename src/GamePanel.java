@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int START_GAME = 0;
+  static final int START_GAME = 1;
   static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
@@ -249,7 +249,8 @@ public class GamePanel extends JPanel implements KeyListener
       g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
     }
 
-    player.paint(g2);
+
+    player.paint(g2,vp);
     g2.setColor(Color.BLUE);
     //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 

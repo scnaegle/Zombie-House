@@ -13,8 +13,8 @@ public class GameMap
   // as the levels progress we may want to make them bigger and add more rooms
   // so these final varibles may not always be final
 
-  public static final int X_SIZE = 75; // used to set size of grid
-  public static final int Y_SIZE = 75; // used to set size of grid
+  public static final int X_SIZE = 50; // used to set size of grid
+  public static final int Y_SIZE = 50; // used to set size of grid
   /**
    * These are the "types" that we have to put into the Tile class
    * <p>
@@ -41,8 +41,8 @@ public class GameMap
   private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
 
-  private static int numberOfInitalHalls = 2;
-  private static int numberOfRandomHalls = 2;
+  private static int numberOfInitalHalls = 4;
+  private static int numberOfRandomHalls = 3;
   private static int numberOfRooms = 10;
 
   // we are going to need to find a way to change this number when
@@ -126,11 +126,13 @@ public class GameMap
         {
           walls.add(new_tile);
         }
+
+
+
         if (new_tile.tile_type == TileType.BRICK)
         {
           if (rand.nextDouble() < GUI.zspawn + (.01 * (level - 1)))
           {
-            System.out.println(spawnMasterZombie);
             Zombie zombie;
             Location location =
                 new Location(new_tile.col * GUI.tile_size,
@@ -141,8 +143,6 @@ public class GameMap
                   new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
                       location);
               spawnMasterZombie = false;
-              System.out.println("first spawn " +spawnMasterZombie);
-              //System.out.println("spawwned that master zomebie, Yo!");
             }
             else
             {
@@ -182,7 +182,6 @@ public class GameMap
       r++;
     }
 
-    System.out.println(spawnMasterZombie);
     if (spawnMasterZombie)
     {
       for (int row = 0; row < num_rows; row++)
@@ -199,7 +198,6 @@ public class GameMap
                 new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
                     location);
             zombies.add(zombie);
-            System.out.println("you spammed a masterZombie, Yo!");
             spawnMasterZombie=false;
           }
 
@@ -1206,8 +1204,7 @@ public class GameMap
         roomSize = 5;
       }
       //this will keep reseting the dimetions till it is valid
-      int timesCalled = 0;
-      alreadyBuilt(type, timesCalled);
+      alreadyBuilt(type);
 
       for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
       {
@@ -1260,12 +1257,8 @@ public class GameMap
      *
      * @param type
      */
-    private static void alreadyBuilt ( char type, int numberOfTimesCalled)
+    private static void alreadyBuilt ( char type)
     {
-      if (numberOfTimesCalled == 1000)
-      {
-        generateMap();
-      }
       boolean hallTouched = false;
       for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
       {
@@ -1297,8 +1290,7 @@ public class GameMap
         {
           roomSize = 5;
         }
-        numberOfTimesCalled++;
-        alreadyBuilt(type, numberOfTimesCalled);
+        alreadyBuilt(type);
       }
     }
 
