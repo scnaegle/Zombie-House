@@ -152,7 +152,6 @@ public class GamePanel extends JPanel implements KeyListener
   {
     //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
     //parent.loadSounds();
@@ -319,7 +318,6 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyPressed(KeyEvent e)
   {
-    player.isStill = false;
     int code = e.getKeyCode();
 
     if (code == KeyEvent.VK_SPACE)
@@ -334,46 +332,31 @@ public class GamePanel extends JPanel implements KeyListener
         parent.pauseGame();
       }
     }
-    if (KEY_RUN.contains(code) && (player.getSpeed() != 0))
+    if (!player.isRunning) {
+      player.setWalking();
+    }
+    if (KEY_RUN.contains(code))
     {
-      // System.out.println("R");
       player.setRunning();
-      player.isRunning = true;
-      player.isWalking = false;
-
     }
     if (KEY_UP.contains(code))
     {
-      //System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
-      player.isRunning = false;
-      player.isWalking = true;
-
     }
     if (KEY_DOWN.contains(code))
     {
-      //System.out.println("down");
       player.heading.setYMovement(Heading.SOUTH_STEP);
-      player.isRunning = false;
-      player.isWalking = true;
     }
     if (KEY_RIGHT.contains(code))
     {
-      //System.out.println("right");
       player.heading.setXMovement(Heading.EAST_STEP);
-      player.isRunning = false;
-      player.isWalking = true;
     }
     if (KEY_LEFT.contains(code))
     {
-      //System.out.println("left");
       player.heading.setXMovement(Heading.WEST_STEP);
-      player.isRunning = false;
-      player.isWalking = true;
     }
     if (KEY_PICKUP.contains(code))
     {
-      //System.out.println("p");
       FireTrap t = map.traps.stream()
                             .filter(player::intersects)
                             .findFirst()
@@ -400,10 +383,6 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyReleased(KeyEvent e)
   {
-    //System.out.println("released");
-    player.isStill = true;
-    player.isRunning = false;
-    player.isWalking = false;
     int code = e.getKeyCode();
 
     if (KEY_UP.contains(code) || KEY_DOWN.contains(code)) {
@@ -415,10 +394,7 @@ public class GamePanel extends JPanel implements KeyListener
     if (KEY_RUN.contains(code))
     {
       player.setWalking();
-      //player.isWalking = true;
     }
-
-
   }
 
   public void startMusic()
