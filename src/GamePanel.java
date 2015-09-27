@@ -151,7 +151,7 @@ public class GamePanel extends JPanel implements KeyListener
   {
     //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-//    parent.map = new_map;
+    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
     //parent.loadSounds();
@@ -241,7 +241,7 @@ public class GamePanel extends JPanel implements KeyListener
 //    }
 
     //g2.drawImage(lightLayer, vcX, vcY, null);
-    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+//    g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
     int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
     int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
