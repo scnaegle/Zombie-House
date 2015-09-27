@@ -205,23 +205,29 @@ public class GameMap
         }
       }
     }
-        //System.out.println("map: ");
-        //System.out.println(toString());
-        this.map_image = convertMapToImage(GUI.tile_size);
-      }
+    //System.out.println("map: ");
+    //System.out.println(toString());
+    this.map_image = convertMapToImage(GUI.tile_size);
+  }
 
-      public GameMap(File file)
-      {
-        createFromFile(file);
-        this.map_image = convertMapToImage(GUI.tile_size);
-      }
+  public GameMap(File file)
+  {
+    createFromFile(file);
+    this.map_image = convertMapToImage(GUI.tile_size);
+  }
 
-      /**
-       * generates the map through many many methods
-       */
+  /**
+   * generates the map through many many methods
+   */
 
-    public static void generateMap ()
+  public static void generateMap()
+  {
+    int countNumberOftimes =0;
+    boolean mapIsBad = true;
+    while (mapIsBad)
     {
+      mapIsBad = false;
+
       for (int x = 0; x < X_SIZE; x++)
       {
         for (int y = 0; y < Y_SIZE; y++)
@@ -239,14 +245,24 @@ public class GameMap
         makeInitialHalls();
       }
 
-
+      // i am purposefully ignoreing this return value
       buildRoom(START_ROOM,
           true); // builds a start room where the player wills start
       for (int i = 0; i < numberOfRooms; i++)
       {
-        buildRoom(BASIC_TILE,
-            false); // builds rooms on the halls that had been made in
+        if (!buildRoom(BASIC_TILE, false))
+        {
+          mapIsBad = true;
+          break;
+        }
+
+        // builds rooms on the halls that had been made in
         // the previous halls
+      }
+      if(mapIsBad)
+      {
+        countNumberOftimes++;
+        continue;
       }
 
       chizelWalls(); // makes protruding halls shaven off so map has even halls
@@ -295,519 +311,521 @@ public class GameMap
 //      System.out.println("");
 //    }
     }
+    //System.out.println("I fucked up " +countNumberOftimes+ " times!!1");
+  }
 
-    private static void turnDoorToFloor ()
+  private static void turnDoorToFloor()
+  {
+    for (int y = 1; y < Y_SIZE - 1; y++)
+    {
+      for (int x = 1; x < X_SIZE - 1; x++)
+      {
+        if (isDoor(x, y))
+        {
+          setBlockType(x, y,
+              BASIC_TILE); // goes through, checks to see if door
+          // turns it to hall
+        }
+      }
+    }
+  }
+
+  /**
+   *
+   */
+  private static void makeEndRoom()
+  {
+    roomSize = 3;
+
+
+    int validX = resetValidSpots(X_SIZE);
+    int validY = resetValidSpots(Y_SIZE);
+
+    for (int x = validX; x < X_SIZE - 3; x++)
+    {
+      for (int y = validY; y < Y_SIZE - 3; y++)
+      {
+        //goes through map to see if it can be a valid location
+        if (validEndLocationHorozantal(x, y) && checkForStart(x, y))
+        {
+          placeEndPeicesHorzantal(x, y);
+          //System.out.println("poo");
+          return;
+        }
+        else if (validEndLocationVerticle(x, y) && checkForStart(x, y))
+        {
+          placeEndPeicesVerticle(x, y);
+          //System.out.println("poopoo");
+          return;
+        }
+      }
+    }
+
+    //if it is able to run through location completly reset varibles and
+    //try again
+    makeEndRoom();
+    return;
+  }
+
+  /**
+   * checks to see if this is could be a valid spot to place the exit piece
+   * by looking for the start spot
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean checkForStart(int x, int y)
+  {
+    for (int t = x - 20; t < x + 20; t++)
+    {
+      for (int l = y - 20; l < y + 20; l++)
+      {
+        if (inBoundsWithBorder(t, l))
+        {
+          if (isStart(t, l))
+          {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  private static int resetValidSpots(int size)
+  {
+    return random.nextInt(size - 6) + 3;
+
+  }
+
+  /**
+   * if it is able to place place the end peices verticly
+   * it will make a 2x2 end room
+   *
+   * @param x
+   * @param y
+   */
+  private static void placeEndPeicesVerticle(int x, int y)
+  {
+    if (isEmpty(x + 1, y + 1))
+    {
+      setBlockType(x + 1, y + 1, END_ROOM);
+      setBlockType(x, y + 1, BASIC_TILE);
+      setBlockType(x + 1, y, ROOM_WALL);
+      setBlockType(x + 2, y, ROOM_WALL);
+      setBlockType(x + 2, y + 1, ROOM_WALL);
+      setBlockType(x + 2, y + 2, ROOM_WALL);
+      setBlockType(x + 1, y + 2, ROOM_WALL);
+    }
+    else if (isEmpty(x - 1, y + 1))
+    {
+      setBlockType(x - 1, y + 1, END_ROOM);
+      setBlockType(x, y + 1, BASIC_TILE);
+      setBlockType(x - 1, y, ROOM_WALL);
+      setBlockType(x - 2, y, ROOM_WALL);
+      setBlockType(x - 2, y + 1, ROOM_WALL);
+      setBlockType(x - 2, y + 2, ROOM_WALL);
+      setBlockType(x - 1, y + 2, ROOM_WALL);
+    }
+  }
+
+  /**
+   * if it is able to place place the end peices horozantily
+   * it will make a 2x2 end room
+   * I wanted to do this another way, but honestly coding it in this way was
+   * the easiest
+   * thing i could think of
+   *
+   * @param x
+   * @param y
+   */
+  private static void placeEndPeicesHorzantal(int x, int y)
+  {
+    if (isEmpty(x + 1, y + 1))
+    {
+      setBlockType(x + 1, y + 1, END_ROOM);
+      setBlockType(x + 1, y, BASIC_TILE);
+      setBlockType(x, y + 1, ROOM_WALL);
+      setBlockType(x, y + 2, ROOM_WALL);
+      setBlockType(x + 1, y + 2, ROOM_WALL);
+      setBlockType(x + 2, y + 2, ROOM_WALL);
+      setBlockType(x + 2, y + 1, ROOM_WALL);
+
+    }
+    else if (isEmpty(x + 1, y - 1))
+    {
+      setBlockType(x + 1, y - 1, END_ROOM);
+      setBlockType(x + 1, y, BASIC_TILE);
+      setBlockType(x, y - 1, ROOM_WALL);
+      setBlockType(x, y - 2, ROOM_WALL);
+      setBlockType(x + 1, y - 2, ROOM_WALL);
+      setBlockType(x + 2, y - 2, ROOM_WALL);
+      setBlockType(x + 2, y - 1, ROOM_WALL);
+
+    }
+  }
+
+  /**
+   * if 3 outside wall peices in a row horozantally
+   * and is  connected to a outside peice return true
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean validEndLocationHorozantal(int x, int y)
+  {
+    return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
+        inBoundsWithBorder(x + 3, y) &&
+        (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
+  }
+
+  private static boolean isStart(int x, int y)
+  {
+    return getBlock(x, y).type == START_ROOM;
+  }
+
+  /**
+   * if 4 wall peices in a row horozantally return true
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean validEndLocationVerticle(int x, int y)
+  {
+    return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
+        inBoundsWithBorder(x, y + 3) &&
+        (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
+  }
+
+  private static void chizelWalls()
+  {
+    for (int y = 1; y < Y_SIZE - 1; y++)
+    {
+      for (int x = 1; x < X_SIZE - 1; x++)
+      {
+        if (isHall(x, y) && surroundedThreeSide(x, y))
+        {
+          // if it is surrounded by three sides by empty tiles it shaves the
+          // hall off
+          setBlockType(x, y, EMPTY);
+        }
+      }
+    }
+
+    for (int y = Y_SIZE - 1; y > 1; y--)
+    {
+      for (int x = X_SIZE - 1; x > 1; x--)
+      {
+        if (isHall(x, y) && surroundedThreeSide(x, y))
+        {
+          // if it is surrounded by three sides by empty tiles it shaves the
+          // hall off
+          setBlockType(x, y, EMPTY);
+        }
+      }
+    }
+  }
+
+  private static boolean surroundedThreeSide(int x, int y)
+  {
+    //if surrounded on 3 sides by empty tiles return true
+    return ((isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y + 1)) ||
+        (isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y - 1)) ||
+        (isEmpty(x + 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)) ||
+        (isEmpty(x - 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)));
+  }
+
+  /**
+   * makes inital halls that will help determine how rooms will be placed
+   * halls will span entire grid
+   */
+  private static void makeInitialHalls()
+  {
+    int randomX = random.nextInt(X_SIZE - 2) + 1;
+    int randomY = random.nextInt(Y_SIZE - 2) + 1;
+
+    for (int x = 2; x < X_SIZE - 2; x++)
+    {
+      setBlockType(x, randomY, HALL);
+    }
+
+    for (int y = 2; y < Y_SIZE - 2; y++)
+    {
+      setBlockType(randomX, y, HALL);
+    }
+  }
+
+  private static void makeInteriorWalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
       for (int y = 1; y < Y_SIZE - 1; y++)
       {
-        for (int x = 1; x < X_SIZE - 1; x++)
+        if (isWall(x, y))
         {
-          if (isDoor(x, y))
+          // System.out.println(getBlock(x, y).corner);
+          if (surroundingSpotEmpty(x, y))
           {
-            setBlockType(x, y,
-                BASIC_TILE); // goes through, checks to see if door
-            // turns it to hall
+
+          }
+          else
+          {
+            setBlockType(x, y, INSIDE_WALL);
           }
         }
       }
     }
+  }
 
-    /**
-     *
-     */
-    private static void makeEndRoom ()
+  /**
+   * checks to see if it is the corner peice on a room
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean cornerOfRoom(int x, int y)
+  {
+    return (isWall(x + 1, y) && isWall(x, y + 1)) ||
+        (isWall(x - 1, y) && isWall(x, y - 1)) ||
+        (isWall(x + 1, y) && isWall(x, y - 1)) ||
+        (isWall(x - 1, y) && isWall(x, y + 1));
+  }
+
+  private static boolean isInsideWall(int x, int y)
+  {
+    return getBlock(x, y).type == INSIDE_WALL;
+  }
+
+  /**
+   * checks to see if spots
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean surroundingSpotEmpty(int x, int y)
+  {
+    return (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y - 1) ||
+        isEmpty(x, y + 1));
+  }
+
+  private static boolean isEmpty(int x, int y)
+  {
+    //checks to see if spot in grid is empty
+    return getBlock(x, y).type == EMPTY;
+  }
+
+  //turns corner to wall
+  private static void turnCornersToWalls()
+  {
+    for (int x = 0; x < X_SIZE; x++)
     {
-      roomSize = 3;
-
-
-      int validX = resetValidSpots(X_SIZE);
-      int validY = resetValidSpots(Y_SIZE);
-
-      for (int x = validX; x < X_SIZE - 3; x++)
+      for (int y = 0; y < Y_SIZE; y++)
       {
-        for (int y = validY; y < Y_SIZE - 3; y++)
+        if (isCorner(x, y))
         {
-          //goes through map to see if it can be a valid location
-          if (validEndLocationHorozantal(x, y) && checkForStart(x, y))
-          {
-            placeEndPeicesHorzantal(x, y);
-            //System.out.println("poo");
-            return;
-          }
-          else if (validEndLocationVerticle(x, y) && checkForStart(x, y))
-          {
-            placeEndPeicesVerticle(x, y);
-            //System.out.println("poopoo");
-            return;
-          }
+          setBlockType(x, y, ROOM_WALL);
         }
       }
-
-      //if it is able to run through location completly reset varibles and
-      //try again
-      makeEndRoom();
-      return;
     }
+  }
 
-    /**
-     * checks to see if this is could be a valid spot to place the exit piece
-     * by looking for the start spot
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    private static boolean checkForStart ( int x, int y)
+  private static boolean isCorner(int x, int y)
+  {
+    //checks to see if is a corner in grid
+    return getBlock(x, y).type == ROOM_CORNER;
+  }
+
+  private static void turnHallsToFloors()
+  {
+    for (int x = 0; x < X_SIZE; x++)
     {
-      for (int t = x - 20; t < x + 20; t++)
+      for (int y = 0; y < Y_SIZE; y++)
       {
-        for (int l = y - 20; l < y + 20; l++)
+        if (isHall(x, y))
         {
-          if (inBoundsWithBorder(t, l))
-          {
-            if (isStart(t, l))
-            {
-              return false;
-            }
-          }
+          setBlockType(x, y, BASIC_TILE);
         }
       }
-      return true;
     }
+  }
 
-    private static int resetValidSpots ( int size)
-    {
-      return random.nextInt(size - 6) + 3;
-
-    }
-
-    /**
-     * if it is able to place place the end peices verticly
-     * it will make a 2x2 end room
-     *
-     * @param x
-     * @param y
-     */
-    private static void placeEndPeicesVerticle ( int x, int y)
-    {
-      if (isEmpty(x + 1, y + 1))
-      {
-        setBlockType(x + 1, y + 1, END_ROOM);
-        setBlockType(x, y + 1, BASIC_TILE);
-        setBlockType(x + 1, y, ROOM_WALL);
-        setBlockType(x + 2, y, ROOM_WALL);
-        setBlockType(x + 2, y + 1, ROOM_WALL);
-        setBlockType(x + 2, y + 2, ROOM_WALL);
-        setBlockType(x + 1, y + 2, ROOM_WALL);
-      }
-      else if (isEmpty(x - 1, y + 1))
-      {
-        setBlockType(x - 1, y + 1, END_ROOM);
-        setBlockType(x, y + 1, BASIC_TILE);
-        setBlockType(x - 1, y, ROOM_WALL);
-        setBlockType(x - 2, y, ROOM_WALL);
-        setBlockType(x - 2, y + 1, ROOM_WALL);
-        setBlockType(x - 2, y + 2, ROOM_WALL);
-        setBlockType(x - 1, y + 2, ROOM_WALL);
-      }
-    }
-
-    /**
-     * if it is able to place place the end peices horozantily
-     * it will make a 2x2 end room
-     * I wanted to do this another way, but honestly coding it in this way was
-     * the easiest
-     * thing i could think of
-     *
-     * @param x
-     * @param y
-     */
-    private static void placeEndPeicesHorzantal ( int x, int y)
-    {
-      if (isEmpty(x + 1, y + 1))
-      {
-        setBlockType(x + 1, y + 1, END_ROOM);
-        setBlockType(x + 1, y, BASIC_TILE);
-        setBlockType(x, y + 1, ROOM_WALL);
-        setBlockType(x, y + 2, ROOM_WALL);
-        setBlockType(x + 1, y + 2, ROOM_WALL);
-        setBlockType(x + 2, y + 2, ROOM_WALL);
-        setBlockType(x + 2, y + 1, ROOM_WALL);
-
-      }
-      else if (isEmpty(x + 1, y - 1))
-      {
-        setBlockType(x + 1, y - 1, END_ROOM);
-        setBlockType(x + 1, y, BASIC_TILE);
-        setBlockType(x, y - 1, ROOM_WALL);
-        setBlockType(x, y - 2, ROOM_WALL);
-        setBlockType(x + 1, y - 2, ROOM_WALL);
-        setBlockType(x + 2, y - 2, ROOM_WALL);
-        setBlockType(x + 2, y - 1, ROOM_WALL);
-
-      }
-    }
-
-    /**
-     * if 3 outside wall peices in a row horozantally
-     * and is  connected to a outside peice return true
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    private static boolean validEndLocationHorozantal ( int x, int y)
-    {
-      return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
-          inBoundsWithBorder(x + 3, y) &&
-          (isEmpty(x + 1, y + 1) || isEmpty(x + 1, y - 1))));
-    }
-
-    private static boolean isStart ( int x, int y)
-    {
-      return getBlock(x, y).type == START_ROOM;
-    }
-
-    /**
-     * if 4 wall peices in a row horozantally return true
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    private static boolean validEndLocationVerticle ( int x, int y)
-    {
-      return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
-          inBoundsWithBorder(x, y + 3) &&
-          (isEmpty(x + 1, y + 1) || isEmpty(x - 1, y + 1)));
-    }
-
-    private static void chizelWalls ()
+  //make doors
+  private static void makeDoors()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
       for (int y = 1; y < Y_SIZE - 1; y++)
       {
-        for (int x = 1; x < X_SIZE - 1; x++)
+
+        if (isHall(x, y))
         {
-          if (isHall(x, y) && surroundedThreeSide(x, y))
+          if (isWall(x + 1, y))
           {
-            // if it is surrounded by three sides by empty tiles it shaves the
-            // hall off
-            setBlockType(x, y, EMPTY);
+            setBlockType(x + 1, y, DOOR);
           }
-        }
-      }
-
-      for (int y = Y_SIZE - 1; y > 1; y--)
-      {
-        for (int x = X_SIZE - 1; x > 1; x--)
-        {
-          if (isHall(x, y) && surroundedThreeSide(x, y))
+          if (isWall(x - 1, y))
           {
-            // if it is surrounded by three sides by empty tiles it shaves the
-            // hall off
-            setBlockType(x, y, EMPTY);
+            setBlockType(x - 1, y, DOOR);
           }
-        }
-      }
-    }
-
-    private static boolean surroundedThreeSide ( int x, int y)
-    {
-      //if surrounded on 3 sides by empty tiles return true
-      return ((isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y + 1)) ||
-          (isEmpty(x + 1, y) && isEmpty(x - 1, y) && isEmpty(x, y - 1)) ||
-          (isEmpty(x + 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)) ||
-          (isEmpty(x - 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)));
-    }
-
-    /**
-     * makes inital halls that will help determine how rooms will be placed
-     * halls will span entire grid
-     */
-    private static void makeInitialHalls ()
-    {
-      int randomX = random.nextInt(X_SIZE - 2) + 1;
-      int randomY = random.nextInt(Y_SIZE - 2) + 1;
-
-      for (int x = 2; x < X_SIZE - 2; x++)
-      {
-        setBlockType(x, randomY, HALL);
-      }
-
-      for (int y = 2; y < Y_SIZE - 2; y++)
-      {
-        setBlockType(randomX, y, HALL);
-      }
-    }
-
-    private static void makeInteriorWalls ()
-    {
-      for (int x = 1; x < X_SIZE - 1; x++)
-      {
-        for (int y = 1; y < Y_SIZE - 1; y++)
-        {
-          if (isWall(x, y))
+          if (isWall(x, y + 1))
           {
-            // System.out.println(getBlock(x, y).corner);
-            if (surroundingSpotEmpty(x, y))
-            {
-
-            }
-            else
-            {
-              setBlockType(x, y, INSIDE_WALL);
-            }
+            setBlockType(x, y + 1, DOOR);
+          }
+          if (isWall(x, y - 1))
+          {
+            setBlockType(x, y - 1, DOOR);
           }
         }
       }
     }
 
     /**
-     * checks to see if it is the corner peice on a room
-     *
-     * @param x
-     * @param y
-     * @return
+     * resets walls to make rooms look like a good ball
      */
-    private static boolean cornerOfRoom ( int x, int y)
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
-      return (isWall(x + 1, y) && isWall(x, y + 1)) ||
-          (isWall(x - 1, y) && isWall(x, y - 1)) ||
-          (isWall(x + 1, y) && isWall(x, y - 1)) ||
-          (isWall(x - 1, y) && isWall(x, y + 1));
-    }
-
-    private static boolean isInsideWall ( int x, int y)
-    {
-      return getBlock(x, y).type == INSIDE_WALL;
-    }
-
-    /**
-     * checks to see if spots
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    private static boolean surroundingSpotEmpty ( int x, int y)
-    {
-      return (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y - 1) ||
-          isEmpty(x, y + 1));
-    }
-
-    private static boolean isEmpty ( int x, int y)
-    {
-      //checks to see if spot in grid is empty
-      return getBlock(x, y).type == EMPTY;
-    }
-
-    //turns corner to wall
-    private static void turnCornersToWalls ()
-    {
-      for (int x = 0; x < X_SIZE; x++)
+      for (int y = 1; y < Y_SIZE - 1; y++)
       {
-        for (int y = 0; y < Y_SIZE; y++)
+        if (isDoor(x, y) && isDoor(x + 1, y) && isDoor(x + 2, y))
         {
-          if (isCorner(x, y))
-          {
-            setBlockType(x, y, ROOM_WALL);
-          }
+          setBlockType(x, y, ROOM_WALL);
+          setBlockType(x + 1, y, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x, y + 1) && isDoor(x, y + 2))
+        {
+          setBlockType(x, y, ROOM_WALL);
+          setBlockType(x, y + 1, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x + 1, y) && chanceForRandomBuild())
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+        else if (isDoor(x, y) && isDoor(x, y + 1) && chanceForRandomBuild())
+        {
+          setBlockType(x, y, ROOM_WALL);
+        }
+        if (isDoor(x, y) &&
+            (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y + 1) ||
+                isEmpty(x, y - 1)))
+        {
+          //resets
+          setBlockType(x, y, ROOM_WALL);
         }
       }
     }
+  }
 
-    private static boolean isCorner ( int x, int y)
+  //checks to see if it is a door
+  private static boolean isDoor(int x, int y)
+  {
+    return getBlock(x, y).type == DOOR;
+  }
+
+  /**
+   * chance to build a room wall
+   *
+   * @return
+   */
+  private static boolean chanceForRandomBuild()
+  {
+    boolean makeNumber = false;
+    int number = random.nextInt(99);
+    if (number < 50)
     {
-      //checks to see if is a corner in grid
-      return getBlock(x, y).type == ROOM_CORNER;
+      makeNumber = true;
     }
+    //return true;
+    return makeNumber;
+  }
 
-    private static void turnHallsToFloors ()
+  //checks to see if it is a wall
+  private static boolean isWall(int x, int y)
+  {
+    return getBlock(x, y).type == ROOM_WALL;
+  }
+
+  //checks to see if it is a wall
+  private static boolean isHall(int x, int y)
+  {
+    return getBlock(x, y).type == HALL;
+  }
+
+  /**
+   * work on later
+   *
+   * @param type
+   */
+  private static void searchAlgorithm(char type)
+  {
+    boolean didAlg = false;
+    for (int x = 0; x < X_SIZE; x++)
     {
-      for (int x = 0; x < X_SIZE; x++)
+      for (int y = 0; y < Y_SIZE; y++)
       {
-        for (int y = 0; y < Y_SIZE; y++)
+        if (getBlock(x, y).type == ROOM_WALL &&
+            getBlock(x, y + 1).type == END_ROOM)
         {
-          if (isHall(x, y))
-          {
-            setBlockType(x, y, BASIC_TILE);
-          }
+          //    algorithm(x, y, END_ROOM);
+          didAlg = true;
         }
-      }
-    }
 
-    //make doors
-    private static void makeDoors ()
-    {
-      for (int x = 1; x < X_SIZE - 1; x++)
-      {
-        for (int y = 1; y < Y_SIZE - 1; y++)
-        {
-
-          if (isHall(x, y))
-          {
-            if (isWall(x + 1, y))
-            {
-              setBlockType(x + 1, y, DOOR);
-            }
-            if (isWall(x - 1, y))
-            {
-              setBlockType(x - 1, y, DOOR);
-            }
-            if (isWall(x, y + 1))
-            {
-              setBlockType(x, y + 1, DOOR);
-            }
-            if (isWall(x, y - 1))
-            {
-              setBlockType(x, y - 1, DOOR);
-            }
-          }
-        }
-      }
-
-      /**
-       * resets walls to make rooms look like a good ball
-       */
-      for (int x = 1; x < X_SIZE - 1; x++)
-      {
-        for (int y = 1; y < Y_SIZE - 1; y++)
-        {
-          if (isDoor(x, y) && isDoor(x + 1, y) && isDoor(x + 2, y))
-          {
-            setBlockType(x, y, ROOM_WALL);
-            setBlockType(x + 1, y, ROOM_WALL);
-          }
-          else if (isDoor(x, y) && isDoor(x, y + 1) && isDoor(x, y + 2))
-          {
-            setBlockType(x, y, ROOM_WALL);
-            setBlockType(x, y + 1, ROOM_WALL);
-          }
-          else if (isDoor(x, y) && isDoor(x + 1, y) && chanceForRandomBuild())
-          {
-            setBlockType(x, y, ROOM_WALL);
-          }
-          else if (isDoor(x, y) && isDoor(x, y + 1) && chanceForRandomBuild())
-          {
-            setBlockType(x, y, ROOM_WALL);
-          }
-          if (isDoor(x, y) &&
-              (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y + 1) ||
-                  isEmpty(x, y - 1)))
-          {
-            //resets
-            setBlockType(x, y, ROOM_WALL);
-          }
-        }
-      }
-    }
-
-    //checks to see if it is a door
-    private static boolean isDoor ( int x, int y)
-    {
-      return getBlock(x, y).type == DOOR;
-    }
-
-    /**
-     * chance to build a room wall
-     *
-     * @return
-     */
-    private static boolean chanceForRandomBuild ()
-    {
-      boolean makeNumber = false;
-      int number = random.nextInt(99);
-      if (number < 50)
-      {
-        makeNumber = true;
-      }
-      //return true;
-      return makeNumber;
-    }
-
-    //checks to see if it is a wall
-    private static boolean isWall ( int x, int y)
-    {
-      return getBlock(x, y).type == ROOM_WALL;
-    }
-
-    //checks to see if it is a wall
-    private static boolean isHall ( int x, int y)
-    {
-      return getBlock(x, y).type == HALL;
-    }
-
-    /**
-     * work on later
-     *
-     * @param type
-     */
-    private static void searchAlgorithm ( char type)
-    {
-      boolean didAlg = false;
-      for (int x = 0; x < X_SIZE; x++)
-      {
-        for (int y = 0; y < Y_SIZE; y++)
-        {
-          if (getBlock(x, y).type == ROOM_WALL &&
-              getBlock(x, y + 1).type == END_ROOM)
-          {
-            //    algorithm(x, y, END_ROOM);
-            didAlg = true;
-          }
-
-          if (didAlg)
-          {
-            break;
-          }
-        }
         if (didAlg)
         {
           break;
         }
       }
-    }
-
-    private static void addWallsToHalls ()
-    {
-      for (int x = 1; x < X_SIZE - 1; x++)
+      if (didAlg)
       {
-        for (int y = 1; y < Y_SIZE - 1; y++)
+        break;
+      }
+    }
+  }
+
+  private static void addWallsToHalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
+    {
+      for (int y = 1; y < Y_SIZE - 1; y++)
+      {
+        if (getBlock(x, y).type == HALL)
         {
-          if (getBlock(x, y).type == HALL)
-          {
-            putUpTheWalls(x, y);
-          }
+          putUpTheWalls(x, y);
         }
       }
     }
+  }
 
-    /**
-     * makes the walls in put make wall method
-     *
-     * @param x
-     * @param y
-     */
-    private static void putUpTheWalls ( int x, int y)
+  /**
+   * makes the walls in put make wall method
+   *
+   * @param x
+   * @param y
+   */
+  private static void putUpTheWalls(int x, int y)
+  {
+    if (getBlock(x + 1, y).type == EMPTY)
     {
-      if (getBlock(x + 1, y).type == EMPTY)
-      {
-        setBlockType(x + 1, y, ROOM_WALL);
-      }
-      if (getBlock(x - 1, y).type == EMPTY)
-      {
-        setBlockType(x - 1, y, ROOM_WALL);
-      }
-      if (getBlock(x, y + 1).type == EMPTY)
-      {
-        setBlockType(x, y + 1, ROOM_WALL);
-      }
-      if (getBlock(x, y - 1).type == EMPTY)
-      {
-        setBlockType(x, y - 1, ROOM_WALL);
-      }
-
+      setBlockType(x + 1, y, ROOM_WALL);
     }
+    if (getBlock(x - 1, y).type == EMPTY)
+    {
+      setBlockType(x - 1, y, ROOM_WALL);
+    }
+    if (getBlock(x, y + 1).type == EMPTY)
+    {
+      setBlockType(x, y + 1, ROOM_WALL);
+    }
+    if (getBlock(x, y - 1).type == EMPTY)
+    {
+      setBlockType(x, y - 1, ROOM_WALL);
+    }
+
+  }
 //
 //  /**
 //   * unworking algorithm
@@ -901,501 +919,509 @@ public class GameMap
 //    getBlock(x, y).visited = true;
 //  }
 
-    private static boolean emptyBlock ( int x, int y)
-    {
-      return getBlock(x, y).type == EMPTY && inBoundsWithBorder(x, y);
-    }
+  private static boolean emptyBlock(int x, int y)
+  {
+    return getBlock(x, y).type == EMPTY && inBoundsWithBorder(x, y);
+  }
 
-    private static void shuffleArray ( int[] pickRandomDirection)
+  private static void shuffleArray(int[] pickRandomDirection)
+  {
+    for (int i = 0; i < pickRandomDirection.length; i++)
     {
-      for (int i = 0; i < pickRandomDirection.length; i++)
-      {
-        int randVar = random.nextInt(3);
-        int temp = pickRandomDirection[i];
-        pickRandomDirection[i] = pickRandomDirection[randVar];
-        pickRandomDirection[randVar] = temp;
-      }
+      int randVar = random.nextInt(3);
+      int temp = pickRandomDirection[i];
+      pickRandomDirection[i] = pickRandomDirection[randVar];
+      pickRandomDirection[randVar] = temp;
     }
+  }
 
-    private static void spawnZombie ()
+  private static void spawnZombie()
+  {
+    int randomNumber;
+    for (int x = 0; x < X_SIZE; x++)
     {
-      int randomNumber;
-      for (int x = 0; x < X_SIZE; x++)
+      for (int y = 0; y < Y_SIZE; y++)
       {
-        for (int y = 0; y < Y_SIZE; y++)
+        if (getBlock(x, y).type == BASIC_TILE)
         {
-          if (getBlock(x, y).type == BASIC_TILE)
+          randomNumber = random.nextInt(99);
+          if (randomNumber == 0)
           {
-            randomNumber = random.nextInt(99);
-            if (randomNumber == 0)
-            {
-              // getBlock(x, y).zombieSpawn = true;
-            }
-          }
-        }
-      }
-    }
-
-    //expand all made halls
-    private static void expandHalls ()
-    {
-      for (int x = 1; x < X_SIZE - 1; x++)
-      {
-        for (int y = 1; y < Y_SIZE - 1; y++)
-        {
-          if (getBlock(x, y).type == HALL)
-          {
-            if (getBlock(x + 1, y).type == HALL &&
-                getBlock(x - 1, y).type == HALL)
-            {
-              setBlockType(x, y - 1, HALL);
-              setBlockType(x + 1, y - 1, HALL);
-              setBlockType(x - 1, y - 1, HALL);
-
-            }
-
-            if (getBlock(x, y + 1).type == HALL &&
-                getBlock(x, y - 1).type == HALL)
-            {
-              setBlockType(x - 1, y, HALL);
-              setBlockType(x - 1, y + 1, HALL);
-              setBlockType(x - 1, y - 1, HALL);
-            }
+            // getBlock(x, y).zombieSpawn = true;
           }
         }
       }
     }
+  }
 
-    private static void makeRandomHalls ()
+  //expand all made halls
+  private static void expandHalls()
+  {
+    for (int x = 1; x < X_SIZE - 1; x++)
     {
-      boolean valid = false;
-      int hallX = random.nextInt(X_SIZE - 10) + 5;
-      int hallY = random.nextInt(Y_SIZE - 10) + 5;
-      while (!valid)
+      for (int y = 1; y < Y_SIZE - 1; y++)
       {
-        //checks to see if valid location
-        if (touchingAnotherRoom(hallX, hallY) ||
-            !validHallLocationForHalls(hallX, hallY))
+        if (getBlock(x, y).type == HALL)
         {
-          hallX = random.nextInt(X_SIZE - 10) + 5;
-          hallY = random.nextInt(Y_SIZE - 10) + 5;
-        }
-        else
-        {
-          valid = true;
-        }
-      }
+          if (getBlock(x + 1, y).type == HALL &&
+              getBlock(x - 1, y).type == HALL)
+          {
+            setBlockType(x, y - 1, HALL);
+            setBlockType(x + 1, y - 1, HALL);
+            setBlockType(x - 1, y - 1, HALL);
 
-      // each method will build a hall to a wall
-      if (hallUp)
-      {
-        for (int a = hallX; a > 0; a--)
-        {
-          if (canMakeHall(a, hallY))
-          {
-            setBlockType(a, hallY, HALL);
-            //    getBlock(a, hallY).hall = true;
           }
-          else
-          {
-            //System.out.println("making hall up, ended at a=" + a);
-            break;
-          }
-        }
-        hallUp = false;
-      }
 
-      if (hallDown)
-      {
-        for (int a = hallX; a < X_SIZE - 1; a++)
-        {
-          if (canMakeHall(a, hallY))
+          if (getBlock(x, y + 1).type == HALL &&
+              getBlock(x, y - 1).type == HALL)
           {
-            setBlockType(a, hallY, HALL);
-            //    getBlock(a, hallY).hall = true;
-          }
-          else
-          {
-            //System.out.println("making hall down, ended at a=" + a);
-            break;
+            setBlockType(x - 1, y, HALL);
+            setBlockType(x - 1, y + 1, HALL);
+            setBlockType(x - 1, y - 1, HALL);
           }
         }
-        hallDown = false;
-      }
-      if (hallRight)
-      {
-        for (int a = hallY; a < Y_SIZE - 1; a++)
-        {
-          if (canMakeHall(hallX, a))
-          {
-            setBlockType(hallX, a, HALL);
-          }
-          else
-          {
-            //System.out.println("making hall right, ended at a=" + a);
-            break;
-          }
-        }
-        hallRight = false;
-      }
-
-      if (hallLeft)
-      {
-        for (int a = hallY; a > 0; a--)
-        {
-          if (canMakeHall(hallX, a))
-          {
-            setBlockType(hallX, a, HALL);
-          }
-          else
-          {
-            //System.out.println("making hall left, ended at a=" + a);
-            break;
-          }
-        }
-        hallLeft = false;
       }
     }
+  }
 
-    private static boolean validHallLocationForHalls ( int x, int y)
+  private static void makeRandomHalls()
+  {
+    boolean valid = false;
+    int hallX = random.nextInt(X_SIZE - 10) + 5;
+    int hallY = random.nextInt(Y_SIZE - 10) + 5;
+    while (!valid)
     {
-
-      int connectRooms = 0;
-      int numberOfConnections = random.nextInt(3) + 1;
-      // checks to see if it can make a hall and if it can the counter will
-      // increase by one
-      for (int a = x; a < X_SIZE; a++)
+      //checks to see if valid location
+      if (touchingAnotherRoom(hallX, hallY) ||
+          !validHallLocationForHalls(hallX, hallY))
       {
-        if (canMakeHall(a, y))
-        {
-
-        }
-        else if (getBlock(a, y).type == ROOM_WALL)
-        {
-
-          connectRooms++;
-          hallDown = true;
-        }
-        else
-        {
-          break;
-        }
-      }
-
-      for (int a = x; a > 0; a--)
-      {
-        if (canMakeHall(a, y))
-        {
-
-        }
-        else if (getBlock(a, y).type == ROOM_WALL)
-        {
-          connectRooms++;
-          hallUp = true;
-        }
-        else
-        {
-          break;
-        }
-      }
-
-      for (int a = y; a < Y_SIZE; a++)
-      {
-        if (canMakeHall(x, a))
-        {
-
-        }
-        else if (getBlock(x, a).type == ROOM_WALL)
-        {
-          hallRight = true;
-          connectRooms++;
-        }
-        else
-        {
-          break;
-        }
-      }
-
-      for (int a = y; a > 0; a--)
-      {
-        if (canMakeHall(x, a))
-        {
-
-        }
-        else if (getBlock(x, a).type == ROOM_WALL)
-        {
-          hallLeft = true;
-          connectRooms++;
-
-        }
-        else
-        {
-          break;
-        }
-      }
-      //   numberOfConnections =2;
-      //checks to see if halls can connect a certain number of rooms specified
-      // earlier
-      if (connectRooms > numberOfConnections)
-      {
-        return true;
+        hallX = random.nextInt(X_SIZE - 10) + 5;
+        hallY = random.nextInt(Y_SIZE - 10) + 5;
       }
       else
       {
-        hallUp = false;
-        hallLeft = false;
-        hallRight = false;
-        hallDown = false;
-        return false;
-
-
+        valid = true;
       }
     }
 
-    private static boolean canMakeHall ( int x, int y)
+    // each method will build a hall to a wall
+    if (hallUp)
     {
-      return (getBlock(x, y).type == EMPTY || getBlock(x, y).type == HALL);
-    }
-
-    private static void buildObsticales ()
-    {
-      boolean validSpot = false;
-      int xCord = random.nextInt(X_SIZE - 2) + 1;
-      int yCord = random.nextInt(Y_SIZE - 2) + 1;
-
-      while (!validSpot)
+      for (int a = hallX; a > 0; a--)
       {
-        if (cycleSpotsForObsticles(xCord, yCord))
+        if (canMakeHall(a, hallY))
         {
-          setBlockType(xCord, yCord, INSIDE_WALL);
-          validSpot = true;
+          setBlockType(a, hallY, HALL);
+          //    getBlock(a, hallY).hall = true;
         }
         else
         {
-          xCord = random.nextInt(X_SIZE - 2) + 1;
-          yCord = random.nextInt(Y_SIZE - 2) + 1;
+          //System.out.println("making hall up, ended at a=" + a);
+          break;
         }
       }
-      //System.out.println("Obsticle");
+      hallUp = false;
     }
 
-    private static boolean cycleSpotsForObsticles ( int s, int t)
+    if (hallDown)
     {
-      boolean valid = true;
-      for (int x = s - 1; x <= s + 1; x++)
+      for (int a = hallX; a < X_SIZE - 1; a++)
       {
-        for (int y = t - 1; y <= t + 1; y++)
+        if (canMakeHall(a, hallY))
         {
-          if (getBlock(x, y).type != BASIC_TILE)
-          {
-            valid = false;
-          }
+          setBlockType(a, hallY, HALL);
+          //    getBlock(a, hallY).hall = true;
+        }
+        else
+        {
+          //System.out.println("making hall down, ended at a=" + a);
+          break;
         }
       }
-      return valid;
+      hallDown = false;
+    }
+    if (hallRight)
+    {
+      for (int a = hallY; a < Y_SIZE - 1; a++)
+      {
+        if (canMakeHall(hallX, a))
+        {
+          setBlockType(hallX, a, HALL);
+        }
+        else
+        {
+          //System.out.println("making hall right, ended at a=" + a);
+          break;
+        }
+      }
+      hallRight = false;
     }
 
-    private static void buildRoom ( char type, boolean firstRoom)
+    if (hallLeft)
     {
-      //set random room dimetions
+      for (int a = hallY; a > 0; a--)
+      {
+        if (canMakeHall(hallX, a))
+        {
+          setBlockType(hallX, a, HALL);
+        }
+        else
+        {
+          //System.out.println("making hall left, ended at a=" + a);
+          break;
+        }
+      }
+      hallLeft = false;
+    }
+  }
+
+  private static boolean validHallLocationForHalls(int x, int y)
+  {
+
+    int connectRooms = 0;
+    int numberOfConnections = random.nextInt(3) + 1;
+    // checks to see if it can make a hall and if it can the counter will
+    // increase by one
+    for (int a = x; a < X_SIZE; a++)
+    {
+      if (canMakeHall(a, y))
+      {
+
+      }
+      else if (getBlock(a, y).type == ROOM_WALL)
+      {
+
+        connectRooms++;
+        hallDown = true;
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    for (int a = x; a > 0; a--)
+    {
+      if (canMakeHall(a, y))
+      {
+
+      }
+      else if (getBlock(a, y).type == ROOM_WALL)
+      {
+        connectRooms++;
+        hallUp = true;
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    for (int a = y; a < Y_SIZE; a++)
+    {
+      if (canMakeHall(x, a))
+      {
+
+      }
+      else if (getBlock(x, a).type == ROOM_WALL)
+      {
+        hallRight = true;
+        connectRooms++;
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    for (int a = y; a > 0; a--)
+    {
+      if (canMakeHall(x, a))
+      {
+
+      }
+      else if (getBlock(x, a).type == ROOM_WALL)
+      {
+        hallLeft = true;
+        connectRooms++;
+
+      }
+      else
+      {
+        break;
+      }
+    }
+    //   numberOfConnections =2;
+    //checks to see if halls can connect a certain number of rooms specified
+    // earlier
+    if (connectRooms > numberOfConnections)
+    {
+      return true;
+    }
+    else
+    {
+      hallUp = false;
+      hallLeft = false;
+      hallRight = false;
+      hallDown = false;
+      return false;
+
+
+    }
+  }
+
+  private static boolean canMakeHall(int x, int y)
+  {
+    return (getBlock(x, y).type == EMPTY || getBlock(x, y).type == HALL);
+  }
+
+  private static void buildObsticales()
+  {
+    boolean validSpot = false;
+    int xCord = random.nextInt(X_SIZE - 2) + 1;
+    int yCord = random.nextInt(Y_SIZE - 2) + 1;
+
+    while (!validSpot)
+    {
+      if (cycleSpotsForObsticles(xCord, yCord))
+      {
+        setBlockType(xCord, yCord, INSIDE_WALL);
+        validSpot = true;
+      }
+      else
+      {
+        xCord = random.nextInt(X_SIZE - 2) + 1;
+        yCord = random.nextInt(Y_SIZE - 2) + 1;
+      }
+    }
+    //System.out.println("Obsticle");
+  }
+
+  private static boolean cycleSpotsForObsticles(int s, int t)
+  {
+    boolean valid = true;
+    for (int x = s - 1; x <= s + 1; x++)
+    {
+      for (int y = t - 1; y <= t + 1; y++)
+      {
+        if (getBlock(x, y).type != BASIC_TILE)
+        {
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
+  private static boolean buildRoom(char type, boolean firstRoom)
+  {
+    //set random room dimetions
+    resetRoomDimentions();
+    //if start start ot end room rooms size'll be 4
+    if (type == END_ROOM || type == START_ROOM)
+    {
+      roomSize = 5;
+    }
+    //this will keep reseting the dimetions till it is valid
+    int numberOfRecusion = 0;
+    if (!searchForRoom(type, numberOfRecusion))
+    {
+      return false;
+    }
+
+
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        //checks to see if corner and sets corner
+        if (inBoundsWithBorder(x, y) &&
+            cornerTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
+        {
+          setBlockType(x, y, ROOM_CORNER);
+          //   getBlock(x, y).corner = true;
+          getBlock(x, y).partOfRoom = true;
+        }
+        //checks to see if Wall and sets wall
+        else if (inBoundsWithBorder(x, y) &&
+            wallTile(x, y, buildRoomX, buildRoomY,
+                (buildRoomX + roomSize - 1),
+                (buildRoomY + roomSize - 1)))
+        {
+          setBlockType(x, y, ROOM_WALL);
+//          getBlock(x, y).wall = true;
+          getBlock(x, y).partOfRoom = true;
+        }
+        else if (inBoundsWithBorder(x, y) && type == BASIC_TILE)
+        {
+          setBlockType(x, y, BASIC_TILE);
+          getBlock(x, y).partOfRoom = true;
+        }
+        else if (inBoundsWithBorder(x, y) && type == END_ROOM)
+        {
+          setBlockType(x, y, END_ROOM);
+//          getBlock(x, y).partOfEndRoom = true;
+          getBlock(x, y).partOfRoom = true;
+        }
+        else
+        {
+          setBlockType(x, y, START_ROOM);
+          //        getBlock(x, y).partOfStartRoom = true;
+          getBlock(x, y).partOfRoom = true;
+        }
+      }
+    }
+    return true;
+    //System.out.println("finish room");
+  }
+
+  /**
+   * chooses start and end points and room size for wall
+   *
+   * @param type
+   */
+  private static boolean searchForRoom(char type, int numberOfRecursion)
+  {
+
+    boolean hallTouched = false;
+    for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+    {
+      for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
+      {
+        if (numberOfRecursion > 100)
+        {
+          return false;
+        }
+
+        if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
+            (buildRoomX + roomSize - 1),
+            (buildRoomY + roomSize - 1)))
+        {
+          hallTouched = true;
+        }
+        if (placeOnTopOfAnotherRoom(x, y))
+        {
+          numberOfRecursion++;
+          hallTouched = false;
+          resetRoomDimentions();
+          if (type == START_ROOM || type == END_ROOM)
+          {
+            roomSize = 5;
+          }
+          x = buildRoomX;
+          y = buildRoomY;
+        }
+      }
+    }
+    if (!hallTouched)
+    {
+      numberOfRecursion++;
       resetRoomDimentions();
-      //if start start ot end room rooms size'll be 4
-      if (type == END_ROOM || type == START_ROOM)
+      if (type == START_ROOM || type == END_ROOM)
       {
         roomSize = 5;
       }
-      //this will keep reseting the dimetions till it is valid
-      int numberOfRecusion=0;
-      alreadyBuilt(type,numberOfRecusion);
+      return searchForRoom(type, numberOfRecursion);
+    }
+    return true;
+  }
 
-      for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
+
+  private static boolean placeOnTopOfAnotherRoom(int x, int y)
+  {
+    return (touchingAnotherRoomExceptHall(x + 1, y - 1) ||
+        touchingAnotherRoomExceptHall(x + 1, y) ||
+        touchingAnotherRoomExceptHall(x + 1, y + 1) ||
+        touchingAnotherRoomExceptHall(x, y - 1) ||
+        touchingAnotherRoomExceptHall(x, y) ||
+        touchingAnotherRoomExceptHall(x, y + 1) ||
+        touchingAnotherRoomExceptHall(x - 1, y - 1) ||
+        touchingAnotherRoomExceptHall(x - 1, y) ||
+        touchingAnotherRoomExceptHall(x, y + 1));
+  }
+
+  /**
+   * makes sure rooms are not being built on top of of oneAnother and on all
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  private static boolean touchingAnotherRoomExceptHall(int x, int y)
+  {
+
+    return isWall(x, y) || isCorner(x, y) || isBasic(x, y);
+  }
+
+  private static boolean isBasic(int x, int y)
+  {
+    return getBlock(x, y).type == BASIC_TILE;
+  }
+
+  private static boolean wallTile(int x, int y, int xSmallBoundry,
+                                  int ySmallBoundry, int xLargeBoundry,
+                                  int yLargeBoundry)
+  {
+    return (x == xSmallBoundry ||
+        x == (xLargeBoundry) || y == ySmallBoundry ||
+        y == yLargeBoundry);
+  }
+
+  private static void setBlockType(int x, int y, char type)
+  {
+    getBlock(x, y).type = type;
+  }
+
+  //makes a room corner tile
+  private static boolean cornerTile(int x, int y, int xSmallBoundry,
+                                    int ySmallBoundry, int xLargeBoundry,
+                                    int yLargeBoundry)
+  {
+    return (x == xSmallBoundry && y == ySmallBoundry) ||
+        (x == xLargeBoundry && y == ySmallBoundry) ||
+        (x == xSmallBoundry && y == yLargeBoundry) ||
+        (x == xLargeBoundry && y == yLargeBoundry);
+  }
+
+  //checks to see if in border
+  private static boolean inBoundsWithBorder(int x, int y)
+  {
+    return (x < X_SIZE - 1 && x > 0 && y < Y_SIZE - 1 && y > 0);
+  }
+
+  private static boolean touchingAnotherRoom(int x, int y)
+  {
+    return getBlock(x, y).getType() != EMPTY;
+  }
+
+  // get the block at x and y cordonates
+  private static Block getBlock(int x, int y)
+  {
+    return blockGrid[y][x];
+  }
+
+  //resets the room dimentions
+  private static void resetRoomDimentions()
+  {
+    buildRoomX = random.nextInt(X_SIZE - 14) + 1;
+    buildRoomY = random.nextInt(Y_SIZE - 14) + 1;
+    roomSize = makeRoomSize();
+  }
+
+  //makes a room of a certain size with min value and max
+  private static int makeRoomSize()
+  {
+    while (true)
+    {
+      roomSize = random.nextInt(MAX_ROOM_SIZE) + 1;
+      if (roomSize >= MIN_ROOM_SIZE)
       {
-        for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
-        {
-          //checks to see if corner and sets corner
-          if (inBoundsWithBorder(x, y) &&
-              cornerTile(x, y, buildRoomX, buildRoomY,
-                  (buildRoomX + roomSize - 1),
-                  (buildRoomY + roomSize - 1)))
-          {
-            setBlockType(x, y, ROOM_CORNER);
-            //   getBlock(x, y).corner = true;
-            getBlock(x, y).partOfRoom = true;
-          }
-          //checks to see if Wall and sets wall
-          else if (inBoundsWithBorder(x, y) &&
-              wallTile(x, y, buildRoomX, buildRoomY,
-                  (buildRoomX + roomSize - 1),
-                  (buildRoomY + roomSize - 1)))
-          {
-            setBlockType(x, y, ROOM_WALL);
-//          getBlock(x, y).wall = true;
-            getBlock(x, y).partOfRoom = true;
-          }
-          else if (inBoundsWithBorder(x, y) && type == BASIC_TILE)
-          {
-            setBlockType(x, y, BASIC_TILE);
-            getBlock(x, y).partOfRoom = true;
-          }
-          else if (inBoundsWithBorder(x, y) && type == END_ROOM)
-          {
-            setBlockType(x, y, END_ROOM);
-//          getBlock(x, y).partOfEndRoom = true;
-            getBlock(x, y).partOfRoom = true;
-          }
-          else
-          {
-            setBlockType(x, y, START_ROOM);
-            //        getBlock(x, y).partOfStartRoom = true;
-            getBlock(x, y).partOfRoom = true;
-          }
-        }
-      }
-      //System.out.println("finish room");
-    }
-
-    /**
-     * chooses start and end points and room size for wall
-     *
-     * @param type
-     */
-    private static void alreadyBuilt ( char type,int numberOfRecursion)
-    {
-
-      boolean hallTouched = false;
-      for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
-      {
-        for (int y = buildRoomY; y < buildRoomY + roomSize; y++)
-        {
-          if(numberOfRecursion>100)
-          {
-
-          }
-
-          if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
-              (buildRoomX + roomSize - 1),
-              (buildRoomY + roomSize - 1)))
-          {
-            hallTouched = true;
-          }
-          if (placeRoom(x, y))
-          {
-            numberOfRecursion++;
-            hallTouched = false;
-            resetRoomDimentions();
-            if (type == START_ROOM || type == END_ROOM)
-            {
-              roomSize = 5;
-            }
-            x = buildRoomX;
-            y = buildRoomY;
-          }
-        }
-      }
-      if (!hallTouched)
-      {
-        resetRoomDimentions();
-        if (type == START_ROOM || type == END_ROOM)
-        {
-          roomSize = 5;
-        }
-        alreadyBuilt(type,numberOfRecursion);
-      }
-    }
-
-    private static boolean placeRoom ( int x, int y)
-    {
-      return (touchingAnotherRoomExceptHall(x + 1, y - 1) ||
-          touchingAnotherRoomExceptHall(x + 1, y) ||
-          touchingAnotherRoomExceptHall(x + 1, y + 1) ||
-          touchingAnotherRoomExceptHall(x, y - 1) ||
-          touchingAnotherRoomExceptHall(x, y) ||
-          touchingAnotherRoomExceptHall(x, y + 1) ||
-          touchingAnotherRoomExceptHall(x - 1, y - 1) ||
-          touchingAnotherRoomExceptHall(x - 1, y) ||
-          touchingAnotherRoomExceptHall(x, y + 1));
-    }
-
-    /**
-     * makes sure rooms are not being built on top of of oneAnother and on all
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    private static boolean touchingAnotherRoomExceptHall ( int x, int y)
-    {
-
-      return isWall(x, y) || isCorner(x, y) || isBasic(x, y);
-    }
-
-    private static boolean isBasic ( int x, int y)
-    {
-      return getBlock(x, y).type == BASIC_TILE;
-    }
-
-    private static boolean wallTile ( int x, int y, int xSmallBoundry,
-    int ySmallBoundry, int xLargeBoundry,
-    int yLargeBoundry)
-    {
-      return (x == xSmallBoundry ||
-          x == (xLargeBoundry) || y == ySmallBoundry ||
-          y == yLargeBoundry);
-    }
-
-    private static void setBlockType ( int x, int y, char type)
-    {
-      getBlock(x, y).type = type;
-    }
-
-    //makes a room corner tile
-    private static boolean cornerTile ( int x, int y, int xSmallBoundry,
-    int ySmallBoundry, int xLargeBoundry,
-    int yLargeBoundry)
-    {
-      return (x == xSmallBoundry && y == ySmallBoundry) ||
-          (x == xLargeBoundry && y == ySmallBoundry) ||
-          (x == xSmallBoundry && y == yLargeBoundry) ||
-          (x == xLargeBoundry && y == yLargeBoundry);
-    }
-
-    //checks to see if in border
-    private static boolean inBoundsWithBorder ( int x, int y)
-    {
-      return (x < X_SIZE - 1 && x > 0 && y < Y_SIZE - 1 && y > 0);
-    }
-
-    private static boolean touchingAnotherRoom ( int x, int y)
-    {
-      return getBlock(x, y).getType() != EMPTY;
-    }
-
-    // get the block at x and y cordonates
-    private static Block getBlock ( int x, int y)
-    {
-      return blockGrid[y][x];
-    }
-
-    //resets the room dimentions
-    private static void resetRoomDimentions ()
-    {
-      buildRoomX = random.nextInt(X_SIZE - 14) + 1;
-      buildRoomY = random.nextInt(Y_SIZE - 14) + 1;
-      roomSize = makeRoomSize();
-    }
-
-    //makes a room of a certain size with min value and max
-    private static int makeRoomSize ()
-    {
-      while (true)
-      {
-        roomSize = random.nextInt(MAX_ROOM_SIZE) + 1;
-        if (roomSize >= MIN_ROOM_SIZE)
-        {
-          return roomSize;
-        }
+        return roomSize;
       }
     }
+  }
 
     public static void main (String[]args)
     {
@@ -1404,179 +1430,179 @@ public class GameMap
       JFrame frame = new JFrame("MapTest");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setLayout(new BorderLayout());
-      frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+      frame.setExtendedState(frame.MAXIMIZED_BOTH);
 
-      JPanel map_panel = new JPanel()
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
       {
-        public void paintComponent(Graphics g)
-        {
-          super.paintComponent(g);
+        super.paintComponent(g);
 
-          Graphics2D g2 = (Graphics2D) g;
-          g2.drawImage(map_image, 0, 0, null);
-        }
-      };
-      map_panel.setPreferredSize(
-          new Dimension(map.num_cols * 80, map.num_rows * 80));
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map_image, 0, 0, null);
+      }
+    };
+    map_panel.setPreferredSize(
+        new Dimension(map.num_cols * 80, map.num_rows * 80));
 
-      JScrollPane scroll_pane = new JScrollPane(map_panel);
-      scroll_pane.setHorizontalScrollBarPolicy(
-          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-      scroll_pane.setVerticalScrollBarPolicy(
-          ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //    scroll_pane.setVerticalScrollBarPolicy(
 //        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //    scroll_pane.setHorizontalScrollBarPolicy(
 //        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-      frame.add(scroll_pane);
-      frame.pack();
-      frame.setVisible(true);
-    }
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
+  }
 
-    public int getTrapSize ()
-    {
-      return trapSize;
-    }
+  public int getTrapSize()
+  {
+    return trapSize;
+  }
 
-    public int getWidth ( int tile_size)
-    {
-      return num_cols * tile_size;
-    }
+  public int getWidth(int tile_size)
+  {
+    return num_cols * tile_size;
+  }
 
-    public int getHeight ( int tile_size)
-    {
-      return num_rows * tile_size;
-    }
+  public int getHeight(int tile_size)
+  {
+    return num_rows * tile_size;
+  }
 
-    public Tile getTile ( int row, int col)
-    {
-      return grid[row][col];
-    }
+  public Tile getTile(int row, int col)
+  {
+    return grid[row][col];
+  }
 
-    public double getZombieSpawnRate ()
-    {
-      return GUI.zspawn;
-    }
+  public double getZombieSpawnRate()
+  {
+    return GUI.zspawn;
+  }
 
-    public ArrayList<Tile> getWalls ()
-    {
-      return walls;
-    }
+  public ArrayList<Tile> getWalls()
+  {
+    return walls;
+  }
 
-    /**
-     * This paints the grid between the the given start (row, col) and end
-     * (row, col)
-     *
-     * @param g
-     * @param start
-     * @param end
-     * @param tile_size
-     */
-    public void paintSection (Graphics g, Location start, Location end,
-    int tile_size)
+  /**
+   * This paints the grid between the the given start (row, col) and end
+   * (row, col)
+   *
+   * @param g
+   * @param start
+   * @param end
+   * @param tile_size
+   */
+  public void paintSection(Graphics g, Location start, Location end,
+                           int tile_size)
+  {
+    for (int row = start.row; row < end.row; row++)
     {
-      for (int row = start.row; row < end.row; row++)
+      for (int col = start.col; col < end.col; col++)
       {
-        for (int col = start.col; col < end.col; col++)
+        //g.setColor(grid[row][col].tile_type.color);
+        //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
+        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
+            row * GUI.tile_size, null);
+        if (SHOW_COORDS)
         {
-          //g.setColor(grid[row][col].tile_type.color);
-          //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
-          g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
-              row * GUI.tile_size, null);
-          if (SHOW_COORDS)
-          {
-            g.setColor(Color.WHITE);
-            g.drawString(String.format("(%d, %d)", row, col).toString(),
-                col * tile_size + (tile_size / 4),
-                row * tile_size + (tile_size / 2));
-          }
+          g.setColor(Color.WHITE);
+          g.drawString(String.format("(%d, %d)", row, col).toString(),
+              col * tile_size + (tile_size / 4),
+              row * tile_size + (tile_size / 2));
         }
       }
     }
+  }
 
-    /**
-     * Converts our map to an image.
-     *
-     * @param tile_size the size of the tile
-     * @return
-     */
-    public BufferedImage convertMapToImage ( int tile_size)
+  /**
+   * Converts our map to an image.
+   *
+   * @param tile_size the size of the tile
+   * @return
+   */
+  public BufferedImage convertMapToImage(int tile_size)
+  {
+    BufferedImage new_image =
+        new BufferedImage(num_cols * tile_size, num_rows * tile_size,
+            BufferedImage.TYPE_INT_RGB);
+    Graphics2D g = new_image.createGraphics();
+    for (int row = 0; row < num_rows; row++)
     {
-      BufferedImage new_image =
-          new BufferedImage(num_cols * tile_size, num_rows * tile_size,
-              BufferedImage.TYPE_INT_RGB);
-      Graphics2D g = new_image.createGraphics();
-      for (int row = 0; row < num_rows; row++)
+      for (int col = 0; col < num_cols; col++)
       {
-        for (int col = 0; col < num_cols; col++)
+        g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+            row * tile_size, tile_size, tile_size, null);
+        if (SHOW_COORDS)
         {
-          g.drawImage(grid[row][col].tile_type.image, col * tile_size,
-              row * tile_size, tile_size, tile_size, null);
-          if (SHOW_COORDS)
-          {
-            g.setColor(Color.WHITE);
-            g.drawString(String.format("(%d, %d)", row, col).toString(),
-                col * tile_size + (tile_size / 4),
-                row * tile_size + (tile_size / 2));
-          }
+          g.setColor(Color.WHITE);
+          g.drawString(String.format("(%d, %d)", row, col).toString(),
+              col * tile_size + (tile_size / 4),
+              row * tile_size + (tile_size / 2));
         }
       }
-      return new_image;
     }
+    return new_image;
+  }
 
-    public void updateBufferedImage ( int tile_size)
-    {
-      this.map_image = convertMapToImage(tile_size);
-    }
+  public void updateBufferedImage(int tile_size)
+  {
+    this.map_image = convertMapToImage(tile_size);
+  }
 
-    public void updateBufferedImage ( int start_row, int start_col, int end_row,
-    int end_col, int tile_size)
+  public void updateBufferedImage(int start_row, int start_col, int end_row,
+                                  int end_col, int tile_size)
+  {
+    long t1 = System.currentTimeMillis();
+    Graphics2D g = (Graphics2D) map_image.getGraphics();
+    for (int row = start_row; row <= end_row; row++)
     {
-      long t1 = System.currentTimeMillis();
-      Graphics2D g = (Graphics2D) map_image.getGraphics();
-      for (int row = start_row; row <= end_row; row++)
+      for (int col = start_col; col <= end_col; col++)
       {
-        for (int col = start_col; col <= end_col; col++)
-        {
-          g.drawImage(grid[row][col].tile_type.image, col * tile_size,
-              row * tile_size, tile_size, tile_size, null);
-        }
+        g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+            row * tile_size, tile_size, tile_size, null);
       }
-      long t2 = System.currentTimeMillis();
-      //System.out.println("update all tiles in grid: " + (t2 - t1));
     }
+    long t2 = System.currentTimeMillis();
+    //System.out.println("update all tiles in grid: " + (t2 - t1));
+  }
 
-    public void updateTileOnImage ( int row, int col, int tile_size)
+  public void updateTileOnImage(int row, int col, int tile_size)
+  {
+    long t1 = System.currentTimeMillis();
+    Graphics2D g = (Graphics2D) map_image.getGraphics();
+    g.drawImage(grid[row][col].tile_type.image, col * tile_size,
+        row * tile_size, tile_size, tile_size, null);
+    if (SHOW_COORDS)
     {
-      long t1 = System.currentTimeMillis();
-      Graphics2D g = (Graphics2D) map_image.getGraphics();
-      g.drawImage(grid[row][col].tile_type.image, col * tile_size,
-          row * tile_size, tile_size, tile_size, null);
-      if (SHOW_COORDS)
-      {
-        g.setColor(Color.WHITE);
-        g.drawString(String.format("(%d, %d)", row, col).toString(),
-            col * tile_size + (tile_size / 4),
-            row * tile_size + (tile_size / 2));
-      }
-      long t2 = System.currentTimeMillis();
-      //System.out.println("update tile: " + (t2 - t1));
+      g.setColor(Color.WHITE);
+      g.drawString(String.format("(%d, %d)", row, col).toString(),
+          col * tile_size + (tile_size / 4),
+          row * tile_size + (tile_size / 2));
     }
+    long t2 = System.currentTimeMillis();
+    //System.out.println("update tile: " + (t2 - t1));
+  }
 
-    public void paintSection (Graphics g, Rectangle rect,int tile_size)
-    {
-      Location start =
-          new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
-      Location end = new Location(0, 0,
-          (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
-          (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
-      start.x = Math.max(start.x, 0);
-      start.y = Math.max(start.y, 0);
-      end.x = Math.min(end.x, num_rows - 1);
-      end.y = Math.min(end.y, num_cols - 1);
-      paintSection(g, start, end, tile_size);
-    }
+  public void paintSection(Graphics g, Rectangle rect, int tile_size)
+  {
+    Location start =
+        new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
+    Location end = new Location(0, 0,
+        (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
+        (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
+    start.x = Math.max(start.x, 0);
+    start.y = Math.max(start.y, 0);
+    end.x = Math.min(end.x, num_rows - 1);
+    end.y = Math.min(end.y, num_cols - 1);
+    paintSection(g, start, end, tile_size);
+  }
 
 
 //    GameMapWithBlocks gameMap = new GameMapWithBlocks();
@@ -1604,150 +1630,150 @@ public class GameMap
 //    generateMap();
 //
 
-    /**
-     * turns a tile into a burnt tile if a firetrap explodes nect to a tile
-     *
-     * @param row gets the row of the tile
-     * @param col gets the col of the tile
-     */
-    public void burnTile ( int row, int col)
+  /**
+   * turns a tile into a burnt tile if a firetrap explodes nect to a tile
+   *
+   * @param row gets the row of the tile
+   * @param col gets the col of the tile
+   */
+  public void burnTile(int row, int col)
+  {
+
+    if (grid[row][col].tile_type.equals(TileType.BRICK)
+        || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
     {
-
-      if (grid[row][col].tile_type.equals(TileType.BRICK)
-          || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
-      {
-        grid[row][col].tile_type = TileType.BURNTFLOOR;
-      }
-      if (grid[row][col].tile_type.equals(TileType.WALL))
-      {
-        grid[row][col].tile_type = TileType.BURNTWALL;
-      }
-      updateTileOnImage(row, col, GUI.tile_size);
+      grid[row][col].tile_type = TileType.BURNTFLOOR;
     }
-
-    /**
-     * This paints the entire grid from start to finish
-     *
-     * @param g
-     * @param tile_size tile size of each spot.
-     */
-    public void paint (Graphics g,int tile_size)
+    if (grid[row][col].tile_type.equals(TileType.WALL))
     {
-      paintSection(g, new Location(0, 0, 0, 0),
-          new Location(0, 0, num_rows, num_cols),
-          tile_size);
+      grid[row][col].tile_type = TileType.BURNTWALL;
     }
-
-
-    /**
-     * Creates map from a file
-     *
-     * @param file
-     */
-    private void createFromFile (File file)
-    {
-      Scanner sc;
-      ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
-      Random rand = new Random();
-      int row = 0;
-      int col = 0;
-
-      try
-      {
-        sc = new Scanner(file);
-        while (sc.hasNextLine())
-        {
-          ArrayList<Tile> row_array = new ArrayList<Tile>();
-          String row_string = sc.nextLine();
-          if (!row_string.startsWith("!"))
-          {
-            char[] row_types = row_string.toCharArray();
-            col = 0;
-
-            for (char type : row_types)
-            {
-              Tile new_tile = new Tile(row, col, type);
-              row_array.add(new_tile);
-              if (new_tile.tile_type == TileType.WALL)
-              {
-                walls.add(new_tile);
-              }
-              if (new_tile.tile_type == TileType.BRICK)
-              {
-                if (rand.nextDouble() < GUI.zspawn)
-                {
-                  Zombie zombie;
-                  Location location =
-                      new Location(col * GUI.tile_size, row * GUI.tile_size);
-                  if (rand.nextBoolean())
-                  {
-                    System.out.println("made random zombie");
-                    zombie =
-                        new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                            location);
-                  }
-                  else
-                  {
-                    System.out.println("made line zombie");
-
-                    zombie =
-                        new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                            location);
-                  }
-                  zombies.add(zombie);
-                  System.out.println(zombies);
-                }
-
-                if (rand.nextDouble() < GUI.fspawn)
-                {
-                  FireTrap fireTrap;
-                  Location location =
-                      new Location(col * GUI.tile_size, row * GUI.tile_size);
-
-                  fireTrap = new FireTrap(50, 50, location);
-                  traps.add(fireTrap);
-
-                }
-              }
-              col++;
-            }
-            grid.add(row_array);
-            row++;
-          }
-        }
-
-        this.num_rows = grid.size();
-        this.num_cols = grid.get(0).size();
-        this.grid = new Tile[num_rows][num_cols];
-        for (int i = 0; i < grid.size(); i++)
-        {
-          Tile[] row_array = new Tile[grid.get(i).size()];
-          row_array = grid.get(i).toArray(row_array);
-          this.grid[i] = row_array;
-        }
-      }
-      catch (IOException e)
-      {
-        System.err.println("Can't find file: " + file.getName());
-        System.exit(1);
-      }
-    }
-
-    @Override
-    public String toString ()
-    {
-      String ret = "GameMap{" +
-          "num_rows=" + num_rows +
-          ", num_cols=" + num_cols + "}\n";
-      for (int row = 0; row < num_rows; row++)
-      {
-        for (int col = 0; col < num_cols; col++)
-        {
-          ret += grid[row][col].tile_type.grid_char;
-        }
-        ret += "\n";
-      }
-      return ret;
-    }
-
+    updateTileOnImage(row, col, GUI.tile_size);
   }
+
+  /**
+   * This paints the entire grid from start to finish
+   *
+   * @param g
+   * @param tile_size tile size of each spot.
+   */
+  public void paint(Graphics g, int tile_size)
+  {
+    paintSection(g, new Location(0, 0, 0, 0),
+        new Location(0, 0, num_rows, num_cols),
+        tile_size);
+  }
+
+
+  /**
+   * Creates map from a file
+   *
+   * @param file
+   */
+  private void createFromFile(File file)
+  {
+    Scanner sc;
+    ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
+    Random rand = new Random();
+    int row = 0;
+    int col = 0;
+
+    try
+    {
+      sc = new Scanner(file);
+      while (sc.hasNextLine())
+      {
+        ArrayList<Tile> row_array = new ArrayList<Tile>();
+        String row_string = sc.nextLine();
+        if (!row_string.startsWith("!"))
+        {
+          char[] row_types = row_string.toCharArray();
+          col = 0;
+
+          for (char type : row_types)
+          {
+            Tile new_tile = new Tile(row, col, type);
+            row_array.add(new_tile);
+            if (new_tile.tile_type == TileType.WALL)
+            {
+              walls.add(new_tile);
+            }
+            if (new_tile.tile_type == TileType.BRICK)
+            {
+              if (rand.nextDouble() < GUI.zspawn)
+              {
+                Zombie zombie;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+                if (rand.nextBoolean())
+                {
+                  System.out.println("made random zombie");
+                  zombie =
+                      new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                          location);
+                }
+                else
+                {
+                  System.out.println("made line zombie");
+
+                  zombie =
+                      new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                          location);
+                }
+                zombies.add(zombie);
+                System.out.println(zombies);
+              }
+
+              if (rand.nextDouble() < GUI.fspawn)
+              {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(50, 50, location);
+                traps.add(fireTrap);
+
+              }
+            }
+            col++;
+          }
+          grid.add(row_array);
+          row++;
+        }
+      }
+
+      this.num_rows = grid.size();
+      this.num_cols = grid.get(0).size();
+      this.grid = new Tile[num_rows][num_cols];
+      for (int i = 0; i < grid.size(); i++)
+      {
+        Tile[] row_array = new Tile[grid.get(i).size()];
+        row_array = grid.get(i).toArray(row_array);
+        this.grid[i] = row_array;
+      }
+    }
+    catch (IOException e)
+    {
+      System.err.println("Can't find file: " + file.getName());
+      System.exit(1);
+    }
+  }
+
+  @Override
+  public String toString()
+  {
+    String ret = "GameMap{" +
+        "num_rows=" + num_rows +
+        ", num_cols=" + num_cols + "}\n";
+    for (int row = 0; row < num_rows; row++)
+    {
+      for (int col = 0; col < num_cols; col++)
+      {
+        ret += grid[row][col].tile_type.grid_char;
+      }
+      ret += "\n";
+    }
+    return ret;
+  }
+
+}
