@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
-    map = new GameMap();
+    map = new GameMap(1);
     player = new Player(GUI.sight, GUI.hearing, GUI.speed, GUI.stamina, GUI.regen, 70, 70, map.start_location);
     player.setHeading(new Heading(Heading.NONE));
 
@@ -243,13 +243,11 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (!parent.running)
     {
-      g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
+      g2.setColor(Color.red);
+      g2.drawString("Press SPACE to start", new_x + vp.getWidth() / 2 - 300, new_y + 50);
     }
 
     player.paint(g2, vp);
-    g2.setColor(Color.BLUE);
-    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
-
   }
 
   private BufferedImage drawFireLight(FireTrap trap)
