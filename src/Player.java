@@ -367,6 +367,7 @@ public class Player extends Humanoid implements HumanoidObject
   {
     current_speed = 2 * defined_speed;
     isRunning = true;
+    isWalking = false;
   }
 
   /**
@@ -376,6 +377,7 @@ public class Player extends Humanoid implements HumanoidObject
   {
     this.current_speed = defined_speed;
     isWalking = true;
+    isRunning = false;
   }
 
   public double getStamina()
@@ -421,6 +423,11 @@ public class Player extends Humanoid implements HumanoidObject
   {
     double x_move = heading.getXMovement();
     double y_move = heading.getYMovement();
+
+    isStill = x_move == 0 && y_move == 0;
+//    isWalking = current_speed == defined_speed;
+//    isRunning = current_speed > defined_speed;
+
     if (isStill)
     {
       if (animation == walkRight)
@@ -443,17 +450,20 @@ public class Player extends Humanoid implements HumanoidObject
       {
         animation = walkLeft;
       }
-      else
-      {
-        if (animation == standRight)
-        {
-          animation = walkRight;
-        }
-        else if (animation == standLeft)
-        {
-          animation = walkLeft;
-        }
+      else if (y_move != 0 && (animation != standLeft || animation != standRight)) {
+        animation = walkRight;
       }
+//      else if (y_move == 0)
+//      {
+//        if (animation == walkRight)
+//        {
+//          animation = standRight;
+//        }
+//        else if (animation == walkLeft)
+//        {
+//          animation = standLeft;
+//        }
+//      }
     }
     if (isRunning)
     {
@@ -465,17 +475,20 @@ public class Player extends Humanoid implements HumanoidObject
       {
         animation = runLeft;
       }
-      else
-      {
-        if (animation == walkRight)
-        {
-          animation = runRight;
-        }
-        else if (animation == walkLeft)
-        {
-          animation = runLeft;
-        }
+      else if (y_move != 0 && (animation != standLeft || animation != standRight)) {
+        animation = runRight;
       }
+//      else
+//      {
+//        if (animation == walkRight)
+//        {
+//          animation = runRight;
+//        }
+//        else if (animation == walkLeft)
+//        {
+//          animation = runLeft;
+//        }
+//      }
     }
 
   }
