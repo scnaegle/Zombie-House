@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -222,7 +221,7 @@ public class GameMap
 
   public static void generateMap()
   {
-    int countNumberOftimes =0;
+    int countNumberOftimes = 0;
     boolean mapIsBad = true;
     while (mapIsBad)
     {
@@ -259,7 +258,7 @@ public class GameMap
         // builds rooms on the halls that had been made in
         // the previous halls
       }
-      if(mapIsBad)
+      if (mapIsBad)
       {
         countNumberOftimes++;
         continue;
@@ -1432,33 +1431,33 @@ public class GameMap
       frame.setLayout(new BorderLayout());
       frame.setExtendedState(frame.MAXIMIZED_BOTH);
 
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
+      JPanel map_panel = new JPanel()
       {
+        public void paintComponent(Graphics g)
+        {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(map_image, 0, 0, null);
       }
-    };
-    map_panel.setPreferredSize(
-        new Dimension(map.num_cols * 80, map.num_rows * 80));
+      };
+      map_panel.setPreferredSize(
+          new Dimension(map.num_cols * 80, map.num_rows * 80));
 
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+      JScrollPane scroll_pane = new JScrollPane(map_panel);
+      scroll_pane.setHorizontalScrollBarPolicy(
+          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+      scroll_pane.setVerticalScrollBarPolicy(
+          ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //    scroll_pane.setVerticalScrollBarPolicy(
 //        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //    scroll_pane.setHorizontalScrollBarPolicy(
 //        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
-  }
+      frame.add(scroll_pane);
+      frame.pack();
+      frame.setVisible(true);
+    }
 
   public int getTrapSize()
   {

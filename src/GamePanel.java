@@ -247,10 +247,12 @@ public class GamePanel extends JPanel implements KeyListener
     int new_y = ((int)vp_rect.getY());
     int width = GUI.SCENE_WIDTH;
     int height = GUI.SCENE_HEIGHT;
-    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
-    System.out.format("Viewport width: %d, height: %d\n", width, height);
-    System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
-    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
+//    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
+//    System.out.format("Viewport width: %d, height: %d\n", width, height);
+//    System.out.format("Player location: x=%f, y=%f\n", player.location.x,
+// player.location.y);
+//    System.out.format("Player top left: x=%d, y=%d\n", player
+// .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
 
     g2.setColor(Color.BLUE);
 //    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
@@ -360,6 +362,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
+      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (KEY_DOWN.contains(code))
