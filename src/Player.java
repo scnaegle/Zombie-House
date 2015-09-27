@@ -334,7 +334,9 @@ public class Player extends Humanoid implements HumanoidObject
 
   public boolean reachedExit(Location exit_location)
   {
-    return getBoundingRectangle()
+//    System.out.println("Player location: " + getCenteredBoundingRectangle());
+//    System.out.println("exit locaiton: " + exit_location);
+    return getCenteredBoundingRectangle()
         .contains(exit_location.x, exit_location.y);
   }
 
