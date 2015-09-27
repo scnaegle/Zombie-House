@@ -240,7 +240,8 @@ public class GamePanel extends JPanel implements KeyListener
     System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2);
 
     g2.setColor(Color.BLUE);
-    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
+//    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
+    g2.draw(vp.getViewRect());
     g2.setColor(Color.RED);
     g2.drawRect(player.getCenterPoint().x - vp.getWidth() / 2, player.getCenterPoint().y - vp.getHeight() / 2, vp.getWidth(), vp.getHeight());
 
