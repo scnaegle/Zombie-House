@@ -252,7 +252,8 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
-
+        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
+        System.out.println("SCENE_HEIGHT = " + SCENE_HEIGHT);
       }
 
       @Override
