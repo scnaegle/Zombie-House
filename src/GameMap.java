@@ -1260,10 +1260,7 @@ public class GameMap
      */
     private static void alreadyBuilt ( char type,int numberOfRecursion)
     {
-      if(numberOfRecursion==1000)
-      {
-        generateMap();
-      }
+
       boolean hallTouched = false;
       for (int x = buildRoomX; x < buildRoomX + roomSize; x++)
       {
@@ -1272,6 +1269,7 @@ public class GameMap
           if(numberOfRecursion>100)
           {
             generateMap();
+            return;
           }
 
           if (isHall(x, y) && !wallTile(x, y, buildRoomX, buildRoomY,
