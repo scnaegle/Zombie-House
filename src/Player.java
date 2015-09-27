@@ -17,8 +17,8 @@ public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  private final double PICKUP_TIME = 5.0;
-  private final double PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
+  private final int PICKUP_TIME = 5;
+  private final int PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
   public boolean isRunning = false;
   public boolean isWalking = false;
   public boolean isStill = true;
@@ -54,7 +54,8 @@ public class Player extends Humanoid implements HumanoidObject
   private ArrayList<FireTrap> traps = new ArrayList<>();
   private int diedFrame = 0;
 
-  private StaminaBar bar;
+  private StaminaBar stamina_bar;
+  private PickupBar pickup_bar;
 
 
   public Player(Location location)
@@ -100,7 +101,7 @@ public class Player extends Humanoid implements HumanoidObject
     this.stamina = player_stamina;
     this.width = GUI.tile_size;
     this.height = GUI.tile_size;
-    bar = new StaminaBar(GUI.stamina);
+    stamina_bar = new StaminaBar(GUI.stamina);
   }
 
   /**
@@ -348,7 +349,10 @@ public class Player extends Humanoid implements HumanoidObject
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
-      bar.paint(g2);
+      stamina_bar.paint(g2);
+      if (is_picking_up || is_putting_down) {
+        pickup_bar.paint(g2);
+      }
     }
   }
 
@@ -384,6 +388,13 @@ public class Player extends Humanoid implements HumanoidObject
     is_picking_up = true;
     pickup_trap = trap;
     frame = 0;
+    pickup_bar = new PickupBar(PICKUP_FRAMES);
+  }
+
+  public void dropFireTrap() {
+    is_putting_down = true;
+    frame = 0;
+    pickup_bar = new PickupBar(PICKUP_FRAMES);
   }
 
   /**
@@ -474,27 +485,61 @@ public class Player extends Humanoid implements HumanoidObject
 
   private class StaminaBar {
 
-    public final Color TIRED = new Color(249, 44, 25);
-    public final Color ENERGY = new Color(108, 246, 16);
-    double maxStamina;
+    public final Color TIRED = Color.BLACK;
+    public final Color ENERGY = new Color(14, 15, 246);
+    public final Color BORDER = new Color(93, 93, 93);
+    private double maxStamina;
+
+    private int width = 20;
+    private int height = 80;
 
     public StaminaBar(double maxStamina) {
       this.maxStamina = maxStamina;
     }
 
     public void paint(Graphics2D g2) {
+      int x = (int)getLocation().x - GUI.SCENE_WIDTH / 2 + 50;
+      int y = (int)getLocation().y + GUI.SCENE_HEIGHT / 2 - 100;
+
+      g2.setColor(TIRED);
+      g2.fillRect(x, y, width, height);
+
+      g2.setColor(ENERGY);
+      g2.fillRect(x, y - (int)getStaminaAmount() + height, width, (int) getStaminaAmount());
+
+      g2.setColor(BORDER);
+      g2.drawRect(x, y, width, height);
+    }
+
+    public double getStaminaAmount() {
+      return (stamina / maxStamina) * height;
+    }
+  }
+
+  private class PickupBar {
+    public final Color TOTAL = new Color(249, 44, 25);
+    public final Color PICKUP = new Color(108, 246, 16);
+    private double max_frames;
+
+    public PickupBar(int max_frames) {
+//      this.maxStamina = maxStamina;
+      this.max_frames = max_frames;
+    }
+
+    public void paint(Graphics2D g2) {
       int x = getLocation().getX();
       int y = getLocation().getY();
 
-      g2.setColor(TIRED);
+      g2.setColor(TOTAL);
       g2.fillRect(x, y - 20, GUI.tile_size, 8);
 
-      g2.setColor(ENERGY);
-      g2.fillRect(x, y - 20, (int) getStamAmount(), 8);
+      g2.setColor(PICKUP);
+      g2.fillRect(x, y - 20, (int) getPickupAmount(), 8);
     }
 
-    public double getStamAmount() {
-      return (stamina / maxStamina) * GUI.tile_size;
+    private double getPickupAmount() {
+      return (frame / max_frames) * GUI.tile_size;
     }
+
   }
 }

@@ -220,8 +220,6 @@ public class GamePanel extends JPanel implements KeyListener
       zombie.paint(g2);
     }
 
-    player.paint(g2);
-
 
     //Draws vignette with player at center.
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
@@ -259,6 +257,10 @@ public class GamePanel extends JPanel implements KeyListener
     {
       g2.drawString("Press SPACE", new_x - 100, new_y + 800);
     }
+
+    player.paint(g2);
+    g2.setColor(Color.BLUE);
+    g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
     //player.getLocation().getX()-900
     //player.getLocation().getY()-450
   }
@@ -381,7 +383,7 @@ public class GamePanel extends JPanel implements KeyListener
       }
       else if (player.getFire_traps() > 0)
       {
-        player.is_putting_down = true;
+        player.dropFireTrap();
         //System.out.println("player put down trap");
       }
       else
