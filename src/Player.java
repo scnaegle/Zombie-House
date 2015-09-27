@@ -467,7 +467,7 @@ public class Player extends Humanoid implements HumanoidObject
    *
    * @param g Graphics object to draw with
    */
-  public void paint(Graphics g, JViewport viewport)
+  public void paint(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
     //Draws player
@@ -475,7 +475,7 @@ public class Player extends Humanoid implements HumanoidObject
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
-      stamina_bar.paint(g2, viewport);
+      stamina_bar.paint(g2);
       if (is_picking_up || is_putting_down)
       {
         pickup_bar.paint(g2);
@@ -486,25 +486,25 @@ public class Player extends Humanoid implements HumanoidObject
   private class StaminaBar
   {
 
-    public final Color TIRED = Color.BLACK;
+    public final Color TIRED = new Color(93, 93, 93);
     public final Color ENERGY = new Color(14, 15, 246);
     public final Color BORDER = new Color(93, 93, 93);
     private double maxStamina;
 
-    private int width = 20;
-    private int height = 200;
-    private int xOffset = -130;
-    private int yOffset = 60;
+    private int width = 5;
+    private int height = 70;
+    private int xOffset = -10;
+    private int yOffset = 5;
 
     public StaminaBar(double maxStamina)
     {
       this.maxStamina = maxStamina;
     }
 
-    public void paint(Graphics2D g2, JViewport viewport)
+    public void paint(Graphics2D g2)
     {
-      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
-      int y = (int)viewport.getViewPosition().getY() + yOffset;
+      int x = (int)location.x + xOffset;
+      int y = (int)location.y + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);

@@ -118,15 +118,15 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.EXIT)
         {
-          end_location =
-              new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
-                  new_tile.row * GUI.tile_size + GUI.tile_size / 2);
+          end_location = new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
+              new_tile.row * GUI.tile_size + GUI.tile_size / 2);
         }
         if (new_tile.tile_type == TileType.WALL ||
             new_tile.tile_type == TileType.INSIDEWALL)
         {
           walls.add(new_tile);
         }
+
 
 
         if (new_tile.tile_type == TileType.BRICK)
@@ -188,7 +188,7 @@ public class GameMap
       {
         for (int col = 0; col < num_cols; col++)
         {
-          if (grid[row][col].tile_type == TileType.BRICK && spawnMasterZombie)
+          if(grid[row][col].tile_type == TileType.BRICK && spawnMasterZombie)
           {
             Zombie zombie;
             Location location =
@@ -198,7 +198,7 @@ public class GameMap
                 new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
                     location);
             zombies.add(zombie);
-            spawnMasterZombie = false;
+            spawnMasterZombie=false;
           }
 
         }
@@ -1437,42 +1437,42 @@ public class GameMap
     }
   }
 
-  public static void main(String[] args)
-  {
-    GameMap map = new GameMap(0);
-    BufferedImage map_image = map.convertMapToImage(80);
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    JPanel map_panel = new JPanel()
+    public static void main (String[]args)
     {
-      public void paintComponent(Graphics g)
+      GameMap map = new GameMap(0);
+      BufferedImage map_image = map.convertMapToImage(80);
+      JFrame frame = new JFrame("MapTest");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setLayout(new BorderLayout());
+      frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+      JPanel map_panel = new JPanel()
       {
+        public void paintComponent(Graphics g)
+        {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(map_image, 0, 0, null);
       }
-    };
-    map_panel.setPreferredSize(
-        new Dimension(map.num_cols * 80, map.num_rows * 80));
+      };
+      map_panel.setPreferredSize(
+          new Dimension(map.num_cols * 80, map.num_rows * 80));
 
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+      JScrollPane scroll_pane = new JScrollPane(map_panel);
+      scroll_pane.setHorizontalScrollBarPolicy(
+          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+      scroll_pane.setVerticalScrollBarPolicy(
+          ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 //    scroll_pane.setVerticalScrollBarPolicy(
 //        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //    scroll_pane.setHorizontalScrollBarPolicy(
 //        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
-  }
+      frame.add(scroll_pane);
+      frame.pack();
+      frame.setVisible(true);
+    }
 
   public int getTrapSize()
   {

@@ -9,8 +9,8 @@ import java.awt.*;
  */
 public class Zombie extends Humanoid implements HumanoidObject
 {
-  public static double decision_rate;
-  public static double smell;
+  public double decision_rate;
+  public double smell;
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
   protected int frame = 0;
@@ -142,7 +142,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 
   public boolean touchingZombie(Zombie zombie)
   {
-    return (intersects((Object2D) zombie));
+    return (intersects(zombie));
   }
 
   public boolean bitesPlayer(HumanoidObject player)

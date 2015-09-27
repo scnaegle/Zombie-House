@@ -187,7 +187,7 @@ public class GamePanel extends JPanel implements KeyListener
     Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON);
-    vp = (JViewport) getParent();
+    vp = GUI.scrollPane.getViewport();
     BufferedImage light;
 
     //For resizing purposes
@@ -198,9 +198,18 @@ public class GamePanel extends JPanel implements KeyListener
 
 
     //When to draw traps and which sprite
+    boolean explodee = false;
+    FireTrap activeTrap = null;
     for (FireTrap trap : map.traps)
     {
       trap.paint(g2, player);
+      if (trap.exploding)
+      {
+        explodee = true;
+        activeTrap = trap;
+
+      }
+
     }
 
     //Draws zombies
@@ -232,43 +241,50 @@ public class GamePanel extends JPanel implements KeyListener
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
-    vp = parent.scrollPane.getViewport();
-    Rectangle vp_rect = vp.getViewRect();
-    int new_x = ((int)vp_rect.getX());
-    int new_y = ((int)vp_rect.getY());
-    int width = GUI.SCENE_WIDTH;
-    int height = GUI.SCENE_HEIGHT;
-    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
-    System.out.format("Viewport width: %d, height: %d\n", width, height);
-    System.out.format("Player location: x=%f, y=%f\n", player.location.x, player.location.y);
-    System.out.format("Player top left: x=%d, y=%d\n", player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
+    paintTextOverlay(g2);
 
-    g2.setColor(Color.BLUE);
-//    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
-    g2.draw(vp.getViewRect());
-    g2.setColor(Color.RED);
-    g2.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
-
-    new_x += 50;
-    new_y += 50;
-    g2.setColor(Color.white);
-    Font font = new Font("Courier", Font.BOLD, 35);
-    g2.setFont(font);
-    g2.drawString("Level: " + parent.whichLevel, new_x,
-        new_y - 50);
-    g2.drawString("Fire traps: " + player.getFire_traps(), new_x,
-        new_y);
-    g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
-
-    if (!parent.running)
-    {
-      g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
-    }
-
-
-    player.paint(g2,vp);
+    player.paint(g2);
     g2.setColor(Color.BLUE);
     //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
+
+  }
+
+  private void paintTextOverlay(Graphics2D g) {
+    vp = GUI.scrollPane.getViewport();
+//    Rectangle vp_rect = vp.getViewRect();
+    int new_x = ((int)player.location.x - GUI.SCENE_WIDTH / 2);
+    int new_y = ((int)player.location.y - GUI.SCENE_HEIGHT / 2);
+    int width = GUI.SCENE_WIDTH;
+    int height = GUI.SCENE_HEIGHT;
+//    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
+//    System.out.format("Viewport width: %d, height: %d\n", width, height);
+//    System.out.format("Player location: x=%f, y=%f\n", player.location.x,
+// player.location.y);
+//    System.out.format("Player top left: x=%d, y=%d\n", player
+// .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
+
+//    g.setColor(Color.BLUE);
+////    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
+//    g.draw(vp.getViewRect());
+//    g.setColor(Color.RED);
+//    g.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
+
+    new_x += 50;
+    new_y += 100;
+    g.setColor(Color.white);
+    Font font = new Font("Courier", Font.BOLD, 35);
+    g.setFont(font);
+    g.drawString("Level: " + parent.whichLevel, new_x,
+        new_y);
+    g.drawString("Fire traps: " + player.getFire_traps(), new_x,
+        new_y + 50);
+//    g.drawString("Stamina", new_x + width - 200, new_y);
+
+    if (!GUI.running)
+    {
+      g.setColor(Color.RED);
+      g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
+    }
 
   }
 
@@ -351,6 +367,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
+      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (KEY_DOWN.contains(code))

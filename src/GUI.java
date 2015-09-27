@@ -252,8 +252,8 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
-        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
-        System.out.println("SCENE_HEIGHT = " + SCENE_HEIGHT);
+//        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
+//        System.out.println("SCENE_HEIGHT = " + SCENE_HEIGHT);
       }
 
       @Override
@@ -278,8 +278,10 @@ public class GUI
 
     gamePanel = new GamePanel(this);
     gamePanel.addKeyListener(gamePanel);
+    System.out.println("added key listener");
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
+    System.out.println("panel has focus");
 
 
 
