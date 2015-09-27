@@ -68,9 +68,7 @@ public class GUI
 
     if (option == 0) //Restart
     {
-      parent.whichLevel = 1;
-      parent.window.dispose();
-      parent.getSettings();
+      restartGame(parent);
     }
     else if (option == 1) //Exit
     {
@@ -93,14 +91,20 @@ public class GUI
 
     if (option == 0)
     {
-      parent.whichLevel = 1;
-      parent.window.dispose();
-      parent.getSettings();
+      restartGame(parent);
     }
     else if (option == 1)
     {
       System.exit(0);
     }
+  }
+
+  private static void restartGame(GUI parent)
+  {
+    parent.whichLevel = 1;
+    System.gc();
+    parent.window.dispose();
+    parent.getSettings();
   }
 
   /**

@@ -105,6 +105,12 @@ public class SoundLoader implements LineListener
   public static void playHitObst(float balance)
   {
     hitObst.setBalance(balance);
+
+    FloatControl volumeControl =
+        (FloatControl) hitObst.audioClip
+            .getControl(FloatControl.Type.MASTER_GAIN);
+    volumeControl.setValue(-10.0f);
+
     hitObst.play();
     if (hitObst.audioClip.getFramePosition() ==
         hitObst.audioClip.getFrameLength())

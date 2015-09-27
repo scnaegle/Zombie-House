@@ -111,7 +111,7 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-         
+
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -144,8 +144,7 @@ public class GamePanel extends JPanel implements KeyListener
                 {
                   parent.showWinningDialog(parent, " You won the game!");
                 }
-                //SoundLoader.killSounds();
-                System.out.println("Next level");
+
                 newMapByExit();
 
               }
