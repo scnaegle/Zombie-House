@@ -31,22 +31,12 @@ public class GUI
   static boolean running = false;
   static JScrollPane scrollPane;
   public int whichLevel = 1;
-  public GameMap map;
   public Player player;
   JFrame window = new JFrame("Zombie House");
+  GameMap map;
   GamePanel gamePanel;
-  private JLabel level;
-  private JLabel playerSight;
-  private JLabel playerHearing;
-  private JLabel playerSpeed;
-  private JLabel playerStamina;
-  private JLabel zombieSpeed;
-  private JLabel zombieSmell;
-  private JButton startPause;
-  private boolean pause = true;
-  private FireTrap fireTrap;
-  private JLabel traps;
   private boolean gameStarted = false;
+  private boolean pause = true;
 
   /**
    * Window that pops up once player is bitten or explodes.

@@ -13,7 +13,6 @@ import java.io.InputStream;
 public class SoundLoader implements LineListener
 {
   private static SoundLoader combust;
-  private static SoundLoader groan;
   private static SoundLoader zWalk;
   private static SoundLoader bite;
   private static SoundLoader hitObst;
@@ -29,6 +28,11 @@ public class SoundLoader implements LineListener
   InputStream inputStream;
 
 
+  /**
+   * Loads in a sound file from directory and makes it into a sound clip.
+   *
+   * @param path
+   */
   public SoundLoader(String path)
   {
     inputStream =
@@ -61,6 +65,10 @@ public class SoundLoader implements LineListener
     }
   }
 
+  /**
+   * Plays explosion sound when called. Has to restart to begging frame in order
+   * to make it play multiple times.
+   */
   public static void playExplosion()
   {
     combust.play();
@@ -78,7 +86,6 @@ public class SoundLoader implements LineListener
   public static void loadSounds()
   {
     combust = new SoundLoader("explosion.wav");
-    groan = new SoundLoader("zGroan.wav");
     zWalk = new SoundLoader("zWalk.wav");
     bite = new SoundLoader("zBite.wav");
     hitObst = new SoundLoader("zHitObst.wav");
@@ -91,6 +98,9 @@ public class SoundLoader implements LineListener
 
   }
 
+  /**
+   * Makes sounds for when zombie bites player
+   */
   public static void playBite()
   {
     bite.play();
@@ -102,6 +112,11 @@ public class SoundLoader implements LineListener
     scream.play();
   }
 
+  /**
+   * Plays sounds for zombie hitting obstacles.
+   * Also gets balance and plays it on certain speaker.
+   * @param balance
+   */
   public static void playHitObst(float balance)
   {
     hitObst.setBalance(balance);

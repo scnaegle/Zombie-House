@@ -499,8 +499,8 @@ public class Player extends Humanoid implements HumanoidObject
 
     private int width = 20;
     private int height = 200;
-    private int xOffset = 1400;
-    private int yOffset = 800;
+    private int xOffset = 40;
+    private int yOffset = 700;
 
     public StaminaBar(double maxStamina)
     {
@@ -509,7 +509,7 @@ public class Player extends Humanoid implements HumanoidObject
 
     public void paint(Graphics2D g2)
     {
-      int x = (int) getLocation().x - GUI.SCENE_WIDTH / 2 + xOffset;
+      int x = (int) getLocation().x + GUI.SCENE_WIDTH / 2 + xOffset;
       int y = (int) getLocation().y + GUI.SCENE_HEIGHT / 2 - yOffset;
 
       g2.setColor(TIRED);
