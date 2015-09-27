@@ -72,117 +72,7 @@ public class GameMap
   private Tile[][] grid;
   private ArrayList<Tile> walls = new ArrayList<>();
 
-
-  public GameMap()
-  {
-    generateMap();
-
-
-    this.num_rows = Y_SIZE + OFFSET;
-    this.num_cols = X_SIZE + OFFSET;
-    grid = new Tile[num_rows][num_cols];
-    Random rand = new Random();
-    int minRow = OFFSET / 2;
-    int minCol = OFFSET / 2;
-
-    int r = minRow;
-    for (int row = 0; row < num_rows; row++)
-    {
-      for (int col = 0; col < num_cols; col++)
-      {
-        Tile empty_tile = new Tile(row, col, TileType.WALL);
-        grid[row][col] = empty_tile;
-//        System.out.print(grid[row][col].tile_type);
-      }
-//      System.out.println();
-    }
-
-
-    boolean spawnMasterZombie = true; // this boolean makes so the master zombie
-    // will only be spawned once
-    for (Block[] row : blockGrid)
-    {
-
-      int c = minCol;
-      for (Block block : row)
-      {
-        Tile new_tile =
-            new Tile(block.y + minRow, block.x + minCol, block.type);
-        grid[r][c] = new_tile;
-        if (new_tile.tile_type == TileType.START)
-        {
-          start_location = new Location(new_tile.col * GUI.tile_size,
-              new_tile.row * GUI.tile_size);
-        }
-        if (new_tile.tile_type == TileType.EXIT)
-        {
-          end_location =
-              new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
-                  new_tile.row * GUI.tile_size + GUI.tile_size / 2);
-        }
-        if (new_tile.tile_type == TileType.WALL ||
-            new_tile.tile_type == TileType.INSIDEWALL)
-        {
-          walls.add(new_tile);
-        }
-        if (new_tile.tile_type == TileType.BRICK)
-        {
-          if (rand.nextDouble() < GUI.zspawn)
-          {
-            //System.out.println("tile is a brick");
-            Zombie zombie;
-            Location location =
-                new Location(new_tile.col * GUI.tile_size,
-                    new_tile.row * GUI.tile_size);
-            if (spawnMasterZombie)
-            {
-              zombie =
-                  new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
-                      location);
-              spawnMasterZombie = false;
-              //System.out.println("spawwned that master zomebie, Yo!");
-            }
-            else
-            {
-              if (rand.nextBoolean())
-              {
-                //System.out.println("made random zombie");
-                zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                    location);
-              }
-              else
-              {
-                //System.out.println("made line zombie");
-
-                zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                    location);
-              }
-              //master = new MasterZombie(location);
-            }
-            zombies.add(zombie);
-            //zombies.add(master);
-            //System.out.println(zombies);
-          }
-
-          if (rand.nextDouble() < GUI.fspawn)
-          {
-            FireTrap fireTrap;
-            Location location =
-                new Location(c * GUI.tile_size, r * GUI.tile_size);
-
-            fireTrap = new FireTrap(50, 50, location);
-            traps.add(fireTrap);
-
-          }
-        }
-        c++;
-      }
-      r++;
-    }
-    //System.out.println("map: ");
-    //System.out.println(toString());
-    this.map_image = convertMapToImage(GUI.tile_size);
-  }
+  //this will be called the first
 
   public GameMap(int level)
   {
@@ -1476,7 +1366,7 @@ public class GameMap
 
   public static void main(String[] args)
   {
-    GameMap map = new GameMap();
+    GameMap map = new GameMap(0);
     BufferedImage map_image = map.convertMapToImage(80);
     JFrame frame = new JFrame("MapTest");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
