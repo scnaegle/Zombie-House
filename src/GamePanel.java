@@ -250,14 +250,14 @@ public class GamePanel extends JPanel implements KeyListener
     g2.setColor(Color.white);
     Font font = new Font("Courier", Font.BOLD, 35);
     g2.setFont(font);
-    g2.drawString("Level: " + parent.whichLevel, new_x - 200,
-        new_y - 100);
-    g2.drawString("Fire traps: " + player.getFire_traps(), new_x - 200,
-        new_y - 50);
+    g2.drawString("Level: " + parent.whichLevel, new_x - 100,
+        new_y+50);
+    g2.drawString("Fire traps: " + player.getFire_traps(), new_x - 100,
+        new_y + 100);
 
     if (!parent.running)
     {
-      g2.drawString("Press SPACE", new_x - 200, new_y + 800);
+      g2.drawString("Press SPACE", new_x - 100, new_y + 800);
     }
     //player.getLocation().getX()-900
     //player.getLocation().getY()-450
