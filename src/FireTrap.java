@@ -66,10 +66,11 @@ public class FireTrap extends GameObject
     return explode;
   }
 
-
-  //Updates each fire trap every timer tick.
-  //Checks for zombie and player intersections.
-  //Reacts appropriately.
+  /**
+   * Updates each fire trap every timer tick.
+   * Checks for zombie and player intersections.
+   * Reacts appropriately.
+   */
   public void update(GameMap map, Player player)
   {
     for (Zombie zombie : map.zombies)
@@ -88,7 +89,6 @@ public class FireTrap extends GameObject
           {
             player.playerDied();
           }
-
         }
       }
     }
@@ -99,7 +99,6 @@ public class FireTrap extends GameObject
       if (trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
       {
         startExploding();
-
       }
     }
 
@@ -117,7 +116,6 @@ public class FireTrap extends GameObject
     {
       startExploding();
       player.playerDied = true;
-
     }
 
     fireAnimation.update();
@@ -130,7 +128,6 @@ public class FireTrap extends GameObject
     fireAnimation.start();
     SoundLoader.playExplosion();
     frame++;
-
   }
 
   public void stopExploding(GameMap map)
@@ -138,7 +135,6 @@ public class FireTrap extends GameObject
     frame = 0;
     exploding = false;
     fireAnimation.stop();
-
 
     //Checks surrounding tiles and blackens them
     int trap_row = location.getRow(GUI.tile_size);
@@ -179,13 +175,11 @@ public class FireTrap extends GameObject
   {
     if (!player.is_picking_up || player.is_putting_down || !exploding)
     {
-      g2.drawImage(trap, location.getX(), location.getY(),
-          null);
+      g2.drawImage(trap, location.getX(), location.getY(), null);
     }
 
     if (exploding)
     {
-
       g2.drawImage(fireAnimation.getSprite(),
           location.getX() - GUI.tile_size,
           location.getY() - GUI.tile_size, null);
