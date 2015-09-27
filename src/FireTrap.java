@@ -75,6 +75,7 @@ public class FireTrap extends GameObject
    */
   public void update(GameMap map, Player player)
   {
+    frame++;
     for (Zombie zombie : map.zombies)
     {
       if (getDistance(zombie) < GUI.tile_size)
@@ -129,7 +130,7 @@ public class FireTrap extends GameObject
     exploding = true;
     fireAnimation.start();
     SoundLoader.playExplosion();
-    frame++;
+    frame = 0;
   }
 
   public void stopExploding(GameMap map)
