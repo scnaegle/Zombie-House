@@ -31,8 +31,8 @@ public class LineWalkZombie extends Zombie
     this(location);
     this.defined_speed = speed;
     this.current_speed = speed;
-    this.smell = smell;
-    this.decision_rate = decision_rate;
+    Zombie.smell = smell;
+    Zombie.decision_rate = decision_rate;
   }
 
 

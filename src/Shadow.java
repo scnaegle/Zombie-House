@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Frame;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Shadow {
     JFrame frame = new JFrame("MapTest");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
     for (Point p : shadow.output)
     {

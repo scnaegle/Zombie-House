@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -1403,7 +1404,7 @@ public class GameMap
       JFrame frame = new JFrame("MapTest");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setLayout(new BorderLayout());
-      frame.setExtendedState(frame.MAXIMIZED_BOTH);
+      frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
       JPanel map_panel = new JPanel()
       {

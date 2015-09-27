@@ -33,8 +33,8 @@ public class Zombie extends Humanoid implements HumanoidObject
     this(location);
     this.current_speed = speed;
     this.defined_speed = speed;
-    this.smell = smell;
-    this.decision_rate = decision_rate;
+    Zombie.smell = smell;
+    Zombie.decision_rate = decision_rate;
   }
 
   public double getSpeed()
@@ -142,7 +142,7 @@ public class Zombie extends Humanoid implements HumanoidObject
 
   public boolean touchingZombie(Zombie zombie)
   {
-    return (intersects((Object2D) zombie));
+    return (intersects(zombie));
   }
 
   public boolean bitesPlayer(HumanoidObject player)

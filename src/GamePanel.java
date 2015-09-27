@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements KeyListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        if (parent.running)
+        if (GUI.running)
         {
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
@@ -130,7 +130,7 @@ public class GamePanel extends JPanel implements KeyListener
             parent.whichLevel++;
             if (parent.whichLevel == 6)
             {
-              parent.showWinningDialog(parent, " You won the game!");
+              GUI.showWinningDialog(parent, " You won the game!");
             }
             System.out.println("Next level");
             newMapByExit();
@@ -198,9 +198,18 @@ public class GamePanel extends JPanel implements KeyListener
 
 
     //When to draw traps and which sprite
+    boolean explodee = false;
+    FireTrap activeTrap = null;
     for (FireTrap trap : map.traps)
     {
       trap.paint(g2, player);
+      if (trap.exploding)
+      {
+        explodee = true;
+        activeTrap = trap;
+
+      }
+
     }
 
     //Draws zombies
@@ -224,15 +233,15 @@ public class GamePanel extends JPanel implements KeyListener
 //    if(explodee)
 //    {
 //      light = drawFireLight(activeTrap);
-//      lightGraphics.drawImage(light, (int) activeTrap.explosionObj.getX(),
+//      lightGraphics.drawImage(light, (int)activeTrap.explosionObj.getX(),
 //          (int) activeTrap.explosionObj.getY(), null);
 //    }
-
-    //g2.drawImage(lightLayer, vcX, vcY, null);
+//
+//    g2.drawImage(lightLayer, vcX, vcY, null);
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
-    vp = parent.scrollPane.getViewport();
+    vp = GUI.scrollPane.getViewport();
     Rectangle vp_rect = vp.getViewRect();
     int new_x = ((int)vp_rect.getX());
     int new_y = ((int)vp_rect.getY());
@@ -260,7 +269,7 @@ public class GamePanel extends JPanel implements KeyListener
         new_y);
     g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
 
-    if (!parent.running)
+    if (!GUI.running)
     {
       g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
     }
@@ -335,7 +344,7 @@ public class GamePanel extends JPanel implements KeyListener
 
     if (code == KeyEvent.VK_SPACE)
     {
-      if (!parent.running)
+      if (!GUI.running)
       {
         parent.startGame();
         requestFocusInWindow();
