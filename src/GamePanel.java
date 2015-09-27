@@ -41,6 +41,10 @@ public class GamePanel extends JPanel implements KeyListener
   GameMap map;
   Timer frame_timer;
   JViewport vp;
+  Iterator<Zombie> zombieIter;
+  Zombie zombie;
+  Iterator<FireTrap> trapIter;
+  FireTrap trap;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
@@ -74,8 +78,7 @@ public class GamePanel extends JPanel implements KeyListener
 
           //Deletes a zombie from list once it explodes in fire trap.
           //Just removing it from a list won't work.
-          Iterator<Zombie> zombieIter = map.zombies.iterator();
-          Zombie zombie;
+          zombieIter = map.zombies.iterator();
           while (zombieIter.hasNext())
           {
             zombie = zombieIter.next();
@@ -87,10 +90,7 @@ public class GamePanel extends JPanel implements KeyListener
             if (zombie.bitPlayer)  //Game over
             {
               System.out.println("zombie bit player");
-              //parent.running = false;
               parent.pauseGame();
-              //stopAllSounds();
-
               GUI.showDeathDialog(parent,
                   "Ye be bitten! Keep yer zombie erff yer tail by using yer " +
                       "fire traps!");
@@ -98,8 +98,9 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           }
-          Iterator<FireTrap> trapIter = map.traps.iterator();
-          FireTrap trap;
+
+          //Checks all traps for collisions
+          trapIter = map.traps.iterator();
           while (trapIter.hasNext())
           {
             trap = trapIter.next();
@@ -114,10 +115,7 @@ public class GamePanel extends JPanel implements KeyListener
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
-            //parent.running = false;
             parent.pauseGame();
-            //stopAllSounds();
-
             GUI.showDeathDialog(parent,
                 "Ye ran into a fire trap! Feast your eyes and pay attention!");
 
@@ -133,7 +131,6 @@ public class GamePanel extends JPanel implements KeyListener
             {
               parent.showWinningDialog(parent, " You won the game!");
             }
-            //SoundLoader.killSounds();
             System.out.println("Next level");
             newMapByExit();
           }
@@ -147,20 +144,10 @@ public class GamePanel extends JPanel implements KeyListener
     });
   }
 
-
-  private void newMapByExit() //Starts a new game with a new map
+  //Starts a new game with a new map
+  private void newMapByExit()
   {
-    //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-    map = new_map;
-    player.location = new_map.start_location;
-    //parent.loadSounds();
-  }
-
-  public void newMap() //Starts a new game with a new map
-  {
-    GameMap new_map = new GameMap();
-//    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
   }
@@ -241,7 +228,8 @@ public class GamePanel extends JPanel implements KeyListener
 //    }
 
     //g2.drawImage(lightLayer, vcX, vcY, null);
-//    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+    g2.drawImage(vignetteCanvas, vcX, vcY, null);
+
 
     int new_x = (player.getLocation().getX() - vp.getWidth() / 2);
     int new_y = (player.getLocation().getY() - vp.getHeight() / 2);
@@ -250,19 +238,19 @@ public class GamePanel extends JPanel implements KeyListener
     Font font = new Font("Courier", Font.BOLD, 35);
     g2.setFont(font);
     g2.drawString("Level: " + parent.whichLevel, new_x,
-        new_y+100);
+        new_y + 50);
     g2.drawString("Fire traps: " + player.getFire_traps(), new_x,
-        new_y + 150);
-    g2.drawString("Stamina", new_x + 1320, new_y);
+        new_y);
+    g2.drawString("Stamina", new_x + vp.getWidth(), new_y);
 
     if (!parent.running)
     {
-      g2.drawString("Press SPACE", new_x, new_y + 800);
+      g2.drawString("Press SPACE", new_x, new_y + vp.getHeight());
     }
 
     player.paint(g2);
     g2.setColor(Color.BLUE);
-    g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
+    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
 
   }
 
@@ -288,6 +276,13 @@ public class GamePanel extends JPanel implements KeyListener
   }
 
 
+  /**
+   * Uses radial gradient to draw a vignette with the player's location
+   * at the center.
+   *
+   * @param sight Uses player as radius for vignette opening
+   * @return A buffered image
+   */
   private BufferedImage makeVignette(int sight)
   {
     BufferedImage img = new BufferedImage(map.getWidth(GUI.tile_size),
@@ -369,7 +364,6 @@ public class GamePanel extends JPanel implements KeyListener
       else if (player.getFire_traps() > 0)
       {
         player.dropFireTrap();
-        //System.out.println("player put down trap");
       }
       else
       {
