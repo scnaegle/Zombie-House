@@ -108,6 +108,73 @@ public class MasterZombie extends Zombie
   }
 
 
+  /**
+   * this is the method that gives the master zombie his speical powers to go
+   * through inside wall. It makes so it ignores the inside walls. It is the
+   * same as the other hit wall in xdirction,but doesnt include one check
+   *
+   * @param map
+   * @return
+   */
+  @Override
+  protected boolean hitWallInYDirection(GameMap map)
+  {
+    Location next_location =
+        new Location(location.x, location.y + getYMovement());
+    GameObject new_location_object =
+        new GameObject(next_location, width, height);
+    int row = next_location.getRow(GUI.tile_size) + heading.getRowMovement();
+    int col = next_location.getCol(GUI.tile_size);
+
+    Tile tile_check;
+    for (int c = col - 1; c <= col + 1; c++)
+    {
+      tile_check = map.getTile(row, c);
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
+          new_location_object.getCenteredBoundingRectangle()
+              .intersects(tile_check.getBoundingRectangle()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * this is the method that gives the master zombie his speical powers to go
+   * through inside wall. It makes so it ignores the inside walls. It is the
+   * same as the other hit wall in xdirction,but doesnt include one check
+   *
+   * @param map
+   * @return
+   */
+  @Override
+  protected boolean hitWallInXDirection(GameMap map)
+  {
+    Location next_location =
+        new Location(location.x + getXMovement(), location.y);
+    GameObject new_location_object =
+        new GameObject(next_location, width, height);
+    int row = next_location.getRow(GUI.tile_size);
+    int col = next_location.getCol(GUI.tile_size) + heading.getColMovement();
+
+    Tile tile_check;
+    for (int r = row - 1; r <= row + 1; r++)
+    {
+      tile_check = map.getTile(r, col);
+      if ((tile_check.tile_type.equals(TileType.WALL) ||
+          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
+          new_location_object.getCenteredBoundingRectangle()
+              .intersects(tile_check.getBoundingRectangle()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   @Override
   protected void chooseDirection(HumanoidObject player)
   {
@@ -135,11 +202,11 @@ public class MasterZombie extends Zombie
      * like we say he can go thorugh walls and getting this
      * method allows for it
      */
-    if (!hitWallInXDirectionMaster(map))
+    if (!hitWallInXDirection(map))
     {
       moveX();
     }
-    if (!hitWallInYDirectionMaster(map))
+    if (!hitWallInYDirection(map))
     {
       moveY();
     }

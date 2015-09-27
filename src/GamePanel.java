@@ -44,14 +44,12 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
-  private StaminaBar bar;
 
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
     player = parent.player;
     map = parent.map;
-    bar = new StaminaBar(player, GUI.stamina);
 
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
@@ -111,7 +109,7 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-
+         
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -126,29 +124,16 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           // Checks if player made it to the exit tile
-          Tile test_tile;
-          int player_row = player.location.getRow(GUI.tile_size);
-          int player_col = player.location.getCol(GUI.tile_size);
-          for (int row = player_row - 1; row <= player_row + 1; row++)
-          {
-            for (int col = player_col - 1; col <= player_col + 1; col++)
+          if (player.reachedExit(map.end_location)) {
+            //If yes, then go to next level.
+            parent.whichLevel++;
+            if (parent.whichLevel == 6)
             {
-              test_tile = map.getTile(row, col);
-              if (test_tile.tile_type.equals(TileType.EXIT) &&
-                  player.getCenteredBoundingRectangle()
-                        .intersects(test_tile.getBoundingRectangle()))
-              {
-                //If yes, then go to next level.
-                parent.whichLevel++;
-                if (parent.whichLevel == 6)
-                {
-                  parent.showWinningDialog(parent, " You won the game!");
-                }
-
-                newMapByExit();
-
-              }
+              parent.showWinningDialog(parent, " You won the game!");
             }
+            //SoundLoader.killSounds();
+            System.out.println("Next level");
+            newMapByExit();
           }
 
           repaint();
@@ -165,7 +150,7 @@ public class GamePanel extends JPanel implements KeyListener
   {
     //SoundLoader.stopSounds();
     GameMap new_map = new GameMap(parent.whichLevel);
-    parent.map = new_map;
+//    parent.map = new_map;
     map = new_map;
     player.location = new_map.start_location;
     //parent.loadSounds();
@@ -226,17 +211,14 @@ public class GamePanel extends JPanel implements KeyListener
     //When to draw traps and which sprite
     for (FireTrap trap : map.traps)
     {
-      trap.paintTraps(g2, player);
+      trap.paint(g2, player);
     }
 
     //Draws zombies
     for (Zombie zombie : map.zombies)
     {
-      zombie.paintZombies(g2);
+      zombie.paint(g2);
     }
-
-    player.paintPlayer(g2);
-    bar.paintBar(g2);
 
 
     //Draws vignette with player at center.
@@ -275,6 +257,10 @@ public class GamePanel extends JPanel implements KeyListener
     {
       g2.drawString("Press SPACE", new_x - 200, new_y + 800);
     }
+
+    player.paint(g2);
+    g2.setColor(Color.BLUE);
+    g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
     //player.getLocation().getX()-900
     //player.getLocation().getY()-450
   }
@@ -397,7 +383,7 @@ public class GamePanel extends JPanel implements KeyListener
       }
       else if (player.getFire_traps() > 0)
       {
-        player.is_putting_down = true;
+        player.dropFireTrap();
         //System.out.println("player put down trap");
       }
       else

@@ -122,7 +122,6 @@ public class SoundLoader implements LineListener
 
   public static void playHitObst()
   {
-
     playHitObst(0);
   }
 

@@ -6,6 +6,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -18,8 +19,7 @@ import java.util.ArrayList;
  */
 public class Humanoid extends GameObject implements HumanoidObject
 {
-  protected final double MOVE_MULTIPLIER =
-      (double) (GUI.tile_size / GamePanel.FPS);
+  protected final double MOVE_MULTIPLIER = (GUI.tile_size / (double)GamePanel.FPS);
   protected double defined_speed = 1.0;
   protected double current_speed = 1.0;
   Heading heading;
@@ -171,71 +171,6 @@ public class Humanoid extends GameObject implements HumanoidObject
 
 
   /**
-   * this is the method that gives the master zombie his speical powers to go
-   * through inside wall. It makes so it ignores the inside walls. It is the
-   * same as the other hit wall in xdirction,but doesnt include one check
-   *
-   * @param map
-   * @return
-   */
-  protected boolean hitWallInYDirectionMaster(GameMap map)
-  {
-    Location next_location =
-        new Location(location.x, location.y + getYMovement());
-    GameObject new_location_object =
-        new GameObject(next_location, width, height);
-    int row = next_location.getRow(GUI.tile_size) + heading.getRowMovement();
-    int col = next_location.getCol(GUI.tile_size);
-
-    Tile tile_check;
-    for (int c = col - 1; c <= col + 1; c++)
-    {
-      tile_check = map.getTile(row, c);
-      if ((tile_check.tile_type.equals(TileType.WALL) ||
-          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
-          new_location_object.getCenteredBoundingRectangle()
-                             .intersects(tile_check.getBoundingRectangle()))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * this is the method that gives the master zombie his speical powers to go
-   * through inside wall. It makes so it ignores the inside walls. It is the
-   * same as the other hit wall in xdirction,but doesnt include one check
-   *
-   * @param map
-   * @return
-   */
-  protected boolean hitWallInXDirectionMaster(GameMap map)
-  {
-    Location next_location =
-        new Location(location.x + getXMovement(), location.y);
-    GameObject new_location_object =
-        new GameObject(next_location, width, height);
-    int row = next_location.getRow(GUI.tile_size);
-    int col = next_location.getCol(GUI.tile_size) + heading.getColMovement();
-
-    Tile tile_check;
-    for (int r = row - 1; r <= row + 1; r++)
-    {
-      tile_check = map.getTile(r, col);
-      if ((tile_check.tile_type.equals(TileType.WALL) ||
-          tile_check.tile_type.equals(TileType.BURNTWALL)) &&
-          new_location_object.getCenteredBoundingRectangle()
-                             .intersects(tile_check.getBoundingRectangle()))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  /**
    * This used to make sure the zombie sprites do not overlap in the X plane
    * essentally making walls around them
    *
@@ -251,12 +186,9 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-      //    if(zombie instanceof MasterZombie)
-      //    {
-      //      return false;
-      //    }
-      if (this != zombie && new_location_object.getDistance(zombie) <
-          GUI.tile_size)
+      if (!this.equals(zombie) &&
+          new_location_object.getDistance(zombie) < GUI.tile_size &&
+          new_location_object.intersects(zombie))
       {
         return true;
       }
@@ -281,8 +213,9 @@ public class Humanoid extends GameObject implements HumanoidObject
 
     for (Zombie zombie : zombies)
     {
-      if (this != zombie && new_location_object.getDistance(zombie) <
-          GUI.tile_size)
+      if (!this.equals(zombie) &&
+          new_location_object.getDistance(zombie) < GUI.tile_size &&
+          new_location_object.intersects(zombie))
       {
         return true;
       }
@@ -296,7 +229,7 @@ public class Humanoid extends GameObject implements HumanoidObject
    *
    * @param map
    * @param next_location
-   * @return
+   * @return true if wall has been hit
    */
   protected boolean hitWall(GameMap map, Location next_location)
   {
@@ -385,6 +318,11 @@ public class Humanoid extends GameObject implements HumanoidObject
       }
     }
     return false;
+  }
+
+  protected void setRandomHeading() {
+    Random rand = new Random();
+    heading.setDegrees(rand.nextInt(360));
   }
 
 

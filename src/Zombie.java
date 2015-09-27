@@ -11,8 +11,6 @@ public class Zombie extends Humanoid implements HumanoidObject
 {
   public static double decision_rate;
   public static double smell;
-  public boolean toTheLeftOfPlayer = false;
-  public boolean toTheRightOfPlayer = false;
   public boolean bitPlayer = false;
   public boolean zombieDied = false;
   protected int frame = 0;
@@ -21,8 +19,6 @@ public class Zombie extends Humanoid implements HumanoidObject
   Animation moveLeft;
   Animation moveRight;
   Animation moveUp;
-  private boolean canHearZombieWalk = false;
-  private boolean canHearHitObst = false;
 
 
   public Zombie(Location location) {
@@ -80,14 +76,13 @@ public class Zombie extends Humanoid implements HumanoidObject
       frame = 0;
       chooseDirection(player);
     }
-//    System.out.println("heading: " + heading);
+
     if (!hitWallInXDirection(map) && !hitAnotherZombieInX(map.zombies)) {
       moveX();
     }
     if (!hitWallInYDirection(map) && !hitAnotherZombieInY(map.zombies)) {
       moveY();
     }
-
 
     if (bitesPlayer(player))
     {
@@ -100,7 +95,6 @@ public class Zombie extends Humanoid implements HumanoidObject
     Location next_location = getNextLocation();
     if (getDistance((Object2D) player) <= range)
     {
-      //System.out.println("yes walk");
       SoundLoader.playZWalk(checkZombieDirection(player));
     }
 
@@ -162,7 +156,7 @@ public class Zombie extends Humanoid implements HumanoidObject
     SoundLoader.playBite();
   }
 
-  public void paintZombies(Graphics2D g2)
+  public void paint(Graphics2D g2)
   {
     if (!zombieDied)
     {
