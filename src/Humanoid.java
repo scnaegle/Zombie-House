@@ -19,7 +19,8 @@ import java.util.Random;
  */
 public class Humanoid extends GameObject implements HumanoidObject
 {
-  protected final double MOVE_MULTIPLIER = (GUI.tile_size / (double)GamePanel.FPS);
+  protected final double MOVE_MULTIPLIER =
+      (GUI.tile_size / (double) GamePanel.FPS);
   protected double defined_speed = 1.0;
   protected double current_speed = 1.0;
   Heading heading;
@@ -320,7 +321,8 @@ public class Humanoid extends GameObject implements HumanoidObject
     return false;
   }
 
-  protected void setRandomHeading() {
+  protected void setRandomHeading()
+  {
     Random rand = new Random();
     heading.setDegrees(rand.nextInt(360));
   }

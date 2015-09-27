@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.util.Random;
 /**
  * Sets up the random walk zombies and their animation sprites
  */

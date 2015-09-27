@@ -1,36 +1,98 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.stream.Collectors;
 
 /**
  * Created by scnaegl on 9/20/15.
  */
 public class Shadow {
 
+  public ArrayList<ArrayList<Point>> demo_intersectionsDetected =
+      new ArrayList<ArrayList<Point>>();
+  ArrayList<Point> output = new ArrayList<Point>();
   private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
   private ArrayList<Segment> segments = new ArrayList<Segment>();
   private Point center = new Point();
-
   private LinkedList<Segment> open = new LinkedList<Segment>();
-
-  ArrayList<Point> output = new ArrayList<Point>();
-
-  public ArrayList<ArrayList<Point>> demo_intersectionsDetected = new ArrayList<ArrayList<Point>>();
 
   public Shadow() {
   }
 
   public Shadow(GameMap map) {
     loadMap(map);
+  }
+
+  public static void main(String[] args)
+  {
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(
+              Shadow.class.getResource("resources/shadow_test.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+
+    GameMap map = new GameMap(map_file);
+    Shadow shadow = new Shadow(map);
+    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
+    shadow.sweep();
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+    frame.setExtendedState(frame.MAXIMIZED_BOTH);
+
+    for (Point p : shadow.output)
+    {
+      System.out.println("point: " + p);
+    }
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map.map_image, 0, 0, null);
+
+        g.setColor(Color.YELLOW);
+        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
+        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
+//        ArrayList<Integer> xs = CollectionUtils.collect(list,
+// TransformerUtils.invokerTransformer("getName")
+        //g.fillPolygon(xs, ys, shadow.output.size());
+        int[] test_xs = new int[3];
+        test_xs[0] = shadow.output.get(0).x;
+        test_xs[1] = shadow.output.get(1).x;
+        test_xs[2] = shadow.center.x;
+        int[] test_ys = new int[3];
+        test_ys[0] = shadow.output.get(0).y;
+        test_ys[1] = shadow.output.get(1).y;
+        test_ys[2] = shadow.center.y;
+        g.fillPolygon(test_xs, test_ys, 3);
+      }
+    };
+    map_panel
+        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
   }
 
   public void loadMap(GameMap map) {
@@ -338,69 +400,5 @@ public class Shadow {
       result = 31 * result + (p2 != null ? p2.hashCode() : 0);
       return result;
     }
-  }
-
-  public static void main(String[] args)
-  {
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(Shadow.class.getResource("resources/shadow_test.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
-
-    GameMap map = new GameMap(map_file);
-    Shadow shadow = new Shadow(map);
-    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
-    shadow.sweep();
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-    frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-    for(Point p : shadow.output) {
-      System.out.println("point: " + p);
-    }
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map.map_image, 0, 0, null);
-
-        g.setColor(Color.YELLOW);
-        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
-        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
-//        ArrayList<Integer> xs = CollectionUtils.collect(list, TransformerUtils.invokerTransformer("getName")
-        //g.fillPolygon(xs, ys, shadow.output.size());
-        int[] test_xs = new int[3];
-        test_xs[0] = shadow.output.get(0).x;
-        test_xs[1] = shadow.output.get(1).x;
-        test_xs[2] = shadow.center.x;
-        int[] test_ys = new int[3];
-        test_ys[0] = shadow.output.get(0).y;
-        test_ys[1] = shadow.output.get(1).y;
-        test_ys[2] = shadow.center.y;
-        g.fillPolygon(test_xs, test_ys, 3);
-      }
-    };
-    map_panel.setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
   }
 }

@@ -23,21 +23,10 @@ public class MasterZombie extends Zombie
    * and made more sense to put it there
    */
   static ArrayList<Zombie> minons = new ArrayList<Zombie>();
-
-  /**
-   * add those zombies to the list
-   * @param zombie
-   */
-  public static void addZombie(Zombie zombie)
-  {
-    minons.add(zombie);
-  }
-
   BufferedImage[] down = initDown();
   BufferedImage[] left = initLeft();
   BufferedImage[] right = initRight();
   BufferedImage[] up = initUp();
-
   public MasterZombie(Location location)
   {
     super(location);
@@ -64,7 +53,6 @@ public class MasterZombie extends Zombie
     }
   }
 
-
   public MasterZombie(double speed, double smell, double decision_rate,
                       Location location)
   {
@@ -73,6 +61,15 @@ public class MasterZombie extends Zombie
     this.current_speed = speed;
     this.smell = smell;
     this.decision_rate = decision_rate;
+  }
+
+  /**
+   * add those zombies to the list
+   * @param zombie
+   */
+  public static void addZombie(Zombie zombie)
+  {
+    minons.add(zombie);
   }
 
   private BufferedImage[] initDown()

@@ -3,8 +3,8 @@
  * Line walk zombies extend the Zombie class since they do not need
  * their own copy of the information.
  */
+
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 public class LineWalkZombie extends Zombie
 {

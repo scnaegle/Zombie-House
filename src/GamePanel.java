@@ -109,7 +109,7 @@ public class GamePanel extends JPanel implements KeyListener
             }
           }
 
-         
+
           //Shows dialog if player died at any time
           if (player.playerDied)
           {
@@ -124,7 +124,8 @@ public class GamePanel extends JPanel implements KeyListener
 
 
           // Checks if player made it to the exit tile
-          if (player.reachedExit(map.end_location)) {
+          if (player.reachedExit(map.end_location))
+          {
             //If yes, then go to next level.
             parent.whichLevel++;
             if (parent.whichLevel == 6)
@@ -252,6 +253,7 @@ public class GamePanel extends JPanel implements KeyListener
         new_y - 100);
     g2.drawString("Fire traps: " + player.getFire_traps(), new_x - 200,
         new_y - 50);
+    g2.drawString("Stamina", new_x + 1320, new_y - 100);
 
     if (!parent.running)
     {
@@ -261,8 +263,7 @@ public class GamePanel extends JPanel implements KeyListener
     player.paint(g2);
     g2.setColor(Color.BLUE);
     g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
-    //player.getLocation().getX()-900
-    //player.getLocation().getY()-450
+
   }
 
   private BufferedImage drawFireLight(FireTrap trap)

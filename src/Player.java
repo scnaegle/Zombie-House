@@ -332,8 +332,10 @@ public class Player extends Humanoid implements HumanoidObject
     }
   }
 
-  public boolean reachedExit(Location exit_location) {
-    return getCenteredBoundingRectangle().contains(exit_location.x, exit_location.y);
+  public boolean reachedExit(Location exit_location)
+  {
+    return getCenteredBoundingRectangle()
+        .contains(exit_location.x, exit_location.y);
   }
 
   /**
@@ -350,7 +352,8 @@ public class Player extends Humanoid implements HumanoidObject
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
       stamina_bar.paint(g2);
-      if (is_picking_up || is_putting_down) {
+      if (is_picking_up || is_putting_down)
+      {
         pickup_bar.paint(g2);
       }
     }
@@ -391,7 +394,8 @@ public class Player extends Humanoid implements HumanoidObject
     pickup_bar = new PickupBar(PICKUP_FRAMES);
   }
 
-  public void dropFireTrap() {
+  public void dropFireTrap()
+  {
     is_putting_down = true;
     frame = 0;
     pickup_bar = new PickupBar(PICKUP_FRAMES);
@@ -483,7 +487,8 @@ public class Player extends Humanoid implements HumanoidObject
 
   }
 
-  private class StaminaBar {
+  private class StaminaBar
+  {
 
     public final Color TIRED = Color.BLACK;
     public final Color ENERGY = new Color(14, 15, 246);
@@ -491,42 +496,51 @@ public class Player extends Humanoid implements HumanoidObject
     private double maxStamina;
 
     private int width = 20;
-    private int height = 80;
+    private int height = 200;
+    private int xOffset = 1400;
+    private int yOffset = 800;
 
-    public StaminaBar(double maxStamina) {
+    public StaminaBar(double maxStamina)
+    {
       this.maxStamina = maxStamina;
     }
 
-    public void paint(Graphics2D g2) {
-      int x = (int)getLocation().x - GUI.SCENE_WIDTH / 2 + 50;
-      int y = (int)getLocation().y + GUI.SCENE_HEIGHT / 2 - 100;
+    public void paint(Graphics2D g2)
+    {
+      int x = (int) getLocation().x - GUI.SCENE_WIDTH / 2 + xOffset;
+      int y = (int) getLocation().y + GUI.SCENE_HEIGHT / 2 - yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);
 
       g2.setColor(ENERGY);
-      g2.fillRect(x, y - (int)getStaminaAmount() + height, width, (int) getStaminaAmount());
+      g2.fillRect(x, y - (int) getStaminaAmount() + height, width,
+          (int) getStaminaAmount());
 
       g2.setColor(BORDER);
       g2.drawRect(x, y, width, height);
     }
 
-    public double getStaminaAmount() {
+    public double getStaminaAmount()
+    {
       return (stamina / maxStamina) * height;
     }
   }
 
-  private class PickupBar {
+  private class PickupBar
+  {
     public final Color TOTAL = new Color(249, 44, 25);
     public final Color PICKUP = new Color(108, 246, 16);
     private double max_frames;
 
-    public PickupBar(int max_frames) {
+    public PickupBar(int max_frames)
+    {
 //      this.maxStamina = maxStamina;
       this.max_frames = max_frames;
     }
 
-    public void paint(Graphics2D g2) {
+    public void paint(Graphics2D g2)
+    {
       int x = getLocation().getX();
       int y = getLocation().getY();
 
@@ -537,7 +551,8 @@ public class Player extends Humanoid implements HumanoidObject
       g2.fillRect(x, y - 20, (int) getPickupAmount(), 8);
     }
 
-    private double getPickupAmount() {
+    private double getPickupAmount()
+    {
       return (frame / max_frames) * GUI.tile_size;
     }
 
