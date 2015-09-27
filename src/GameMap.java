@@ -118,8 +118,8 @@ public class GameMap
         }
         if (new_tile.tile_type == TileType.EXIT)
         {
-          end_location = new Location(new_tile.col * GUI.tile_size,
-              new_tile.row * GUI.tile_size);
+          end_location = new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
+              new_tile.row * GUI.tile_size + GUI.tile_size / 2);
         }
         if (new_tile.tile_type == TileType.WALL ||
             new_tile.tile_type == TileType.INSIDEWALL)
