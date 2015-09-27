@@ -251,7 +251,7 @@ public class GamePanel extends JPanel implements KeyListener
 
   private void paintTextOverlay(Graphics2D g) {
     vp = GUI.scrollPane.getViewport();
-    Rectangle vp_rect = vp.getViewRect();
+//    Rectangle vp_rect = vp.getViewRect();
     int new_x = ((int)player.location.x - GUI.SCENE_WIDTH / 2);
     int new_y = ((int)player.location.y - GUI.SCENE_HEIGHT / 2);
     int width = GUI.SCENE_WIDTH;
@@ -263,11 +263,11 @@ public class GamePanel extends JPanel implements KeyListener
 //    System.out.format("Player top left: x=%d, y=%d\n", player
 // .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
 
-    g.setColor(Color.BLUE);
-//    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
-    g.draw(vp.getViewRect());
-    g.setColor(Color.RED);
-    g.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
+//    g.setColor(Color.BLUE);
+////    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
+//    g.draw(vp.getViewRect());
+//    g.setColor(Color.RED);
+//    g.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
 
     new_x += 50;
     new_y += 100;
