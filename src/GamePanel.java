@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
+  static final int START_GAME = 0;
   static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
@@ -52,7 +53,7 @@ public class GamePanel extends JPanel implements KeyListener
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
     this.parent = parent;
-    map = new GameMap();
+    map = new GameMap(START_GAME);
     player = new Player(GUI.sight, GUI.hearing, GUI.speed, GUI.stamina, GUI.regen, 70, 70, map.start_location);
     player.setHeading(new Heading(Heading.NONE));
 
