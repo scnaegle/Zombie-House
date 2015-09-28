@@ -20,7 +20,6 @@ public class GamePanel extends JPanel implements KeyListener
 {
 
   // How fast the timer should tick. Ranges from 35ish to 50ish.
-  static final int START_GAME = 1;
   static final int FPS = 45;
   static final int SKIP_TICKS = 1000 / FPS;
   final static int SHOWN_TILES = 24;
@@ -50,6 +49,7 @@ public class GamePanel extends JPanel implements KeyListener
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
+  private Shadow shadow;
 
   public GamePanel(GUI parent) //Takes in the GUI so it can uses it's info
   {
@@ -61,6 +61,8 @@ public class GamePanel extends JPanel implements KeyListener
     setBackground(Color.black);
     vignetteCanvas = makeVignette(player.getSight());
 
+    shadow = new Shadow(map);
+    shadow.setPlayerSight(player.getSight());
 
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
@@ -76,7 +78,6 @@ public class GamePanel extends JPanel implements KeyListener
           //long end, start = System.currentTimeMillis();
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
-          snapViewPortToPlayer();  //Makes viewport follow player
 
 
           //Deletes a zombie from list once it explodes in fire trap.
@@ -141,10 +142,15 @@ public class GamePanel extends JPanel implements KeyListener
           //end = System.currentTimeMillis();
           //System.out.printf("Everything not painting took %dms%n", end - start);
 
+          shadow.setDimensions(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT);
+          Point center_point = player.getCenterPoint();
+          shadow.setLightLocation((int)center_point.getX(), (int)center_point.getY());
+          shadow.sweep();
 
+          snapViewPortToPlayer();  //Makes viewport follow player
         }
-
         repaint();
+
       }
     });
   }
@@ -222,14 +228,17 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
-     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
+//     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
+//     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
+//
+//    if (!explodee)
+//    {
+//      g2.drawImage(vignetteCanvas, vcX, vcY, null);
+//    }
 
-    if (!explodee)
-    {
-      g2.drawImage(vignetteCanvas, vcX, vcY, null);
-    }
 
+    System.out.println("player location: " + player.location);
+    shadow.paint(g2);
 
     //Draws vignette with player at center.
 //    int absWidth = 2000;

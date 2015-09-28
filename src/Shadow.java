@@ -1,32 +1,108 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Frame;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by scnaegl on 9/20/15.
  */
 public class Shadow {
 
-  public ArrayList<ArrayList<Point>> demo_intersectionsDetected =
-      new ArrayList<ArrayList<Point>>();
-  ArrayList<Point> output = new ArrayList<Point>();
-  public ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
-  public ArrayList<Segment> segments = new ArrayList<Segment>();
+  ArrayList<EndPoint> output = new ArrayList<EndPoint>();
+  private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+  private ArrayList<Segment> segments = new ArrayList<Segment>();
   private Point center = new Point();
-  private LinkedList<Segment> open = new LinkedList<Segment>();
+//  private LinkedList<Segment> open = new LinkedList<Segment>();
+  private GameMap map;
+  private BufferedImage background;
+  public BufferedImage overlay;
+  private int width = 800;
+  private int height = 800;
+  private int sight = 5;
+  private int sight_pixels = 5 * GUI.tile_size;
+  private Point location;
 
   public Shadow() {
   }
 
   public Shadow(GameMap map) {
     loadMap(map);
+    this.map = map;
+    setupBackground();
+    location = new Point(0, 0);
+  }
+
+  public void setDimensions(int width, int height) {
+    this.width = width;
+    this.height = height;
+  }
+
+  public void setPlayerSight(int sight) {
+    this.sight = sight;
+    this.sight_pixels = sight * GUI.tile_size;
+  }
+
+  private void setupBackground(){
+    background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D bg = (Graphics2D)background.getGraphics();
+    bg.setColor(Color.BLACK);
+    bg.fillRect(0, 0, width, height);
+    overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+  }
+
+  private void setupOverlay() {
+    long t1 = System.currentTimeMillis();
+//    int width = map.getWidth(GUI.tile_size);
+//    int height = map.getHeight(GUI.tile_size);
+    overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = (Graphics2D)overlay.getGraphics();
+    g.setColor(Color.BLACK);
+    g.fillRect(0, 0, width, height);
+
+//    overlay = deepCopy(background);
+//    Graphics2D g = (Graphics2D)overlay.getGraphics();
+
+    int[] xs = output.stream().mapToInt(s -> s.x - location.x).toArray();
+    int[] ys = output.stream().mapToInt(s -> s.y - location.y).toArray();
+    int rule = AlphaComposite.CLEAR;
+    float alpha = 0.1f;
+    Composite comp = AlphaComposite.getInstance(rule, alpha);
+    g.setComposite(comp);
+//    bg.setColor(Color.YELLOW);
+    g.setPaint(Color.white);
+    g.fillPolygon(xs, ys, xs.length);
+    for(Tile tile : map.getWalls()) {
+      Rectangle rect = tile.getBoundingRectangle();
+      rect.width += 1;
+      rect.height += 1;
+//      if (Math.hypot(tile.location.x - center.x, tile.location.y - center.y) > sight_pixels) {
+//        continue;
+//      }
+      for (EndPoint p : output) {
+        if (rect.contains(p.x, p.y)) {
+          rect.x -= location.x;
+          rect.y -= location.y;
+          rect.width -= 1;
+          rect.height -= 1;
+          g.fill(rect);
+          break;
+        }
+      }
+    }
+    long t2 = System.currentTimeMillis();
+    System.out.println("setting up overlay took: " + (t2 - t1));
+  }
+
+  static BufferedImage deepCopy(BufferedImage bi) {
+    ColorModel cm = bi.getColorModel();
+    boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+    WritableRaster raster = bi.copyData(null);
+    return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
   }
 
   public static void main(String[] args)
@@ -53,10 +129,6 @@ public class Shadow {
 //    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
     frame.setPreferredSize(new Dimension(1600, 800));
 
-    for (Point p : shadow.output)
-    {
-      System.out.println("point: " + p);
-    }
 
     JPanel map_panel = new JPanel()
     {
@@ -85,6 +157,12 @@ public class Shadow {
   }
 
   public void paint(Graphics2D g) {
+    System.out.println("Painting shadows...");
+    System.out.format("x=%d, y=%d, width=%d, height=%d\n", location.x, location.y, width, height);
+    g.drawImage(overlay, location.x, location.y, width, height, null);
+  }
+
+  public void paint_OLD(Graphics2D g) {
     g.setColor(Color.YELLOW);
 //        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
 //        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
@@ -100,65 +178,87 @@ public class Shadow {
 //        test_ys[1] = shadow.output.get(1).y;
 //        test_ys[2] = shadow.center.y;
 //        g.fillPolygon(test_xs, test_ys, 3);
-    g.setColor(Color.YELLOW);
-    g.fillOval(center.x - 10, center.y - 10, 20, 20);
-    int i = 0;
-    output.clear();
-    for(Segment s : segments) {
-      i++;
-      System.out.println("Segment: " + s);
-      g.setColor(Color.RED);
-      g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
-      g.setColor(Color.BLUE);
-      g.fillOval(s.p1.x - 3, s.p1.y - 3, 6, 6);
-      g.fillOval(s.p2.x - 3, s.p2.y - 3, 6, 6);
-      g.setColor(Color.YELLOW);
-      Point new_p1 = s.p1;
-      Point new_p2 = s.p2;
-      System.out.println("p1: " + new_p1);
-      System.out.println("p2: " + new_p2);
-      long t1 = System.currentTimeMillis();
-      for(Segment s2 : segments) {
-        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
-            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-        System.out.println("intersection: " + intersection);
-        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
-          new_p1 = intersection;
-        }
-        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
-            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-        System.out.println("intersection 2: " + intersection2);
-        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
-          new_p2 = intersection2;
-        }
-      }
-      g.drawLine(center.x, center.y, new_p1.x, new_p1.y);
-      g.drawLine(center.x, center.y, new_p2.x, new_p2.y);
-      output.add(new_p1);
-      output.add(new_p2);
-//      if (i > 5) {
-//        break;
+//    g.setColor(Color.YELLOW);
+//    g.fillOval(center.x - 10, center.y - 10, 20, 20);
+//    int i = 0;
+//    output.clear();
+//    for(Segment s : segments) {
+//      i++;
+//      System.out.println("Segment: " + s);
+//      g.setColor(Color.RED);
+//      g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
+//      g.setColor(Color.BLUE);
+//      g.fillOval(s.p1.x - 3, s.p1.y - 3, 6, 6);
+//      g.fillOval(s.p2.x - 3, s.p2.y - 3, 6, 6);
+//      g.setColor(Color.YELLOW);
+//      Point new_p1 = s.p1;
+//      Point new_p2 = s.p2;
+//      System.out.println("p1: " + new_p1);
+//      System.out.println("p2: " + new_p2);
+//      long t1 = System.currentTimeMillis();
+//      for(Segment s2 : segments) {
+//        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
+//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+//        System.out.println("intersection: " + intersection);
+//        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
+//          new_p1 = intersection;
+//        }
+//        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
+//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+//        System.out.println("intersection 2: " + intersection2);
+//        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
+//          new_p2 = intersection2;
+//        }
 //      }
-      long t2 = System.currentTimeMillis();
-      System.out.println("This took " + (t2 - t1));
-    }
+//      g.drawLine(center.x, center.y, new_p1.x, new_p1.y);
+//      g.drawLine(center.x, center.y, new_p2.x, new_p2.y);
+//      EndPoint new_e1 = new EndPoint(new_p1.x, new_p1.y);
+//      new_e1.angle = Math.atan2(new_e1.y - center.y, new_e1.x - center.x);
+//      EndPoint new_e2 = new EndPoint(new_p2.x, new_p2.y);
+//      new_e2.angle = Math.atan2(new_e2.y - center.y, new_e2.x - center.x);
+//      output.add(new_e1);
+//      output.add(new_e2);
+////      if (i > 5) {
+////        break;
+////      }
+//      long t2 = System.currentTimeMillis();
+//      System.out.println("This took " + (t2 - t1));
+//    }
 
-    int[] xs = output.stream().mapToInt(s -> s.x).toArray();
-    int[] ys = output.stream().mapToInt(s -> s.y).toArray();
-    g.setColor(Color.YELLOW);
-//    g.fillPolygon(xs, ys, xs.length);
-//        for(Point p : output) {
-//          g.setColor(Color.YELLOW);
-//          g.fillOval(p.x - 5, p.y - 5, 10, 10);
+//    Collections.sort(output);
+    long t1 = System.currentTimeMillis();
+//    int[] xs = output.stream().mapToInt(s -> s.x).toArray();
+//    int[] ys = output.stream().mapToInt(s -> s.y).toArray();
+//    int width = map.getWidth(GUI.tile_size);
+//    int height = map.getHeight(GUI.tile_size);
+//    BufferedImage background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//    Graphics2D bg = (Graphics2D)background.getGraphics();
+//    bg.setColor(Color.BLACK);
+//    bg.fillRect(0, 0, width, height);
+//    int rule = AlphaComposite.CLEAR;
+//    float alpha = 0.1f;
+//    Composite comp = AlphaComposite.getInstance(rule, alpha);
+//    bg.setComposite(comp);
+////    bg.setColor(Color.YELLOW);
+//    bg.setPaint(Color.white);
+//    bg.fillPolygon(xs, ys, xs.length);
+//    for(Tile tile : map.getWalls()) {
+//      Rectangle rect = tile.getBoundingRectangle();
+//      rect.width += 1;
+//      rect.height += 1;
+////      if (Math.hypot(tile.location.x - center.x, tile.location.y - center.y) > sight_pixels) {
+////        continue;
+////      }
+//      for (EndPoint p : output) {
+//        if (rect.contains(p.x, p.y)) {
+//          bg.fill(tile.getBoundingRectangle());
+//          break;
 //        }
-//        for(ArrayList<Point> points : demo_intersectionsDetected) {
-//          Point previous = points.get(0);
-//          for(Point p : points) {
-//            g.setColor(Color.GREEN);
-//            g.fillOval(p.x - 5, p.y - 5, 10, 10);
-//            g.drawLine(previous.x, previous.y, p.x, p.y);
-//          }
-//        }
+//      }
+//    }
+    g.drawImage(overlay, 0, 0, map.getWidth(GUI.tile_size), map.getHeight(GUI.tile_size), null);
+    long t2 = System.currentTimeMillis();
+    System.out.println("Drawing took: " + (t2 - t1));
   }
 
   public void loadMap(GameMap map) {
@@ -167,7 +267,6 @@ public class Shadow {
 //    setEndPoints(map.getWalls());
     int x, y, w, h;
     for(Tile wall : map.getWalls()) {
-      System.out.println("wall: " + wall);
       x = wall.location.getX();
       y = wall.location.getY();
       w = wall.width;
@@ -179,25 +278,9 @@ public class Shadow {
     }
   }
 
-  private void setEndPoints(ArrayList<Tile> walls) {
-    int x, y, w, h;
-    for(Tile wall : walls) {
-      System.out.println("wall: " + wall);
-      x = wall.location.getX();
-      y = wall.location.getY();
-      w = wall.width;
-      h = wall.height;
-//      System.out.format("x=%d, y=%, w=%w, h=%h\n", x, y, w, h);
-      addEndPoint(x, y); // top left
-      addEndPoint(x + w, y); // top right
-      addEndPoint(x, y + h); // bottom left
-      addEndPoint(x + w, y + h); // bottom right
-    }
-  }
-
   private void addSegment(int x1, int y1, int x2, int y2) {
 //    segments.add(new Segment(x, y, x2, y2));
-    System.out.format("x1=%d, y2=%d, x2=%d, y2=%d\n", x1, y1, x2, y2);
+//    System.out.format("x1=%d, y2=%d, x2=%d, y2=%d\n", x1, y1, x2, y2);
     Segment segment = null;
     EndPoint p1 = new EndPoint(0, 0);
     p1.segment = segment;
@@ -221,126 +304,42 @@ public class Shadow {
 //    }
   }
 
-  private void addEndPoint(int x, int y) {
-    endpoints.add(new EndPoint(x, y));
-  }
-
-  private void setLightLocation(int x, int y) {
-    this.center = new Point(x, y);
-
-    for (Segment segment : segments) {
-      double dx = 0.5 * (segment.p1.x + segment.p2.x) - x;
-      double dy = 0.5 * (segment.p1.y + segment.p2.y) - y;
-      // NOTE: we only use this for comparison so we can use
-      // distance squared instead of distance. However in
-      // practice the sqrt is plenty fast and this doesn't
-      // really help in this situation.
-      segment.d = dx*dx + dy*dy;
-
-      // NOTE: future optimization: we could record the quadrant
-      // and the y/x or x/y ratio, and sort by (quadrant,
-      // ratio), instead of calling atan2. See
-      // <https://github.com/mikolalysenko/compare-slope> for a
-      // library that does this. Alternatively, calculate the
-      // angles and use bucket sort to get an O(N) sort.
-      segment.p1.angle = Math.atan2(segment.p1.y - y, segment.p1.x - x);
-      segment.p2.angle = Math.atan2(segment.p2.y - y, segment.p2.x - x);
-
-      double dAngle = segment.p2.angle - segment.p1.angle;
-      if (dAngle <= -Math.PI) { dAngle += 2*Math.PI; }
-      if (dAngle > Math.PI) { dAngle -= 2*Math.PI; }
-      segment.p1.begin = (dAngle > 0.0);
-      segment.p2.begin = !segment.p1.begin;
-    }
-  }
-
-  public boolean segmentInFrontOf(Segment a, Segment b, Point relativeTo) {
-    // NOTE: we slightly shorten the segments so that
-    // intersections of the endpoints (common) don't count as
-    // intersections in this algorithm
-//    var A1 = leftOf(a, interpolate(b.p1, b.p2, 0.01));
-//    var A2 = leftOf(a, interpolate(b.p2, b.p1, 0.01));
-//    var A3 = leftOf(a, relativeTo);
-//    var B1 = leftOf(b, interpolate(a.p1, a.p2, 0.01));
-//    var B2 = leftOf(b, interpolate(a.p2, a.p1, 0.01));
-//    var B3 = leftOf(b, relativeTo);
-
-    // NOTE: this algorithm is probably worthy of a short article
-    // but for now, draw it on paper to see how it works. Consider
-    // the line A1-A2. If both B1 and B2 are on one side and
-    // relativeTo is on the other side, then A is in between the
-    // viewer and B. We can do the same with B1-B2: if A1 and A2
-    // are on one side, and relativeTo is on the other side, then
-    // B is in between the viewer and A.
-//    if (B1 == B2 && B2 != B3) return true;
-//    if (A1 == A2 && A2 == A3) return true;
-//    if (A1 == A2 && A2 != A3) return false;
-//    if (B1 == B2 && B2 == B3) return false;
-    if (a.d < b.d) return true;
-
-    // If A1 != A2 and B1 != B2 then we have an intersection.
-    // Expose it for the GUI to show a message. A more robust
-    // implementation would split segments at intersections so
-    // that part of the segment is in front and part is behind.
-    ArrayList<Point> inner_list = new ArrayList<Point>();
-    inner_list.add(a.p1);
-    inner_list.add(a.p2);
-    inner_list.add(b.p1);
-    inner_list.add(b.p2);
-    demo_intersectionsDetected.add(inner_list);
-    return false;
-
-    // NOTE: previous implementation was a.d < b.d. That's simpler
-    // but trouble when the segments are of dissimilar sizes. If
-    // you're on a grid and the segments are similarly sized, then
-    // using distance will be a simpler and faster implementation.
-  }
-
-  private void addTriangle(double angle1, double angle2, Segment segment) {
-    Point p1 = center;
-    Point p2 = new Point((int)(center.x + Math.cos(angle1)), (int)(center.y + Math.sin(angle1)));
-    Point p3 = new Point(0, 0);
-    Point p4 = new Point(0, 0);
-
-    if (segment != null) {
-      // Stop the triangle at the intersecting segment
-      p3.x = segment.p1.x;
-      p3.y = segment.p1.y;
-      p4.x = segment.p2.x;
-      p4.y = segment.p2.y;
-    } else {
-      // Stop the triangle at a fixed distance; this probably is
-      // not what we want, but it never gets used in the demo
-      p3.x = (int)(center.x + Math.cos(angle1) * 500);
-      p3.y = (int)(center.y + Math.sin(angle1) * 500);
-      p4.x = (int)(center.x + Math.cos(angle2) * 500);
-      p4.y = (int)(center.y + Math.sin(angle2) * 500);
+  public void setLightLocation(int x, int y) {
+    System.out.println("Setting light location...");
+    System.out.format("x=%d, y=%d\n", x, y);
+    if (x != center.x || y != center.y) {
+      this.center = new Point(x, y);
+      this.location.setLocation(x - width / 2, y - height / 2);
+      System.out.println("new location: " + this.location);
     }
 
-    Point pBegin = lineIntersection(p3, p4, p1, p2);
-
-    p2.x = (int)(center.x + Math.cos(angle2));
-    p2.y = (int)(center.y + Math.sin(angle2));
-    Point pEnd = lineIntersection(p3, p4, p1, p2);
-
-    if (pBegin != null) {
-      output.add(pBegin);
-    }
-    if (pEnd != null) {
-      output.add(pEnd);
-    }
+//    for (Segment segment : segments) {
+//      double dx = 0.5 * (segment.p1.x + segment.p2.x) - x;
+//      double dy = 0.5 * (segment.p1.y + segment.p2.y) - y;
+//      // NOTE: we only use this for comparison so we can use
+//      // distance squared instead of distance. However in
+//      // practice the sqrt is plenty fast and this doesn't
+//      // really help in this situation.
+//      segment.d = dx*dx + dy*dy;
+//
+//      // NOTE: future optimization: we could record the quadrant
+//      // and the y/x or x/y ratio, and sort by (quadrant,
+//      // ratio), instead of calling atan2. See
+//      // <https://github.com/mikolalysenko/compare-slope> for a
+//      // library that does this. Alternatively, calculate the
+//      // angles and use bucket sort to get an O(N) sort.
+//      segment.p1.angle = Math.atan2(segment.p1.y - y, segment.p1.x - x);
+//      segment.p2.angle = Math.atan2(segment.p2.y - y, segment.p2.x - x);
+//
+//      double dAngle = segment.p2.angle - segment.p1.angle;
+//      if (dAngle <= -Math.PI) { dAngle += 2*Math.PI; }
+//      if (dAngle > Math.PI) { dAngle -= 2*Math.PI; }
+//      segment.p1.begin = (dAngle > 0.0);
+//      segment.p2.begin = !segment.p1.begin;
+//    }
   }
 
   public Point lineIntersection(Point p1, Point p2, Point p3, Point p4) {
-    // From http://paulbourke.net/geometry/lineline2d/
-    System.out.format("p1=%s, p2=%s, p3=%s, p4=%s\n", p1, p2, p3, p4);
-//    try {
-//      int s = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x))
-//          / ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y));
-//      return new Point(p1.x + s * (p2.x - p1.x), p1.y + s * (p2.y - p1.y));
-//    } catch (ArithmeticException e) {
-//      return null;
-//    }
     if (! Line2D.linesIntersect(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)) return null;
     double px = p1.x,
         py = p1.y,
@@ -365,63 +364,37 @@ public class Shadow {
   // the visible area, represented as a set of triangles
   public void sweep(double maxAngle) {
     output.clear();  // output set of triangles
-    demo_intersectionsDetected.clear();
-//    endpoints.sort(endpointCompare, true);
-    for (EndPoint ep : endpoints) {
-      System.out.println("endpoints: " + ep);
-    }
-    Collections.sort(endpoints);
-
-    open.clear();
-    double beginAngle = 0.0;
-
-    // At the beginning of the sweep we want to know which
-    // segments are active. The simplest way to do this is to make
-    // a pass collecting the segments, and make another pass to
-    // both collect and process them. However it would be more
-    // efficient to go through all the segments, figure out which
-    // ones intersect the initial sweep line, and then sort them.
-//    for (pass in 0...2) {
-    for(int pass = 0; pass <= 2; pass++) {
-      for (EndPoint p : endpoints) {
-        if (pass == 1 && p.angle > maxAngle) {
-          // Early exit for the visualization to show the sweep process
-          break;
-        }
-
-        Segment current_old = open.isEmpty()? null : open.get(0);
-
-        System.out.println("p begin: " + p.begin);
-        if (p.begin) {
-          // Insert into the right place in the list
-          Iterator<Segment> open_iter = open.iterator();
-          Segment node = null;
-          if(open_iter.hasNext()) {
-            node = open_iter.next();
-          }
-          while (node != null && open_iter.hasNext() && segmentInFrontOf(p.segment, node, center)) {
-            node = open_iter.next();
-          }
-          if (open.isEmpty()) {
-            open.add(p.segment);
-          } else {
-            open.add(open.indexOf(node), p.segment);
-          }
-        }
-        else {
-          open.remove(p.segment);
-        }
-
-        Segment current_new = open.isEmpty()? null : open.get(0);
-        if (current_old != current_new) {
-          if (pass == 1) {
-            System.out.println("Gonna create a triangle");
-            addTriangle(beginAngle, p.angle, current_old);
-          }
-          beginAngle = p.angle;
+    long t1 = System.currentTimeMillis();
+    for(Segment s : segments) {
+      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels) {
+        continue;
+      }
+//      Point new_p1 = s.p1;
+      Point new_p2 = s.p2;
+      for(Segment s2 : segments) {
+//        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
+//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+//        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
+//          new_p1 = intersection;
+//        }
+        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
+            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
+          new_p2 = intersection2;
         }
       }
+//      EndPoint new_e1 = new EndPoint(new_p1.x, new_p1.y);
+//      new_e1.angle = Math.atan2(new_e1.y - center.y, new_e1.x - center.x);
+      EndPoint new_e2 = new EndPoint(new_p2.x, new_p2.y);
+      new_e2.angle = Math.atan2(new_e2.y - center.y, new_e2.x - center.x);
+//      output.add(new_e1);
+      output.add(new_e2);
     }
+    long t2 = System.currentTimeMillis();
+    System.out.println("This took " + (t2 - t1));
+
+    Collections.sort(output);
+    setupOverlay();
   }
 
   public void sweep() {
