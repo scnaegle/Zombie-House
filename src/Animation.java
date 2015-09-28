@@ -3,16 +3,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * This class allows each object's sprite list to be run every tick of a timer,
+ * making it move like an animation.
  */
 public class Animation
 {
 
-  public boolean doneAnimating = false;
-  private int frameCount;                 // Counts ticks for change
-  private int frameDelay;
-  // frame delay 1-12 (You will have to play around with this)
-  private int currentFrame;               // animations current frame
+  private int frameCount;     // Counts ticks for change
+  private int frameDelay;   //Delay between each image
+
+  private int currentFrame;      // animations current frame
   private int animationDirection;
   // total amount of frames for your animation
   // animation direction (i.e counting forward or backward)
@@ -20,6 +20,10 @@ public class Animation
   private boolean stopped;                // has animations stopped
   private List<Frame> frames = new ArrayList<Frame>();    // Arraylist of frames
 
+  /**
+   * Takes in list of sprites and the delay between each one and creates
+   * an animation.
+   */
   public Animation(BufferedImage[] frames, int frameDelay)
   {
     this.frameDelay = frameDelay;
@@ -38,6 +42,9 @@ public class Animation
 
   }
 
+  /**
+   * Starts animation from beginning frame.
+   */
   public void start()
   {
     if (!stopped)
@@ -53,6 +60,9 @@ public class Animation
     stopped = false;
   }
 
+  /**
+   * Stops animation if there are no frames left.
+   */
   public void stop()
   {
     if (frames.size() == 0)
@@ -63,24 +73,11 @@ public class Animation
     stopped = true;
   }
 
-  public void restart()
-  {
-    if (frames.size() == 0)
-    {
-      return;
-    }
-
-    stopped = false;
-    currentFrame = 0;
-  }
-
-  public void reset()
-  {
-    this.stopped = true;
-    this.frameCount = 0;
-    this.currentFrame = 0;
-  }
-
+  /**
+   * Used to add images to animation sequence
+   * @param frame
+   * @param duration
+   */
   private void addFrame(BufferedImage frame, int duration)
   {
     if (duration <= 0)
@@ -93,14 +90,21 @@ public class Animation
     currentFrame = 0;
   }
 
+  /**
+   * Getter used when the current frame is needed.
+   * @return a buffered image from sprite list
+   */
   public BufferedImage getSprite()
   {
     return frames.get(currentFrame).getFrame();
   }
 
+  /**
+   * Keeps updating list of sprites in order to make animation smooth.
+   */
   public void update()
   {
-    if (!stopped)
+    if (!stopped) //Loop through images
     {
       frameCount++;
 
@@ -127,8 +131,4 @@ public class Animation
   }
 
 
-  public int getFrameCount()
-  {
-    return currentFrame;
-  }
 }

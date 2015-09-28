@@ -7,26 +7,25 @@
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
- * now this the player. Lets call him bob the zombie runner.
- * He is the sprite that you follow throughout the game and have control over
+ * The player class takes care of the animation, the movement, the current
+ * direction the sprite is moving, and collisions.
  */
 public class Player extends Humanoid implements HumanoidObject
 {
   private final double STAMINA_PER_SEC = 1.0;
   private final double STAMINA_STEP = STAMINA_PER_SEC / GamePanel.FPS;
-  private final int PICKUP_TIME = 5;
-  private final int PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS;
+  private final int PICKUP_TIME = 5; //for firetraps
+  private final int PICKUP_FRAMES = PICKUP_TIME * GamePanel.FPS; //for firetraps
   public boolean is_putting_down = false;
+  public boolean is_picking_up = false;
   public boolean playerDied = false;
   public boolean playerExploded = false;
   protected int frame = 0;
-  double max_stamina;
-  double stamina;
-  double regen;
-  boolean is_picking_up = false;
+  private double max_stamina;
+  private double stamina;
+  private double regen;
   private int sight;
   private int hearing;
   private int fire_traps = 0;
@@ -41,8 +40,9 @@ public class Player extends Humanoid implements HumanoidObject
   private BufferedImage[] runningLeft = initPlayerSpriteRunLeft();
 
 
+  //All animations used for player
   private Animation walkRight = new Animation(walkingRight, 2);
-  Animation animation = walkRight;
+  private Animation animation = walkRight;
   private Animation walkLeft = new Animation(walkingLeft, 2);
   private Animation runRight = new Animation(runningRight, 1);
   private Animation runLeft = new Animation(runningLeft, 1);
@@ -50,6 +50,7 @@ public class Player extends Humanoid implements HumanoidObject
   private Animation standLeft = new Animation(stillLeft, 5);
   private int diedFrame = 0;
 
+  //Reference inner classes
   private StaminaBar stamina_bar;
   private PickupBar pickup_bar;
 
@@ -77,9 +78,7 @@ public class Player extends Humanoid implements HumanoidObject
 
   /**
    * The player needs sight, hearing, speed, and maxStamina to start out with
-   * This is where all of it gets set, You have control over it from the
-   * initlization
-   * GUI
+   * This is where all of it gets set, You have control over it from the GUI.
    *
    * @param player_sight
    * @param player_hearing
@@ -101,7 +100,8 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * pretty much does the same thing as the last method
+   * Constructor used at beginning setup to create player and tell him where
+   * to start
    *
    * @param sight
    * @param hearing
@@ -138,7 +138,7 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   //Loads sprites for walkingRight animation
-  public BufferedImage[] initPlayerSpriteWalkRight()
+  private BufferedImage[] initPlayerSpriteWalkRight()
   {
 
     Sprite sprite = new Sprite("pWalk", 80);
@@ -166,7 +166,7 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   //Loads sprites for runningRight animation
-  public BufferedImage[] initPlayerSpriteRunRight()
+  private BufferedImage[] initPlayerSpriteRunRight()
   {
 
     Sprite sprite = new Sprite("pRun", 80);
@@ -330,10 +330,13 @@ public class Player extends Humanoid implements HumanoidObject
     }
   }
 
+  /**
+   * Checks to see if player's location is on top of the exit.
+   * @param exit_location Tile that represents the exit
+   * @return true or false
+   */
   public boolean reachedExit(Location exit_location)
   {
-//    System.out.println("Player location: " + getCenteredBoundingRectangle());
-//    System.out.println("exit locaiton: " + exit_location);
     return getCenteredBoundingRectangle()
         .contains(exit_location.x, exit_location.y);
   }
@@ -346,7 +349,7 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * if sprite (Bob) is walking then he will move at walking speeds
+   * if sprite is walking then he will move at walking speeds
    */
   public void setWalking()
   {
@@ -365,10 +368,6 @@ public class Player extends Humanoid implements HumanoidObject
     return current_speed > defined_speed;
   }
 
-  public double getStamina()
-  {
-    return stamina;
-  }
 
   /**
    * picks up the fire trap
@@ -461,26 +460,29 @@ public class Player extends Humanoid implements HumanoidObject
   }
 
   /**
-   * draw the sprite "Bob" on the map
+   * draw the sprite on the map
    *
-   * @param g Graphics object to draw with
+   * @param g2 Graphics object to draw with
    */
-  public void paint(Graphics g)
+  public void paint(Graphics2D g2)
   {
-    Graphics2D g2 = (Graphics2D) g;
-    //Draws player
     if (!playerExploded)
     {
       g2.drawImage(animation.getSprite(), location.getX(), location.getY(),
           null);
-      stamina_bar.paint(g2);
+      stamina_bar.paint(g2); //Draws stamina bar
       if (is_picking_up || is_putting_down)
       {
-        pickup_bar.paint(g2);
+        pickup_bar.paint(g2); //Draws pickup loading bar
       }
     }
   }
 
+  /**
+   * Private inner class that relates only to the player.
+   * Draws a stamina bar next to the player and shows the user how much
+   * stamina he has left after running.
+   */
   private class StaminaBar
   {
 
@@ -521,6 +523,10 @@ public class Player extends Humanoid implements HumanoidObject
     }
   }
 
+  /**
+   * Private inner class that also only pertains to the player.
+   * Shows how much time it being used to pick up/ put down a firetrap.
+   */
   private class PickupBar
   {
     public final Color TOTAL = new Color(249, 44, 25);

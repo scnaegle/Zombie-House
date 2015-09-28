@@ -1,25 +1,13 @@
 /**
- * Created by Tyler on 9/14/2015.
- */
-
-/**
- * block class
- * each block represents a tile grid in the map
- * blocks have many boolean values that can give much information into
- * game logic
+ * Block class.
+ * Each block represents a tile grid in the map.
+ * Blocks have many boolean values that can give much information into
+ * game logic.
  */
 public class Block
 {
-//  boolean zombieSpawn = false;
+
   boolean partOfRoom = false;
-//  boolean partOfStartRoom = false;
-//  boolean partOfEndRoom = false;
-//  boolean visited = false;
-//  boolean goal = false;
-//  boolean corner = false;
-//  boolean wall = false;
-//  boolean hall = false;
-//  boolean doorways = false;
 
   char type;
   int x;
@@ -48,16 +36,6 @@ public class Block
   {
 
    return new Tile(y, x, type);
-  }
-
-  private int getX()
-  {
-    return x;
-  }
-
-  private int getY()
-  {
-    return y;
   }
 
   public char getType()

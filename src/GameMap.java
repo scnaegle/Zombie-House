@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * GameMap procedurally generates a map that is 1.5 times bigger than the
+ * actual screen. It contains walls, corners, floors, obsticles , inside walls,
+ * and hallways.
+ */
 public class GameMap
 {
-
-  // as the levels progress we may want to make them bigger and add more rooms
-  // so these final varibles may not always be final
 
   public static final int X_SIZE = 40; // used to set size of grid
   public static final int Y_SIZE = 40; // used to set size of grid
@@ -28,16 +30,10 @@ public class GameMap
   private static final char START_ROOM = 'S';
   private static final char HALL = 'H';
   private static final char EMPTY = '.';
-  private static final char OBSTICLE = 'O';
   private static final char INSIDE_WALL = 'I';
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
-  private static final int END_ROOM_SIZE = 4;
 
-  private static final int UP = 0;
-  private static final int DOWN = 1;
-  private static final int LEFT = 2;
-  private static final int RIGHT = 3;
   private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
 
@@ -79,7 +75,6 @@ public class GameMap
     generateMap();
 
 
-    //System.out.println(level);
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
     grid = new Tile[num_rows][num_cols];
@@ -97,9 +92,9 @@ public class GameMap
       {
         Tile empty_tile = new Tile(row, col, TileType.WALL);
         grid[row][col] = empty_tile;
-//        System.out.print(grid[row][col].tile_type);
+
       }
-//      System.out.println();
+
     }
 
     for (Block[] row : blockGrid)
@@ -148,22 +143,21 @@ public class GameMap
             {
               if (rand.nextBoolean())
               {
-                //System.out.println("made random zombie");
+
                 zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                     location);
               }
               else
               {
-                //System.out.println("made line zombie");
+
 
                 zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                     location);
               }
-              //master = new MasterZombie(location);
+
             }
             zombies.add(zombie);
-            //zombies.add(master);
-            //System.out.println(zombies);
+
           }
 
           if (rand.nextDouble() < GUI.fspawn)
@@ -204,8 +198,7 @@ public class GameMap
         }
       }
     }
-    //System.out.println("map: ");
-    //System.out.println(toString());
+
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
