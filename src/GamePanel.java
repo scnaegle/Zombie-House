@@ -142,6 +142,7 @@ public class GamePanel extends JPanel implements KeyListener
           //end = System.currentTimeMillis();
           //System.out.printf("Everything not painting took %dms%n", end - start);
 
+          // Calculates shadows
           shadow.setDimensions(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT);
           Point center_point = player.getCenterPoint();
           shadow.setLightLocation((int) center_point.getX(), (int) center_point.getY());
@@ -161,7 +162,7 @@ public class GamePanel extends JPanel implements KeyListener
     GameMap new_map = new GameMap(parent.whichLevel);
     map = new_map;
     player.location = new_map.start_location;
-    shadow = new Shadow(map);
+    shadow.loadMap(map);
   }
 
   private boolean onScreen(GameObject object)
