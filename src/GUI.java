@@ -142,6 +142,7 @@ public class GUI
     settings.add(choose, BorderLayout.NORTH);
     settings.add(everything, BorderLayout.CENTER);
 
+    //adds all labels
     words.add(Box.createRigidArea(new Dimension(10, 15)));
     words.add(PlSpeed);
     words.add(Box.createRigidArea(new Dimension(10, 25)));
@@ -165,6 +166,7 @@ public class GUI
     words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(wiLevel);
 
+    //Adds text boxes
     textFields.add(pSpeed);
     textFields.add(pHearing);
     textFields.add(pSight);
@@ -202,22 +204,66 @@ public class GUI
         try
         {
           speed = Double.parseDouble(pSpeed.getText());
+          if (speed > 5.0 || speed < 1.0)
+          {
+            throw new NumberFormatException();
+          }
           hearing = Integer.parseInt(pHearing.getText());
+          if (hearing > 15 || hearing < sight)
+          {
+            throw new NumberFormatException();
+          }
           sight = Integer.parseInt(pSight.getText());
+          if (sight < 1 || sight > 10)
+          {
+            throw new NumberFormatException();
+          }
           stamina = Double.parseDouble(pStamina.getText());
+          if (stamina < 3.0 || stamina > 10.0)
+          {
+            throw new NumberFormatException();
+          }
           regen = Double.parseDouble(pRegen.getText());
+          if (regen < 0.01 || regen > stamina)
+          {
+            throw new NumberFormatException();
+          }
           zspeed = Double.parseDouble(zSpeed.getText());
+          if (zspeed < 0.3 || zspeed > 2.0)
+          {
+            throw new NumberFormatException();
+          }
           zsmell = Double.parseDouble(zSmell.getText());
+          if (zsmell < 4.0 || zsmell > 10.0)
+          {
+            throw new NumberFormatException();
+          }
           drate = Double.parseDouble(zRate.getText());
+          if (drate < 1.0 || drate > 4.0)
+          {
+            throw new NumberFormatException();
+          }
           zspawn = Double.parseDouble(zSpawn.getText());
+          if (zspawn < 0.01 || zspawn > 0.1)
+          {
+            throw new NumberFormatException();
+          }
           fspawn = Double.parseDouble(fireSpawn.getText());
+          if (fspawn < 0.01 || fspawn > 0.1)
+          {
+            throw new NumberFormatException();
+          }
           winLevel = Integer.parseInt(wLevel.getText());
+          if (winLevel < 2 || winLevel > 10)
+          {
+            throw new NumberFormatException();
+          }
         }
         catch (NumberFormatException x)
         {
           numsGood = false;
           gameStarted = false;
-          System.out.println("Error: " + x.getMessage());
+          System.out.println("Error, bad input");
         }
         if (!numsGood) return;
 
@@ -276,10 +322,8 @@ public class GUI
 
     gamePanel = new GamePanel(this);
     gamePanel.addKeyListener(gamePanel);
-    System.out.println("added key listener");
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
-    System.out.println("panel has focus");
 
 
     scrollPane = new JScrollPane(gamePanel);

@@ -210,7 +210,6 @@ public class GamePanel extends JPanel implements KeyListener
 
     g2.drawImage(map.map_image, 0, 0, null);
 
-
     //When to draw traps and which sprite
     boolean explodee = false;
     FireTrap activeTrap = null;
@@ -237,50 +236,7 @@ public class GamePanel extends JPanel implements KeyListener
       g2.drawImage(vignetteCanvas, vcX, vcY, null);
     }
 
-
     shadow.paint(g2);
-
-    //Draws vignette with player at center.
-//    int absWidth = 2000;
-//    int absHeight = 1500;
-//    int vcX = player.getCenterPoint().x - absWidth / 2;
-//    int vcY = player.getCenterPoint().y - absHeight / 2;
-//
-////    start = System.currentTimeMillis();
-//    lightLayer =
-//        new BufferedImage(absWidth, absHeight, BufferedImage.TYPE_4BYTE_ABGR);
-//
-//    Graphics2D lightGraphics = (Graphics2D) lightLayer.getGraphics();
-//    lightGraphics.setColor(Color.black);
-//    lightGraphics.fillRect(0, 0, absWidth, absHeight);
-//
-//    Composite composite = lightGraphics.getComposite();
-//    lightGraphics.setComposite(
-//        AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
-//
-//    lightGraphics.setColor(new Color(0, 0, 0, 0));
-//    lightGraphics
-//        .fillOval(lightLayer.getWidth() / 2 - player.getSight() * GUI
-// .tile_size,
-//            lightLayer.getHeight() / 2 - player.getSight() * GUI.tile_size,
-//            2 * player.getSight() * GUI.tile_size,
-//            2 * player.getSight() * GUI.tile_size);
-//    //drawPlayerLight(player.getSight(), lightGraphics);
-//
-//
-//    //drawFireLight(activeTrap,lightGraphics);
-//    if (explodee)
-//    {
-//      lightGraphics
-//          .fillOval((int) activeTrap.explosionObj.getX(),
-//              (int) activeTrap.explosionObj.getY(),
-//              (int) activeTrap.explosionObj.getWidth() * GUI.tile_size,
-//              (int) activeTrap.explosionObj.getHeight() * GUI.tile_size);
-//    }
-//    lightGraphics.setComposite(composite);
-////    System.out.println(System.currentTimeMillis() - start + " 1");
-//    g2.drawImage(lightLayer, vcX, vcY, null);
-    //g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
 
     player.paint(g2);
@@ -319,20 +275,6 @@ public class GamePanel extends JPanel implements KeyListener
     int new_x = ((int) player.location.x - GUI.SCENE_WIDTH / 2);
     int new_y = ((int) player.location.y - GUI.SCENE_HEIGHT / 2);
     int width = GUI.SCENE_WIDTH;
-    int height = GUI.SCENE_HEIGHT;
-//    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
-//    System.out.format("Viewport width: %d, height: %d\n", width, height);
-//    System.out.format("Player location: x=%f, y=%f\n", player.location.x,
-// player.location.y);
-//    System.out.format("Player top left: x=%d, y=%d\n", player
-// .getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2);
-
-//    g.setColor(Color.BLUE);
-////    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
-//    g.draw(vp.getViewRect());
-//    g.setColor(Color.RED);
-//    g.drawRect(player.getCenterPoint().x - width / 2,
-//        player.getCenterPoint().y - height / 2, width, height);
 
     new_x += 50;
     new_y += 100;
@@ -425,7 +367,6 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
-      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (KEY_DOWN.contains(code))
