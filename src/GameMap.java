@@ -1744,7 +1744,7 @@ public class GameMap
                 Location location =
                     new Location(col * GUI.tile_size, row * GUI.tile_size);
 
-                fireTrap = new FireTrap(50, 50, location);
+                fireTrap = new FireTrap(location);
                 traps.add(fireTrap);
 
               }
