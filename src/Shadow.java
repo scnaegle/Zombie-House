@@ -157,8 +157,8 @@ public class Shadow {
   }
 
   public void paint(Graphics2D g) {
-    System.out.println("Painting shadows...");
-    System.out.format("x=%d, y=%d, width=%d, height=%d\n", location.x, location.y, width, height);
+//    System.out.println("Painting shadows...");
+//    System.out.format("x=%d, y=%d, width=%d, height=%d\n", location.x, location.y, width, height);
     g.drawImage(overlay, location.x, location.y, width, height, null);
   }
 
@@ -305,12 +305,12 @@ public class Shadow {
   }
 
   public void setLightLocation(int x, int y) {
-    System.out.println("Setting light location...");
-    System.out.format("x=%d, y=%d\n", x, y);
+//    System.out.println("Setting light location...");
+//    System.out.format("x=%d, y=%d\n", x, y);
     if (x != center.x || y != center.y) {
       this.center = new Point(x, y);
       this.location.setLocation(x - width / 2, y - height / 2);
-      System.out.println("new location: " + this.location);
+//      System.out.println("new location: " + this.location);
     }
 
 //    for (Segment segment : segments) {
