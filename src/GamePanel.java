@@ -144,7 +144,7 @@ public class GamePanel extends JPanel implements KeyListener
 
           shadow.setDimensions(GUI.SCENE_WIDTH, GUI.SCENE_HEIGHT);
           Point center_point = player.getCenterPoint();
-          shadow.setLightLocation((int)center_point.getX(), (int)center_point.getY());
+          shadow.setLightLocation((int) center_point.getX(), (int) center_point.getY());
           shadow.sweep();
 
           snapViewPortToPlayer();  //Makes viewport follow player
@@ -161,6 +161,7 @@ public class GamePanel extends JPanel implements KeyListener
     GameMap new_map = new GameMap(parent.whichLevel);
     map = new_map;
     player.location = new_map.start_location;
+    shadow = new Shadow(map);
   }
 
   private boolean onScreen(GameObject object)
