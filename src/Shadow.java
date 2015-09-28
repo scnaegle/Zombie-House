@@ -17,7 +17,6 @@ public class Shadow {
   private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
   private ArrayList<Segment> segments = new ArrayList<Segment>();
   private Point center = new Point();
-//  private LinkedList<Segment> open = new LinkedList<Segment>();
   private GameMap map;
   private BufferedImage background;
   public BufferedImage overlay;
@@ -33,7 +32,6 @@ public class Shadow {
   public Shadow(GameMap map) {
     loadMap(map);
     this.map = map;
-    setupBackground();
     location = new Point(0, 0);
   }
 
@@ -47,25 +45,11 @@ public class Shadow {
     this.sight_pixels = sight * GUI.tile_size;
   }
 
-  private void setupBackground(){
-    background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D bg = (Graphics2D)background.getGraphics();
-    bg.setColor(Color.BLACK);
-    bg.fillRect(0, 0, width, height);
-    overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-  }
-
   private void setupOverlay() {
-    long t1 = System.currentTimeMillis();
-//    int width = map.getWidth(GUI.tile_size);
-//    int height = map.getHeight(GUI.tile_size);
     overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = (Graphics2D)overlay.getGraphics();
     g.setColor(Color.BLACK);
     g.fillRect(0, 0, width, height);
-
-//    overlay = deepCopy(background);
-//    Graphics2D g = (Graphics2D)overlay.getGraphics();
 
     int[] xs = output.stream().mapToInt(s -> s.x - location.x).toArray();
     int[] ys = output.stream().mapToInt(s -> s.y - location.y).toArray();
@@ -73,16 +57,12 @@ public class Shadow {
     float alpha = 0.1f;
     Composite comp = AlphaComposite.getInstance(rule, alpha);
     g.setComposite(comp);
-//    bg.setColor(Color.YELLOW);
     g.setPaint(Color.white);
     g.fillPolygon(xs, ys, xs.length);
     for(Tile tile : map.getWalls()) {
       Rectangle rect = tile.getBoundingRectangle();
       rect.width += 1;
       rect.height += 1;
-//      if (Math.hypot(tile.location.x - center.x, tile.location.y - center.y) > sight_pixels) {
-//        continue;
-//      }
       for (EndPoint p : output) {
         if (rect.contains(p.x, p.y)) {
           rect.x -= location.x;
@@ -94,177 +74,11 @@ public class Shadow {
         }
       }
     }
-    long t2 = System.currentTimeMillis();
-    System.out.println("setting up overlay took: " + (t2 - t1));
-  }
-
-  static BufferedImage deepCopy(BufferedImage bi) {
-    ColorModel cm = bi.getColorModel();
-    boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-    WritableRaster raster = bi.copyData(null);
-    return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-  }
-
-  public static void main(String[] args)
-  {
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(
-              Shadow.class.getResource("resources/shadow_test.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
-
-    GameMap map = new GameMap(map_file);
-    Shadow shadow = new Shadow(map);
-    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
-    shadow.sweep();
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-    frame.setPreferredSize(new Dimension(1600, 800));
-
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map.map_image, 0, 0, null);
-
-        shadow.paint(g2);
-      }
-    };
-    map_panel
-        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
-  }
-
-  public void paint(Graphics2D g) {
-//    System.out.println("Painting shadows...");
-//    System.out.format("x=%d, y=%d, width=%d, height=%d\n", location.x, location.y, width, height);
-    g.drawImage(overlay, location.x, location.y, width, height, null);
-  }
-
-  public void paint_OLD(Graphics2D g) {
-    g.setColor(Color.YELLOW);
-//        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
-//        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
-////        ArrayList<Integer> xs = CollectionUtils.collect(list,
-//// TransformerUtils.invokerTransformer("getName")
-//        //g.fillPolygon(xs, ys, shadow.output.size());
-//        int[] test_xs = new int[3];
-//        test_xs[0] = shadow.output.get(0).x;
-//        test_xs[1] = shadow.output.get(1).x;
-//        test_xs[2] = shadow.center.x;
-//        int[] test_ys = new int[3];
-//        test_ys[0] = shadow.output.get(0).y;
-//        test_ys[1] = shadow.output.get(1).y;
-//        test_ys[2] = shadow.center.y;
-//        g.fillPolygon(test_xs, test_ys, 3);
-//    g.setColor(Color.YELLOW);
-//    g.fillOval(center.x - 10, center.y - 10, 20, 20);
-//    int i = 0;
-//    output.clear();
-//    for(Segment s : segments) {
-//      i++;
-//      System.out.println("Segment: " + s);
-//      g.setColor(Color.RED);
-//      g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
-//      g.setColor(Color.BLUE);
-//      g.fillOval(s.p1.x - 3, s.p1.y - 3, 6, 6);
-//      g.fillOval(s.p2.x - 3, s.p2.y - 3, 6, 6);
-//      g.setColor(Color.YELLOW);
-//      Point new_p1 = s.p1;
-//      Point new_p2 = s.p2;
-//      System.out.println("p1: " + new_p1);
-//      System.out.println("p2: " + new_p2);
-//      long t1 = System.currentTimeMillis();
-//      for(Segment s2 : segments) {
-//        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
-//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-//        System.out.println("intersection: " + intersection);
-//        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
-//          new_p1 = intersection;
-//        }
-//        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
-//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-//        System.out.println("intersection 2: " + intersection2);
-//        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
-//          new_p2 = intersection2;
-//        }
-//      }
-//      g.drawLine(center.x, center.y, new_p1.x, new_p1.y);
-//      g.drawLine(center.x, center.y, new_p2.x, new_p2.y);
-//      EndPoint new_e1 = new EndPoint(new_p1.x, new_p1.y);
-//      new_e1.angle = Math.atan2(new_e1.y - center.y, new_e1.x - center.x);
-//      EndPoint new_e2 = new EndPoint(new_p2.x, new_p2.y);
-//      new_e2.angle = Math.atan2(new_e2.y - center.y, new_e2.x - center.x);
-//      output.add(new_e1);
-//      output.add(new_e2);
-////      if (i > 5) {
-////        break;
-////      }
-//      long t2 = System.currentTimeMillis();
-//      System.out.println("This took " + (t2 - t1));
-//    }
-
-//    Collections.sort(output);
-    long t1 = System.currentTimeMillis();
-//    int[] xs = output.stream().mapToInt(s -> s.x).toArray();
-//    int[] ys = output.stream().mapToInt(s -> s.y).toArray();
-//    int width = map.getWidth(GUI.tile_size);
-//    int height = map.getHeight(GUI.tile_size);
-//    BufferedImage background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-//    Graphics2D bg = (Graphics2D)background.getGraphics();
-//    bg.setColor(Color.BLACK);
-//    bg.fillRect(0, 0, width, height);
-//    int rule = AlphaComposite.CLEAR;
-//    float alpha = 0.1f;
-//    Composite comp = AlphaComposite.getInstance(rule, alpha);
-//    bg.setComposite(comp);
-////    bg.setColor(Color.YELLOW);
-//    bg.setPaint(Color.white);
-//    bg.fillPolygon(xs, ys, xs.length);
-//    for(Tile tile : map.getWalls()) {
-//      Rectangle rect = tile.getBoundingRectangle();
-//      rect.width += 1;
-//      rect.height += 1;
-////      if (Math.hypot(tile.location.x - center.x, tile.location.y - center.y) > sight_pixels) {
-////        continue;
-////      }
-//      for (EndPoint p : output) {
-//        if (rect.contains(p.x, p.y)) {
-//          bg.fill(tile.getBoundingRectangle());
-//          break;
-//        }
-//      }
-//    }
-    g.drawImage(overlay, 0, 0, map.getWidth(GUI.tile_size), map.getHeight(GUI.tile_size), null);
-    long t2 = System.currentTimeMillis();
-    System.out.println("Drawing took: " + (t2 - t1));
   }
 
   public void loadMap(GameMap map) {
     endpoints.clear();
     segments.clear();
-//    setEndPoints(map.getWalls());
     int x, y, w, h;
     for(Tile wall : map.getWalls()) {
       x = wall.location.getX();
@@ -279,8 +93,6 @@ public class Shadow {
   }
 
   private void addSegment(int x1, int y1, int x2, int y2) {
-//    segments.add(new Segment(x, y, x2, y2));
-//    System.out.format("x1=%d, y2=%d, x2=%d, y2=%d\n", x1, y1, x2, y2);
     Segment segment = null;
     EndPoint p1 = new EndPoint(0, 0);
     p1.segment = segment;
@@ -401,6 +213,10 @@ public class Shadow {
     sweep(999.0);
   }
 
+  public void paint(Graphics2D g) {
+    g.drawImage(overlay, location.x, location.y, width, height, null);
+  }
+
   public class EndPoint extends Point implements Comparable {
     boolean begin = false;
     Segment segment = null;
@@ -467,5 +283,56 @@ public class Shadow {
       result = 31 * result + (p2 != null ? p2.hashCode() : 0);
       return result;
     }
+  }
+
+  public static void main(String[] args)
+  {
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(
+              Shadow.class.getResource("resources/shadow_test.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+
+    GameMap map = new GameMap(map_file);
+    Shadow shadow = new Shadow(map);
+    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
+    shadow.sweep();
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.setPreferredSize(new Dimension(1600, 800));
+
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map.map_image, 0, 0, null);
+
+        shadow.paint(g2);
+      }
+    };
+    map_panel
+        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
   }
 }
