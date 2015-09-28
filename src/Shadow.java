@@ -31,7 +31,6 @@ public class Shadow {
 
   public Shadow(GameMap map) {
     loadMap(map);
-    this.map = map;
     location = new Point(0, 0);
   }
 
@@ -77,6 +76,7 @@ public class Shadow {
   }
 
   public void loadMap(GameMap map) {
+    this.map = map;
     endpoints.clear();
     segments.clear();
     int x, y, w, h;

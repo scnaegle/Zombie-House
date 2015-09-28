@@ -80,19 +80,17 @@ public class FireTrap extends GameObject
     frame++;
     for (Zombie zombie : map.zombies)
     {
-      if (getDistance(zombie) < GUI.tile_size)
-      {
-        //If zombie touches trap, it explodes
-        if (getCenteredBoundingRectangle()
-            .intersects(zombie.getCenteredBoundingRectangle()))
-        {
-          startExploding();
-          zombie.zombieDied = true;
-
-          //If player is too close to explosion, player dies.
-          if (explosionObj.intersects(player.getBoundingRectangle()))
-          {
-            player.playerDied();
+      if (getDistance(zombie) < GUI.tile_size) {
+        if (exploding) {
+          if(explosionObj.intersects(zombie.getCenteredBoundingRectangle())) {
+            zombie.zombieDied = true;
+          }
+        } else {
+          //If zombie touches trap, it explodes
+          if (getCenteredBoundingRectangle()
+              .intersects(zombie.getCenteredBoundingRectangle())) {
+            startExploding();
+            zombie.zombieDied = true;
           }
         }
       }
@@ -101,7 +99,7 @@ public class FireTrap extends GameObject
     //If firetrap is next to exploding trap, that trap should explode too
     for (FireTrap trap : map.traps)
     {
-      if (!equals(trap) && trap.exploding && explosionObj.contains(trap.getBoundingRectangle()))
+      if (!equals(trap) && trap.exploding && explosionObj.contains(trap.getCenteredBoundingRectangle()))
       {
         startExploding();
       }
@@ -114,13 +112,10 @@ public class FireTrap extends GameObject
     }
 
     //If player runs over trap or walks over trap while exploding
-    if (exploding && getCenteredBoundingRectangle().intersects(player
-        .getBoundingRectangle()) ||
-        getCenteredBoundingRectangle().intersects(player
-        .getBoundingRectangle()) && player.isRunning())
+    if (exploding && explosionObj.intersects(player.getBoundingRectangle()) ||
+        (getCenteredBoundingRectangle().intersects(player.getBoundingRectangle()) && player.isRunning()))
     {
-      startExploding();
-      player.playerDied = true;
+      player.playerDied();
     }
 
     fireAnimation.update();
