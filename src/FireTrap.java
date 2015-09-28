@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class FireTrap extends GameObject
 {
+  private static final boolean TESTING = true;
   public static final int WIDTH = 50;
   public static final int HEIGHT = 50;
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
@@ -164,13 +165,6 @@ public class FireTrap extends GameObject
     return location != null ? location.hashCode() : 0;
   }
 
-  public void setNewLocation(Location newLocation)
-  {
-    location.x = newLocation.x;
-    location.y = newLocation.y;
-    explosionObj.setLocation((int) newLocation.x, (int) newLocation.y);
-  }
-
   public void paint(Graphics2D g2, Player player)
   {
     if (!player.is_picking_up || player.is_putting_down || !exploding)
@@ -186,9 +180,10 @@ public class FireTrap extends GameObject
 
       activeTrap = this;
       explodee = true;
-      g2.setColor(Color.BLUE);
-      g2.draw(explosionObj);
-
+      if (TESTING) {
+        g2.setColor(Color.BLUE);
+        g2.draw(explosionObj);
+      }
     }
   }
 }
