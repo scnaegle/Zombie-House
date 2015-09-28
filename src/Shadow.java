@@ -50,7 +50,8 @@ public class Shadow {
     JFrame frame = new JFrame("MapTest");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setLayout(new BorderLayout());
-    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.setPreferredSize(new Dimension(1600, 800));
 
     for (Point p : shadow.output)
     {
@@ -66,30 +67,7 @@ public class Shadow {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(map.map_image, 0, 0, null);
 
-        g.setColor(Color.YELLOW);
-//        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
-//        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
-////        ArrayList<Integer> xs = CollectionUtils.collect(list,
-//// TransformerUtils.invokerTransformer("getName")
-//        //g.fillPolygon(xs, ys, shadow.output.size());
-//        int[] test_xs = new int[3];
-//        test_xs[0] = shadow.output.get(0).x;
-//        test_xs[1] = shadow.output.get(1).x;
-//        test_xs[2] = shadow.center.x;
-//        int[] test_ys = new int[3];
-//        test_ys[0] = shadow.output.get(0).y;
-//        test_ys[1] = shadow.output.get(1).y;
-//        test_ys[2] = shadow.center.y;
-//        g.fillPolygon(test_xs, test_ys, 3);
-        for(Point p : shadow.endpoints) {
-          g.setColor(Color.BLUE);
-          g.fillOval((int)p.getX() - 3, (int)p.getY() - 3, 6, 6);
-        }
-        for(Segment s : shadow.segments) {
-          System.out.println("Segment: " + s);
-          g.setColor(Color.RED);
-          g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
-        }
+        shadow.paint(g2);
       }
     };
     map_panel
@@ -104,6 +82,83 @@ public class Shadow {
     frame.add(scroll_pane);
     frame.pack();
     frame.setVisible(true);
+  }
+
+  public void paint(Graphics2D g) {
+    g.setColor(Color.YELLOW);
+//        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
+//        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
+////        ArrayList<Integer> xs = CollectionUtils.collect(list,
+//// TransformerUtils.invokerTransformer("getName")
+//        //g.fillPolygon(xs, ys, shadow.output.size());
+//        int[] test_xs = new int[3];
+//        test_xs[0] = shadow.output.get(0).x;
+//        test_xs[1] = shadow.output.get(1).x;
+//        test_xs[2] = shadow.center.x;
+//        int[] test_ys = new int[3];
+//        test_ys[0] = shadow.output.get(0).y;
+//        test_ys[1] = shadow.output.get(1).y;
+//        test_ys[2] = shadow.center.y;
+//        g.fillPolygon(test_xs, test_ys, 3);
+    g.setColor(Color.YELLOW);
+    g.fillOval(center.x - 10, center.y - 10, 20, 20);
+    int i = 0;
+    output.clear();
+    for(Segment s : segments) {
+      i++;
+      System.out.println("Segment: " + s);
+      g.setColor(Color.RED);
+      g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
+      g.setColor(Color.BLUE);
+      g.fillOval(s.p1.x - 3, s.p1.y - 3, 6, 6);
+      g.fillOval(s.p2.x - 3, s.p2.y - 3, 6, 6);
+      g.setColor(Color.YELLOW);
+      Point new_p1 = s.p1;
+      Point new_p2 = s.p2;
+      System.out.println("p1: " + new_p1);
+      System.out.println("p2: " + new_p2);
+      long t1 = System.currentTimeMillis();
+      for(Segment s2 : segments) {
+        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
+            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+        System.out.println("intersection: " + intersection);
+        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
+          new_p1 = intersection;
+        }
+        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
+            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+        System.out.println("intersection 2: " + intersection2);
+        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
+          new_p2 = intersection2;
+        }
+      }
+      g.drawLine(center.x, center.y, new_p1.x, new_p1.y);
+      g.drawLine(center.x, center.y, new_p2.x, new_p2.y);
+      output.add(new_p1);
+      output.add(new_p2);
+//      if (i > 5) {
+//        break;
+//      }
+      long t2 = System.currentTimeMillis();
+      System.out.println("This took " + (t2 - t1));
+    }
+
+    int[] xs = output.stream().mapToInt(s -> s.x).toArray();
+    int[] ys = output.stream().mapToInt(s -> s.y).toArray();
+    g.setColor(Color.YELLOW);
+//    g.fillPolygon(xs, ys, xs.length);
+//        for(Point p : output) {
+//          g.setColor(Color.YELLOW);
+//          g.fillOval(p.x - 5, p.y - 5, 10, 10);
+//        }
+//        for(ArrayList<Point> points : demo_intersectionsDetected) {
+//          Point previous = points.get(0);
+//          for(Point p : points) {
+//            g.setColor(Color.GREEN);
+//            g.fillOval(p.x - 5, p.y - 5, 10, 10);
+//            g.drawLine(previous.x, previous.y, p.x, p.y);
+//          }
+//        }
   }
 
   public void loadMap(GameMap map) {
@@ -279,12 +334,30 @@ public class Shadow {
   public Point lineIntersection(Point p1, Point p2, Point p3, Point p4) {
     // From http://paulbourke.net/geometry/lineline2d/
     System.out.format("p1=%s, p2=%s, p3=%s, p4=%s\n", p1, p2, p3, p4);
-    try {
-      int s = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x))
-          / ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y));
-      return new Point(p1.x + s * (p2.x - p1.x), p1.y + s * (p2.y - p1.y));
-    } catch (ArithmeticException e) {
+//    try {
+//      int s = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x))
+//          / ((p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y));
+//      return new Point(p1.x + s * (p2.x - p1.x), p1.y + s * (p2.y - p1.y));
+//    } catch (ArithmeticException e) {
+//      return null;
+//    }
+    if (! Line2D.linesIntersect(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)) return null;
+    double px = p1.x,
+        py = p1.y,
+        rx = p2.x-px,
+        ry = p2.y-py;
+    double qx = p3.x,
+        qy = p3.y,
+        sx = p4.x-qx,
+        sy = p4.y-qy;
+
+    double det = sx*ry - sy*rx;
+    if (det == 0) {
       return null;
+    } else {
+      double z = (sx*(qy-py)+sy*(px-qx))/det;
+      if (z==0 ||  z==1) return null;  // intersection at end point!
+      return new Point( (int)(px+z*rx), (int)(py+z*ry));
     }
   }
 
@@ -310,9 +383,7 @@ public class Shadow {
     // ones intersect the initial sweep line, and then sort them.
 //    for (pass in 0...2) {
     for(int pass = 0; pass <= 2; pass++) {
-      System.out.println("pass: " + pass);
       for (EndPoint p : endpoints) {
-        System.out.println("EndPoint: " + p);
         if (pass == 1 && p.angle > maxAngle) {
           // Early exit for the visualization to show the sweep process
           break;
