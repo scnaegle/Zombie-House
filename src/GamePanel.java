@@ -112,6 +112,7 @@ public class GamePanel extends JPanel implements KeyListener
             if (trap.remove_me)
             {
               trapIter.remove();
+              shadow.loadMap(map);
             }
           }
 
@@ -237,7 +238,6 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-    System.out.println("player location: " + player.location);
     shadow.paint(g2);
 
     //Draws vignette with player at center.
