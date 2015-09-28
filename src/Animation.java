@@ -121,12 +121,8 @@ public class Animation
         }
 
       }
-
     }
-
   }
-
-
   public int getFrameCount()
   {
     return currentFrame;

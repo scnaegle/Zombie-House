@@ -297,7 +297,7 @@ public class GameMap
       //System.out.println("poo");
       if (makeEndRoom(0)) // makes an end room
       {
-        System.out.println("WHY?WHY?WHY?");
+       // System.out.println("WHY?WHY?WHY?");
         mapIsBad = false;
       }
       else
@@ -310,7 +310,7 @@ public class GameMap
         continue;
       }
 
-      System.out.println("stuff");
+      //` System.out.println("stuff");
       turnDoorToFloor(); // makes door to floor
       makeInteriorWalls();
 
