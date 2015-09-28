@@ -176,7 +176,6 @@ public class Shadow {
   // the visible area, represented as a set of triangles
   public void sweep(double maxAngle) {
     output.clear();  // output set of triangles
-    long t1 = System.currentTimeMillis();
     for(Segment s : segments) {
       if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 2) {
         continue;
@@ -202,8 +201,6 @@ public class Shadow {
 //      output.add(new_e1);
       output.add(new_e2);
     }
-    long t2 = System.currentTimeMillis();
-    System.out.println("This took " + (t2 - t1));
 
     Collections.sort(output);
     setupOverlay();
