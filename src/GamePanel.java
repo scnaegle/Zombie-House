@@ -46,6 +46,7 @@ public class GamePanel extends JPanel implements KeyListener
   Zombie zombie;
   Iterator<FireTrap> trapIter;
   FireTrap trap;
+  BufferedImage lightLayer = null;
   private SoundLoader loadAmbience;
   private GUI parent;
   private Player player;
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements KeyListener
       {
         if (parent.running)
         {
+          //long end, start = System.currentTimeMillis();
           //System.out.println("timer going off");
           player.update(map); //Asks player for animations, sounds, movement
           snapViewPortToPlayer();  //Makes viewport follow player
@@ -90,7 +92,7 @@ public class GamePanel extends JPanel implements KeyListener
 
             if (zombie.bitPlayer)  //Game over
             {
-              System.out.println("zombie bit player");
+              //System.out.println("zombie bit player");
               parent.pauseGame();
               GUI.showDeathDialog(parent,
                   "Ye be bitten! Keep yer zombie erff yer tail by using yer " +
@@ -128,19 +130,21 @@ public class GamePanel extends JPanel implements KeyListener
           {
             //If yes, then go to next level.
             parent.whichLevel++;
-            if (parent.whichLevel == 6)
+            if (parent.whichLevel == parent.winLevel)
             {
+              parent.pauseGame();
               parent.showWinningDialog(parent, " You won the game!");
             }
             System.out.println("Next level");
             newMapByExit();
           }
+          //end = System.currentTimeMillis();
+          //System.out.printf("Everything not painting took %dms%n", end - start);
 
-          repaint();
 
         }
 
-
+        repaint();
       }
     });
   }
@@ -184,6 +188,7 @@ public class GamePanel extends JPanel implements KeyListener
   public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
+    long start = System.currentTimeMillis();
     Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON);
@@ -203,12 +208,10 @@ public class GamePanel extends JPanel implements KeyListener
     for (FireTrap trap : map.traps)
     {
       trap.paint(g2, player);
-      if (trap.exploding)
-      {
-        explodee = true;
-        activeTrap = trap;
 
-      }
+      explodee = trap.explodee;
+      activeTrap = trap;
+
 
     }
 
@@ -219,41 +222,93 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-    //Draws vignette with player at center.
-    int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
-    int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
+     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
+     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
 
-//    BufferedImage lightLayer = new BufferedImage(vignetteCanvas.getWidth(),
-//        vignetteCanvas.getHeight(),BufferedImage.TYPE_4BYTE_ABGR);
+    if (!explodee)
+    {
+      g2.drawImage(vignetteCanvas, vcX, vcY, null);
+    }
+
+
+    //Draws vignette with player at center.
+//    int absWidth = 2000;
+//    int absHeight = 1500;
+//    int vcX = player.getCenterPoint().x - absWidth / 2;
+//    int vcY = player.getCenterPoint().y - absHeight / 2;
+//
+////    start = System.currentTimeMillis();
+//    lightLayer =
+//        new BufferedImage(absWidth, absHeight, BufferedImage.TYPE_4BYTE_ABGR);
+//
 //    Graphics2D lightGraphics = (Graphics2D) lightLayer.getGraphics();
-//    lightGraphics.drawImage(vignetteCanvas, 0, 0, null);
+//    lightGraphics.setColor(Color.black);
+//    lightGraphics.fillRect(0, 0, absWidth, absHeight);
+//
+//    Composite composite = lightGraphics.getComposite();
 //    lightGraphics.setComposite(
 //        AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
 //
-//    if(explodee)
+//    lightGraphics.setColor(new Color(0, 0, 0, 0));
+//    lightGraphics
+//        .fillOval(lightLayer.getWidth() / 2 - player.getSight() * GUI
+// .tile_size,
+//            lightLayer.getHeight() / 2 - player.getSight() * GUI.tile_size,
+//            2 * player.getSight() * GUI.tile_size,
+//            2 * player.getSight() * GUI.tile_size);
+//    //drawPlayerLight(player.getSight(), lightGraphics);
+//
+//
+//    //drawFireLight(activeTrap,lightGraphics);
+//    if (explodee)
 //    {
-//      light = drawFireLight(activeTrap);
-//      lightGraphics.drawImage(light, (int) activeTrap.explosionObj.getX(),
-//          (int) activeTrap.explosionObj.getY(), null);
+//      lightGraphics
+//          .fillOval((int) activeTrap.explosionObj.getX(),
+//              (int) activeTrap.explosionObj.getY(),
+//              (int) activeTrap.explosionObj.getWidth() * GUI.tile_size,
+//              (int) activeTrap.explosionObj.getHeight() * GUI.tile_size);
 //    }
+//    lightGraphics.setComposite(composite);
+////    System.out.println(System.currentTimeMillis() - start + " 1");
+//    g2.drawImage(lightLayer, vcX, vcY, null);
+    //g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
-    //g2.drawImage(lightLayer, vcX, vcY, null);
-    g2.drawImage(vignetteCanvas, vcX, vcY, null);
-
-
-    paintTextOverlay(g2);
 
     player.paint(g2);
-    g2.setColor(Color.BLUE);
-    //g2.fillRect(20, GUI.SCENE_HEIGHT - 200, 20, 80);
+    paintTextOverlay(g2);
+
 
   }
 
-  private void paintTextOverlay(Graphics2D g) {
+  private BufferedImage makeVignette(int sight)
+  {
+    BufferedImage img = new BufferedImage(map.getWidth(GUI.tile_size),
+        map.getHeight(GUI.tile_size), BufferedImage.TYPE_4BYTE_ABGR);
+    Graphics2D g = (Graphics2D) img.getGraphics();
+
+    float sight_pixels = (float) sight * GUI.tile_size;
+    Point2D center = new Point2D.Float(map.getWidth(GUI.tile_size) / 2,
+        map.getHeight(GUI.tile_size) / 2);
+    Color[] colors = {new Color(1f, 1f, 1f, 0f), Color.black};
+    float[] dist = {0.0f, 1f};
+    RadialGradientPaint p = new RadialGradientPaint(center, sight_pixels,
+        dist, colors);
+
+
+    g.setPaint(p);
+    g.fillRect(0, 0, map.getWidth(GUI.tile_size), map.getHeight(GUI
+        .tile_size));
+
+    return img;
+  }
+
+
+  private void paintTextOverlay(Graphics2D g)
+  {
     vp = GUI.scrollPane.getViewport();
-//    Rectangle vp_rect = vp.getViewRect();
-    int new_x = ((int)player.location.x - GUI.SCENE_WIDTH / 2);
-    int new_y = ((int)player.location.y - GUI.SCENE_HEIGHT / 2);
+    Rectangle vp_rect = vp.getViewRect();
+    int new_x = ((int) player.location.x - GUI.SCENE_WIDTH / 2);
+    int new_y = ((int) player.location.y - GUI.SCENE_HEIGHT / 2);
     int width = GUI.SCENE_WIDTH;
     int height = GUI.SCENE_HEIGHT;
 //    System.out.format("Viewport location: x=%d, y=%d\n", new_x, new_y);
@@ -267,7 +322,8 @@ public class GamePanel extends JPanel implements KeyListener
 ////    g2.drawRect(new_x, new_y, vp.getWidth(), vp.getHeight());
 //    g.draw(vp.getViewRect());
 //    g.setColor(Color.RED);
-//    g.drawRect(player.getCenterPoint().x - width / 2, player.getCenterPoint().y - height / 2, width, height);
+//    g.drawRect(player.getCenterPoint().x - width / 2,
+//        player.getCenterPoint().y - height / 2, width, height);
 
     new_x += 50;
     new_y += 100;
@@ -286,14 +342,12 @@ public class GamePanel extends JPanel implements KeyListener
       g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
     }
 
+
+
   }
 
-  private BufferedImage drawFireLight(FireTrap trap)
+  private void drawFireLight(FireTrap trap, Graphics2D g2)
   {
-    BufferedImage img = new BufferedImage((int) trap.explosionObj.getWidth()
-        , (int) trap.explosionObj.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-
-    Graphics2D g = (Graphics2D) img.getGraphics();
     float radius = (float) trap.explosionObj.getWidth() * GUI.tile_size;
     Point2D center = new Point2D.Float((float) trap.explosionObj.getWidth() / 2,
         (float) trap.explosionObj.getHeight() / 2);
@@ -302,11 +356,10 @@ public class GamePanel extends JPanel implements KeyListener
     RadialGradientPaint p =
         new RadialGradientPaint(center, radius, dist, colors);
 
-    g.setPaint(p);
-    g.fillRect(0, 0, (int) trap.explosionObj.getWidth(),
+    g2.setPaint(p);
+    g2.fillRect(0, 0, (int) trap.explosionObj.getWidth(),
         (int) trap.explosionObj.getHeight());
 
-    return img;
   }
 
 
@@ -317,24 +370,20 @@ public class GamePanel extends JPanel implements KeyListener
    * @param sight Uses player as radius for vignette opening
    * @return A buffered image
    */
-  private BufferedImage makeVignette(int sight)
+  private void drawPlayerLight(int sight, Graphics2D g2)
   {
-    BufferedImage img = new BufferedImage(map.getWidth(GUI.tile_size),
-        map.getHeight(GUI.tile_size), BufferedImage.TYPE_4BYTE_ABGR);
-    Graphics2D g = (Graphics2D) img.getGraphics();
-
     float sight_pixels = (float)sight*GUI.tile_size;
-    Point2D center = new Point2D.Float(map.getWidth(GUI.tile_size) / 2,
-        map.getHeight(GUI.tile_size) / 2);
+    Point2D center = new Point2D.Float(lightLayer.getWidth() / 2,
+        lightLayer.getHeight() / 2);
     Color[] colors = {new Color(1f,1f,1f,0f),  Color.black};
-    float[] dist = {0.0f, 1f};
+    float[] dist = {0.8f, 1f};
     RadialGradientPaint p = new RadialGradientPaint(center,sight_pixels,dist,colors);
 
 
-    g.setPaint(p);
-    g.fillRect(0, 0, map.getWidth(GUI.tile_size), map.getHeight(GUI.tile_size));
+    g2.setPaint(p);
+    g2.fillRect(0, 0, GUI.SCENE_WIDTH, GUI.SCENE_WIDTH);
 
-    return img;
+
   }
 
 
