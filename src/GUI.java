@@ -30,6 +30,7 @@ public class GUI
   static JPanel viewPanel;
   static boolean running = false;
   static JScrollPane scrollPane;
+  public int winLevel;
   public int whichLevel = 1;
   JFrame window = new JFrame("Zombie House");
   GameMap map;
@@ -112,6 +113,7 @@ public class GUI
     JLabel ZoRate = new JLabel("   Zombie Decision Rate: ");
     JLabel fSpawn = new JLabel("    Fire Trap Spawn: ");
     JLabel PlRegen = new JLabel("   Player Regenerate: ");
+    JLabel wiLevel = new JLabel("   Play to level: ");
 
     JTextField pSpeed = new JTextField("1.0");
     JTextField pSight = new JTextField("5");
@@ -123,6 +125,7 @@ public class GUI
     JTextField zRate = new JTextField("2.0");
     JTextField fireSpawn = new JTextField("0.01");
     JTextField pRegen = new JTextField("0.2");
+    JTextField wLevel = new JTextField("6");
 
     JPanel settings = new JPanel();
     JPanel textFields = new JPanel();
@@ -139,26 +142,28 @@ public class GUI
     settings.add(choose, BorderLayout.NORTH);
     settings.add(everything, BorderLayout.CENTER);
 
-    words.add(Box.createRigidArea(new Dimension(10, 20)));
+    words.add(Box.createRigidArea(new Dimension(10, 15)));
     words.add(PlSpeed);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(PlHearing);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(PlSight);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(PlStamina);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(PlRegen);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(ZoSpeed);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(ZoSmell);
     words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(ZoRate);
-    words.add(Box.createRigidArea(new Dimension(10, 30)));
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(ZoSpawn);
     words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(fSpawn);
+    words.add(Box.createRigidArea(new Dimension(10, 25)));
+    words.add(wiLevel);
 
     textFields.add(pSpeed);
     textFields.add(pHearing);
@@ -170,6 +175,7 @@ public class GUI
     textFields.add(zRate);
     textFields.add(zSpawn);
     textFields.add(fireSpawn);
+    textFields.add(wLevel);
 
     everything.add(words, BorderLayout.WEST);
     everything.add(textFields, BorderLayout.EAST);
@@ -192,27 +198,28 @@ public class GUI
           return;
         }
         gameStarted = true;
-        String one = pSpeed.getText();
-        String two = pHearing.getText();
-        String three = pSight.getText();
-        String four = pStamina.getText();
-        String five = pRegen.getText();
-        String six = zSpeed.getText();
-        String seven = zSmell.getText();
-        String eight = zRate.getText();
-        String nine = zSpawn.getText();
-        String ten = fireSpawn.getText();
-
-        speed = Double.parseDouble(one);
-        hearing = Integer.parseInt(two);
-        sight = Integer.parseInt(three);
-        stamina = Double.parseDouble(four);
-        regen = Double.parseDouble(five);
-        zspeed = Double.parseDouble(six);
-        zsmell = Double.parseDouble(seven);
-        drate = Double.parseDouble(eight);
-        zspawn = Double.parseDouble(nine);
-        fspawn = Double.parseDouble(ten);
+        boolean numsGood = true;
+        try
+        {
+          speed = Double.parseDouble(pSpeed.getText());
+          hearing = Integer.parseInt(pHearing.getText());
+          sight = Integer.parseInt(pSight.getText());
+          stamina = Double.parseDouble(pStamina.getText());
+          regen = Double.parseDouble(pRegen.getText());
+          zspeed = Double.parseDouble(zSpeed.getText());
+          zsmell = Double.parseDouble(zSmell.getText());
+          drate = Double.parseDouble(zRate.getText());
+          zspawn = Double.parseDouble(zSpawn.getText());
+          fspawn = Double.parseDouble(fireSpawn.getText());
+          winLevel = Integer.parseInt(wLevel.getText());
+        }
+        catch (NumberFormatException x)
+        {
+          numsGood = false;
+          gameStarted = false;
+          System.out.println("Error: " + x.getMessage());
+        }
+        if (!numsGood) return;
 
 
         //initializes everything
@@ -236,9 +243,11 @@ public class GUI
     //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
 
-    window.addComponentListener(new ComponentListener() {
+    window.addComponentListener(new ComponentListener()
+    {
       @Override
-      public void componentResized(ComponentEvent e) {
+      public void componentResized(ComponentEvent e)
+      {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
 //        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
@@ -246,17 +255,20 @@ public class GUI
       }
 
       @Override
-      public void componentMoved(ComponentEvent e) {
+      public void componentMoved(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentShown(ComponentEvent e) {
+      public void componentShown(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentHidden(ComponentEvent e) {
+      public void componentHidden(ComponentEvent e)
+      {
 
       }
     });

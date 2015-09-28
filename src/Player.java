@@ -5,7 +5,6 @@
  * for picking up and putting down firetraps.
  */
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class Player extends Humanoid implements HumanoidObject
   private Animation runLeft = new Animation(runningLeft, 1);
   private Animation standRight = new Animation(stillRight, 5);
   private Animation standLeft = new Animation(stillLeft, 5);
-  private ArrayList<FireTrap> traps = new ArrayList<>();
   private int diedFrame = 0;
 
   private StaminaBar stamina_bar;
@@ -258,7 +256,6 @@ public class Player extends Humanoid implements HumanoidObject
         frame = 0;
         is_picking_up = false;
         map.traps.remove(pickup_trap);
-        traps.add(pickup_trap); //Adds trap to player's list of held traps
       }
     }
     else if (is_putting_down)
@@ -270,8 +267,9 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps--;
         frame = 0;
         is_putting_down = false;
-        FireTrap t = traps.remove(0); //Remove local copy.
-        t.setNewLocation(location);
+//        FireTrap t = traps.remove(0); //Remove local copy.
+        FireTrap t = new FireTrap(new Location(location.getCol(GUI.tile_size) * GUI.tile_size,
+            location.getRow(GUI.tile_size) * GUI.tile_size));
         map.traps.add(t); //Add back to map copy of traps.
       }
     }
@@ -503,8 +501,8 @@ public class Player extends Humanoid implements HumanoidObject
 
     public void paint(Graphics2D g2)
     {
-      int x = (int)location.x + xOffset;
-      int y = (int)location.y + yOffset;
+      int x = (int) location.x + xOffset;
+      int y = (int) location.y + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);

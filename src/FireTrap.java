@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 
 public class FireTrap extends GameObject
 {
+  public static final int WIDTH = 50;
+  public static final int HEIGHT = 50;
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
   public boolean explodee;
@@ -23,17 +25,17 @@ public class FireTrap extends GameObject
   boolean remove_me = false;
   Rectangle explosionObj;
 
-  public FireTrap(Location location)
-  {
-    this.location = location;
-  }
-
   public FireTrap(int width, int height, Location location) {
-    this(location);
+    this.location = location;
     this.width = width;
     this.height = height;
     explosionObj = new Rectangle(location.getX() - GUI.tile_size,
         location.getY() - GUI.tile_size, 3 * GUI.tile_size, 3 * GUI.tile_size);
+  }
+
+  public FireTrap(Location location)
+  {
+    this(WIDTH, HEIGHT, location);
   }
 
   //Gets sprite images for explosion
@@ -189,6 +191,8 @@ public class FireTrap extends GameObject
 
       activeTrap = this;
       explodee = true;
+      g2.setColor(Color.BLUE);
+      g2.draw(explosionObj);
 
     }
   }

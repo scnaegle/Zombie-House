@@ -297,12 +297,12 @@ public class GameMap
       //System.out.println("poo");
       if (makeEndRoom(0)) // makes an end room
       {
-       // System.out.println("WHY?WHY?WHY?");
+        //System.out.println("WHY?WHY?WHY?");
         mapIsBad = false;
       }
       else
       {
-        mapIsBad=true;
+        mapIsBad = true;
       }
       if (mapIsBad)
       {
@@ -310,7 +310,7 @@ public class GameMap
         continue;
       }
 
-      //` System.out.println("stuff");
+      //System.out.println("stuff");
       turnDoorToFloor(); // makes door to floor
       makeInteriorWalls();
 
@@ -324,7 +324,7 @@ public class GameMap
 //      System.out.println("");
 //    }
     }
-    System.out.println("I fucked up " + countNumberOftimes + " times!!1");
+    // System.out.println("I fucked up " + countNumberOftimes + " times!!1");
   }
 
   private static void turnDoorToFloor()
@@ -373,7 +373,7 @@ public class GameMap
       }
     }
     inputNumber++;
-    System.out.println(inputNumber);
+    //System.out.println(inputNumber);
     if (inputNumber > 5000)
     {
       return false;
@@ -1744,7 +1744,7 @@ public class GameMap
                 Location location =
                     new Location(col * GUI.tile_size, row * GUI.tile_size);
 
-                fireTrap = new FireTrap(50, 50, location);
+                fireTrap = new FireTrap(location);
                 traps.add(fireTrap);
 
               }
