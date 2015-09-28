@@ -57,7 +57,7 @@ public class GUI
 
     if (option == 0) //Restart
     {
-      restartGame(parent);
+      StartGame.restartGame();
     }
     else if (option == 1) //Exit
     {
@@ -80,20 +80,12 @@ public class GUI
 
     if (option == 0)
     {
-      restartGame(parent);
+      StartGame.restartGame();
     }
     else if (option == 1)
     {
       System.exit(0);
     }
-  }
-
-  private static void restartGame(GUI parent)
-  {
-    parent.whichLevel = 1;
-    System.gc();
-    parent.window.dispose();
-    parent.getSettings();
   }
 
   /**
@@ -239,17 +231,14 @@ public class GUI
    */
   public void setUpGUI()
   {
-
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setLayout(new BorderLayout());
     //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
 
-    window.addComponentListener(new ComponentListener()
-    {
+    window.addComponentListener(new ComponentListener() {
       @Override
-      public void componentResized(ComponentEvent e)
-      {
+      public void componentResized(ComponentEvent e) {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
 //        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
@@ -257,20 +246,17 @@ public class GUI
       }
 
       @Override
-      public void componentMoved(ComponentEvent e)
-      {
+      public void componentMoved(ComponentEvent e) {
 
       }
 
       @Override
-      public void componentShown(ComponentEvent e)
-      {
+      public void componentShown(ComponentEvent e) {
 
       }
 
       @Override
-      public void componentHidden(ComponentEvent e)
-      {
+      public void componentHidden(ComponentEvent e) {
 
       }
     });
@@ -282,9 +268,6 @@ public class GUI
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
     System.out.println("panel has focus");
-
-
-
 
 
     scrollPane = new JScrollPane(gamePanel);
@@ -330,12 +313,10 @@ public class GUI
   //start and pause game methods
   public void startGame()
   {
-
     pause = false;
     running = true;
     gamePanel.frame_timer.start();
     gamePanel.startMusic();
-
   }
 
   public void pauseGame()
@@ -345,8 +326,6 @@ public class GUI
     gamePanel.frame_timer.stop();
     gamePanel.stopMusic();
     gamePanel.stopAllSounds();
-
-
   }
 
   /**
