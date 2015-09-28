@@ -366,7 +366,7 @@ public class Shadow {
     output.clear();  // output set of triangles
     long t1 = System.currentTimeMillis();
     for(Segment s : segments) {
-      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels) {
+      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 2) {
         continue;
       }
 //      Point new_p1 = s.p1;

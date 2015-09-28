@@ -217,8 +217,6 @@ public class GamePanel extends JPanel implements KeyListener
 
       explodee = trap.explodee;
       activeTrap = trap;
-
-
     }
 
     //Draws zombies
@@ -228,13 +226,13 @@ public class GamePanel extends JPanel implements KeyListener
     }
 
 
-//     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
-//     int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
-//
-//    if (!explodee)
-//    {
-//      g2.drawImage(vignetteCanvas, vcX, vcY, null);
-//    }
+    int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
+    int vcY = player.getCenterPoint().y - vignetteCanvas.getHeight() / 2;
+
+    if (!explodee)
+    {
+      g2.drawImage(vignetteCanvas, vcX, vcY, null);
+    }
 
 
     System.out.println("player location: " + player.location);
