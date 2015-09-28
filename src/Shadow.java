@@ -10,40 +10,61 @@ import java.util.*;
 
 /**
  * Created by scnaegl on 9/20/15.
+ * The Shadow class its what builds up the shadow overlay based on the given light
+ * location and where all the game map walls are located. This works by first casting
+ * rays and figuring out that the current visibility polygon would look like. Then, we
+ * make a black overlay and subtract out the visibility polygon so that that part is
+ * transparent to the map below.
  */
 public class Shadow {
 
-  ArrayList<EndPoint> output = new ArrayList<EndPoint>();
+  private ArrayList<EndPoint> output = new ArrayList<EndPoint>();
   private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
   private ArrayList<Segment> segments = new ArrayList<Segment>();
   private Point center = new Point();
   private GameMap map;
-  private BufferedImage background;
-  public BufferedImage overlay;
   private int width = 800;
   private int height = 800;
   private int sight = 5;
   private int sight_pixels = 5 * GUI.tile_size;
   private Point location;
 
-  public Shadow() {
-  }
+  public BufferedImage overlay;
 
+  /**
+   * Basic constructor. This takes in the GameMap object and calls the loadMap function
+   * to load all the walls, endpoints, and segments
+   * @param map GameMap object
+   */
   public Shadow(GameMap map) {
     loadMap(map);
     location = new Point(0, 0);
   }
 
+  /**
+   * Set the Dimensions of the background overlay.
+   * @param width Width of overlay
+   * @param height Height of overlay
+   */
   public void setDimensions(int width, int height) {
     this.width = width;
     this.height = height;
   }
 
-  public void setPlayerSight(int sight) {
+  /**
+   * Set the sight distance of wherever the light source is.
+   * @param sight Sight in number of tiles
+   */
+  public void setSight(int sight) {
     this.sight = sight;
     this.sight_pixels = sight * GUI.tile_size;
   }
 
+  /**
+   * Setup the overlay image to be used to draw on top of the given map. This
+   * overlay should simply be a black square minus the visibility polygon and
+   * all the walls that the visibility polygon touches.
+   */
   private void setupOverlay() {
     overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = (Graphics2D)overlay.getGraphics();
@@ -75,6 +96,10 @@ public class Shadow {
     }
   }
 
+  /**
+   * Use the GameMap passed in to add segments by using the walls in the map.
+   * @param map GameMap object
+   */
   public void loadMap(GameMap map) {
     this.map = map;
     endpoints.clear();
@@ -92,6 +117,14 @@ public class Shadow {
     }
   }
 
+  /**
+   * Add a wall segment to use when determining the visibility. This also
+   * adds endpoints as well.
+   * @param x1 First x coordinate
+   * @param y1 First y coordinate
+   * @param x2 Second x coordinate
+   * @param y2 Second y coordinate
+   */
   private void addSegment(int x1, int y1, int x2, int y2) {
     Segment segment = null;
     EndPoint p1 = new EndPoint(0, 0);
@@ -109,48 +142,31 @@ public class Shadow {
     segment.p2 = p2;
     segment.d = 0.0;
 
-//    if (!segments.contains(segment)) {
-      segments.add(segment);
-      endpoints.add(p1);
-      endpoints.add(p2);
-//    }
+    segments.add(segment);
+    endpoints.add(p1);
+    endpoints.add(p2);
   }
 
+  /**
+   * Set the light location to be used for calculating the visibility.
+   * @param x X coordinate of light location
+   * @param y Y coordinate of light location
+   */
   public void setLightLocation(int x, int y) {
-//    System.out.println("Setting light location...");
-//    System.out.format("x=%d, y=%d\n", x, y);
     if (x != center.x || y != center.y) {
       this.center = new Point(x, y);
       this.location.setLocation(x - width / 2, y - height / 2);
-//      System.out.println("new location: " + this.location);
     }
-
-//    for (Segment segment : segments) {
-//      double dx = 0.5 * (segment.p1.x + segment.p2.x) - x;
-//      double dy = 0.5 * (segment.p1.y + segment.p2.y) - y;
-//      // NOTE: we only use this for comparison so we can use
-//      // distance squared instead of distance. However in
-//      // practice the sqrt is plenty fast and this doesn't
-//      // really help in this situation.
-//      segment.d = dx*dx + dy*dy;
-//
-//      // NOTE: future optimization: we could record the quadrant
-//      // and the y/x or x/y ratio, and sort by (quadrant,
-//      // ratio), instead of calling atan2. See
-//      // <https://github.com/mikolalysenko/compare-slope> for a
-//      // library that does this. Alternatively, calculate the
-//      // angles and use bucket sort to get an O(N) sort.
-//      segment.p1.angle = Math.atan2(segment.p1.y - y, segment.p1.x - x);
-//      segment.p2.angle = Math.atan2(segment.p2.y - y, segment.p2.x - x);
-//
-//      double dAngle = segment.p2.angle - segment.p1.angle;
-//      if (dAngle <= -Math.PI) { dAngle += 2*Math.PI; }
-//      if (dAngle > Math.PI) { dAngle -= 2*Math.PI; }
-//      segment.p1.begin = (dAngle > 0.0);
-//      segment.p2.begin = !segment.p1.begin;
-//    }
   }
 
+  /**
+   * Get the intersection point between 2 lines
+   * @param p1 Start point of the first line
+   * @param p2 End point of the first line
+   * @param p3 Start point of the second line
+   * @param p4 End point of the second line
+   * @return Point at which the 2 lines intersect
+   */
   public Point lineIntersection(Point p1, Point p2, Point p3, Point p4) {
     if (! Line2D.linesIntersect(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)) return null;
     double px = p1.x,
@@ -172,9 +188,11 @@ public class Shadow {
     }
   }
 
-  // Run the algorithm, sweeping over all or part of the circle to find
-  // the visible area, represented as a set of triangles
-  public void sweep(double maxAngle) {
+  /**
+   * Run the algorithm, sweeping over all endpoints within the sight range
+   * and created bunch of points that represent a polygon of visibility
+   */
+  public void sweep() {
     output.clear();  // output set of triangles
     for(Segment s : segments) {
       if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 2) {
@@ -206,15 +224,18 @@ public class Shadow {
     setupOverlay();
   }
 
-  public void sweep() {
-    sweep(999.0);
-  }
-
+  /**
+   * Draw the overlay image to the screen at the set location
+   * @param g Graphics2D object with which to paint
+   */
   public void paint(Graphics2D g) {
     g.drawImage(overlay, location.x, location.y, width, height, null);
   }
 
-  public class EndPoint extends Point implements Comparable {
+  /**
+   * EndPoint class to track all of the wall end points.
+   */
+  private class EndPoint extends Point implements Comparable {
     boolean begin = false;
     Segment segment = null;
     double angle = 0.0;
@@ -237,19 +258,16 @@ public class Shadow {
     }
   }
 
-  public class Segment {
+  /**
+   * Segment class to track all of the wall line segments.
+   */
+  private class Segment {
     EndPoint p1;
     EndPoint p2;
     double d;
     double angle;
 
     public Segment() {
-
-    }
-
-    public Segment(int x, int y, int x2, int y2) {
-      p1 = new EndPoint(x, y);
-      p2 = new EndPoint(x2, y2);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements KeyListener
     vignetteCanvas = makeVignette(player.getSight());
 
     shadow = new Shadow(map);
-    shadow.setPlayerSight(player.getSight());
+    shadow.setSight(player.getSight());
 
     setPreferredSize(new Dimension(map.getWidth(GUI.tile_size),
         map.getHeight(GUI.tile_size)));
