@@ -274,9 +274,8 @@ public class GamePanel extends JPanel implements KeyListener
 
     player.paint(g2, vp);
     paintTextOverlay(g2);
-    //System.out.printf("paintComponent() %dms%n", System.currentTimeMillis()
-    // - start);
 
+    
 
   }
 
@@ -334,9 +333,9 @@ public class GamePanel extends JPanel implements KeyListener
         new_y);
     g.drawString("Fire traps: " + player.getFire_traps(), new_x,
         new_y + 50);
-    g.drawString("Stamina:", new_x + width - 200, new_y);
+//    g.drawString("Stamina", new_x + width - 200, new_y);
 
-    if (!parent.running)
+    if (!GUI.running)
     {
       g.setColor(Color.RED);
       g.drawString("Press SPACE to start", new_x + width / 2 - 220, new_y);
@@ -359,7 +358,7 @@ public class GamePanel extends JPanel implements KeyListener
     g2.setPaint(p);
     g2.fillRect(0, 0, (int) trap.explosionObj.getWidth(),
         (int) trap.explosionObj.getHeight());
-
+    
   }
 
 
@@ -416,7 +415,7 @@ public class GamePanel extends JPanel implements KeyListener
     }
     if (KEY_UP.contains(code))
     {
-      //System.out.println("up");
+      System.out.println("up");
       player.heading.setYMovement(Heading.NORTH_STEP);
     }
     if (KEY_DOWN.contains(code))

@@ -4,10 +4,18 @@
  */
 public class StartGame
 {
+  static GUI g;
+
   public static void main(String[] args)
   {
-    GUI g = new GUI();
+    g = new GUI();
     g.getSettings();
+  }
 
+  public static void restartGame() {
+    g.window.dispose();
+    g = null;
+    g = new GUI();
+    g.getSettings();
   }
 }
