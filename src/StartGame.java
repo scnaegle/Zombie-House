@@ -12,7 +12,8 @@ public class StartGame
     g.getSettings();
   }
 
-  public static void restartGame() {
+  public static void restartGame()
+  {
     g.window.dispose();
     g = null;
     g = new GUI();

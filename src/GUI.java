@@ -198,29 +198,28 @@ public class GUI
           return;
         }
         gameStarted = true;
-        String one = pSpeed.getText();
-        String two = pHearing.getText();
-        String three = pSight.getText();
-        String four = pStamina.getText();
-        String five = pRegen.getText();
-        String six = zSpeed.getText();
-        String seven = zSmell.getText();
-        String eight = zRate.getText();
-        String nine = zSpawn.getText();
-        String ten = fireSpawn.getText();
-        String eleven = wLevel.getText();
-
-        speed = Double.parseDouble(one);
-        hearing = Integer.parseInt(two);
-        sight = Integer.parseInt(three);
-        stamina = Double.parseDouble(four);
-        regen = Double.parseDouble(five);
-        zspeed = Double.parseDouble(six);
-        zsmell = Double.parseDouble(seven);
-        drate = Double.parseDouble(eight);
-        zspawn = Double.parseDouble(nine);
-        fspawn = Double.parseDouble(ten);
-        winLevel = Integer.parseInt(eleven);
+        boolean numsGood = true;
+        try
+        {
+          speed = Double.parseDouble(pSpeed.getText());
+          hearing = Integer.parseInt(pHearing.getText());
+          sight = Integer.parseInt(pSight.getText());
+          stamina = Double.parseDouble(pStamina.getText());
+          regen = Double.parseDouble(pRegen.getText());
+          zspeed = Double.parseDouble(zSpeed.getText());
+          zsmell = Double.parseDouble(zSmell.getText());
+          drate = Double.parseDouble(zRate.getText());
+          zspawn = Double.parseDouble(zSpawn.getText());
+          fspawn = Double.parseDouble(fireSpawn.getText());
+          winLevel = Integer.parseInt(wLevel.getText());
+        }
+        catch (NumberFormatException x)
+        {
+          numsGood = false;
+          gameStarted = false;
+          System.out.println("Error: " + x.getMessage());
+        }
+        if (!numsGood) return;
 
 
         //initializes everything
@@ -244,9 +243,11 @@ public class GUI
     //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
 
-    window.addComponentListener(new ComponentListener() {
+    window.addComponentListener(new ComponentListener()
+    {
       @Override
-      public void componentResized(ComponentEvent e) {
+      public void componentResized(ComponentEvent e)
+      {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
 //        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
@@ -254,17 +255,20 @@ public class GUI
       }
 
       @Override
-      public void componentMoved(ComponentEvent e) {
+      public void componentMoved(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentShown(ComponentEvent e) {
+      public void componentShown(ComponentEvent e)
+      {
 
       }
 
       @Override
-      public void componentHidden(ComponentEvent e) {
+      public void componentHidden(ComponentEvent e)
+      {
 
       }
     });

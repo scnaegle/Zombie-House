@@ -5,7 +5,6 @@
  * for picking up and putting down firetraps.
  */
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -503,8 +502,8 @@ public class Player extends Humanoid implements HumanoidObject
 
     public void paint(Graphics2D g2)
     {
-      int x = (int)location.x + xOffset;
-      int y = (int)location.y + yOffset;
+      int x = (int) location.x + xOffset;
+      int y = (int) location.y + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);
