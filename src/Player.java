@@ -503,10 +503,11 @@ public class Player extends Humanoid implements HumanoidObject
 
     public void paint(Graphics2D g2)
     {
-//      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth() + xOffset;
+//      int x = (int)viewport.getViewPosition().getX() + viewport.getWidth()
+// + xOffset;
 //      int y = (int)viewport.getViewPosition().getY() + yOffset;
-      int x = (int)location.x + xOffset;
-      int y = (int)location.y + yOffset;
+      int x = (int) location.x + xOffset;
+      int y = (int) location.y + yOffset;
 
       g2.setColor(TIRED);
       g2.fillRect(x, y, width, height);
