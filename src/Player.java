@@ -268,8 +268,7 @@ public class Player extends Humanoid implements HumanoidObject
         frame = 0;
         is_putting_down = false;
 //        FireTrap t = traps.remove(0); //Remove local copy.
-        FireTrap t = new FireTrap(new Location(location.getCol(GUI.tile_size) * GUI.tile_size,
-            location.getRow(GUI.tile_size) * GUI.tile_size));
+        FireTrap t = new FireTrap(Location.snapToTile(getCenterPoint().x + 20, getCenterPoint().y - 20, GUI.tile_size));
         map.traps.add(t); //Add back to map copy of traps.
       }
     }
