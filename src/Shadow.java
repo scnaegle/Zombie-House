@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Frame;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class Shadow {
   public ArrayList<ArrayList<Point>> demo_intersectionsDetected =
       new ArrayList<ArrayList<Point>>();
   ArrayList<Point> output = new ArrayList<Point>();
-  private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
-  private ArrayList<Segment> segments = new ArrayList<Segment>();
+  public ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+  public ArrayList<Segment> segments = new ArrayList<Segment>();
   private Point center = new Point();
   private LinkedList<Segment> open = new LinkedList<Segment>();
 
@@ -66,20 +67,29 @@ public class Shadow {
         g2.drawImage(map.map_image, 0, 0, null);
 
         g.setColor(Color.YELLOW);
-        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
-        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
-//        ArrayList<Integer> xs = CollectionUtils.collect(list,
-// TransformerUtils.invokerTransformer("getName")
-        //g.fillPolygon(xs, ys, shadow.output.size());
-        int[] test_xs = new int[3];
-        test_xs[0] = shadow.output.get(0).x;
-        test_xs[1] = shadow.output.get(1).x;
-        test_xs[2] = shadow.center.x;
-        int[] test_ys = new int[3];
-        test_ys[0] = shadow.output.get(0).y;
-        test_ys[1] = shadow.output.get(1).y;
-        test_ys[2] = shadow.center.y;
-        g.fillPolygon(test_xs, test_ys, 3);
+//        int[] xs = shadow.output.stream().mapToInt(s -> s.x).toArray();
+//        int[] ys = shadow.output.stream().mapToInt(s -> s.y).toArray();
+////        ArrayList<Integer> xs = CollectionUtils.collect(list,
+//// TransformerUtils.invokerTransformer("getName")
+//        //g.fillPolygon(xs, ys, shadow.output.size());
+//        int[] test_xs = new int[3];
+//        test_xs[0] = shadow.output.get(0).x;
+//        test_xs[1] = shadow.output.get(1).x;
+//        test_xs[2] = shadow.center.x;
+//        int[] test_ys = new int[3];
+//        test_ys[0] = shadow.output.get(0).y;
+//        test_ys[1] = shadow.output.get(1).y;
+//        test_ys[2] = shadow.center.y;
+//        g.fillPolygon(test_xs, test_ys, 3);
+        for(Point p : shadow.endpoints) {
+          g.setColor(Color.BLUE);
+          g.fillOval((int)p.getX() - 3, (int)p.getY() - 3, 6, 6);
+        }
+        for(Segment s : shadow.segments) {
+          System.out.println("Segment: " + s);
+          g.setColor(Color.RED);
+          g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
+        }
       }
     };
     map_panel
@@ -102,6 +112,7 @@ public class Shadow {
 //    setEndPoints(map.getWalls());
     int x, y, w, h;
     for(Tile wall : map.getWalls()) {
+      System.out.println("wall: " + wall);
       x = wall.location.getX();
       y = wall.location.getY();
       w = wall.width;
@@ -131,6 +142,7 @@ public class Shadow {
 
   private void addSegment(int x1, int y1, int x2, int y2) {
 //    segments.add(new Segment(x, y, x2, y2));
+    System.out.format("x1=%d, y2=%d, x2=%d, y2=%d\n", x1, y1, x2, y2);
     Segment segment = null;
     EndPoint p1 = new EndPoint(0, 0);
     p1.segment = segment;
@@ -381,6 +393,16 @@ public class Shadow {
     public Segment(int x, int y, int x2, int y2) {
       p1 = new EndPoint(x, y);
       p2 = new EndPoint(x2, y2);
+    }
+
+    @Override
+    public String toString() {
+      return "Segment{" +
+          "p1=" + p1 +
+          ", p2=" + p2 +
+          ", d=" + d +
+          ", angle=" + angle +
+          '}';
     }
 
     @Override
