@@ -1,13 +1,13 @@
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 /**
  * Allows us to create firetraps and load images for the explosion.
  * Keeps track of zombies in list to see if they have touched a trap.
  * If they do set one off, it plays the animation, sound, and changes the
  * surrounding tiles to burnt.
  */
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 public class FireTrap extends GameObject
 {
   public static final int WIDTH = 50;

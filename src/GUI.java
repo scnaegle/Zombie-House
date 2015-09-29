@@ -1,13 +1,13 @@
-/**
- * GUI class creates the settings window, initializes map, player, and sounds,
- * creates actual game window, and creates scrollpane which lets us follow the
- * player around.
- */
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * GUI class creates the settings window, initializes map, player, and sounds,
+ * creates actual game window, and creates scrollpane which lets us follow the
+ * player around.
+ */
 
 public class GUI
 {

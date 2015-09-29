@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * loads the sounds to be played from the zombies, firetraps, and player sprites
+ * Loads the sounds to be played from the zombies, firetraps, and player sprites
  */
 public class SoundLoader implements LineListener
 {
