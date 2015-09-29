@@ -1624,6 +1624,7 @@ public class GameMap
     if (grid[row][col].tile_type.equals(TileType.BRICK)
         || grid[row][col].tile_type.equals(TileType.INSIDEWALL))
     {
+      walls.remove(grid[row][col]);
       grid[row][col].tile_type = TileType.BURNTFLOOR;
     }
     if (grid[row][col].tile_type.equals(TileType.WALL))
