@@ -143,7 +143,6 @@ public class GamePanel extends JPanel implements KeyListener
               parent.pauseGame();
               parent.showWinningDialog(parent, " You won the game!");
             }
-            System.out.println("Next level");
             newMapByExit();
           }
 
