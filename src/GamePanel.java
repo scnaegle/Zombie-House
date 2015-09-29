@@ -203,7 +203,7 @@ public class GamePanel extends JPanel implements KeyListener
     double scale = ((double) vp.getWidth()) / DEFAULT_WIDTH;
     g2.scale(scale, scale);
 
-    g2.drawImage(map.map_image, 0, 0, null);
+    map.paint(g2);
 
     //When to draw traps and which sprite
     boolean explodee = false;
