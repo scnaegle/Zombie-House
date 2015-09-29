@@ -315,8 +315,34 @@ public class GameMap
       }
       turnDoorToFloor(); // makes door to floor
       makeInteriorWalls();
+      doubleCheck(); // one last double check to prevent error
     }
   }
+
+  private static void doubleCheck()
+  {
+    for (int y = 1; y < Y_SIZE - 1; y++)
+    {
+      for (int x = 1; x < X_SIZE - 1; x++)
+      {
+        if (isEmpty(x, y) && surroundingSpotWall(x, y))
+        {
+          setBlockType(x, y,
+              ROOM_WALL); // goes through, checks to see if door
+          // turns it to hall
+        }
+      }
+    }
+  }
+
+  private static boolean surroundingSpotWall(int x, int y)
+  {
+
+    return (isBasic(x + 1, y) || isBasic(x - 1, y) || isBasic(x, y - 1) ||
+        isBasic(x, y + 1));
+  }
+
+
 
   private static void turnDoorToFloor()
   {

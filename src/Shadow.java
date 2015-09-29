@@ -39,7 +39,7 @@ public class Shadow {
     location = new Point(0, 0);
   }
 
- 
+
   /**
    * Set the Dimensions of the background overlay.
    * @param width Width of overlay
