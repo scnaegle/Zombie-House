@@ -8,9 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * makes the GUI and all the objects that go along with it
- */
+
 public class GUI
 {
   final static int tile_size = 80;
@@ -27,7 +25,6 @@ public class GUI
   public static double fspawn;
   static int SCENE_WIDTH = 1920;
   static int SCENE_HEIGHT = 1080;
-  static JPanel viewPanel;
   static boolean running = false;
   static JScrollPane scrollPane;
   public int winLevel;
@@ -67,7 +64,7 @@ public class GUI
   }
 
   /**
-   * come up if you win the game by completing 5 levels or something like that
+   * Comes up if you win the game by completing levels.
    * @param parent
    * @param message
    */
@@ -91,7 +88,7 @@ public class GUI
 
   /**
    * Window that pops up once the game has started. Allows user to change
-   * any settings. THis is cool and has allowed for a much quicker debugging process
+   * any settings.
    */
   public void getSettings()
   {
@@ -103,6 +100,7 @@ public class GUI
     JLabel choose = new JLabel("Choose your settings: ");
     JButton start = new JButton("Start");
 
+    //Displays labels
     JLabel PlSpeed = new JLabel("   Player Speed: ");
     JLabel PlSight = new JLabel("   Player Sight: ");
     JLabel PlHearing = new JLabel("   Player Hearing: ");
@@ -115,6 +113,7 @@ public class GUI
     JLabel PlRegen = new JLabel("   Player Regenerate: ");
     JLabel wiLevel = new JLabel("   Play to level: ");
 
+    //Displays text boxes
     JTextField pSpeed = new JTextField("1.0");
     JTextField pSight = new JTextField("5");
     JTextField pHearing = new JTextField("10");
@@ -142,6 +141,7 @@ public class GUI
     settings.add(choose, BorderLayout.NORTH);
     settings.add(everything, BorderLayout.CENTER);
 
+    //adds all labels
     words.add(Box.createRigidArea(new Dimension(10, 15)));
     words.add(PlSpeed);
     words.add(Box.createRigidArea(new Dimension(10, 25)));
@@ -165,6 +165,7 @@ public class GUI
     words.add(Box.createRigidArea(new Dimension(10, 25)));
     words.add(wiLevel);
 
+    //Adds text boxes
     textFields.add(pSpeed);
     textFields.add(pHearing);
     textFields.add(pSight);
@@ -201,23 +202,68 @@ public class GUI
         boolean numsGood = true;
         try
         {
+          //Checks every textfield for bad input
           speed = Double.parseDouble(pSpeed.getText());
+          if (speed > 5.0 || speed < 1.0)
+          {
+            throw new NumberFormatException();
+          }
           hearing = Integer.parseInt(pHearing.getText());
+          if (hearing > 15 || hearing < sight)
+          {
+            throw new NumberFormatException();
+          }
           sight = Integer.parseInt(pSight.getText());
+          if (sight < 1 || sight > 10)
+          {
+            throw new NumberFormatException();
+          }
           stamina = Double.parseDouble(pStamina.getText());
+          if (stamina < 3.0 || stamina > 10.0)
+          {
+            throw new NumberFormatException();
+          }
           regen = Double.parseDouble(pRegen.getText());
+          if (regen < 0.01 || regen > stamina)
+          {
+            throw new NumberFormatException();
+          }
           zspeed = Double.parseDouble(zSpeed.getText());
+          if (zspeed < 0.3 || zspeed > 2.0)
+          {
+            throw new NumberFormatException();
+          }
           zsmell = Double.parseDouble(zSmell.getText());
+          if (zsmell < 4.0 || zsmell > 10.0)
+          {
+            throw new NumberFormatException();
+          }
           drate = Double.parseDouble(zRate.getText());
+          if (drate < 1.0 || drate > 4.0)
+          {
+            throw new NumberFormatException();
+          }
           zspawn = Double.parseDouble(zSpawn.getText());
+          if (zspawn < 0.01 || zspawn > 0.1)
+          {
+            throw new NumberFormatException();
+          }
           fspawn = Double.parseDouble(fireSpawn.getText());
+          if (fspawn < 0.01 || fspawn > 0.1)
+          {
+            throw new NumberFormatException();
+          }
           winLevel = Integer.parseInt(wLevel.getText());
+          if (winLevel < 2 || winLevel > 10)
+          {
+            throw new NumberFormatException();
+          }
         }
         catch (NumberFormatException x)
         {
           numsGood = false;
           gameStarted = false;
-          System.out.println("Error: " + x.getMessage());
+          System.out.println("Error, bad input");
         }
         if (!numsGood) return;
 
@@ -240,7 +286,6 @@ public class GUI
   {
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setLayout(new BorderLayout());
-    //window.setExtendedState(window.MAXIMIZED_BOTH);
     window.setPreferredSize(new Dimension(SCENE_WIDTH, SCENE_HEIGHT));
 
     window.addComponentListener(new ComponentListener()
@@ -250,8 +295,7 @@ public class GUI
       {
         SCENE_WIDTH = window.getWidth();
         SCENE_HEIGHT = window.getHeight();
-//        System.out.println("SCENE_WIDTH = " + SCENE_WIDTH);
-//        System.out.println("SCENE_HEIGHT = " + SCENE_HEIGHT);
+
       }
 
       @Override
@@ -276,12 +320,11 @@ public class GUI
 
     gamePanel = new GamePanel(this);
     gamePanel.addKeyListener(gamePanel);
-    System.out.println("added key listener");
     gamePanel.setFocusable(true);
     gamePanel.requestFocus();
-    System.out.println("panel has focus");
 
 
+    //Creates scrollpane but hides side scrolls
     scrollPane = new JScrollPane(gamePanel);
     scrollPane.setVerticalScrollBarPolicy(
         ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);

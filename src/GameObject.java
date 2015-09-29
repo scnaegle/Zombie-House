@@ -1,7 +1,8 @@
 import java.awt.*;
 
 /**
- * Created by scnaegl on 9/9/15.
+ * This class implements object2D since we want our game objects to
+ * use those methods specified, such as intersects and getBoundingRectangle.
  */
 public class GameObject implements Object2D {
   protected int width;
@@ -12,6 +13,7 @@ public class GameObject implements Object2D {
 
   }
 
+  //Every game object needs a location, a width, and a height.
   public GameObject(Location location, int width, int height) {
     this.location = location;
     this.width = width;
@@ -37,7 +39,6 @@ public class GameObject implements Object2D {
   public double getDistance(Object2D other) {
     double diff_x = Math.abs(location.x - other.getLocation().getX());
     double diff_y = Math.abs(location.y - other.getLocation().getY());
-    //return (diff_y + diff_x);
     return Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2));
   }
 
@@ -59,7 +60,6 @@ public class GameObject implements Object2D {
 
   public Rectangle getCenteredBoundingRectangle() {
     Rectangle rect = getBoundingRectangle();
-//    System.out.println("GETTING IN BOUNDING RECT!!");
     rect.x += (GUI.tile_size - width) / 2;
     rect.y += (GUI.tile_size - height) / 2;
     return rect;

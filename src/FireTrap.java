@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 
 public class FireTrap extends GameObject
 {
-  private static final boolean TESTING = true;
   public static final int WIDTH = 50;
   public static final int HEIGHT = 50;
+  private static final boolean TESTING = true;
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
   public boolean explodee;
@@ -26,6 +26,13 @@ public class FireTrap extends GameObject
   boolean remove_me = false;
   Rectangle explosionObj;
 
+  /**
+   * Every firetrap gets a width, height, location, and an explosion object
+   * that surrounds the non-exploding image of the firetrap.
+   * @param width
+   * @param height
+   * @param location
+   */
   public FireTrap(int width, int height, Location location) {
     this.location = location;
     this.width = width;
@@ -123,7 +130,7 @@ public class FireTrap extends GameObject
   }
 
 
-  public void startExploding()
+  private void startExploding()
   {
     exploding = true;
     fireAnimation.start();
@@ -131,7 +138,7 @@ public class FireTrap extends GameObject
     frame = 0;
   }
 
-  public void stopExploding(GameMap map)
+  private void stopExploding(GameMap map)
   {
     frame = 0;
     exploding = false;
@@ -147,7 +154,7 @@ public class FireTrap extends GameObject
         map.burnTile(row, col);
       }
     }
-    remove_me = true;
+    remove_me = true; //Remove exploded trap from list
   }
 
   @Override
@@ -165,6 +172,12 @@ public class FireTrap extends GameObject
     return location != null ? location.hashCode() : 0;
   }
 
+  /**
+   * Tells gamepanel how to paint the trap.
+   * If not exploding, use the single sprite, otherwise use the animation.
+   * @param g2
+   * @param player
+   */
   public void paint(Graphics2D g2, Player player)
   {
     if (!player.is_picking_up || player.is_putting_down || !exploding)

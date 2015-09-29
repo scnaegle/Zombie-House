@@ -1,7 +1,7 @@
 import java.awt.image.BufferedImage;
 
 /**
- * makes the frame to hold everything
+ * Class used for frames in each animation.
  */
 public class Frame
 {
@@ -10,7 +10,8 @@ public class Frame
   private int duration;
 
   /**
-   * Makes the frame and inserts the imiage into it
+   * Every frame is a buffered image with an exact duration in which it is
+   * played.
    * @param frame the buffered image
    * @param duration how many frames we are going to be using
    */
@@ -29,31 +30,5 @@ public class Frame
     return frame;
   }
 
-  /**
-   * sets the image in the frame
-   * @param frame image in the frame
-   */
-  public void setFrame(BufferedImage frame)
-  {
-    this.frame = frame;
-  }
-
-  /**
-   * gets the time that we use a buffered image for
-   * @return the durations
-   */
-  public int getDuration()
-  {
-    return duration;
-  }
-
-  /**
-   * Sets how long we use a buffered image for
-   * @param duration how long a buffered image should be used
-   */
-  public void setDuration(int duration)
-  {
-    this.duration = duration;
-  }
 
 }

@@ -39,49 +39,6 @@ public class Heading
   }
 
   /**
-   * supposed to used to turn zombies around if they touch eachother
-   * DOn't know if it will be used.
-   * @param current
-   * @return
-   */
-  public static Heading getOppositeHeading(Heading current)
-  {
-    if (current == Heading.NORTH)
-    {
-      return Heading.SOUTH;
-    }
-    if (current == Heading.SOUTH)
-    {
-      return Heading.NORTH;
-    }
-    if (current == Heading.EAST)
-    {
-      return Heading.WEST;
-    }
-    if (current == Heading.WEST)
-    {
-      return Heading.EAST;
-    }
-    if (current == Heading.NE)
-    {
-      return Heading.SW;
-    }
-    if (current == Heading.NW)
-    {
-      return Heading.SE;
-    }
-    if (current == Heading.SE)
-    {
-      return Heading.NW;
-    }
-    if (current == Heading.SW)
-    {
-      return Heading.NE;
-    }
-    return Heading.NONE;
-  }
-
-  /**
    * gets the x_movement of the sprite
    * @return
    */
@@ -120,6 +77,11 @@ public class Heading
   }
 
 
+  /**
+   * Getter for
+   *
+   * @return
+   */
   public int getColMovement()
   {
     if (x_movement >= 0)
@@ -181,20 +143,6 @@ public class Heading
 
   }
 
-  /**
-   * I have no idea, somebody else comment this part
-   *
-   *
-   *
-   *
-   * <--
-   *
-   * <--
-   *
-   *
-   *
-   * @return
-   */
   @Override
   public int hashCode()
   {

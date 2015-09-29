@@ -80,6 +80,18 @@ public class Location
     return new Point((int)x + width / 2, (int)y + height / 2);
   }
 
+  /**
+   * Snap the position of the coordinates to the top left of the tile that it is on.
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @param tile_size Size of the tiles
+   * @return Location that is snapped to a tile position.
+   */
+  public static Location snapToTile(double x, double y, int tile_size) {
+    int new_x = (int)(x / GUI.tile_size) * tile_size;
+    int new_y = (int)(y / GUI.tile_size) * tile_size;
+    return new Location(new_x, new_y);
+  }
   @Override
   public String toString() {
     return "Location{" +

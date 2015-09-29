@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * GameMap procedurally generates a map that is 1.5 times bigger than the
+ * actual screen. It contains walls, corners, floors, obsticles , inside walls,
+ * and hallways.
+ */
 public class GameMap
 {
-
-  // as the levels progress we may want to make them bigger and add more rooms
-  // so these final varibles may not always be final
 
   public static final int X_SIZE = 40; // used to set size of grid
   public static final int Y_SIZE = 40; // used to set size of grid
@@ -28,16 +30,10 @@ public class GameMap
   private static final char START_ROOM = 'S';
   private static final char HALL = 'H';
   private static final char EMPTY = '.';
-  private static final char OBSTICLE = 'O';
   private static final char INSIDE_WALL = 'I';
   private static final int MAX_ROOM_SIZE = 12;
   private static final int MIN_ROOM_SIZE = 6;
-  private static final int END_ROOM_SIZE = 4;
 
-  private static final int UP = 0;
-  private static final int DOWN = 1;
-  private static final int LEFT = 2;
-  private static final int RIGHT = 3;
   private static final int OFFSET = 24;
   private static final boolean SHOW_COORDS = false;
 
@@ -79,7 +75,6 @@ public class GameMap
     generateMap();
 
 
-    //System.out.println(level);
     this.num_rows = Y_SIZE + OFFSET;
     this.num_cols = X_SIZE + OFFSET;
     grid = new Tile[num_rows][num_cols];
@@ -97,9 +92,9 @@ public class GameMap
       {
         Tile empty_tile = new Tile(row, col, TileType.WALL);
         grid[row][col] = empty_tile;
-//        System.out.print(grid[row][col].tile_type);
+
       }
-//      System.out.println();
+
     }
 
     for (Block[] row : blockGrid)
@@ -148,22 +143,21 @@ public class GameMap
             {
               if (rand.nextBoolean())
               {
-                //System.out.println("made random zombie");
+
                 zombie = new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                     location);
               }
               else
               {
-                //System.out.println("made line zombie");
+
 
                 zombie = new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
                     location);
               }
-              //master = new MasterZombie(location);
+
             }
             zombies.add(zombie);
-            //zombies.add(master);
-            //System.out.println(zombies);
+
           }
 
           if (rand.nextDouble() < GUI.fspawn)
@@ -204,8 +198,7 @@ public class GameMap
         }
       }
     }
-    //System.out.println("map: ");
-    //System.out.println(toString());
+
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
@@ -1604,46 +1597,6 @@ public class GameMap
     //System.out.println("update tile: " + (t2 - t1));
   }
 
-  public void paintSection(Graphics g, Rectangle rect, int tile_size)
-  {
-    Location start =
-        new Location(0, 0, rect.x / tile_size, rect.y / tile_size);
-    Location end = new Location(0, 0,
-        (int) Math.ceil((rect.x + rect.width) / (double) tile_size),
-        (int) Math.ceil((rect.y + rect.height) / (double) tile_size));
-    start.x = Math.max(start.x, 0);
-    start.y = Math.max(start.y, 0);
-    end.x = Math.min(end.x, num_rows - 1);
-    end.y = Math.min(end.y, num_cols - 1);
-    paintSection(g, start, end, tile_size);
-  }
-
-
-//    GameMapWithBlocks gameMap = new GameMapWithBlocks();
-//    GameMap procedureGenerateMap = new GameMap(gameMap.generateMap());
-//    File map_file = null;
-//    try
-//    {
-//      map_file =
-//          new File(GameMap.class.getResource("resources/level1.map").toURI());
-//    }
-//    catch (URISyntaxException e)
-//    {
-//      e.printStackTrace();
-//    }
-//    System.out.println("file: " + map_file);
-//    GameMap map = new GameMap(map_file);
-//    System.out.println("map: " + map.toString());
-//    System.out.println("zombies: " + map.zombies.size());
-//     System.out.println("map walls: ");
-//     for (Tile tile : map.getWalls())
-//     {
-//     System.out.println(tile);
-//     }
-
-//    generateMap();
-//
-
   /**
    * turns a tile into a burnt tile if a firetrap explodes nect to a tile
    *
@@ -1668,21 +1621,18 @@ public class GameMap
   /**
    * This paints the entire grid from start to finish
    *
-   * @param g
-   * @param tile_size tile size of each spot.
+   * @param g Graphics object with which to paint
    */
-  public void paint(Graphics g, int tile_size)
+  public void paint(Graphics2D g)
   {
-    paintSection(g, new Location(0, 0, 0, 0),
-        new Location(0, 0, num_rows, num_cols),
-        tile_size);
+    g.drawImage(map_image, 0, 0, null);
   }
 
 
   /**
    * Creates map from a file
    *
-   * @param file
+   * @param file File from which to create map
    */
   private void createFromFile(File file)
   {
