@@ -190,8 +190,6 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 3),
         sprite.getSprite(2, 2),
         sprite.getSprite(2, 1)};
-//        sprite.getSprite(3, 1),
-//        sprite.getSprite(3, 2)};
 
     return runningRight;
   }
@@ -219,8 +217,7 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 8),
         sprite.getSprite(2, 9),
         sprite.getSprite(2, 10)};
-//        sprite.getSprite(3, 9),
-//        sprite.getSprite(3, 10)};
+
 
     return runningLeft;
   }
@@ -268,7 +265,8 @@ public class Player extends Humanoid implements HumanoidObject
         frame = 0;
         is_putting_down = false;
 //        FireTrap t = traps.remove(0); //Remove local copy.
-        FireTrap t = new FireTrap(Location.snapToTile(getCenterPoint().x + 20, getCenterPoint().y - 20, GUI.tile_size));
+        FireTrap t = new FireTrap(Location.snapToTile(getCenterPoint().x + 20,
+            getCenterPoint().y - 20, GUI.tile_size));
         map.traps.add(t); //Add back to map copy of traps.
       }
     }

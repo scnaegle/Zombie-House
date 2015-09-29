@@ -2,11 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by scnaegl on 9/20/15.
@@ -18,6 +17,7 @@ import java.util.*;
  */
 public class Shadow {
 
+  public BufferedImage overlay;
   private ArrayList<EndPoint> output = new ArrayList<EndPoint>();
   private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
   private ArrayList<Segment> segments = new ArrayList<Segment>();
@@ -29,8 +29,6 @@ public class Shadow {
   private int sight_pixels = 5 * GUI.tile_size;
   private Point location;
 
-  public BufferedImage overlay;
-
   /**
    * Basic constructor. This takes in the GameMap object and calls the loadMap function
    * to load all the walls, endpoints, and segments
@@ -39,6 +37,57 @@ public class Shadow {
   public Shadow(GameMap map) {
     loadMap(map);
     location = new Point(0, 0);
+  }
+
+  public static void main(String[] args)
+  {
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(
+              Shadow.class.getResource("resources/shadow_test.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+
+    GameMap map = new GameMap(map_file);
+    Shadow shadow = new Shadow(map);
+    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
+    shadow.sweep();
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.setPreferredSize(new Dimension(1600, 800));
+
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map.map_image, 0, 0, null);
+
+        shadow.paint(g2);
+      }
+    };
+    map_panel
+        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
   }
 
   /**
@@ -96,7 +145,7 @@ public class Shadow {
       }
     }
     long t2 = System.currentTimeMillis();
-    System.out.println("setup overlay took " + (t2 - t1));
+    //System.out.println("setup overlay took " + (t2 - t1));
   }
 
   /**
@@ -226,7 +275,7 @@ public class Shadow {
 
     Collections.sort(output);
     long t2 = System.currentTimeMillis();
-    System.out.println("sweep took " + (t2 - t1));
+    //System.out.println("sweep took " + (t2 - t1));
     setupOverlay();
   }
 
@@ -304,56 +353,5 @@ public class Shadow {
       result = 31 * result + (p2 != null ? p2.hashCode() : 0);
       return result;
     }
-  }
-
-  public static void main(String[] args)
-  {
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(
-              Shadow.class.getResource("resources/shadow_test.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
-
-    GameMap map = new GameMap(map_file);
-    Shadow shadow = new Shadow(map);
-    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
-    shadow.sweep();
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-    frame.setPreferredSize(new Dimension(1600, 800));
-
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map.map_image, 0, 0, null);
-
-        shadow.paint(g2);
-      }
-    };
-    map_panel
-        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
   }
 }
