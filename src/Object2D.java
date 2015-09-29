@@ -1,29 +1,9 @@
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
- * Created by scnaegl on 9/9/15.
+ * Interface that sets up methods for GameObject to use.
  */
 public interface Object2D {
-
-  /**
-   * @return x coordinate of upper left corner of object
-   */
-//  int getX();
-
-  /**
-   * @return y coordinate of upper left corner of object
-   */
-//  int getY();
-
-  /**
-   * @return Row coordinate
-   */
-//  int getRow();
-
-  /**
-   * @return Column coordinate
-   */
-//  int getCol();
 
   /**
    * @return Width of object

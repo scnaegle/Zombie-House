@@ -189,9 +189,7 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 4),
         sprite.getSprite(2, 3),
         sprite.getSprite(2, 2),
-        sprite.getSprite(2, 1),
-        sprite.getSprite(3, 10),
-        sprite.getSprite(3, 9)};
+        sprite.getSprite(2, 1)};
 
     return runningRight;
   }
@@ -218,9 +216,8 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 7),
         sprite.getSprite(2, 8),
         sprite.getSprite(2, 9),
-        sprite.getSprite(2, 10),
-        sprite.getSprite(3, 1),
-        sprite.getSprite(3, 2)};
+        sprite.getSprite(2, 10)};
+
 
     return runningLeft;
   }
@@ -267,14 +264,13 @@ public class Player extends Humanoid implements HumanoidObject
         fire_traps--;
         frame = 0;
         is_putting_down = false;
-//        FireTrap t = traps.remove(0); //Remove local copy.
-        FireTrap t = new FireTrap(Location.snapToTile(getCenterPoint().x + 20, getCenterPoint().y - 20, GUI.tile_size));
+        FireTrap t = new FireTrap(Location.snapToTile(getCenterPoint().x + 20,
+            getCenterPoint().y - 20, GUI.tile_size));
         map.traps.add(t); //Add back to map copy of traps.
       }
     }
     else
     {
-//      Location next_location = getNextLocation();
       if (!heading.equals(Heading.NONE))
       {
         if (heading.getXMovement() != 0 && !hitWallInXDirection(map))
@@ -290,17 +286,14 @@ public class Player extends Humanoid implements HumanoidObject
       {
         regenerate();
         current_speed = 0;
-        //isStill = true;
       }
       else if (current_speed > defined_speed && stamina > 0)
       {
-        //isRunning = true;
         stamina -= STAMINA_STEP;
       }
       else
       {
         regenerate();
-        //isWalking = true;
         current_speed = defined_speed;
       }
 
@@ -388,19 +381,7 @@ public class Player extends Humanoid implements HumanoidObject
     pickup_bar = new PickupBar(PICKUP_FRAMES);
   }
 
-  /**
-   * gets the tile that the player sprite is standing on
-   *
-   * @param map
-   * @return
-   */
-  public Tile getFootTile(GameMap map)
-  {
-    int row = (int) (location.y + GUI.tile_size) / GUI.tile_size;
-    int col = (int) (location.x + (width / 2)) / GUI.tile_size;
-    return map.getTile(row, col);
-  }
-
+  
   //Decides which bufferedImages to play and when
   protected void determineAnimation()
   {

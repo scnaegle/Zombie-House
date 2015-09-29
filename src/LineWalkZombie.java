@@ -27,6 +27,14 @@ public class LineWalkZombie extends Zombie
   }
 
 
+  /**
+   * Takes in all attributes from the Zombie class and keeps a local copy.
+   *
+   * @param speed         how fast zombie moves
+   * @param smell         how far zombie smells
+   * @param decision_rate every few seconds it changes direction
+   * @param location      location of zombie
+   */
   public LineWalkZombie(double speed, double smell, double decision_rate, Location location) {
     this(location);
     this.defined_speed = speed;

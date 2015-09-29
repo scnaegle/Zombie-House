@@ -21,13 +21,21 @@ public class Zombie extends Humanoid implements HumanoidObject
   Animation moveUp;
 
 
+  /**
+   * Constructs zombie with location, width and height.
+   *
+   * @param location location of zombie
+   */
   public Zombie(Location location) {
     this.location = location;
     this.width = GUI.tile_size - 10;
     this.height = GUI.tile_size - 10;
   }
 
-  //Makes new zombie with such attributes
+  /**
+   * Makes new zombie with such attributes
+   */
+
   public Zombie(double speed, double smell, double decision_rate, Location location)
   {
     this(location);
@@ -37,6 +45,10 @@ public class Zombie extends Humanoid implements HumanoidObject
     this.decision_rate = decision_rate;
   }
 
+  /**
+   * Gets current speed of zombie
+   * @return current_speed
+   */
   public double getSpeed()
   {
     return current_speed;
@@ -68,8 +80,13 @@ public class Zombie extends Humanoid implements HumanoidObject
     // This is a placeholder that should be overridden.
   }
 
-  //Updates each zombie in list every timer tick.
-  //Checks for movement, if player gets biten, and sounds.
+
+  /**
+   * Updates each zombie in list every timer tick.
+   Checks for movement, if player gets biten, and sounds.
+   * @param map Game map
+   * @param player main player
+   */
   public void update(GameMap map, HumanoidObject player) {
     frame++;
     if (frame >= decision_rate * GamePanel.FPS) {
@@ -123,7 +140,8 @@ public class Zombie extends Humanoid implements HumanoidObject
 
   }
 
-  public float checkZombieDirection(HumanoidObject player)
+  //Moves the balance between speakers depending on where zombie is
+  private float checkZombieDirection(HumanoidObject player)
   {
     if (toTheLeft(player))
     {
@@ -145,17 +163,29 @@ public class Zombie extends Humanoid implements HumanoidObject
     return (intersects(zombie));
   }
 
+  /**
+   * Sees if zombie touched player.
+   * @param player only player
+   * @return true or false
+   */
   public boolean bitesPlayer(HumanoidObject player)
   {
     return (intersects((Object2D) player));
 
   }
 
+  /**
+   * Sets sound effect for when zombie bites player
+   */
   public void setBite()
   {
     SoundLoader.playBite();
   }
 
+  /**
+   * Explains how to draw zombie and when to draw it.
+   * @param g2
+   */
   public void paint(Graphics2D g2)
   {
     if (!zombieDied)

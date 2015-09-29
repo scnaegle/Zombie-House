@@ -3,20 +3,33 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * used to make the different sprites that the game uses like the zombies and bob
- * We used sprite sheets to make what we needed
+ * Used to make the different sprites that the game uses like the zombies and
+ * player.
+ *
  */
 public class Sprite
 {
   private BufferedImage sprite_sheet;
   private int tile_size = 80;
 
+  /**
+   * When making a new sprite, it needs the name of the file and how big each
+   * sprite needs to be.
+   *
+   * @param sprite    file name
+   * @param tile_size 80 pixels
+   */
   public Sprite(String sprite, int tile_size)
   {
     sprite_sheet = loadSprite(sprite);
     this.tile_size = tile_size;
   }
 
+  /**
+   * Loads in sprite from a file
+   * @param file Sprite sheet .png
+   * @return a buffered image
+   */
   public BufferedImage loadSprite(String file)
   {
     BufferedImage sprite = null;
@@ -34,12 +47,12 @@ public class Sprite
   }
 
   /**
-   * this is pretty cool because we use peices of a picture depending on what
-   * sprite it is to set pictures that should be moving essentally putting many
-   * pictures together to make it look like the sprites are moving.
-   * @param row
-   * @param col
-   * @return
+   * Gets the subimage of the sprite sheet by moving over a certain amount of
+   * pixels
+   * each time and grabbing that image.
+   * @param row Row of sheet
+   * @param col Col of sheet
+   * @return buffered image
    */
   public BufferedImage getSprite(int row, int col) {
     // Set back the row and col so that the index starts at 1

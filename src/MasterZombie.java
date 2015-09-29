@@ -16,17 +16,24 @@ public class MasterZombie extends Zombie
   /**
    * this array list will help him determine where a player is by using the
    * zombies that are around the player to know where the player is.
-   * words and explaing are hard
+   *
    *
    * the master zombie can move faster and smell better than the other zombies
    * as well, but that is set up in the GameMap class, because it was easier
    * and made more sense to put it there
    */
-  static ArrayList<Zombie> minons = new ArrayList<Zombie>();
+  static ArrayList<Zombie> minions = new ArrayList<Zombie>();
   BufferedImage[] down = initDown();
   BufferedImage[] left = initLeft();
   BufferedImage[] right = initRight();
   BufferedImage[] up = initUp();
+
+  /**
+   * MasterZombie takes in a starting location and gets all attributes that
+   * other zombies do. Randomly decides heading at beginning.
+   *
+   * @param location
+   */
   public MasterZombie(Location location)
   {
     super(location);
@@ -53,6 +60,13 @@ public class MasterZombie extends Zombie
     }
   }
 
+  /**
+   * Other constructor that gives master zombie local copies of attributes.
+   * @param speed Zombie speed
+   * @param smell Zombie smell
+   * @param decision_rate zombie decision_rate in seconds
+   * @param location a location
+   */
   public MasterZombie(double speed, double smell, double decision_rate,
                       Location location)
   {
@@ -69,7 +83,7 @@ public class MasterZombie extends Zombie
    */
   public static void addZombie(Zombie zombie)
   {
-    minons.add(zombie);
+    minions.add(zombie);
   }
 
   private BufferedImage[] initDown()
@@ -185,7 +199,13 @@ public class MasterZombie extends Zombie
     } // else if hit hall then choose random direction
   }
 
-  @Override
+
+  /**
+   * Updates master zombie every timer tick. Moves in the direction of the
+   * player.
+   * @param map
+   * @param player
+   */
   public void update(GameMap map, HumanoidObject player)
   {
     frame++;
@@ -194,9 +214,9 @@ public class MasterZombie extends Zombie
       frame = 0;
       chooseDirection(player);
     }
-//    System.out.println("heading: " + heading);
+
     /**
-     * like we say he can go thorugh walls and getting this
+     * like we say he can go through walls and getting this
      * method allows for it
      */
     if (!hitWallInXDirection(map))
@@ -208,10 +228,6 @@ public class MasterZombie extends Zombie
       moveY();
     }
 
-    ///   if(touchingZombie(zombie))
-    {
-
-    }
     /**
      * biting the player
      * well thats a game over
@@ -226,22 +242,14 @@ public class MasterZombie extends Zombie
     double range = ((Player) player).getHearing() * GUI.tile_size;
     if (getDistance((Object2D) player) <= range)
     {
-      //System.out.println(Math.round(getDistance((Object2D) player)));
       SoundLoader.playZWalk();
     }
-//    else
-//    {
-//      System.out.println("  Can't hear zombie anymore");
-//      stopSound();
-//    }
-
 
     Location next_location = getNextLocation();
     //Sees is zombie is in 2*hearing range and hits wall
     if (getDistance((Object2D) player) <= 2 * range &&
         hitWall(map, next_location))
     {
-//      System.out.println("Zombie hit wall");
       SoundLoader.playHitObst();
     }
 

@@ -12,7 +12,7 @@ public class FireTrap extends GameObject
 {
   public static final int WIDTH = 50;
   public static final int HEIGHT = 50;
-  private static final boolean TESTING = true;
+  private static final boolean TESTING = false;
   private final int EXPLODE_TIME = 15 * GamePanel.FPS;
   public boolean exploding = false;
   public boolean explodee;
