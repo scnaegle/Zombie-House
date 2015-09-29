@@ -15,7 +15,8 @@ Any of these attributes can be changed at the beginning of the level when the 's
 Movement:
 The player is moved by pressing any of the arrow keys and ASWD, or any combination of them. 
 The player runs by pressing 'r' or 'shift' while any of the movement keys are held down.
-The player can walk or stand still for as long as they want, but running requires stamina which decreases the more you run. 
+The player can pick up or drop firetraps by pressing 'e' or 'p'
+The player can walk or stand still for as long as they want, but running requires stamina which decreases the more you run.
 The player cannot move through walls.
 
 There are two types of zombies: random walk and line walk.
@@ -31,7 +32,8 @@ Features:
 - Window is re-sizeable.
 - User may change settings at the beginning of each game. 
 - There are creepy shadows!
-- Each level spawns more zombies and gets gradually harder. 
+- Each level spawns more zombies and gets gradually harder.
+- Pressing the 'm' key will toggle showing all walls or just the walls that are directly visible
 
 
 Enjoy the game!
