@@ -106,17 +106,17 @@ public class GameMap
 
     // Make sure we have walls around the edges of the map in the walls list
     // so that the shadows will work properly
-    for(int col = minCol; col < num_cols - minCol; col++) {
-      Tile tile = new Tile(minRow, col, TileType.WALL);
-      grid[minRow][col] = tile;
+    for(int col = minCol - 1; col < num_cols - minCol; col++) {
+      Tile tile = new Tile(minRow - 1, col, TileType.WALL);
+      grid[minRow - 1][col] = tile;
       walls.add(tile);
       Tile tile2 = new Tile(num_rows - minRow, col, TileType.WALL);
       grid[num_rows - minRow][col] = tile2;
       walls.add(tile2);
     }
-    for(int row = minRow + 1; row < num_rows - minRow - 1; row++) {
-      Tile tile = new Tile(row, minCol, TileType.WALL);
-      grid[row][minCol] = tile;
+    for(int row = minRow; row < num_rows - minRow - 1; row++) {
+      Tile tile = new Tile(row, minCol - 1, TileType.WALL);
+      grid[row][minCol - 1] = tile;
       walls.add(tile);
       Tile tile2 = new Tile(row, num_cols - minCol, TileType.WALL);
       grid[num_rows - minRow][num_cols - minCol] = tile2;
