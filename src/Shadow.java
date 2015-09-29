@@ -17,6 +17,7 @@ import java.util.Collections;
  */
 public class Shadow {
 
+  private final double SIGHT_MULTIPLIER = 1.5;
   public BufferedImage overlay;
   private boolean show_all_walls = false;
   private ArrayList<EndPoint> output = new ArrayList<EndPoint>();
@@ -226,7 +227,7 @@ public class Shadow {
    * Defaults the sight_range to the 1.5 * the sight_pixels
    */
   public void sweep() {
-    sweep(sight_pixels * 2);
+    sweep(sight_pixels * SIGHT_MULTIPLIER);
   }
 
   /**
