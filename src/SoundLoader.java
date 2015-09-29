@@ -3,7 +3,9 @@
  * This class loads in audio in the form of .wav files and makes them playable.
  * Also decides which speaker to play sounds from.
  */
+
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,14 +36,16 @@ public class SoundLoader implements LineListener
    */
   public SoundLoader(String path)
   {
-    //inputStream = getClass().getResourceAsStream("resources/" + path);
-    inputStream =
-        ClassLoader.getSystemResourceAsStream("resources/" + path);
+    //inputStream = SoundLoader.class.getResourceAsStream("/resources/"+path);
+    inputStream = getClass().getResourceAsStream("/resources/" + path);
+//    inputStream =
+//        ClassLoader.getSystemResourceAsStream("/resources/" + path);
 
     try
     {
+      BufferedInputStream buffered = new BufferedInputStream(inputStream);
       AudioInputStream audioStream =
-          AudioSystem.getAudioInputStream(inputStream);
+          AudioSystem.getAudioInputStream(buffered);
       AudioFormat format = audioStream.getFormat();
       DataLine.Info info = new DataLine.Info(Clip.class, format);
       audioClip = (Clip) AudioSystem.getLine(info);
