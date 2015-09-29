@@ -243,6 +243,18 @@ public class Player extends Humanoid implements HumanoidObject
   public void update(GameMap map)
   {
     diedFrame++;
+    if (!heading.equals(Heading.NONE)) {
+      is_picking_up = false;
+      is_putting_down = false;
+      if (heading.getXMovement() != 0 && !hitWallInXDirection(map))
+      {
+        moveX();
+      }
+      if (heading.getYMovement() != 0 && !hitWallInYDirection(map))
+      {
+        moveY();
+      }
+    }
     if (is_picking_up)
     {
       frame++;
@@ -271,17 +283,6 @@ public class Player extends Humanoid implements HumanoidObject
     }
     else
     {
-      if (!heading.equals(Heading.NONE))
-      {
-        if (heading.getXMovement() != 0 && !hitWallInXDirection(map))
-        {
-          moveX();
-        }
-        if (heading.getYMovement() != 0 && !hitWallInYDirection(map))
-        {
-          moveY();
-        }
-      }
       if (heading.equals(Heading.NONE))
       {
         regenerate();
