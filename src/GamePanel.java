@@ -39,6 +39,8 @@ public class GamePanel extends JPanel implements KeyListener
       new ArrayList<>(Arrays.asList(KeyEvent.VK_R, KeyEvent.VK_SHIFT));
   private final ArrayList KEY_PICKUP =
       new ArrayList<>(Arrays.asList(KeyEvent.VK_P, KeyEvent.VK_E));
+  private final ArrayList KEY_SHOW_WALLS =
+      new ArrayList<>(Arrays.asList(KeyEvent.VK_M));
 
   GameMap map;
   Timer frame_timer;
@@ -129,7 +131,6 @@ public class GamePanel extends JPanel implements KeyListener
             parent.pauseGame();
             GUI.showDeathDialog(parent,
                 "Ye ran into a fire trap! Feast your eyes and pay attention!");
-
           }
 
 
@@ -345,6 +346,10 @@ public class GamePanel extends JPanel implements KeyListener
       {
         System.out.println(player.getFire_traps());
       }
+    }
+    if (KEY_SHOW_WALLS.contains(code))
+    {
+      shadow.invertShowAllWalls();
     }
   }
 

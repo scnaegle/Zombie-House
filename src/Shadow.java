@@ -18,6 +18,7 @@ import java.util.Collections;
 public class Shadow {
 
   public BufferedImage overlay;
+  private boolean show_all_walls = false;
   private ArrayList<EndPoint> output = new ArrayList<EndPoint>();
   private ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
   private ArrayList<Segment> segments = new ArrayList<Segment>();
@@ -28,6 +29,7 @@ public class Shadow {
   private int sight = 5;
   private int sight_pixels = 5 * GUI.tile_size;
   private Point location;
+  private Rectangle boundingRect;
 
   /**
    * Basic constructor. This takes in the GameMap object and calls the loadMap function
@@ -37,6 +39,7 @@ public class Shadow {
   public Shadow(GameMap map) {
     loadMap(map);
     location = new Point(0, 0);
+    setBoundingRect();
   }
 
 
@@ -48,6 +51,7 @@ public class Shadow {
   public void setDimensions(int width, int height) {
     this.width = width;
     this.height = height;
+    setBoundingRect();
   }
 
   /**
@@ -57,6 +61,34 @@ public class Shadow {
   public void setSight(int sight) {
     this.sight = sight;
     this.sight_pixels = sight * GUI.tile_size;
+  }
+
+  /**
+   * Set whether or not to show all the walls or just the walls that are touching
+   * the visibility polygon
+   * @param show_all_walls
+   */
+  public void setShowAllWalls(boolean show_all_walls) {
+    this.show_all_walls = show_all_walls;
+  }
+
+  /**
+   * Invert whatever show_all_walls is. If true then false, if false then true.
+   */
+  public void invertShowAllWalls() {
+    if (show_all_walls) {
+      show_all_walls = false;
+    } else {
+      show_all_walls = true;
+    }
+  }
+
+  /**
+   * Set the bounding rectangle, which is useful for limiting the walls in order to
+   * speed up calculations
+   */
+  private void setBoundingRect() {
+    boundingRect = new Rectangle(location.x, location.y, width, height);
   }
 
   /**
@@ -194,7 +226,7 @@ public class Shadow {
    * Defaults the sight_range to the 1.5 * the sight_pixels
    */
   public void sweep() {
-    sweep(sight_pixels * 1.5);
+    sweep(sight_pixels * 2);
   }
 
   /**
@@ -218,16 +250,24 @@ public class Shadow {
     g.fillPolygon(xs, ys, xs.length);
     for(Tile tile : map.getWalls()) {
       Rectangle rect = tile.getBoundingRectangle();
-      rect.width += 1;
-      rect.height += 1;
-      for (EndPoint p : output) {
-        if (rect.contains(p.x, p.y)) {
+      if (boundingRect.contains(rect)) {
+        if (show_all_walls) {
           rect.x -= location.x;
           rect.y -= location.y;
-          rect.width -= 1;
-          rect.height -= 1;
           g.fill(rect);
-          break;
+        } else {
+          rect.width += 1;
+          rect.height += 1;
+          for (EndPoint p : output) {
+            if (rect.contains(p.x, p.y)) {
+              rect.x -= location.x;
+              rect.y -= location.y;
+              rect.width -= 1;
+              rect.height -= 1;
+              g.fill(rect);
+              break;
+            }
+          }
         }
       }
     }
@@ -253,7 +293,7 @@ public class Shadow {
    */
   private void drawCenter(Graphics2D g) {
     g.setColor(Color.YELLOW);
-    g.fillOval(center.x - 10, center.y - 10, 20 , 20);
+    g.fillOval(center.x - 10, center.y - 10, 20, 20);
   }
 
   /**
