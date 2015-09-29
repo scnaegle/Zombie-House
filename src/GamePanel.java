@@ -206,14 +206,9 @@ public class GamePanel extends JPanel implements KeyListener
     map.paint(g2);
 
     //When to draw traps and which sprite
-    boolean explodee = false;
-    FireTrap activeTrap = null;
     for (FireTrap trap : map.traps)
     {
       trap.paint(g2, player);
-
-      explodee = trap.explodee;
-      activeTrap = trap;
     }
 
     //Draws zombies
@@ -222,7 +217,6 @@ public class GamePanel extends JPanel implements KeyListener
       zombie.paint(g2);
     }
 
-
     //Finds starting point on screen according to player location
     //and draws vignette as player moves.
     int vcX = player.getCenterPoint().x - vignetteCanvas.getWidth() / 2;
@@ -230,14 +224,10 @@ public class GamePanel extends JPanel implements KeyListener
 
     g2.drawImage(vignetteCanvas, vcX, vcY, null);
 
-
     shadow.paint(g2);
-
 
     player.paint(g2);
     paintTextOverlay(g2);
-
-
   }
 
   //Uses radial gradients to draw vignette around player.
