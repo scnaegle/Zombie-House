@@ -1,11 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  * GameMap procedurally generates a map that is 1.5 times bigger than the
@@ -70,6 +66,13 @@ public class GameMap
 
   //this will be called the first
 
+  /**
+   * This is the game map and where the map gets generated, along with where
+   * the player
+   * starts, the zombies start, where the exit is.
+   *
+   * @param level the level that is called setting the xpmbie spawn
+   */
   public GameMap(int level)
   {
     generateMap();
@@ -86,6 +89,9 @@ public class GameMap
     boolean spawnMasterZombie = true; // this boolean makes so the master zombie
     // will only be spawned once
 
+    //intialize all the tiles to empty in order to make a nice border around
+    // the
+    //map
     for (int row = 0; row < num_rows; row++)
     {
       for (int col = 0; col < num_cols; col++)
@@ -114,23 +120,29 @@ public class GameMap
 
     for (Block[] row : blockGrid)
     {
-
+      //we have to set c = to a diffrent col that way it gareentees us that the
+      // screen will be big enough to allow easuy repainting with no errors
       int c = minCol;
       for (Block block : row)
       {
         Tile new_tile =
             new Tile(block.y + minRow, block.x + minCol, block.type);
         grid[r][c] = new_tile;
+        //if it is a start location, itsets the player start to this location
         if (new_tile.tile_type == TileType.START)
         {
           start_location = new Location(new_tile.col * GUI.tile_size,
               new_tile.row * GUI.tile_size);
         }
+        // if exit location, sets it to exit
         if (new_tile.tile_type == TileType.EXIT)
         {
-          end_location = new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
-              new_tile.row * GUI.tile_size + GUI.tile_size / 2);
+          end_location =
+              new Location(new_tile.col * GUI.tile_size + GUI.tile_size / 2,
+                  new_tile.row * GUI.tile_size + GUI.tile_size / 2);
         }
+        //makes the wall array list that way the zombies and players have a
+        //reference into what they run into
         if (new_tile.tile_type == TileType.WALL ||
             new_tile.tile_type == TileType.INSIDEWALL)
         {
@@ -138,7 +150,8 @@ public class GameMap
         }
 
 
-
+        //if it is just a normal room tile it will run through steps to see if
+        // if it should spawn a zombie or firetrap.
         if (new_tile.tile_type == TileType.BRICK)
         {
           if (rand.nextDouble() < GUI.zspawn + (.01 * (level - 1)))
@@ -191,13 +204,15 @@ public class GameMap
       r++;
     }
 
+    // if no zombies were spawned on the map, this will garentee that a master
+    //zombie will spawn.
     if (spawnMasterZombie)
     {
       for (int row = 0; row < num_rows; row++)
       {
         for (int col = 0; col < num_cols; col++)
         {
-          if(grid[row][col].tile_type == TileType.BRICK && spawnMasterZombie)
+          if (grid[row][col].tile_type == TileType.BRICK && spawnMasterZombie)
           {
             Zombie zombie;
             Location location =
@@ -207,7 +222,7 @@ public class GameMap
                 new MasterZombie(GUI.zspeed * 1.5, GUI.zsmell * 2, GUI.drate,
                     location);
             zombies.add(zombie);
-            spawnMasterZombie=false;
+            spawnMasterZombie = false;
           }
 
         }
@@ -217,20 +232,18 @@ public class GameMap
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
-  public GameMap(File file)
-  {
-    createFromFile(file);
-    this.map_image = convertMapToImage(GUI.tile_size);
-  }
 
   /**
-   * generates the map through many many methods
+   * this is where the magic happens and the map is made.
+   * There are many different things that happen in this method in order to make
+   * a map from char types, then transform them into ENums to print later on
    */
-
   public static void generateMap()
   {
-    int countNumberOftimes = 0;
     boolean mapIsBad = true;
+    //This is for making a map that is garenteed to work.
+    //there are many times when a map is generated that doesn't work because
+    // the rooms don't have any where to be put
     while (mapIsBad)
     {
       mapIsBad = false;
@@ -252,32 +265,27 @@ public class GameMap
         makeInitialHalls();
       }
 
-      // i am purposefully ignoreing this return value
-      buildRoom(START_ROOM,
-          true); // builds a start room where the player wills start
+
+      // I am purposefully ignoring this return value. There will always be
+      // a spot for the start room
+      buildRoom(START_ROOM);
       for (int i = 0; i < numberOfRooms; i++)
       {
-        if (!buildRoom(BASIC_TILE, false))
+        //If build room doesn't return true after 100 recursion steps
+        // it most likely means the map is bad and will try again.
+        if (!buildRoom(BASIC_TILE))
         {
           mapIsBad = true;
           break;
         }
 
-        // builds rooms on the halls that had been made in
-        // the previous halls
+
       }
       if (mapIsBad)
       {
-        countNumberOftimes++;
         continue;
       }
-
-      chizelWalls(); // makes protruding halls shaven off so map has even halls
-      //   breakTouchingWalls(); // if two rooms are touching it will break the
-      // walls
-      /**
-       * Need adjustment to make larger obsitcles and such
-       */
+      chizelWalls(); // shaves protruding halls off so map has nice square halls
       for (int i = 0; i < numberOfObsicles; i++)
       {
         buildObsticales(); // makes obsticles inside rooms
@@ -287,25 +295,14 @@ public class GameMap
       {
         makeRandomHalls(); //makes random halls that connect halls together
       }
-      //   searchAlgorithm(END_ROOM);
-      expandHalls(); //expands halls so
+      expandHalls();
       makeDoors(); // makes doors where halls and rooms meet
       addWallsToHalls(); // adds walls to the halls
-      /**
-       * sets a zombie spawn. Need to change around to the generate map
-       */
-      spawnZombie();
-      /**
-       * these next couple of methods cause it to be used for basic testing
-       * until
-       * I implement it to be more verssitle
-       */
-      //  turnHallsToFloors(); // this will change the halls to the floors
       turnCornersToWalls(); // turns corners to walls
-      //System.out.println("poo");
+      // makes the end room by using 5000 steps of recursion to see if it can be
+      // placed
       if (makeEndRoom(0)) // makes an end room
       {
-        //System.out.println("WHY?WHY?WHY?");
         mapIsBad = false;
       }
       else
@@ -314,25 +311,11 @@ public class GameMap
       }
       if (mapIsBad)
       {
-        countNumberOftimes++;
         continue;
       }
-
-      //System.out.println("stuff");
       turnDoorToFloor(); // makes door to floor
       makeInteriorWalls();
-
-      //System.out.println("help1");
-//    for (int y = 0; y < Y_SIZE; y++)
-//    {
-//      for (int x = 0; x < X_SIZE; x++)
-//      {
-//        System.out.print(getBlock(x, y).type);
-//      }
-//      System.out.println("");
-//    }
     }
-    // System.out.println("I fucked up " + countNumberOftimes + " times!!1");
   }
 
   private static void turnDoorToFloor()
@@ -351,9 +334,6 @@ public class GameMap
     }
   }
 
-  /**
-   *
-   */
   private static boolean makeEndRoom(int inputNumber)
   {
     roomSize = 3;
@@ -369,19 +349,16 @@ public class GameMap
         if (validEndLocationHorozantal(x, y) && checkForStart(x, y))
         {
           placeEndPeicesHorzantal(x, y);
-          //System.out.println("poo");
           return true;
         }
         else if (validEndLocationVerticle(x, y) && checkForStart(x, y))
         {
           placeEndPeicesVerticle(x, y);
-          //System.out.println("poopoo");
           return true;
         }
       }
     }
     inputNumber++;
-    //System.out.println(inputNumber);
     if (inputNumber > 5000)
     {
       return false;
@@ -389,14 +366,6 @@ public class GameMap
     return makeEndRoom(inputNumber);
   }
 
-  /**
-   * checks to see if this is could be a valid spot to place the exit piece
-   * by looking for the start spot
-   *
-   * @param x
-   * @param y
-   * @return
-   */
   private static boolean checkForStart(int x, int y)
   {
     for (int t = x - 20; t < x + 20; t++)
@@ -418,16 +387,8 @@ public class GameMap
   private static int resetValidSpots(int size)
   {
     return random.nextInt(size - 6) + 3;
-
   }
 
-  /**
-   * if it is able to place place the end peices verticly
-   * it will make a 2x2 end room
-   *
-   * @param x
-   * @param y
-   */
   private static void placeEndPeicesVerticle(int x, int y)
   {
     if (isEmpty(x + 1, y + 1))
@@ -452,16 +413,6 @@ public class GameMap
     }
   }
 
-  /**
-   * if it is able to place place the end peices horozantily
-   * it will make a 2x2 end room
-   * I wanted to do this another way, but honestly coding it in this way was
-   * the easiest
-   * thing i could think of
-   *
-   * @param x
-   * @param y
-   */
   private static void placeEndPeicesHorzantal(int x, int y)
   {
     if (isEmpty(x + 1, y + 1))
@@ -488,14 +439,6 @@ public class GameMap
     }
   }
 
-  /**
-   * if 3 outside wall peices in a row horozantally
-   * and is  connected to a outside peice return true
-   *
-   * @param x
-   * @param y
-   * @return
-   */
   private static boolean validEndLocationHorozantal(int x, int y)
   {
     return ((isWall(x, y) && isWall(x + 1, y) && isWall(x + 2, y) &&
@@ -508,13 +451,6 @@ public class GameMap
     return getBlock(x, y).type == START_ROOM;
   }
 
-  /**
-   * if 4 wall peices in a row horozantally return true
-   *
-   * @param x
-   * @param y
-   * @return
-   */
   private static boolean validEndLocationVerticle(int x, int y)
   {
     return (isWall(x, y) && isWall(x, y + 1) && isWall(x, y + 2) &&
@@ -560,10 +496,8 @@ public class GameMap
         (isEmpty(x - 1, y) && isEmpty(x, y + 1) && isEmpty(x, y - 1)));
   }
 
-  /**
-   * makes inital halls that will help determine how rooms will be placed
-   * halls will span entire grid
-   */
+   // makes inital halls that will help determine how rooms will be placed
+   // halls will span entire grid
   private static void makeInitialHalls()
   {
     int randomX = random.nextInt(X_SIZE - 2) + 1;
@@ -588,7 +522,6 @@ public class GameMap
       {
         if (isWall(x, y))
         {
-          // System.out.println(getBlock(x, y).corner);
           if (surroundingSpotEmpty(x, y))
           {
 
@@ -602,33 +535,7 @@ public class GameMap
     }
   }
 
-  /**
-   * checks to see if it is the corner peice on a room
-   *
-   * @param x
-   * @param y
-   * @return
-   */
-  private static boolean cornerOfRoom(int x, int y)
-  {
-    return (isWall(x + 1, y) && isWall(x, y + 1)) ||
-        (isWall(x - 1, y) && isWall(x, y - 1)) ||
-        (isWall(x + 1, y) && isWall(x, y - 1)) ||
-        (isWall(x - 1, y) && isWall(x, y + 1));
-  }
-
-  private static boolean isInsideWall(int x, int y)
-  {
-    return getBlock(x, y).type == INSIDE_WALL;
-  }
-
-  /**
-   * checks to see if spots
-   *
-   * @param x
-   * @param y
-   * @return
-   */
+  //used for making inside walls
   private static boolean surroundingSpotEmpty(int x, int y)
   {
     return (isEmpty(x + 1, y) || isEmpty(x - 1, y) || isEmpty(x, y - 1) ||
@@ -662,20 +569,6 @@ public class GameMap
     return getBlock(x, y).type == ROOM_CORNER;
   }
 
-  private static void turnHallsToFloors()
-  {
-    for (int x = 0; x < X_SIZE; x++)
-    {
-      for (int y = 0; y < Y_SIZE; y++)
-      {
-        if (isHall(x, y))
-        {
-          setBlockType(x, y, BASIC_TILE);
-        }
-      }
-    }
-  }
-
   //make doors
   private static void makeDoors()
   {
@@ -707,7 +600,7 @@ public class GameMap
     }
 
     /**
-     * resets walls to make rooms look like a good ball
+     * resets walls to make rooms look like a good hall
      */
     for (int x = 1; x < X_SIZE - 1; x++)
     {
@@ -748,11 +641,6 @@ public class GameMap
     return getBlock(x, y).type == DOOR;
   }
 
-  /**
-   * chance to build a room wall
-   *
-   * @return
-   */
   private static boolean chanceForRandomBuild()
   {
     boolean makeNumber = false;
@@ -777,37 +665,6 @@ public class GameMap
     return getBlock(x, y).type == HALL;
   }
 
-  /**
-   * work on later
-   *
-   * @param type
-   */
-  private static void searchAlgorithm(char type)
-  {
-    boolean didAlg = false;
-    for (int x = 0; x < X_SIZE; x++)
-    {
-      for (int y = 0; y < Y_SIZE; y++)
-      {
-        if (getBlock(x, y).type == ROOM_WALL &&
-            getBlock(x, y + 1).type == END_ROOM)
-        {
-          //    algorithm(x, y, END_ROOM);
-          didAlg = true;
-        }
-
-        if (didAlg)
-        {
-          break;
-        }
-      }
-      if (didAlg)
-      {
-        break;
-      }
-    }
-  }
-
   private static void addWallsToHalls()
   {
     for (int x = 1; x < X_SIZE - 1; x++)
@@ -822,12 +679,7 @@ public class GameMap
     }
   }
 
-  /**
-   * makes the walls in put make wall method
-   *
-   * @param x
-   * @param y
-   */
+  //makes wall in make wall method
   private static void putUpTheWalls(int x, int y)
   {
     if (getBlock(x + 1, y).type == EMPTY)
@@ -848,134 +700,6 @@ public class GameMap
     }
 
   }
-//
-//  /**
-//   * unworking algorithm
-//   *
-//   * @param x
-//   * @param y
-//   * @param type
-//   */
-//  private static void algorithm(int x, int y, char type)
-//  {
-//    getBlock(x, y).visited = true;
-//    int[] pickRandomDirection = {UP, DOWN, LEFT, RIGHT};
-//    shuffleArray(pickRandomDirection);
-//    //System.out.println(x);
-//    //System.out.println(y);
-//    for (int i = 0; i < 4; i++)
-//    {
-//      if (pickRandomDirection[i] == RIGHT)
-//      {
-//        if (emptyBlock(x + 1, y)/*inbounds and empty type*/)
-//        {
-//          setVisitedTrue(x, y);
-//          //System.out.println("Right");
-//          algorithm(x + 1, y, END_ROOM);
-//        }
-//        else if (getBlock(x + 1, y).partOfRoom == true)
-//        {
-//          getBlock(x, y).hall = true;
-//          setBlockType(x, y, HALL);
-//          return;
-//        }
-//      }
-//      if (pickRandomDirection[i] == UP)
-//      {
-//        if (emptyBlock(x, y - 1))
-//        {
-//          setVisitedTrue(x, y);
-//          //System.out.println("UP");
-//          algorithm(x, y - 1, END_ROOM);
-//        }
-//        else if (getBlock(x, y - 1).partOfRoom == true)
-//        {
-//          getBlock(x, y).hall = true;
-//          setBlockType(x, y, HALL);
-//          return;
-//        }
-//      }
-//      if (pickRandomDirection[i] == LEFT)
-//      {
-//        if (emptyBlock(x - 1, y))
-//        {
-//          setVisitedTrue(x, y);
-//          //System.out.println("Left");
-//          algorithm(x - 1, y, END_ROOM);
-//        }
-//        else if (getBlock(x - 1, y).partOfRoom == true)
-//        {
-//          getBlock(x, y).hall = true;
-//          setBlockType(x, y, HALL);
-//          return;
-//        }
-//      }
-//      if (pickRandomDirection[i] == RIGHT)
-//      {
-//        if (emptyBlock(x, y + 1))
-//        {
-//          setVisitedTrue(x, y);
-//          //System.out.println("down");
-//          algorithm(x, y + 1, END_ROOM);
-//        }
-//        else if (getBlock(x + 1, y).partOfRoom == true)
-//        {
-//          getBlock(x, y).hall = true;
-//          setBlockType(x, y, HALL);
-//          return;
-//        }
-//      }
-//      //System.out.println();
-//    }
-//    if (getBlock(x, y).visited == true)
-//    {
-//      setBlockType(x, y, HALL);
-//      getBlock(x, y).hall = true;
-//      return;
-//    }
-//
-//  }
-//
-//  private static void setVisitedTrue(int x, int y)
-//  {
-//    getBlock(x, y).visited = true;
-//  }
-
-  private static boolean emptyBlock(int x, int y)
-  {
-    return getBlock(x, y).type == EMPTY && inBoundsWithBorder(x, y);
-  }
-
-  private static void shuffleArray(int[] pickRandomDirection)
-  {
-    for (int i = 0; i < pickRandomDirection.length; i++)
-    {
-      int randVar = random.nextInt(3);
-      int temp = pickRandomDirection[i];
-      pickRandomDirection[i] = pickRandomDirection[randVar];
-      pickRandomDirection[randVar] = temp;
-    }
-  }
-
-  private static void spawnZombie()
-  {
-    int randomNumber;
-    for (int x = 0; x < X_SIZE; x++)
-    {
-      for (int y = 0; y < Y_SIZE; y++)
-      {
-        if (getBlock(x, y).type == BASIC_TILE)
-        {
-          randomNumber = random.nextInt(99);
-          if (randomNumber == 0)
-          {
-            // getBlock(x, y).zombieSpawn = true;
-          }
-        }
-      }
-    }
-  }
-
   //expand all made halls
   private static void expandHalls()
   {
@@ -1034,11 +758,9 @@ public class GameMap
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
-          //    getBlock(a, hallY).hall = true;
         }
         else
         {
-          //System.out.println("making hall up, ended at a=" + a);
           break;
         }
       }
@@ -1052,11 +774,9 @@ public class GameMap
         if (canMakeHall(a, hallY))
         {
           setBlockType(a, hallY, HALL);
-          //    getBlock(a, hallY).hall = true;
         }
         else
         {
-          //System.out.println("making hall down, ended at a=" + a);
           break;
         }
       }
@@ -1072,7 +792,6 @@ public class GameMap
         }
         else
         {
-          //System.out.println("making hall right, ended at a=" + a);
           break;
         }
       }
@@ -1089,7 +808,6 @@ public class GameMap
         }
         else
         {
-          //System.out.println("making hall left, ended at a=" + a);
           break;
         }
       }
@@ -1173,7 +891,6 @@ public class GameMap
         break;
       }
     }
-    //   numberOfConnections =2;
     //checks to see if halls can connect a certain number of rooms specified
     // earlier
     if (connectRooms > numberOfConnections)
@@ -1216,7 +933,6 @@ public class GameMap
         yCord = random.nextInt(Y_SIZE - 2) + 1;
       }
     }
-    //System.out.println("Obsticle");
   }
 
   private static boolean cycleSpotsForObsticles(int s, int t)
@@ -1235,7 +951,7 @@ public class GameMap
     return valid;
   }
 
-  private static boolean buildRoom(char type, boolean firstRoom)
+  private static boolean buildRoom(char type)
   {
     //set random room dimetions
     resetRoomDimentions();
@@ -1263,7 +979,6 @@ public class GameMap
                 (buildRoomY + roomSize - 1)))
         {
           setBlockType(x, y, ROOM_CORNER);
-          //   getBlock(x, y).corner = true;
           getBlock(x, y).partOfRoom = true;
         }
         //checks to see if Wall and sets wall
@@ -1273,7 +988,6 @@ public class GameMap
                 (buildRoomY + roomSize - 1)))
         {
           setBlockType(x, y, ROOM_WALL);
-//          getBlock(x, y).wall = true;
           getBlock(x, y).partOfRoom = true;
         }
         else if (inBoundsWithBorder(x, y) && type == BASIC_TILE)
@@ -1284,7 +998,6 @@ public class GameMap
         else if (inBoundsWithBorder(x, y) && type == END_ROOM)
         {
           setBlockType(x, y, END_ROOM);
-//          getBlock(x, y).partOfEndRoom = true;
           getBlock(x, y).partOfRoom = true;
         }
         else
@@ -1296,14 +1009,8 @@ public class GameMap
       }
     }
     return true;
-    //System.out.println("finish room");
   }
 
-  /**
-   * chooses start and end points and room size for wall
-   *
-   * @param type
-   */
   private static boolean searchForRoom(char type, int numberOfRecursion)
   {
 
@@ -1364,13 +1071,6 @@ public class GameMap
         touchingAnotherRoomExceptHall(x, y + 1));
   }
 
-  /**
-   * makes sure rooms are not being built on top of of oneAnother and on all
-   *
-   * @param x
-   * @param y
-   * @return
-   */
   private static boolean touchingAnotherRoomExceptHall(int x, int y)
   {
 
@@ -1445,109 +1145,50 @@ public class GameMap
     }
   }
 
-    public static void main (String[]args)
-    {
-      GameMap map = new GameMap(0);
-      BufferedImage map_image = map.convertMapToImage(80);
-      JFrame frame = new JFrame("MapTest");
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      frame.setLayout(new BorderLayout());
-      frame.setExtendedState(frame.MAXIMIZED_BOTH);
-
-      JPanel map_panel = new JPanel()
-      {
-        public void paintComponent(Graphics g)
-        {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map_image, 0, 0, null);
-      }
-      };
-      map_panel.setPreferredSize(
-          new Dimension(map.num_cols * 80, map.num_rows * 80));
-
-      JScrollPane scroll_pane = new JScrollPane(map_panel);
-      scroll_pane.setHorizontalScrollBarPolicy(
-          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-      scroll_pane.setVerticalScrollBarPolicy(
-          ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//    scroll_pane.setVerticalScrollBarPolicy(
-//        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-//    scroll_pane.setHorizontalScrollBarPolicy(
-//        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-      frame.add(scroll_pane);
-      frame.pack();
-      frame.setVisible(true);
-    }
-
-  public int getTrapSize()
-  {
-    return trapSize;
-  }
-
+  /**
+   * gets the width of the entire image in pixels
+   * @param tile_size The Tile size of the images in pixels
+   * @return the width of the entire image in pixels
+   */
   public int getWidth(int tile_size)
   {
     return num_cols * tile_size;
   }
 
+  /**
+   * gets the height in pixels of the entire image
+   * @param tile_size The tile size of the images pixels
+   * @return the height of the entire image in pixels
+   */
   public int getHeight(int tile_size)
   {
     return num_rows * tile_size;
   }
 
+  /**
+   * gets a specific tile
+   * @param row the y value of the tile
+   * @param col the x value of the tile
+   * @return the type of tile
+   */
   public Tile getTile(int row, int col)
   {
     return grid[row][col];
   }
 
-  public double getZombieSpawnRate()
-  {
-    return GUI.zspawn;
-  }
-
+  /**
+   * a getter for the array list of walls
+   * @return the walls of the map
+   */
   public ArrayList<Tile> getWalls()
   {
     return walls;
   }
 
   /**
-   * This paints the grid between the the given start (row, col) and end
-   * (row, col)
-   *
-   * @param g
-   * @param start
-   * @param end
-   * @param tile_size
-   */
-  public void paintSection(Graphics g, Location start, Location end,
-                           int tile_size)
-  {
-    for (int row = start.row; row < end.row; row++)
-    {
-      for (int col = start.col; col < end.col; col++)
-      {
-        //g.setColor(grid[row][col].tile_type.color);
-        //g.fillRect(col * tile_size, row * tile_size, tile_size, tile_size);
-        g.drawImage(grid[row][col].tile_type.image, col * GUI.tile_size,
-            row * GUI.tile_size, null);
-        if (SHOW_COORDS)
-        {
-          g.setColor(Color.WHITE);
-          g.drawString(String.format("(%d, %d)", row, col).toString(),
-              col * tile_size + (tile_size / 4),
-              row * tile_size + (tile_size / 2));
-        }
-      }
-    }
-  }
-
-  /**
-   * Converts our map to an image.
-   *
-   * @param tile_size the size of the tile
-   * @return
+   * This will convert our map to a buffered image so it will run smoothly
+   * @param tile_size how large we want the tiles to be
+   * @return an image of the map
    */
   public BufferedImage convertMapToImage(int tile_size)
   {
@@ -1561,55 +1202,23 @@ public class GameMap
       {
         g.drawImage(grid[row][col].tile_type.image, col * tile_size,
             row * tile_size, tile_size, tile_size, null);
-        if (SHOW_COORDS)
-        {
-          g.setColor(Color.WHITE);
-          g.drawString(String.format("(%d, %d)", row, col).toString(),
-              col * tile_size + (tile_size / 4),
-              row * tile_size + (tile_size / 2));
-        }
       }
     }
     return new_image;
   }
 
-  public void updateBufferedImage(int tile_size)
-  {
-    this.map_image = convertMapToImage(tile_size);
-  }
-
-  public void updateBufferedImage(int start_row, int start_col, int end_row,
-                                  int end_col, int tile_size)
-  {
-    long t1 = System.currentTimeMillis();
-    Graphics2D g = (Graphics2D) map_image.getGraphics();
-    for (int row = start_row; row <= end_row; row++)
-    {
-      for (int col = start_col; col <= end_col; col++)
-      {
-        g.drawImage(grid[row][col].tile_type.image, col * tile_size,
-            row * tile_size, tile_size, tile_size, null);
-      }
-    }
-    long t2 = System.currentTimeMillis();
-    //System.out.println("update all tiles in grid: " + (t2 - t1));
-  }
-
+  /**
+   * This allows for the changing of tiles on the map to change when they become
+   * burnt by a firetrap.
+   * @param row the y value of the grid
+   * @param col the x value of the grid
+   * @param tile_size size of the tiles we want to print in piels
+   */
   public void updateTileOnImage(int row, int col, int tile_size)
   {
-    long t1 = System.currentTimeMillis();
     Graphics2D g = (Graphics2D) map_image.getGraphics();
     g.drawImage(grid[row][col].tile_type.image, col * tile_size,
         row * tile_size, tile_size, tile_size, null);
-    if (SHOW_COORDS)
-    {
-      g.setColor(Color.WHITE);
-      g.drawString(String.format("(%d, %d)", row, col).toString(),
-          col * tile_size + (tile_size / 4),
-          row * tile_size + (tile_size / 2));
-    }
-    long t2 = System.currentTimeMillis();
-    //System.out.println("update tile: " + (t2 - t1));
   }
 
   /**
@@ -1643,117 +1252,4 @@ public class GameMap
   {
     g.drawImage(map_image, 0, 0, null);
   }
-
-
-  /**
-   * Creates map from a file
-   *
-   * @param file File from which to create map
-   */
-  private void createFromFile(File file)
-  {
-    Scanner sc;
-    ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
-    Random rand = new Random();
-    int row = 0;
-    int col = 0;
-
-    try
-    {
-      sc = new Scanner(file);
-      while (sc.hasNextLine())
-      {
-        ArrayList<Tile> row_array = new ArrayList<Tile>();
-        String row_string = sc.nextLine();
-        if (!row_string.startsWith("!"))
-        {
-          char[] row_types = row_string.toCharArray();
-          col = 0;
-
-          for (char type : row_types)
-          {
-            Tile new_tile = new Tile(row, col, type);
-            row_array.add(new_tile);
-            if (new_tile.tile_type == TileType.WALL)
-            {
-              walls.add(new_tile);
-            }
-            if (new_tile.tile_type == TileType.BRICK)
-            {
-              if (rand.nextDouble() < GUI.zspawn)
-              {
-                Zombie zombie;
-                Location location =
-                    new Location(col * GUI.tile_size, row * GUI.tile_size);
-                if (rand.nextBoolean())
-                {
-                  System.out.println("made random zombie");
-                  zombie =
-                      new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                          location);
-                }
-                else
-                {
-                  System.out.println("made line zombie");
-
-                  zombie =
-                      new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
-                          location);
-                }
-                zombies.add(zombie);
-                System.out.println(zombies);
-              }
-
-              if (rand.nextDouble() < GUI.fspawn)
-              {
-                FireTrap fireTrap;
-                Location location =
-                    new Location(col * GUI.tile_size, row * GUI.tile_size);
-
-                fireTrap = new FireTrap(location);
-                traps.add(fireTrap);
-
-              }
-            }
-            col++;
-          }
-          grid.add(row_array);
-          row++;
-        }
-      }
-
-      this.num_rows = grid.size();
-      this.num_cols = grid.get(0).size();
-      this.grid = new Tile[num_rows][num_cols];
-      for (int i = 0; i < grid.size(); i++)
-      {
-        Tile[] row_array = new Tile[grid.get(i).size()];
-        row_array = grid.get(i).toArray(row_array);
-        this.grid[i] = row_array;
-      }
-    }
-    catch (IOException e)
-    {
-      System.err.println("Can't find file: " + file.getName());
-      System.exit(1);
-    }
-  }
-
-  @Override
-  public String toString()
-  {
-    String ret = "GameMap{" +
-        "num_rows=" + num_rows +
-        ", num_cols=" + num_cols + "}\n";
-    for (int row = 0; row < num_rows; row++)
-    {
-      for (int col = 0; col < num_cols; col++)
-      {
-        ret += grid[row][col].tile_type.grid_char;
-      }
-      ret += "\n";
-    }
-    return ret;
-  }
-
 }

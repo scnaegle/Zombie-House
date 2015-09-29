@@ -39,57 +39,7 @@ public class Shadow {
     location = new Point(0, 0);
   }
 
-  public static void main(String[] args)
-  {
-    File map_file = null;
-    try
-    {
-      map_file =
-          new File(
-              Shadow.class.getResource("resources/shadow_test.map").toURI());
-    }
-    catch (URISyntaxException e)
-    {
-      e.printStackTrace();
-    }
-
-    GameMap map = new GameMap(map_file);
-    Shadow shadow = new Shadow(map);
-    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
-    shadow.sweep();
-    JFrame frame = new JFrame("MapTest");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLayout(new BorderLayout());
-//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-    frame.setPreferredSize(new Dimension(1600, 800));
-
-
-    JPanel map_panel = new JPanel()
-    {
-      public void paintComponent(Graphics g)
-      {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map.map_image, 0, 0, null);
-
-        shadow.paint(g2);
-      }
-    };
-    map_panel
-        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
-
-    JScrollPane scroll_pane = new JScrollPane(map_panel);
-    scroll_pane.setHorizontalScrollBarPolicy(
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-    scroll_pane.setVerticalScrollBarPolicy(
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-    frame.add(scroll_pane);
-    frame.pack();
-    frame.setVisible(true);
-  }
-
+ 
   /**
    * Set the Dimensions of the background overlay.
    * @param width Width of overlay
