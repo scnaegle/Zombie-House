@@ -10,11 +10,11 @@ import java.util.Random;
 
 
 /**
- * This class makes makes the basic layout for the player class, the zombie
- * class
- * these methods use things that they all will have in common such as a
- * heading movement
- * speed, a location and a width and height of the humanoid object, AKA a
+ * This class makes the basic layout for the player class and the zombie
+ * class. These methods use attributes that they all will have in common such
+ * as a
+ * heading, movement, speed, a location and a width and height of the
+ * humanoid object, AKA a
  * sprite, or sprite object.
  */
 public class Humanoid extends GameObject implements HumanoidObject
@@ -98,14 +98,6 @@ public class Humanoid extends GameObject implements HumanoidObject
     this.location = new_location;
   }
 
-  /**
-   * Tells the sprite how to move based on the heading we give it.
-   * Heading is controlled by keyboard arrows.
-   */
-  public void move(Location next_location)
-  {
-    this.location = next_location;
-  }
 
   /**
    * tells the sprite to move to right or left on map

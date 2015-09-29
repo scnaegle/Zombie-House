@@ -78,9 +78,9 @@ public class Heading
 
 
   /**
-   * Getter for
+   * Getter for current movement along x-axis
    *
-   * @return
+   * @return positive or negative one, or zero
    */
   public int getColMovement()
   {
@@ -94,6 +94,11 @@ public class Heading
     }
   }
 
+  /**
+   * Getter for current movement along y-axis
+   *
+   * @return positive or negative one, or zero
+   */
   public int getRowMovement()
   {
     if (y_movement >= 0)

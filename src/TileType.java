@@ -28,10 +28,10 @@ public enum TileType {
 
 	/**
 	 * makes the Tile type and sets what it should be.
-	 * @param value
-	 * @param grid_char
-	 * @param movement_cost
-	 * @param image
+	 * @param value value of tile
+	 * @param grid_char character used for tile
+	 * @param movement_cost Is it cheap to move here
+	 * @param image loaded .jpg image
 	 */
 	TileType(int value, char grid_char, int movement_cost, String image)
 	{
@@ -43,12 +43,19 @@ public enum TileType {
 
 		}
 
+	/**
+	 * Takes the tiles from the game map and assigns them to a specific character
+	 * that corresponds to the above enums.
+	 *
+	 * @param value character from map
+	 * @return tile type
+	 * @throws IllegalArgumentException
+	 */
 	public static TileType fromGridChar(char value) //Converts chars to type
 			throws IllegalArgumentException
 	{
 			try{
 				for (TileType type : TileType.values()) {
-					//System.out.println("getting tile value");
 					if (type.grid_char == value) {
 						return type;
 					}
@@ -56,9 +63,14 @@ public enum TileType {
 				throw new IllegalArgumentException("Unknown enum value: " + value);
       } catch( ArrayIndexOutOfBoundsException e ) {
         throw new IllegalArgumentException("Unknown enum value: " + value);
-      }
-		}
+			}
+	}
 
+	/**
+	 * Loads in all tile files
+	 * @param file name of file
+	 * @return buffered image
+	 */
 	public BufferedImage loadTile(String file)  //Loads in jpg from resources
 	{
 

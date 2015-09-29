@@ -48,6 +48,11 @@ public class GameObject implements Object2D {
     return Math.atan2(diff_y, diff_x);
   }
 
+  /**
+   * Gets center point of object based on location
+   *
+   * @return center point
+   */
   public Point getCenterPoint() {
     return location.getCenterPoint(width, height);
   }
@@ -57,7 +62,10 @@ public class GameObject implements Object2D {
     return new Rectangle(location.getX(), location.getY(), width, height);
   }
 
-
+  /**
+   * Gets the bounding rectangle of an object based off of it's center point.
+   * @return rectangle
+   */
   public Rectangle getCenteredBoundingRectangle() {
     Rectangle rect = getBoundingRectangle();
     rect.x += (GUI.tile_size - width) / 2;

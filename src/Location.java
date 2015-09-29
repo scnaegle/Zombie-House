@@ -1,11 +1,8 @@
 import java.awt.*;
 
 /**
- * Created by scnaegl on 9/8/15.
- */
-
-/**
- * has to do with bookkeeping and maintaing location
+ * Location class holds all methods necessary for finding an object's location
+ * on the map.
  */
 public class Location
 {
@@ -19,7 +16,7 @@ public class Location
   }
 
   /**
-   * sets a location of an object generally
+   * sets a location of an object
    * @param x
    * @param y
    */
@@ -42,20 +39,34 @@ public class Location
   }
 
   /**
+   * Snap the position of the coordinates to the top left of the tile that it
+   * is on.
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @param tile_size Size of the tiles
+   * @return Location that is snapped to a tile position.
+   */
+  public static Location snapToTile(double x, double y, int tile_size)
+  {
+    int new_x = (int) (x / GUI.tile_size) * tile_size;
+    int new_y = (int) (y / GUI.tile_size) * tile_size;
+    return new Location(new_x, new_y);
+  }
+
+  /**
    * gets the row for a 2d grid an object is on
-   * @param tile_size
-   * @return
+   * @param tile_size 80 pixels
+   * @return exact row on map
    */
   public int getRow(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
     return (center.y / tile_size);
   }
 
-
   /**
    * gets the column for a 2d grid an object is on
-   * @param tile_size
-   * @return
+   * @param tile_size 80 pixels
+   * @return exact column on map
    */
   public int getCol(int tile_size) {
     Point center = getCenterPoint(tile_size, tile_size);
@@ -72,26 +83,14 @@ public class Location
 
   /**
    * gets the center point of an object
-   * @param width
-   * @param height
-   * @return
+   * @param width width of object
+   * @param height height of object
+   * @return center point
    */
   public Point getCenterPoint(int width, int height) {
     return new Point((int)x + width / 2, (int)y + height / 2);
   }
 
-  /**
-   * Snap the position of the coordinates to the top left of the tile that it is on.
-   * @param x X coordinate
-   * @param y Y coordinate
-   * @param tile_size Size of the tiles
-   * @return Location that is snapped to a tile position.
-   */
-  public static Location snapToTile(double x, double y, int tile_size) {
-    int new_x = (int)(x / GUI.tile_size) * tile_size;
-    int new_y = (int)(y / GUI.tile_size) * tile_size;
-    return new Location(new_x, new_y);
-  }
   @Override
   public String toString() {
     return "Location{" +
