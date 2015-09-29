@@ -1,7 +1,10 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * GameMap procedurally generates a map that is 1.5 times bigger than the
@@ -101,6 +104,8 @@ public class GameMap
       }
     }
 
+    // Make sure we have walls around the edges of the map in the walls list
+    // so that the shadows will work properly
     for(int col = minCol; col < num_cols - minCol; col++) {
       Tile tile = new Tile(minRow, col, TileType.WALL);
       grid[minRow][col] = tile;
@@ -229,6 +234,16 @@ public class GameMap
       }
     }
 
+    this.map_image = convertMapToImage(GUI.tile_size);
+  }
+
+  /**
+   * GameMap constuctor that creates map from a file.
+   * @param file File from which to create the map
+   */
+  public GameMap(File file)
+  {
+    createFromFile(file);
     this.map_image = convertMapToImage(GUI.tile_size);
   }
 
@@ -1277,5 +1292,84 @@ public class GameMap
   public void paint(Graphics2D g)
   {
     g.drawImage(map_image, 0, 0, null);
+  }
+
+  /**
+   * Creates map from a file
+   *
+   * @param file File from which to create map
+   */
+  private void createFromFile(File file) {
+    Scanner sc;
+    ArrayList<ArrayList<Tile>> grid = new ArrayList<ArrayList<Tile>>();
+    Random rand = new Random();
+    int row = 0;
+    int col = 0;
+
+    try {
+      sc = new Scanner(file);
+      while (sc.hasNextLine()) {
+        ArrayList<Tile> row_array = new ArrayList<Tile>();
+        String row_string = sc.nextLine();
+        if (!row_string.startsWith("!")) {
+          char[] row_types = row_string.toCharArray();
+          col = 0;
+
+          for (char type : row_types) {
+            Tile new_tile = new Tile(row, col, type);
+            row_array.add(new_tile);
+            if (new_tile.tile_type == TileType.WALL) {
+              walls.add(new_tile);
+            }
+            if (new_tile.tile_type == TileType.BRICK) {
+              if (rand.nextDouble() < GUI.zspawn) {
+                Zombie zombie;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+                if (rand.nextBoolean()) {
+                  System.out.println("made random zombie");
+                  zombie =
+                      new RandomWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                          location);
+                } else {
+                  System.out.println("made line zombie");
+
+                  zombie =
+                      new LineWalkZombie(GUI.zspeed, GUI.zsmell, GUI.drate,
+                          location);
+                }
+                zombies.add(zombie);
+                System.out.println(zombies);
+              }
+
+              if (rand.nextDouble() < GUI.fspawn) {
+                FireTrap fireTrap;
+                Location location =
+                    new Location(col * GUI.tile_size, row * GUI.tile_size);
+
+                fireTrap = new FireTrap(location);
+                traps.add(fireTrap);
+
+              }
+            }
+            col++;
+          }
+          grid.add(row_array);
+          row++;
+        }
+      }
+
+      this.num_rows = grid.size();
+      this.num_cols = grid.get(0).size();
+      this.grid = new Tile[num_rows][num_cols];
+      for (int i = 0; i < grid.size(); i++) {
+        Tile[] row_array = new Tile[grid.get(i).size()];
+        row_array = grid.get(i).toArray(row_array);
+        this.grid[i] = row_array;
+      }
+    } catch (IOException e) {
+      System.err.println("Can't find file: " + file.getName());
+      System.exit(1);
+    }
   }
 }

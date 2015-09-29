@@ -60,45 +60,6 @@ public class Shadow {
   }
 
   /**
-   * Setup the overlay image to be used to draw on top of the given map. This
-   * overlay should simply be a black square minus the visibility polygon and
-   * all the walls that the visibility polygon touches.
-   */
-  private void setupOverlay() {
-    long t1 = System.currentTimeMillis();
-    overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g = (Graphics2D)overlay.getGraphics();
-    g.setColor(Color.BLACK);
-    g.fillRect(0, 0, width, height);
-
-    int[] xs = output.stream().mapToInt(s -> s.x - location.x).toArray();
-    int[] ys = output.stream().mapToInt(s -> s.y - location.y).toArray();
-    int rule = AlphaComposite.CLEAR;
-    float alpha = 0.1f;
-    Composite comp = AlphaComposite.getInstance(rule, alpha);
-    g.setComposite(comp);
-    g.setPaint(Color.white);
-    g.fillPolygon(xs, ys, xs.length);
-    for(Tile tile : map.getWalls()) {
-      Rectangle rect = tile.getBoundingRectangle();
-      rect.width += 1;
-      rect.height += 1;
-      for (EndPoint p : output) {
-        if (rect.contains(p.x, p.y)) {
-          rect.x -= location.x;
-          rect.y -= location.y;
-          rect.width -= 1;
-          rect.height -= 1;
-          g.fill(rect);
-          break;
-        }
-      }
-    }
-    long t2 = System.currentTimeMillis();
-    //System.out.println("setup overlay took " + (t2 - t1));
-  }
-
-  /**
    * Use the GameMap passed in to add segments by using the walls in the map.
    * @param map GameMap object
    */
@@ -113,9 +74,9 @@ public class Shadow {
       w = wall.width;
       h = wall.height;
       addSegment(x, y, x + w, y); // top
-      addSegment(x, y, x, y + h); // left
       addSegment(x + w, y, x + w, y + h); // right
-      addSegment(x, y + h, x + w, y + h); // bottom
+      addSegment(x + w, y + h, x, y + h); // bottom
+      addSegment(x, y + h, x, y); // left
     }
   }
 
@@ -193,40 +154,83 @@ public class Shadow {
   /**
    * Run the algorithm, sweeping over all endpoints within the sight range
    * and created bunch of points that represent a polygon of visibility
+   * @param sight_range The distance in pixels that we want to go out
    */
-  public void sweep() {
-    long t1 = System.currentTimeMillis();
+  public void sweep(double sight_range) {
     output.clear();  // output set of triangles
     for(Segment s : segments) {
-      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 1.5) {
+      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_range) {
         continue;
       }
-//      Point new_p1 = s.p1;
-      Point new_p2 = s.p2;
+      Point new_p1 = s.p1;
+//      Point new_p2 = s.p2;
       for(Segment s2 : segments) {
-//        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
-//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-//        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
-//          new_p1 = intersection;
-//        }
-        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
+        Point intersection = lineIntersection(new Point(center.x, center.y), new Point(s.p1.x, s.p1.y),
             new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
-        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
-          new_p2 = intersection2;
+        if (intersection != null && Math.abs(intersection.distance(center.x, center.y)) < Math.abs(new_p1.distance(center.x, center.y))) {
+          new_p1 = intersection;
         }
+//        Point intersection2 = lineIntersection(new Point(center.x, center.y), new Point(s.p2.x, s.p2.y),
+//            new Point(s2.p1.x, s2.p1.y), new Point(s2.p2.x, s2.p2.y));
+//        if (intersection2 != null && Math.abs(intersection2.distance(center.x, center.y)) < Math.abs(new_p2.distance(center.x, center.y))) {
+//          new_p2 = intersection2;
+//        }
       }
-//      EndPoint new_e1 = new EndPoint(new_p1.x, new_p1.y);
-//      new_e1.angle = Math.atan2(new_e1.y - center.y, new_e1.x - center.x);
-      EndPoint new_e2 = new EndPoint(new_p2.x, new_p2.y);
-      new_e2.angle = Math.atan2(new_e2.y - center.y, new_e2.x - center.x);
-//      output.add(new_e1);
-      output.add(new_e2);
+      EndPoint new_e1 = new EndPoint(new_p1.x, new_p1.y);
+      new_e1.angle = Math.atan2(new_e1.y - center.y, new_e1.x - center.x);
+//      EndPoint new_e2 = new EndPoint(new_p2.x, new_p2.y);
+//      new_e2.angle = Math.atan2(new_e2.y - center.y, new_e2.x - center.x);
+      output.add(new_e1);
+//      output.add(new_e2);
     }
 
     Collections.sort(output);
-    long t2 = System.currentTimeMillis();
-    //System.out.println("sweep took " + (t2 - t1));
     setupOverlay();
+  }
+
+  /**
+   * Run the algorithm, sweeping over all endpoints within the sight range
+   * and created bunch of points that represent a polygon of visibility
+   * Defaults the sight_range to the 1.5 * the sight_pixels
+   */
+  public void sweep() {
+    sweep(sight_pixels * 1.5);
+  }
+
+  /**
+   * Setup the overlay image to be used to draw on top of the given map. This
+   * overlay should simply be a black square minus the visibility polygon and
+   * all the walls that the visibility polygon touches.
+   */
+  private void setupOverlay() {
+    overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = (Graphics2D)overlay.getGraphics();
+    g.setColor(Color.BLACK);
+    g.fillRect(0, 0, width, height);
+
+    int[] xs = output.stream().mapToInt(s -> s.x - location.x).toArray();
+    int[] ys = output.stream().mapToInt(s -> s.y - location.y).toArray();
+    int rule = AlphaComposite.CLEAR;
+    float alpha = 0.1f;
+    Composite comp = AlphaComposite.getInstance(rule, alpha);
+    g.setComposite(comp);
+    g.setPaint(Color.white);
+    g.fillPolygon(xs, ys, xs.length);
+    for(Tile tile : map.getWalls()) {
+      Rectangle rect = tile.getBoundingRectangle();
+      rect.width += 1;
+      rect.height += 1;
+      for (EndPoint p : output) {
+        if (rect.contains(p.x, p.y)) {
+          rect.x -= location.x;
+          rect.y -= location.y;
+          rect.width -= 1;
+          rect.height -= 1;
+          g.fill(rect);
+          break;
+        }
+      }
+    }
   }
 
   /**
@@ -235,6 +239,73 @@ public class Shadow {
    */
   public void paint(Graphics2D g) {
     g.drawImage(overlay, location.x, location.y, width, height, null);
+
+//    drawSegmentsAndEndPoints(g);
+//    drawCenter(g);
+//    drawRays(g);
+//    drawShortenedRays(g);
+//    drawVisibilityPolygon(g);
+  }
+
+  /**
+   * Draws a yellow circle at the center point
+   * @param g Graphics2D object with which to paint
+   */
+  private void drawCenter(Graphics2D g) {
+    g.setColor(Color.YELLOW);
+    g.fillOval(center.x - 10, center.y - 10, 20 , 20);
+  }
+
+  /**
+   * Draws a blue circle at each end point and red line between each
+   * of the segments
+   * @param g Graphics2D object with which to paint
+   */
+  private void drawSegmentsAndEndPoints(Graphics2D g) {
+    for(Segment s : segments) {
+      g.setColor(Color.RED);
+      g.drawLine(s.p1.x, s.p1.y, s.p2.x, s.p2.y);
+      g.setColor(Color.BLUE);
+      g.fillOval(s.p1.x - 3, s.p1.y - 3, 6, 6);
+    }
+  }
+
+  /**
+   * Draws a yellow line from the center to every end point
+   * @param g Graphics2D object with which to paint
+   */
+  public void drawRays(Graphics2D g) {
+    g.setColor(Color.YELLOW);
+    for (Segment s : segments) {
+      g.drawLine(center.x, center.y, s.p1.x, s.p1.y);
+    }
+  }
+
+  /**
+   * Draws a yellow line from the center towards every end point,
+   * but stops at the first segment intersection
+   * @param g Graphics2D object with which to paint
+   */
+  public void drawShortenedRays(Graphics2D g) {
+    g.setColor(Color.YELLOW);
+    for (EndPoint p : output) {
+      g.drawLine(center.x, center.y, p.x, p.y);
+    }
+  }
+
+  /**
+   * Draws a semi transparent polygon where the visibility would be
+   * @param g Graphics2D object with which to paint
+   */
+  public void drawVisibilityPolygon(Graphics2D g) {
+    int[] xs = output.stream().mapToInt(s -> s.x).toArray();
+    int[] ys = output.stream().mapToInt(s -> s.y).toArray();
+    int rule = AlphaComposite.SRC_OVER;
+    float alpha = 0.5f;
+    Composite comp = AlphaComposite.getInstance(rule, alpha);
+    g.setComposite(comp);
+    g.setPaint(Color.YELLOW);
+    g.fillPolygon(xs, ys, xs.length);
   }
 
   /**
@@ -303,5 +374,61 @@ public class Shadow {
       result = 31 * result + (p2 != null ? p2.hashCode() : 0);
       return result;
     }
+  }
+
+  /**
+   * Main function for testing
+   * @param args
+   */
+  public static void main(String[] args)
+  {
+    File map_file = null;
+    try
+    {
+      map_file =
+          new File(
+              Shadow.class.getResource("resources/shadow_test.map").toURI());
+    }
+    catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+
+    GameMap map = new GameMap(map_file);
+    Shadow shadow = new Shadow(map);
+    shadow.setDimensions(map.getWidth(80), map.getHeight(80));
+    shadow.setLightLocation(map.getWidth(80) / 2, map.getHeight(80) / 2);
+    shadow.sweep(10000);
+    JFrame frame = new JFrame("MapTest");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new BorderLayout());
+//    frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    frame.setPreferredSize(new Dimension(1600, 800));
+
+
+    JPanel map_panel = new JPanel()
+    {
+      public void paintComponent(Graphics g)
+      {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map.map_image, 0, 0, null);
+
+        shadow.paint(g2);
+      }
+    };
+    map_panel
+        .setPreferredSize(new Dimension(map.getWidth(80), map.getHeight(80)));
+
+    JScrollPane scroll_pane = new JScrollPane(map_panel);
+    scroll_pane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    scroll_pane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+    frame.add(scroll_pane);
+    frame.pack();
+    frame.setVisible(true);
   }
 }
