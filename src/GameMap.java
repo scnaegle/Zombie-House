@@ -92,9 +92,24 @@ public class GameMap
       {
         Tile empty_tile = new Tile(row, col, TileType.WALL);
         grid[row][col] = empty_tile;
-
       }
+    }
 
+    for(int col = minCol; col < num_cols - minCol; col++) {
+      Tile tile = new Tile(minRow, col, TileType.WALL);
+      grid[minRow][col] = tile;
+      walls.add(tile);
+      Tile tile2 = new Tile(num_rows - minRow, col, TileType.WALL);
+      grid[num_rows - minRow][col] = tile2;
+      walls.add(tile2);
+    }
+    for(int row = minRow + 1; row < num_rows - minRow - 1; row++) {
+      Tile tile = new Tile(row, minCol, TileType.WALL);
+      grid[row][minCol] = tile;
+      walls.add(tile);
+      Tile tile2 = new Tile(row, num_cols - minCol, TileType.WALL);
+      grid[num_rows - minRow][num_cols - minCol] = tile2;
+      walls.add(tile2);
     }
 
     for (Block[] row : blockGrid)
