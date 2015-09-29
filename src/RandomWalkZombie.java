@@ -10,8 +10,11 @@ public class RandomWalkZombie extends Zombie
   BufferedImage[] up = initUp();
 
 
-
-
+  /**
+   * Takes in a location to start and uses animations from zombie class.
+   *
+   * @param location
+   */
   public RandomWalkZombie(Location location) {
     super(location);
     moveDown = new Animation(down, 5);
@@ -23,6 +26,13 @@ public class RandomWalkZombie extends Zombie
     animation.start();
   }
 
+  /**
+   * Takes in all attributes from the Zombie class and keeps a local copy.
+   * @param speed how fast zombie moves
+   * @param smell how far zombie smells
+   * @param decision_rate every few seconds it changes direction
+   * @param location location of zombie
+   */
   public RandomWalkZombie(double speed, double smell, double decision_rate, Location location) {
     this(location);
     this.defined_speed = speed;

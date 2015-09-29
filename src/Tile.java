@@ -69,50 +69,6 @@ public class Tile extends GameObject implements Comparable<Tile> {
 		this(tile.row, tile.col, tile.tile_type);
   }
 
-  public static void main(String[] args)
-  {
-//    Tile grass = new Tile(0,0, TileType.GRASS);
-//    Tile forest = new Tile(0, 0, TileType.FOREST);
-//    Tile hill = new Tile(0, 0, TileType.HILL);
-//    Tile water = new Tile(0, 0, TileType.WATER);
-//    Tile wall = new Tile(0, 0, TileType.WALL);
-
-//    System.out.println("grass value is " + grass.tile_type.value
-//    									 + " and the movement cost is " + grass.tile_type
-// .movement_cost);
-//    System.out.println("forest value is " + forest.tile_type.value
-//    									 + " and the movement cost is " + forest.tile_type
-// .movement_cost);
-//    System.out.println("hill value is " + hill.tile_type.value
-//    									 + " and the movement cost is " + hill.tile_type
-// .movement_cost);
-//    System.out.println("water value is " + water.tile_type.value
-//    									 + " and the movement cost is " + water.tile_type
-// .movement_cost);
-//    System.out.println("wall value is " + wall.tile_type.value
-//    									 + " and the movement cost is " + wall.tile_type
-// .movement_cost);
-
-	}
-
-//  public BufferedImage loadTile(String file)
-//  {
-//
-//    BufferedImage tile = null;
-//
-//    try
-//    {
-//      tile = ImageIO
-//          .read(Sprite.class.getResource("resources/" + file + ".jpg"));
-//    }
-//    catch (IOException e)
-//    {
-//      e.printStackTrace();
-//    }
-//
-//    return tile;
-//  }
-
   /**
    * get X coordinate
    * @return int - X coordinate

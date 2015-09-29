@@ -365,7 +365,10 @@ public class GUI
 
   }
 
-  //start and pause game methods
+
+  /**
+   * start and pause game methods
+   */
   public void startGame()
   {
     pause = false;

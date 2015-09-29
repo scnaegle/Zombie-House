@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * loads the sounds to be played from the zombies and player sprites
+ * loads the sounds to be played from the zombies, firetraps, and player sprites
  */
 public class SoundLoader implements LineListener
 {
@@ -21,7 +21,6 @@ public class SoundLoader implements LineListener
   private static SoundLoader scream;
 
   boolean playFinished;
-  //String audioFilePath;
   Thread thread;
   Clip audioClip;
   FloatControl balanceCtrl;
@@ -35,6 +34,7 @@ public class SoundLoader implements LineListener
    */
   public SoundLoader(String path)
   {
+    //inputStream = getClass().getResourceAsStream("resources/" + path);
     inputStream =
         ClassLoader.getSystemResourceAsStream("resources/" + path);
 
@@ -107,6 +107,9 @@ public class SoundLoader implements LineListener
     scream.play();
   }
 
+  /**
+   * Makes sounds for when zombie bites player
+   */
   public static void playScream()
   {
     scream.play();
@@ -135,23 +138,37 @@ public class SoundLoader implements LineListener
     }
   }
 
+  /**
+   * Plays hit sound with a current balance of zero.
+   */
   public static void playHitObst()
   {
     playHitObst(0);
   }
 
+  /**
+   * Plays zombie walk sound.
+   *
+   * @param balance which speaker it should be played from.
+   */
   public static void playZWalk(float balance)
   {
     zWalk.setBalance(balance);
     zWalk.playLooped();
   }
 
+  /**
+   * Plays zombie walk with a current balance of zero.
+   */
   public static void playZWalk()
   {
     playZWalk(0);
   }
 
 
+  /**
+   * Stops all sounds. Usefull for pause game and restart.
+   */
   public static void stopSounds()
   {
     zWalk.stop();
@@ -161,6 +178,9 @@ public class SoundLoader implements LineListener
     runSound.stop();
   }
 
+  /**
+   * Stops player sounds from playing when standing still.
+   */
   public static void stopMoving()
   {
     //System.out.println("player stopped moving");
@@ -169,47 +189,39 @@ public class SoundLoader implements LineListener
   }
 
 
+  /**
+   * Plays the run sound on a loop.
+   */
   public static void playerRun()
   {
     runSound.playLooped();
   }
 
+  /**
+   * Plays the walk sound on a loop.
+   */
   public static void playerWalk()
   {
     walkSound.playLooped();
   }
 
-//  public static void killSounds()
-//  {
-//
-//    //Need to be able to reset all the sound threads, or kill them,
-//    // but if they arent used then you get null pointer exception.
-//
-//    //Need a way to see which threads were created and then kill those
-//
-//    zWalk.thread.interrupt();
-//    walkSound.thread.interrupt();
-//    //runSound.thread.interrupt();
-//    hitObst.thread.interrupt();
-//    combust.thread.interrupt();
-//    //groan.thread.interrupt();
-//    //scream.thread.interrupt();
-//    //bite.thread.interrupt();
-//
-//  }
 
-  void makeBalanceControlled()
+  private void makeBalanceControlled()
   {
     balanceCtrl =
         (FloatControl) audioClip.getControl(FloatControl.Type.BALANCE);
   }
 
+  /**
+   * Sets the balance which corresponds to a certain speaker.
+   * @param value 0, 1, or -1
+   */
   public void setBalance(float value)
   {
     balanceCtrl.setValue(value);
   }
 
-  void play()
+  private void play()
   {
     thread = new Thread(new Runnable()
     {
@@ -229,29 +241,27 @@ public class SoundLoader implements LineListener
 
     if (type == LineEvent.Type.START)
     {
-      // System.out.println("Playback started.");
 
     }
     else if (type == LineEvent.Type.STOP)
     {
       playFinished = true;
-      //System.out.println("Playback completed.");
     }
 
   }
 
-  public void playLooped(int loops)
-  {
-    audioClip.loop(loops);
-    play();
-  }
-
+  /**
+   * Plays audio clip over and over until stopped.
+   */
   public void playLooped()
   {
     audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     play();
   }
 
+  /**
+   * Tells clip to stop playing.
+   */
   public void stop()
   {
     audioClip.stop();

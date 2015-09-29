@@ -1,5 +1,5 @@
 /**
- * Created by sean on 9/8/15.
+ * Interface that Humanoid uses to override methods.
  */
 public interface HumanoidObject
 {
@@ -17,21 +17,16 @@ public interface HumanoidObject
   Heading getHeading();
 
   /**
-   * Set the location
-   * @param new_location New location object
-   */
-  void setLocation(Location new_location);
-
-  /**
    * Get the location of a zombie
    * @return location
    */
   Location getLocation();
 
   /**
-   * Does this zombie intersect another? Check if this zombie is in the same location as another zombie.
-   * @param other
-   * @return
+   * Set the location
+   * @param new_location New location object
    */
-//  boolean intersects(HumanoidObject other);
+  void setLocation(Location new_location);
+
+
 }
