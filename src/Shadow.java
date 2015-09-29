@@ -66,6 +66,7 @@ public class Shadow {
    * all the walls that the visibility polygon touches.
    */
   private void setupOverlay() {
+    long t1 = System.currentTimeMillis();
     overlay = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = (Graphics2D)overlay.getGraphics();
     g.setColor(Color.BLACK);
@@ -94,6 +95,8 @@ public class Shadow {
         }
       }
     }
+    long t2 = System.currentTimeMillis();
+    System.out.println("setup overlay took " + (t2 - t1));
   }
 
   /**
@@ -193,9 +196,10 @@ public class Shadow {
    * and created bunch of points that represent a polygon of visibility
    */
   public void sweep() {
+    long t1 = System.currentTimeMillis();
     output.clear();  // output set of triangles
     for(Segment s : segments) {
-      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 2) {
+      if (Math.hypot(center.x - s.p1.x, center.y - s.p1.y) > sight_pixels * 1.5) {
         continue;
       }
 //      Point new_p1 = s.p1;
@@ -221,6 +225,8 @@ public class Shadow {
     }
 
     Collections.sort(output);
+    long t2 = System.currentTimeMillis();
+    System.out.println("sweep took " + (t2 - t1));
     setupOverlay();
   }
 

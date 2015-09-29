@@ -189,9 +189,9 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 4),
         sprite.getSprite(2, 3),
         sprite.getSprite(2, 2),
-        sprite.getSprite(2, 1),
-        sprite.getSprite(3, 10),
-        sprite.getSprite(3, 9)};
+        sprite.getSprite(2, 1)};
+//        sprite.getSprite(3, 1),
+//        sprite.getSprite(3, 2)};
 
     return runningRight;
   }
@@ -218,9 +218,9 @@ public class Player extends Humanoid implements HumanoidObject
         sprite.getSprite(2, 7),
         sprite.getSprite(2, 8),
         sprite.getSprite(2, 9),
-        sprite.getSprite(2, 10),
-        sprite.getSprite(3, 1),
-        sprite.getSprite(3, 2)};
+        sprite.getSprite(2, 10)};
+//        sprite.getSprite(3, 9),
+//        sprite.getSprite(3, 10)};
 
     return runningLeft;
   }
